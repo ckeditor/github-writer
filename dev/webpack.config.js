@@ -5,11 +5,11 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 
 module.exports = {
 	// https://webpack.js.org/configuration/entry-context/
-	entry: './app.js',
+	entry: './tmp/app.js',
 
 	// https://webpack.js.org/configuration/output/
 	output: {
-		path: path.resolve( __dirname, 'dist' ),
+		path: path.resolve( __dirname, '../dist' ),
 		filename: 'bundle.js'
 	},
 
