@@ -13,12 +13,9 @@
   "keywords": [
     "GitHub",
     "WYSIWYG",
-    "Editor",
-    "Rich-Text",
-    "Editor",
+    "Rich-Text Editor",
     "CKEditor",
-    "Browser",
-    "Extension"
+    "Browser Extension"
   ],
   "author": "CKSource Frederico Knabben",
   "license": "MIT",
