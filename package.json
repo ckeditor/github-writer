@@ -23,6 +23,14 @@
     "url": "https://github.com/fredck/github-rte/issues"
   },
   "homepage": "https://github.com/fredck/github-rte#readme",
+  "dependencies": {
+    "@ckeditor/ckeditor5-basic-styles": "^15.0.0",
+    "@ckeditor/ckeditor5-dev-utils": "^12.0.5",
+    "@ckeditor/ckeditor5-editor-classic": "^15.0.0",
+    "@ckeditor/ckeditor5-essentials": "^15.0.0",
+    "@ckeditor/ckeditor5-paragraph": "^15.0.0",
+    "@ckeditor/ckeditor5-theme-lark": "^15.0.0"
+  },
   "devDependencies": {
     "postcss-loader": "^3.0.0",
     "raw-loader": "^3.1.0",
