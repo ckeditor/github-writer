@@ -1,0 +1,29 @@
+{
+  "name": "github-rte",
+  "version": "0.1.0",
+  "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor 5.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fredck/github-rte.git"
+  },
+  "keywords": [
+    "GitHub",
+    "WYSIWYG",
+    "Editor",
+    "Rich-Text",
+    "Editor",
+    "CKEditor",
+    "Browser",
+    "Extension"
+  ],
+  "author": "CKSource Frederico Knabben",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fredck/github-rte/issues"
+  },
+  "homepage": "https://github.com/fredck/github-rte#readme"
+}
