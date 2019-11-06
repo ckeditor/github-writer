@@ -1,0 +1,17 @@
+{
+	"manifest_version": 2,
+	"name": "GitHub RTE",
+	"description": "Rich-text editing in GitHub. Powered by CKEditor 5.",
+	"version": "1.0",
+	"content_scripts": [
+		{
+			"matches": [
+				"*://github.com/*"
+			],
+			"js": [
+				"loader.js"
+			],
+			"run_at": "document_end"
+		}
+	]
+}
