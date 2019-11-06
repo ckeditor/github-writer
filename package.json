@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor 5.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode development --config dev/webpack.config.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fredck/github-rte.git"
@@ -36,10 +32,22 @@
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-inspector": "^1.4.0",
+    "eslint": "^5.5.0",
+    "eslint-config-ckeditor5": "^2.0.0",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^3.1.0",
     "style-loader": "^1.0.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
-  }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode development --config dev/webpack.config.js",
+    "lint": "eslint --quiet '**/*.js'"
+  },
+  "eslintIgnore": [
+    "dist/**",
+    "coverage/**",
+    "packages/**"
+  ]
 }

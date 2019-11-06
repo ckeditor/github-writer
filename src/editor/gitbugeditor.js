@@ -8,14 +8,14 @@ import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 
 export default class GitHubEditor extends DecoupledEditor {
-	constructor(initialData) {
-		super(initialData, {
+	constructor( initialData ) {
+		super( initialData, {
 			plugins: [
 				Essentials, Paragraph,
 				Bold, Italic
 			],
-			toolbar: ['bold', 'italic']
-		});
+			toolbar: [ 'bold', 'italic' ]
+		} );
 
 		this.data.processor = new GFMDataProcessor();
 	}
