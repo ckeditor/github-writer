@@ -42,7 +42,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode development --config dev/webpack.config.js",
+    "build": "/bin/bash dev/build.sh",
     "lint": "eslint --quiet '**/*.js'"
   },
   "eslintIgnore": [
