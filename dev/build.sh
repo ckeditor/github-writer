@@ -15,5 +15,5 @@ echo "Creating browser extension directories..."
 cp -r src/extension-chrome build/extension-chrome
 
 echo "Copying bundled scripts to the browser extensions..."
-cp build/loader.js build/extension-chrome
-cp build/app.js build/extension-chrome
+cp build/*.js build/extension-chrome
+cp build/*.map build/extension-chrome
