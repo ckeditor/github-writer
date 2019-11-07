@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import App from '../app/app';
+import App from './app/app';
 
 App.run();
 

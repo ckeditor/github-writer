@@ -9,7 +9,7 @@
 				"*://github.com/*"
 			],
 			"js": [
-				"loader.js"
+				"index.js"
 			],
 			"run_at": "document_end"
 		}

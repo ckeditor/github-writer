@@ -6,11 +6,11 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 module.exports = [
 	// The loader script, responsible for injecting the app into the proper GitHub pages.
 	{
-		entry: './src/loader/loader.js',
+		entry: './src/index.js',
 
 		output: {
 			path: path.resolve( __dirname, '../build' ),
-			filename: 'loader.js'
+			filename: 'index.js'
 		}
 	}
 
