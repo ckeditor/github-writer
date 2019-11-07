@@ -12,8 +12,9 @@ module.exports = [
 			path: path.resolve( __dirname, '../build' ),
 			filename: 'loader.js'
 		}
-	},
+	}
 
+	/*
 	// The main application, which replaces textareas with GitHiub RTE.
 	{
 		entry: './tmp/app.js',
@@ -60,5 +61,6 @@ module.exports = [
 		// By default webpack logs warnings if the bundle is bigger than 200kb.
 		performance: { hints: false }
 	}
+	*/
 ]
 ;
