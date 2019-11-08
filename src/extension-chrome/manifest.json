@@ -6,7 +6,7 @@
 	"content_scripts": [
 		{
 			"matches": [
-				"*://github.com/*"
+				"https://github.com/fredck/github-rte-playground/issues/*"
 			],
 			"js": [
 				"index.js"
