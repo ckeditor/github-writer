@@ -1,0 +1,63 @@
+.github-rte-mode-rte textarea.comment-form-textarea {
+	display: none;
+}
+
+/* TODO: remove this */
+.github-rte-mode-rte md-bold {
+	background: yellow;
+}
+
+/* Classes are prefixed with "div" so they have higher specificity and override default rules. */
+
+/* The following rules are mainly overriding defaults coming from CKEditor and GitHub. */
+
+div.github-rte-ckeditor .ck-editor__editable.ck-focused {
+	border: none !important;
+	box-shadow: none !important;
+}
+
+div.github-rte-ckeditor .ck-editor__editable {
+	border: none !important;
+	padding: 0 8px;
+	resize: vertical;
+	width: 100%;
+	min-height: 100px;
+}
+
+div.github-rte-ckeditor {
+	height: auto !important;
+}
+
+div.github-rte-ckeditor:focus-within {
+	background-color: #fff;
+}
+
+/* The following rules needed to be copied because they're applied to the textarea directly,
+   while the editable is a div.
+
+   Most of the CSS here are copies from teh markdown textarea CSS, sniffed with the inspector. */
+
+/* .previewable-comment-form textarea { */
+div.github-rte-ckeditor {
+	max-width: 100%;
+	margin: 0;
+	line-height: 1.6;
+}
+
+/* .upload-enabled textarea { */
+div.github-rte-ckeditor {
+	border-bottom: 1px dashed #dfe2e5;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+/* .previewable-comment-form textarea { */
+div.github-rte-ckeditor {
+	display: block;
+	width: 100%;
+	/*	min-height: 100px; */
+	/*	padding: 8px; */
+	padding: 0 !important;
+	/*	resize: vertical; */
+}
+

@@ -19,9 +19,6 @@ export default class App {
 		// Watches for new mardown editor dinamically created.
 		createObserver();
 
-		// TODO: Remove this at some point.
-		console.log( 'GitHub RTE is running and ready.' );
-
 		function searchMarkdownEditors( root ) {
 			// Search for root elements that enclose each of the markdown editors.
 			root.querySelectorAll( '.js-previewable-comment-form' ).forEach( el => {

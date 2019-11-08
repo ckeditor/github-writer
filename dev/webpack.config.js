@@ -4,24 +4,12 @@ const path = require( 'path' );
 const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 
 module.exports = [
-	// The loader script, responsible for injecting the app into the proper GitHub pages.
 	{
 		entry: './src/index.js',
 
 		output: {
 			path: path.resolve( __dirname, '../build' ),
 			filename: 'index.js'
-		}
-	}
-
-	/*
-	// The main application, which replaces textareas with GitHiub RTE.
-	{
-		entry: './tmp/app.js',
-
-		output: {
-			path: path.resolve( __dirname, '../build' ),
-			filename: 'app.js'
 		},
 
 		module: {
@@ -61,6 +49,4 @@ module.exports = [
 		// By default webpack logs warnings if the bundle is bigger than 200kb.
 		performance: { hints: false }
 	}
-	*/
-]
-;
+];

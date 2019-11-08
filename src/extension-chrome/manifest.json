@@ -11,6 +11,9 @@
 			"js": [
 				"index.js"
 			],
+			"css": [
+				"github-rte.css"
+			],
 			"run_at": "document_end"
 		}
 	]

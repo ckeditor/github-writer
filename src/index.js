@@ -5,7 +5,12 @@
 
 import App from './app/app';
 
+const startTime = new Date();
+
 App.run();
+
+// TODO: Remove this at some point.
+console.log( 'GitHub RTE loaded and ready. Running time: ' + ( new Date() - startTime ) + 'ms.' );
 
 // import delegate from 'delegate-it';
 //
