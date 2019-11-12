@@ -8,9 +8,9 @@
 	opacity: .54;
 }
 
-/* TODO: remove this */
-.github-rte-mode-rte md-bold {
-	background: yellow;
+/* Hide the "Preview" tab when in RTE mode. */
+.github-rte-mode-rte .preview-tab {
+	display: none;
 }
 
 /* Classes are prefixed with "div" so they have higher specificity and override default rules. */
