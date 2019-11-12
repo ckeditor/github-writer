@@ -16,7 +16,7 @@ export default class App {
 		// Search for markdown editors already existing in the page.
 		searchMarkdownEditors( document.body );
 
-		// Watches for new mardown editor dinamically created.
+		// Watches for new markdown editor dynamically created.
 		createObserver();
 
 		function searchMarkdownEditors( root ) {
@@ -29,7 +29,7 @@ export default class App {
 		function createObserver() {
 			const observer = new MutationObserver( mutations => {
 				mutations.forEach( mutation => {
-					for ( var i = 0; i < mutation.addedNodes.length; i++ ) {
+					for ( let i = 0; i < mutation.addedNodes.length; i++ ) {
 						const node = mutation.addedNodes[ i ];
 
 						// TODO: Maybe filter this better for performance?
