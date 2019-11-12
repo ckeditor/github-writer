@@ -29,6 +29,10 @@ div.github-rte-ckeditor .ck-editor__editable {
 	display: none;
 }
 
+/* Hide all markdown toolbar items. */
+.github-rte-mode-rte .github-rte-button-markdown {
+	display: none !important;
+}
 
 /* Classes are prefixed with "div" so they have higher specificity and override default rules. */
 

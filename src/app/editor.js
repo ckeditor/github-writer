@@ -5,6 +5,10 @@
 
 import GitHubEditor from '../ckeditor/githubeditor';
 
+import Bold from './features/bold';
+
+const featureClasses = [ Bold ];
+
 export default class Editor {
 	/**
 	 * Creates a GitHub RTE editor.
@@ -80,6 +84,8 @@ export default class Editor {
 
 		GitHubEditor.create( data )
 			.then( editor => {
+				this.editor = editor;
+
 				// Create the outer div that will inherit some of the original GitHub styles.
 				const outer = document.createElement( 'div' );
 				outer.classList.add(
@@ -112,8 +118,22 @@ export default class Editor {
 					editor.setData( '' );
 				} );
 
-				// All done. Se the current editor mode.
-				this.editor = editor;
+				// ### Setup features.
+
+				// Mark all original toolbar items with our very own class.
+				this.dom.toolbar.querySelectorAll( '.toolbar-item' ).forEach( element => {
+					element.classList.add( 'github-rte-button-markdown' );
+				} );
+
+				// Attach each feature to the editor.
+				featureClasses.forEach( Feature => {
+					const feature = new Feature( this );
+					feature.attach();
+				} );
+
+				// ### Done.
+
+				// All done. Set the current editor mode.
 				this.mode = Editor.modes.RTE;
 			} );
 	}
