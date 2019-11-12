@@ -3,8 +3,6 @@
  * For licensing, see LICENSE.md.
  */
 
-// import delegate from 'delegate-it';
-
 export default class Feature {
 	constructor( name, editor ) {
 		this.name = name;
@@ -12,17 +10,32 @@ export default class Feature {
 	}
 
 	attach() {
-		// Get the original DOM button.
-		const italic = this.editor.dom.toolbar.querySelector( 'md-' + this.name );
+		const gitHubName = this.gitHubName || this.name;
 
-		const rteItalic = copyElement( italic, 'rte-button' );
-		rteItalic.classList.add( 'github-rte-button-rte', 'github-rte-button-' + this.name );
-		rteItalic.classList.remove( 'github-rte-button-markdown' );
-		rteItalic.setAttribute( 'role', 'button' );
-		rteItalic.setAttribute( 'data-ga-click', 'GitHub RTE, click, ' + name );
+		// Get the original DOM button.
+		const mdButton = this.editor.dom.toolbar.querySelector( 'md-' + gitHubName );
+
+		const rteButton = copyElement( mdButton, 'rte-button' );
+		rteButton.classList.add( 'github-rte-button-rte', 'github-rte-button-' + this.name );
+		rteButton.classList.remove( 'github-rte-button-markdown' );
+		rteButton.setAttribute( 'role', 'button' );
+		rteButton.setAttribute( 'data-ga-click', 'GitHub RTE, click, ' + name );
 
 		// Inject the new button right next to the original one.
-		italic.insertAdjacentElement( 'afterend', rteItalic );
+		mdButton.insertAdjacentElement( 'afterend', rteButton );
+
+		// Connects the button click to the editor command.
+		rteButton.addEventListener( 'click', () => {
+			this.execute();
+			this.editor.editor.editing.view.focus();
+		} );
+
+		// We don't want the button to still the focus on click.
+		rteButton.addEventListener( 'mousedown', evt => evt.preventDefault() );
+	}
+
+	execute() {
+		this.editor.editor.execute( this.name );
 	}
 }
 
@@ -41,15 +54,3 @@ function copyElement( sourceElement, newName ) {
 
 	return newElement;
 }
-
-
-
-// import delegate from 'delegate-it';
-//
-/* Creating custom buttons */
-//
-//
-// delegate( 'rte-button.rte-button-italic', 'click', event => {
-// 	console.log( 'Event delegation!' );
-// 	App.run();
-// } );
