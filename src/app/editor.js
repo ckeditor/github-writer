@@ -53,13 +53,13 @@ export default class Editor {
 
 	set mode( mode ) {
 		if ( mode == Editor.modes.MARKDOWN ) {
-			this.updateTextarea();
-		}
-		else if ( mode == Editor.modes.RTE ) {
+			if ( this.mode == Editor.modes.RTE ) {
+				this.updateTextarea();
+			}
+		} else if ( mode == Editor.modes.RTE ) {
 			// A small trick to enable the submit button while the editor is visible.
 			this.dom.textarea.textContent += ' ';
-		}
-		else {
+		} else {
 			throw new Error( 'Unknown mode "' + mode + '"' );
 		}
 
@@ -70,13 +70,13 @@ export default class Editor {
 
 	updateTextarea() {
 		if ( this.mode == Editor.modes.RTE ) {
-			this.textarea.textContent = this.editor.getData();
+			this.dom.textarea.textContent = this.editor.getData();
 		}
 	}
 
 	create() {
 		// Take the initial markdown data to be loaded in the editor.
-		const data = this.dom.textarea.textContent;
+		const data = this.dom.textarea.value;
 
 		GitHubEditor.create( data )
 			.then( editor => {
@@ -97,9 +97,11 @@ export default class Editor {
 
 				// Update the textarea on form post.
 				this.dom.form.addEventListener( 'submit', () => {
-					if ( this.mode == Editor.modes.RTE ) {
-						this.dom.textarea.textContent = editor.getData();
-					}
+					this.updateTextarea();
+				} );
+
+				this.dom.form.addEventListener( 'reset', () => {
+					editor.setData( '' );
 				} );
 
 				// All done. Se the current editor mode.
