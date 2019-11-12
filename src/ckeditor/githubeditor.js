@@ -19,7 +19,8 @@ export default class GitHubEditor extends DecoupledEditor {
 				Essentials, Paragraph,
 				Bold, Italic
 			],
-			toolbar: [ 'bold', 'italic' ]
+			toolbar: [ 'bold', 'italic' ],
+			placeholder: 'Leave a comment'
 		} );
 
 		this.data.processor = new GFMDataProcessor();

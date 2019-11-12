@@ -2,6 +2,12 @@
 	display: none;
 }
 
+/* The CKEditor placeholder. Matches the inspected rules from the GH textarea on Chrome. */
+.ck.ck-editor__editable > .ck-placeholder::before {
+	color: #6a737d;
+	opacity: .54;
+}
+
 /* TODO: remove this */
 .github-rte-mode-rte md-bold {
 	background: yellow;
