@@ -12,6 +12,9 @@ import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 
+// TODO: For now DecoupledEditor we're simply inheriting from the DecoupledEditor. Maybe creating an Editor from
+//  scratch makes more sense? Performance?
+
 export default class GitHubEditor extends DecoupledEditor {
 	constructor( initialData ) {
 		super( initialData, {
@@ -19,7 +22,6 @@ export default class GitHubEditor extends DecoupledEditor {
 				Essentials, Paragraph,
 				Bold, Italic
 			],
-			toolbar: [ 'bold', 'italic' ],
 			placeholder: 'Leave a comment'
 		} );
 
