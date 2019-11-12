@@ -82,7 +82,15 @@ export default class Editor {
 			.then( editor => {
 				// Create the outer div that will inherit some of the original GitHub styles.
 				const outer = document.createElement( 'div' );
-				outer.classList.add( 'github-rte-ckeditor', 'form-control', 'input-contrast', 'comment-form-textarea' );
+				outer.classList.add(
+					'github-rte-ckeditor',
+					// GH textarea classes.
+					'form-control',
+					'input-contrast',
+					'comment-form-textarea',
+					// GH rendered output classes.
+					'comment-body',
+					'markdown-body' );
 
 				// Inject the editor inside the outer div.
 				outer.append( editor.ui.getEditableElement() );
