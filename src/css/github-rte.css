@@ -1,5 +1,9 @@
-.github-rte-mode-rte textarea.comment-form-textarea {
-	display: none;
+div.github-rte-ckeditor .ck-editor__editable {
+	min-height: inherit;
+
+	/* TODO: We're hardcoding a fixed height here.
+	   It seems that GH originally calculates the height based on the viewport size, instead. */
+	max-height: 350px;
 }
 
 /* The CKEditor placeholder. Matches the inspected rules from the GH textarea on Chrome. */
@@ -8,10 +12,18 @@
 	opacity: .54;
 }
 
-/* Hide the "Preview" tab when in RTE mode. */
+/* RTE mode */
+
+/* Hide the "Preview" tab. */
 .github-rte-mode-rte .preview-tab {
 	display: none;
 }
+
+/* Hide the markdown textarea. */
+.github-rte-mode-rte textarea.comment-form-textarea {
+	display: none;
+}
+
 
 /* Classes are prefixed with "div" so they have higher specificity and override default rules. */
 
@@ -27,7 +39,7 @@ div.github-rte-ckeditor .ck-editor__editable {
 	padding: 0 8px;
 	resize: vertical;
 	width: 100%;
-	min-height: 100px;
+	/*	min-height: 100px; */
 }
 
 div.github-rte-ckeditor {
