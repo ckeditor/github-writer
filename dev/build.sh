@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Be sure to be at the root of the project.
-DIRECTORY=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+DIRECTORY=$(
+  cd "$(dirname "${BASH_SOURCE[0]}")"
+  pwd -P
+)
 cd "$DIRECTORY"
 cd ..
 
