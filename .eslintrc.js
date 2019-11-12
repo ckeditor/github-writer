@@ -8,5 +8,10 @@
 'use strict';
 
 module.exports = {
-	extends: 'ckeditor5'
+	extends: 'ckeditor5',
+
+	"env": {
+		"browser": true,
+		"commonjs": true
+	}
 };
