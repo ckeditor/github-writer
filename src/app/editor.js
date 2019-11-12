@@ -7,45 +7,109 @@ import GitHubEditor from '../ckeditor/githubeditor';
 
 export default class Editor {
 	/**
-	 * A GitHub RTE editor, created as a replacement for the default markdown editor.
+	 * Creates a GitHub RTE editor.
 	 *
-	 * @param markdownEditorRoot {HTMLElement} The element that contains the complete DOM of a single GitHub markdown
+	 * @param markdownEditorRootElement {HTMLElement} The element that contains the complete DOM of a single GitHub markdown
 	 * editor.
 	 */
 	constructor( markdownEditorRootElement ) {
-		this.rootElement = markdownEditorRootElement;
-		this.setMode( 'markdown' );
+		// Find the GitHub UI elements to be touched by the editor logic.
+
+		// The element holding the toolbar.
+		const toolbar = markdownEditorRootElement.querySelector( 'markdown-toolbar' );
+
+		// The markdown textarea.
+		const textarea = markdownEditorRootElement.querySelector( '#' + toolbar.getAttribute( 'for' ) );
+
+		// The form that posts the data.
+		const form = textarea.form;
+
+		// The element to be highlighted when the editor has focus.
+		const focusBox = markdownEditorRootElement.querySelector( 'div.upload-enabled' );
+
+		this.dom = {
+			root: markdownEditorRootElement,
+			toolbar,
+			textarea,
+			form,
+			focusBox
+		};
+
+		// When bootstraping, we're on markdown mode.
+		this.mode = Editor.modes.MARKDOWN;
+	}
+
+	get mode() {
+		if ( this.dom.root.classList.contains( 'github-rte-mode-rte' ) ) {
+			return Editor.modes.RTE;
+		}
+
+		if ( this.dom.root.classList.contains( 'github-rte-mode-markdown' ) ) {
+			return Editor.modes.MARKDOWN;
+		}
+
+		return null;
+	}
+
+	set mode( mode ) {
+		if ( mode == Editor.modes.MARKDOWN ) {
+			this.updateTextarea();
+		}
+		else if ( mode == Editor.modes.RTE ) {
+			// A small trick to enable the submit button while the editor is visible.
+			this.dom.textarea.textContent += ' ';
+		}
+		else {
+			throw new Error( 'Unknown mode "' + mode + '"' );
+		}
+
+		// Set the appropriate class to the root element according to the mode being set.
+		this.dom.root.classList.toggle( 'github-rte-mode-rte', mode == Editor.modes.RTE );
+		this.dom.root.classList.toggle( 'github-rte-mode-markdown', mode == Editor.modes.MARKDOWN );
+	}
+
+	updateTextarea() {
+		if ( this.mode == Editor.modes.RTE ) {
+			this.textarea.textContent = this.editor.getData();
+		}
 	}
 
 	create() {
-		const toolbar = this.rootElement.querySelector( 'markdown-toolbar' );
-		const textarea = this.rootElement.querySelector( '#' + toolbar.getAttribute( 'for' ) );
-		const focusBox = this.rootElement.querySelector( 'div.upload-enabled' );
-
-		// toolbar.style.background = 'red';
-		// textarea.style.background = 'blue';
-
-		const data = textarea.textContent;
+		// Take the initial markdown data to be loaded in the editor.
+		const data = this.dom.textarea.textContent;
 
 		GitHubEditor.create( data )
 			.then( editor => {
+				// Create the outer div that will inherit some of the original GitHub styles.
 				const outer = document.createElement( 'div' );
 				outer.classList.add( 'github-rte-ckeditor', 'form-control', 'input-contrast', 'comment-form-textarea' );
+
+				// Inject the editor inside the outer div.
 				outer.append( editor.ui.getEditableElement() );
 
+				// Enable the GitHub focus styles when the editor focus/blur.
 				editor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
-					focusBox.classList.toggle( 'focused', !!value );
+					this.dom.focusBox.classList.toggle( 'focused', !!value );
 				} );
 
-				this.editor = editor;
-				textarea.insertAdjacentElement( 'afterend', outer );
+				// Place the outer/editor right after the textarea in the DOM.
+				this.dom.textarea.insertAdjacentElement( 'afterend', outer );
 
-				this.setMode( 'rte' );
+				// Update the textarea on form post.
+				this.dom.form.addEventListener( 'submit', () => {
+					if ( this.mode == Editor.modes.RTE ) {
+						this.dom.textarea.textContent = editor.getData();
+					}
+				} );
+
+				// All done. Se the current editor mode.
+				this.editor = editor;
+				this.mode = Editor.modes.RTE;
 			} );
 	}
-
-	setMode( mode ) {
-		this.rootElement.classList.toggle( 'github-rte-mode-rte', mode == 'rte' );
-		this.rootElement.classList.toggle( 'github-rte-mode-markdown', mode == 'markdown' );
-	}
 }
+
+Editor.modes = {
+	RTE: 'rte',
+	MARKDOWN: 'markdown'
+};
