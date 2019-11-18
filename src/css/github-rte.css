@@ -24,9 +24,9 @@ div.github-rte-ckeditor .ck-editor__editable {
 	display: none;
 }
 
-/* Hide the markdown textarea. */
-.github-rte-mode-rte textarea.comment-form-textarea {
-	display: none;
+/* Hide the markdown textarea outer box. */
+.github-rte-mode-rte .github-rte-editableroot-markdown {
+	display: none !important;
 }
 
 /* Hide all markdown toolbar items. */

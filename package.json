@@ -27,9 +27,11 @@
     "@ckeditor/ckeditor5-editor-decoupled": "^15.0.0",
     "@ckeditor/ckeditor5-essentials": "^15.0.0",
     "@ckeditor/ckeditor5-heading": "^15.0.0",
+    "@ckeditor/ckeditor5-image": "^15.0.0",
     "@ckeditor/ckeditor5-markdown-gfm": "^15.0.0",
     "@ckeditor/ckeditor5-paragraph": "^15.0.0",
     "@ckeditor/ckeditor5-theme-lark": "^15.0.0",
+    "@ckeditor/ckeditor5-upload": "^15.0.0",
     "delegate-it": "^1.1.0"
   },
   "devDependencies": {

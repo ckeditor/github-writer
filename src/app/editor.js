@@ -3,6 +3,8 @@
  * For licensing, see LICENSE.md.
  */
 
+import { copyElement } from './util';
+
 import GitHubEditor from '../ckeditor/githubeditor';
 
 import Bold from './features/bold';
@@ -33,12 +35,19 @@ export default class Editor {
 		// The element to be highlighted when the editor has focus.
 		const focusBox = markdownEditorRootElement.querySelector( 'div.upload-enabled' );
 
+		// The element holding upload related data.
+		const uploadData = textarea.closest( '*[data-upload-policy-url]' );
+
 		this.dom = {
 			root: markdownEditorRootElement,
 			toolbar,
 			textarea,
 			form,
-			focusBox
+			focusBox,
+			uploadData,
+			// The element containing the upload data is also the outermost element that we need to replicate to mimic
+			// the GH design around the textarea.
+			editableRoot: uploadData
 		};
 
 		// When bootstraping, we're on markdown mode.
@@ -88,8 +97,17 @@ export default class Editor {
 			.then( editor => {
 				this.editor = editor;
 
-				// Create the outer div that will inherit some of the original GitHub styles.
-				const outer = document.createElement( 'div' );
+				// Save DOM information about file upload (used by the GitHubUploadAdapter plugin).
+				{
+					editor.config.set( 'githubRte.upload.uploadUrl', this.dom.uploadData.getAttribute( 'data-upload-policy-url' ) );
+					editor.config.set( 'githubRte.upload.form', {
+						authenticity_token: this.dom.uploadData.getAttribute( 'data-upload-policy-authenticity-token' ),
+						repository_id: this.dom.uploadData.getAttribute( 'data-upload-repository-id' )
+					} );
+				}
+
+				// Create the outer div that will hold the editable and inherit some of the original GitHub styles.
+				let outer = document.createElement( 'div' );
 				outer.classList.add(
 					'github-rte-ckeditor',
 					// GH textarea classes.
@@ -103,13 +121,31 @@ export default class Editor {
 				// Inject the editor inside the outer div.
 				outer.append( editor.ui.getEditableElement() );
 
+				// Create a copy of the parent tree of the textarea (using divs only) up to the editableRoot,
+				// so we'll mimic the styles used by GH by copying the CSS classes of this tree.
+				{
+					let parent = this.dom.textarea;
+					let parentClone;
+
+					while ( parent != this.dom.editableRoot ) {
+						parent = parent.parentElement;
+						parentClone = copyElement( parent, 'div', false );
+						parentClone.appendChild( outer );
+						outer = parentClone;
+					}
+				}
+
+				// Add the classes that will be used to switch the visibility of the textarea vs CKEditor.
+				this.dom.editableRoot.classList.add( 'github-rte-editableroot-markdown' );
+				outer.classList.add( 'github-rte-editableroot-rte' );
+
+				// Place the outer/editor right after the textarea root in the DOM.
+				this.dom.editableRoot.insertAdjacentElement( 'afterend', outer );
+
 				// Enable the GitHub focus styles when the editor focus/blur.
 				editor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
 					this.dom.focusBox.classList.toggle( 'focused', !!value );
 				} );
-
-				// Place the outer/editor right after the textarea in the DOM.
-				this.dom.textarea.insertAdjacentElement( 'afterend', outer );
 
 				// Update the textarea on form post.
 				this.dom.form.addEventListener( 'submit', () => {

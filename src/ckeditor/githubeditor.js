@@ -4,8 +4,11 @@
  */
 
 import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
-
 import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
+
+import Image from '@ckeditor/ckeditor5-image/src/image';
+import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
+import GitHubUploadAdapter from './githubuploadadapter';
 
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
@@ -23,6 +26,7 @@ export default class GitHubEditor extends DecoupledEditor {
 		super( initialData, {
 			plugins: [
 				Essentials, Paragraph,
+				Image, ImageUpload, GitHubUploadAdapter,
 				Heading,
 				Bold, Italic
 			],
@@ -38,7 +42,6 @@ export default class GitHubEditor extends DecoupledEditor {
 					{ model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
 				]
 			}
-
 		} );
 
 		this.data.processor = new GFMDataProcessor();

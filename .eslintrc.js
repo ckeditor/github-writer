@@ -8,8 +8,15 @@
 'use strict';
 
 module.exports = {
+	// Follow CKEditor 5 rules.
 	extends: 'ckeditor5',
 
+	rules: {
+		// We allow blocks to be used to organize the logic of longer functions.
+		'no-lone-blocks': 'off'
+	},
+
+	// Bring in environment variables that touch the project, overall.
 	'env': {
 		'browser': true,
 		'commonjs': true
