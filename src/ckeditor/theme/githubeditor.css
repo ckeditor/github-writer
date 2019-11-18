@@ -1,0 +1,17 @@
+/**
+ * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+/* Override some of the Image plugin styles, so it matches visually with the GH final output. */
+
+.ck-content .image {
+	margin: 0;
+	margin-bottom: 21px;
+
+	& > img {
+		  margin: 0;
+
+		  min-width: auto;
+	  }
+}
