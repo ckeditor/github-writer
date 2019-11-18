@@ -1,7 +1,7 @@
 # GitHub WYSIWYG Rich-Text Editor
 
 Replaces the plain-text markdown input textareas from GitHub.com pages with a
-WYSIWYG rich-text editor, powered by [CKEditor 5](https://ckeditor.com/).
+WYSIWYG rich-text editor, powered by [CKEditor](https://ckeditor.com/).
 
 ---
 
