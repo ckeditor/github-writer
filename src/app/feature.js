@@ -3,6 +3,8 @@
  * For licensing, see LICENSE.md.
  */
 
+import { copyElement } from './util';
+
 export default class Feature {
 	constructor( name, editor ) {
 		this.name = name;
@@ -39,18 +41,3 @@ export default class Feature {
 	}
 }
 
-// Makes a copy of a DOM element, with a different name.
-function copyElement( sourceElement, newName ) {
-	const newElement = document.createElement( newName );
-
-	for ( let i = 0; i < sourceElement.attributes.length; i++ ) {
-		const att = sourceElement.attributes[ i ];
-		newElement.setAttribute( att.name, att.value );
-	}
-
-	sourceElement.childNodes.forEach( child => {
-		newElement.appendChild( child.cloneNode( true ) );
-	} );
-
-	return newElement;
-}
