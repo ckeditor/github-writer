@@ -15,7 +15,7 @@
 				"https://github.com/fredck/github-rte-playground/issues/*"
 			],
 			"js": [
-				"index.js"
+				"github-rte.js"
 			],
 			"css": [
 				"github-rte.css"

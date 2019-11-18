@@ -11,7 +11,7 @@ cd ..
 echo "Removing the build directory..."
 rm -rf build
 
-echo "Creating the JavaScript bundles..."
+echo "Creating JavaScript bundles..."
 webpack --mode development --config dev/webpack.config.js
 
 echo "Copying CSS files..."

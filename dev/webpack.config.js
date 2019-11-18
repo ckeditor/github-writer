@@ -3,6 +3,8 @@
  * For licensing, see LICENSE.md.
  */
 
+/* global __dirname */
+
 'use strict';
 
 const path = require( 'path' );
@@ -10,11 +12,11 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 
 module.exports = [
 	{
-		entry: './src/index.js',
+		entry: './src/github-rte.js',
 
 		output: {
 			path: path.resolve( __dirname, '../build' ),
-			filename: 'index.js'
+			filename: 'github-rte.js'
 		},
 
 		module: {
