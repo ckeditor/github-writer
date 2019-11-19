@@ -19,6 +19,7 @@ import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 
 import List from '@ckeditor/ckeditor5-list/src/list';
+import TodoList from '@ckeditor/ckeditor5-list/src/todolist';
 
 import './theme/githubeditor.css';
 
@@ -33,7 +34,7 @@ export default class GitHubEditor extends DecoupledEditor {
 				Image, ImageUpload, GitHubUploadAdapter,
 				Heading,
 				Bold, Italic,
-				List
+				List, TodoList
 			],
 			placeholder: 'Leave a comment',
 			heading: {

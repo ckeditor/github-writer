@@ -7,13 +7,18 @@ import { copyElement } from './util';
 
 import GitHubEditor from '../ckeditor/githubeditor';
 
+import Heading from './features/heading';
 import Bold from './features/bold';
 import Italic from './features/italic';
-import Heading from './features/heading';
 import BulletedList from './features/bulletedList';
 import NumberedList from './features/numberedlist';
+import TodoList from './features/todolist';
 
-const featureClasses = [ Bold, Italic, Heading, BulletedList, NumberedList ];
+const featureClasses = [
+	Heading,
+	Bold, Italic,
+	BulletedList, NumberedList, TodoList
+];
 
 export default class Editor {
 	/**
