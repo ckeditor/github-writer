@@ -10,13 +10,14 @@ import GitHubEditor from '../ckeditor/githubeditor';
 import Heading from './features/heading';
 import Bold from './features/bold';
 import Italic from './features/italic';
+import Code from './features/code';
 import BulletedList from './features/bulletedList';
 import NumberedList from './features/numberedlist';
 import TodoList from './features/todolist';
 
 const featureClasses = [
 	Heading,
-	Bold, Italic,
+	Bold, Italic, Code,
 	BulletedList, NumberedList, TodoList
 ];
 
