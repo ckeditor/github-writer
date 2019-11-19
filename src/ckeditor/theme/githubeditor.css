@@ -10,8 +10,40 @@
 	margin-bottom: 21px;
 
 	& > img {
-		  margin: 0;
+		margin: 0;
 
-		  min-width: auto;
-	  }
+		min-width: auto;
+	}
+}
+
+.ck-content .todo-list {
+	& li {
+		margin-bottom: initial;
+
+		& .todo-list {
+			margin-top: initial;
+		}
+	}
+
+	& .todo-list__label {
+		& > input {
+			-webkit-appearance: checkbox;
+			width: auto;
+			height: auto;
+			margin-right: -18px;
+			margin-left: 4px;
+
+			&::before {
+				content: none;
+			}
+
+			&::after {
+				content: none;
+			}
+		}
+
+		& .todo-list__label__description {
+			vertical-align: middle;
+		}
+	}
 }
