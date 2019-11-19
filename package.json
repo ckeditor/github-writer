@@ -21,6 +21,7 @@
     "url": "https://github.com/fredck/github-rte/issues"
   },
   "homepage": "https://github.com/fredck/github-rte#readme",
+  "workspaces": [ "packages/*" ],
   "dependencies": {
     "@ckeditor/ckeditor5-basic-styles": "^15.0.0",
     "@ckeditor/ckeditor5-dev-utils": "^12.0.5",
