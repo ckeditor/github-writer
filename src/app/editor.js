@@ -10,8 +10,10 @@ import GitHubEditor from '../ckeditor/githubeditor';
 import Bold from './features/bold';
 import Italic from './features/italic';
 import Heading from './features/heading';
+import BulletedList from './features/bulletedList';
+import NumberedList from './features/numberedlist';
 
-const featureClasses = [ Bold, Italic, Heading ];
+const featureClasses = [ Bold, Italic, Heading, BulletedList, NumberedList ];
 
 export default class Editor {
 	/**

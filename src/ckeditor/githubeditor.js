@@ -18,6 +18,8 @@ import Heading from '@ckeditor/ckeditor5-heading/src/heading';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 
+import List from '@ckeditor/ckeditor5-list/src/list';
+
 import './theme/githubeditor.css';
 
 // TODO: For now DecoupledEditor we're simply inheriting from the DecoupledEditor. Maybe creating an Editor from
@@ -30,7 +32,8 @@ export default class GitHubEditor extends DecoupledEditor {
 				Essentials, Paragraph,
 				Image, ImageUpload, GitHubUploadAdapter,
 				Heading,
-				Bold, Italic
+				Bold, Italic,
+				List
 			],
 			placeholder: 'Leave a comment',
 			heading: {
