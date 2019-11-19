@@ -7,7 +7,7 @@ import Feature from '../feature';
 
 export default class Heading extends Feature {
 	constructor( editor ) {
-		super( 'Heading', editor );
+		super( 'heading', editor );
 
 		this.gitHubName = 'header';
 	}
