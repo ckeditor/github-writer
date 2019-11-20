@@ -63,6 +63,9 @@ The GitHub RTE should be enabled in all places where the original markdown edito
 *   [ ] Pull requests
     *   [ ] Comment
         *   [ ] Editing
+*   [ ] Commits
+    *   [ ] Comment
+    *   [ ] Line comment
 *   [ ] Settings > Saved replies
 *   [ ] Wiki pages (well, that's s whole different editor, still a target)
 ---
