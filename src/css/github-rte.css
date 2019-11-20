@@ -11,6 +11,14 @@ div.github-rte-ckeditor .ck-editor__editable {
 	max-height: 350px;
 }
 
+div.github-rte-ckeditor .ck-editor__editable.ck-blurred {
+	background-color: #fafbfc;
+}
+
+div.github-rte-ckeditor .ck-editor__editable.ck-focused {
+	background-color: #fff;
+}
+
 /* The CKEditor placeholder. Matches the inspected rules from the GH textarea on Chrome. */
 .ck.ck-editor__editable > .ck-placeholder::before {
 	color: #6a737d;
@@ -55,10 +63,6 @@ div.github-rte-ckeditor {
 	height: auto !important;
 }
 
-div.github-rte-ckeditor:focus-within {
-	background-color: #fff;
-}
-
 /* The following rules needed to be copied because they're applied to the textarea directly,
    while the editable is a div.
 
@@ -87,4 +91,3 @@ div.github-rte-ckeditor {
 	padding: 0 !important;
 	/*	resize: vertical; */
 }
-
