@@ -24,3 +24,8 @@ echo "Copying bundled scripts to the browser extensions..."
 cp build/*.js build/extension-chrome
 cp build/*.map build/extension-chrome
 cp build/*.css build/extension-chrome
+
+echo "Cleaning up..."
+rm build/*.js
+rm build/*.map
+rm build/*.css
