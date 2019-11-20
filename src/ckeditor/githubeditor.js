@@ -8,6 +8,7 @@ import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataproces
 
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 
 import Heading from '@ckeditor/ckeditor5-heading/src/heading';
 
@@ -33,7 +34,7 @@ export default class GitHubEditor extends DecoupledEditor {
 	constructor( initialData ) {
 		super( initialData, {
 			plugins: [
-				Essentials, Paragraph,
+				Essentials, Paragraph, Autoformat,
 				Image, ImageUpload, GitHubUploadAdapter,
 				Heading,
 				Bold, Italic, Code,
