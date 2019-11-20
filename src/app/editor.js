@@ -11,13 +11,15 @@ import Heading from './features/heading';
 import Bold from './features/bold';
 import Italic from './features/italic';
 import Code from './features/code';
-import BulletedList from './features/bulletedList';
+import BlockQuote from './features/blockquote';
+import BulletedList from './features/bulletedlist';
 import NumberedList from './features/numberedlist';
 import TodoList from './features/todolist';
 
 const featureClasses = [
 	Heading,
 	Bold, Italic, Code,
+	BlockQuote,
 	BulletedList, NumberedList, TodoList
 ];
 
