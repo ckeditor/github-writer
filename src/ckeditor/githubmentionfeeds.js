@@ -39,9 +39,9 @@ export default function getMentionFeedsConfig( urls ) {
 			entryRenderer: entry => {
 				const template = document.createElement( 'template' );
 				template.innerHTML = `
-					<div>
+					<button>
 						<small>#${ entry.number }</small> ${ entry.title }
-					</div>
+					</button>
 				`;
 
 				return template.content.firstElementChild;

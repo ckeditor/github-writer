@@ -57,7 +57,7 @@
 		}
 	}
 
-	& div.ck-button {
+	& button.ck-button {
 		font-size: 14px;
 		font-weight: 600;
 		cursor: pointer;
