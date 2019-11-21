@@ -12,7 +12,7 @@
 	"content_scripts": [
 		{
 			"matches": [
-				"https://github.com/fredck/github-rte-playground/issues/*"
+				"https://github.com/fredck/*/issues/*"
 			],
 			"js": [
 				"github-rte.js"
