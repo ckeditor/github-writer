@@ -30,6 +30,7 @@ export default function getMentionFeedsConfig( urls ) {
 				return {
 					key,
 					data: {
+						id: '#' + entryData.number,
 						number: entryData.number,
 						title: entryData.title
 					}
@@ -73,6 +74,7 @@ export default function getMentionFeedsConfig( urls ) {
 				return {
 					key,
 					data: {
+						id: '@' + entryData.login,
 						login: entryData.login,
 						name: entryData.name
 					}
@@ -117,11 +119,16 @@ export default function getMentionFeedsConfig( urls ) {
 					text + ' ' +
 					text.match( /\b\w/g ).join( '' );	// All initials.
 
+				const icon = entryLiElement.querySelector( 'g-emoji' ).textContent;
+				const name = entryLiElement.getAttribute( 'data-emoji-name' );
+
 				return {
 					key,
 					data: {
-						icon: entryLiElement.querySelector( 'g-emoji' ).textContent,
-						name: entryLiElement.getAttribute( 'data-emoji-name' )
+						// TODO: Show the icon to the user, instead of the ":name:". CKEditor forces the id to start with the marker.
+						id: ':' + name + ':',
+						icon,
+						name
 					}
 				};
 			},
