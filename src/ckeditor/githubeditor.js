@@ -25,16 +25,18 @@ import Image from '@ckeditor/ckeditor5-image/src/image';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
 import GitHubUploadAdapter from './githubuploadadapter';
 
+import Mention from '@ckeditor/ckeditor5-mention/src/mention';
+
 import './theme/githubeditor.css';
 
 // TODO: For now DecoupledEditor we're simply inheriting from the DecoupledEditor. Maybe creating an Editor from
 //  scratch makes more sense? Performance?
 
 export default class GitHubEditor extends DecoupledEditor {
-	constructor( initialData ) {
-		super( initialData, {
+	constructor( initialData, extraConfig ) {
+		super( initialData, Object.assign({
 			plugins: [
-				Essentials, Paragraph, Autoformat,
+				Essentials, Paragraph, Autoformat, Mention,
 				Image, ImageUpload, GitHubUploadAdapter,
 				Heading,
 				Bold, Italic, Code,
@@ -53,7 +55,7 @@ export default class GitHubEditor extends DecoupledEditor {
 					{ model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
 				]
 			}
-		} );
+		}, extraConfig ) );
 
 		this.data.processor = new GFMDataProcessor();
 	}

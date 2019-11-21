@@ -13,7 +13,8 @@ module.exports = {
 
 	rules: {
 		// We allow blocks to be used to organize the logic of longer functions.
-		'no-lone-blocks': 'off'
+		'no-lone-blocks': 'off',
+		'quotes': [ 'error', 'single', { 'allowTemplateLiterals': true } ]
 	},
 
 	// Bring in environment variables that touch the project, overall.
