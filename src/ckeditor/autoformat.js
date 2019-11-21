@@ -5,14 +5,15 @@
 
 import CKEditorAutoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 import InlineAutoformatEditing from '@ckeditor/ckeditor5-autoformat/src/inlineautoformatediting';
+import BlockAutoformatEditing from '@ckeditor/ckeditor5-autoformat/src/blockautoformatediting';
 
 export default class Autoformat extends CKEditorAutoformat {
 	afterInit() {
 		super.afterInit();
-		this.__addInlineAutoformats();
+		this.__addAutoformats();
 	}
 
-	__addInlineAutoformats() {
+	__addAutoformats() {
 		const commands = this.editor.commands;
 
 		if ( commands.get( 'strikethrough' ) ) {
@@ -21,6 +22,11 @@ export default class Autoformat extends CKEditorAutoformat {
 
 			new InlineAutoformatEditing( this.editor, /(~)([^~]+)(~)$/g, codeCallback );
 			/* eslint-enable no-new */
+		}
+
+		if ( commands.get( 'horizontalLine' ) ) {
+			// eslint-disable-next-line no-new
+			new BlockAutoformatEditing( this.editor, /^-{3,}$/, 'horizontalLine' );
 		}
 	}
 }

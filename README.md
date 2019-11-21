@@ -16,7 +16,7 @@ One of the goals of this extension is providing all features which are available
     *   [x] Paragraphs (Enter)
     *   [x] Soft line-break (Shift+Enter)
     *   [x] Headings
-    *   [ ] Horizontal line separator
+    *   [x] Horizontal line separator (when typing ---)
 *   Blocks
     *   [x] Quote
         *   [ ] Quote in quote (levels)

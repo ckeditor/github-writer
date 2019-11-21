@@ -48,6 +48,20 @@
 	}
 }
 
+.ck-editor__editable div.ck-horizontal-line {
+	padding: 0;
+	overflow: initial;
+}
+
+.ck-content hr {
+	height: .25em;
+	padding: 0;
+	margin: 24px 0;
+	background: transparent;
+	background-color: #e1e4e8;
+	border: 0;
+}
+
 .ck-mentions {
 	& li.ck-list__item {
 		border-bottom: 1px solid #dfe2e5 !important;

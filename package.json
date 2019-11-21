@@ -33,6 +33,7 @@
     "@ckeditor/ckeditor5-editor-decoupled": "^15.0.0",
     "@ckeditor/ckeditor5-essentials": "^15.0.0",
     "@ckeditor/ckeditor5-heading": "^15.0.0",
+    "@ckeditor/ckeditor5-horizontal-line": "^15.0.0",
     "@ckeditor/ckeditor5-image": "^15.0.0",
     "@ckeditor/ckeditor5-list": "^15.0.0",
     "@ckeditor/ckeditor5-markdown-gfm": "^15.0.0",

@@ -26,6 +26,8 @@ import Image from '@ckeditor/ckeditor5-image/src/image';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
 import GitHubUploadAdapter from './githubuploadadapter';
 
+import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
+
 import Mention from '@ckeditor/ckeditor5-mention/src/mention';
 
 import './theme/githubeditor.css';
@@ -42,7 +44,8 @@ export default class GitHubEditor extends DecoupledEditor {
 				Heading,
 				Bold, Italic, Code, Strikethrough,
 				BlockQuoteEditing,
-				List, TodoList
+				List, TodoList,
+				HorizontalLine
 			],
 			placeholder: 'Leave a comment',
 			heading: {
