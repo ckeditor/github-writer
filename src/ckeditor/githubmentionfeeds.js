@@ -136,7 +136,7 @@ export default function getMentionFeedsConfig( urls ) {
 				const template = document.createElement( 'template' );
 				template.innerHTML = `
 					<div>
-						<g-emoji>${ entry.icon }</g-emoji> <small>${ entry.name }</small>
+						<g-emoji>${ entry.icon }</g-emoji> ${ entry.name }
 					</div>
 				`;
 
