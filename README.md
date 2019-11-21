@@ -40,12 +40,12 @@ One of the goals of this extension is providing all features which are available
         *   [ ] Drag-and-drop
         *   [ ] Open file dialog
 *   Auto-complete
-    *   [ ] People (list when typing "@")
-    *   [ ] Issues/PRs (list when typing "#")
+    *   [x] People (list when typing "@")
+    *   [x] Issues/PRs (list when typing "#")
 *   Other
     *   [x] Emoji
         *   [x] OS, Unicode characters
-        *   [ ] Auto-complete (list when typing ":")
+        *   [x] Auto-complete (list when typing ":")
     *   [x] Escape markdown in text
     *   [ ] Tables
     *   [ ] Saved replies
