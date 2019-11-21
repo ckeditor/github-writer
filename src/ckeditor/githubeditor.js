@@ -22,6 +22,8 @@ import BlockQuoteEditing from '@ckeditor/ckeditor5-block-quote/src/blockquoteedi
 import List from '@ckeditor/ckeditor5-list/src/list';
 import TodoList from '@ckeditor/ckeditor5-list/src/todolist';
 
+import Link from '@ckeditor/ckeditor5-link/src/link';
+
 import Image from '@ckeditor/ckeditor5-image/src/image';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
 import GitHubUploadAdapter from './githubuploadadapter';
@@ -44,6 +46,7 @@ export default class GitHubEditor extends DecoupledEditor {
 				Heading,
 				Bold, Italic, Code, Strikethrough,
 				BlockQuoteEditing,
+				Link,
 				List, TodoList,
 				HorizontalLine
 			],

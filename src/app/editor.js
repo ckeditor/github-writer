@@ -16,12 +16,14 @@ import BlockQuote from './features/blockquote';
 import BulletedList from './features/bulletedlist';
 import NumberedList from './features/numberedlist';
 import TodoList from './features/todolist';
+import Link from './features/link';
 
 const featureClasses = [
 	Heading,
 	Bold, Italic, Code,
 	BlockQuote,
-	BulletedList, NumberedList, TodoList
+	BulletedList, NumberedList, TodoList,
+	Link
 ];
 
 let mentionFeedsConfig;

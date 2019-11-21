@@ -27,10 +27,10 @@ One of the goals of this extension is providing all features which are available
     *   [x] Numbered list
     *   [x] Task/Todo list
 *   Links
-    *   [ ] On text
+    *   [x] On text
     *   [ ] On images
-    *   [ ] Auto-link URLs
-    *   [ ] Mentions (#, @)
+    *   [x] Auto-link URLs on pasting.
+    *   [ ] Auto-link URLs on typing.
 *   Media
     *   [x] Images
         *   [x] Drag-and-drop
