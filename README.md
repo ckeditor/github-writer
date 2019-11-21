@@ -10,7 +10,7 @@ One of the goals of this extension is providing all features which are available
 *   Inline formatting
     *   [x] Bold
     *   [x] Italic
-    *   [ ] Strikethrough
+    *   [x] Strikethrough (when typing ~text~)
     *   [x] Inline code
 *   Structure
     *   [x] Paragraphs (Enter)

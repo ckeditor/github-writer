@@ -8,13 +8,14 @@ import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataproces
 
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
+import Autoformat from './autoformat';
 
 import Heading from '@ckeditor/ckeditor5-heading/src/heading';
 
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
+import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 
 import BlockQuoteEditing from '@ckeditor/ckeditor5-block-quote/src/blockquoteediting';
 
@@ -39,7 +40,7 @@ export default class GitHubEditor extends DecoupledEditor {
 				Essentials, Paragraph, Autoformat, Mention,
 				Image, ImageUpload, GitHubUploadAdapter,
 				Heading,
-				Bold, Italic, Code,
+				Bold, Italic, Code, Strikethrough,
 				BlockQuoteEditing,
 				List, TodoList
 			],
