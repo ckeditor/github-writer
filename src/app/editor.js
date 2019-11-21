@@ -76,6 +76,9 @@ export default class Editor {
 
 		// When bootstraping, we're on markdown mode.
 		this.mode = Editor.modes.MARKDOWN;
+
+		// This will expose the list of editors in the extension console.
+		( window.GITHUB_RTE_EDITORS = window.GITHUB_RTE_EDITORS || [] ).push( this );
 	}
 
 	get mode() {
