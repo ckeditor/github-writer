@@ -106,16 +106,26 @@ export default class Editor {
 	set mode( mode ) {
 		this.syncEditors();
 
-		if ( mode === Editor.modes.RTE ) {
-			// A small trick to enable the submit button while the editor is visible.
-			this.dom.textarea.value += ' ';
-		}
-
 		// Set the appropriate class to the root element according to the mode being set.
 		this.dom.root.classList.toggle( 'github-rte-mode-rte', mode === Editor.modes.RTE );
 		this.dom.root.classList.toggle( 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
 
-		this.dom.textarea.dispatchEvent( new Event( 'input' ) );
+		// This will enable the submit button.
+		// TODO: check if possible to remove setTimeout (ideally a document ready event).
+		setTimeout( () => {
+			if ( mode === Editor.modes.RTE ) {
+				// A small trick to enable the submit button while the editor is visible.
+				// TODO: ideally we should do this by checking if the editor contents changed.
+				if ( this.dom.textarea.value === this.dom.textarea.defaultValue ) {
+					this.dom.textarea.value += '\n<!-- -->';
+				}
+			}
+			this.dom.textarea.dispatchEvent( new Event( 'change' ) );
+			this.dom.textarea.form.dispatchEvent( new Event( 'change' ) );
+		}, 100 );
+
+		// This will fix the textarea height.
+		this.dom.textarea.dispatchEvent( new Event( 'change' ) );
 	}
 
 	syncEditors() {
