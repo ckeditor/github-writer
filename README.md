@@ -10,13 +10,13 @@ One of the goals of this extension is providing all features which are available
 *   Inline formatting
     *   [x] Bold
     *   [x] Italic
-    *   [x] Strikethrough (when typing ~text~)
+    *   [x] Strikethrough
     *   [x] Inline code
 *   Structure
     *   [x] Paragraphs (Enter)
     *   [x] Soft line-break (Shift+Enter)
     *   [x] Headings
-    *   [x] Horizontal line separator (when typing ---)
+    *   [x] Horizontal line separator
 *   Blocks
     *   [x] Quote
         *   [ ] Quote in quote (levels)
