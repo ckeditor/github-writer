@@ -6,7 +6,7 @@
 import { copyElement } from './util';
 
 import GitHubEditor from '../ckeditor/githubeditor';
-import createKebab from './kebabdropdown';
+import KebabDropdown from './kebabdropdown';
 import getMentionFeedsConfig from '../ckeditor/githubmentionfeeds';
 
 import Heading from './features/heading';
@@ -19,12 +19,18 @@ import NumberedList from './features/numberedlist';
 import TodoList from './features/todolist';
 import Link from './features/link';
 
+import Strikethrough from './features/strikethrough';
+import HorizontalLine from './features/horizontalline';
+
 const featureClasses = [
+	// GH Toolbar
 	Heading,
 	Bold, Italic, Code,
 	BlockQuote,
 	BulletedList, NumberedList, TodoList,
-	Link
+	Link,
+	// Kebab
+	Strikethrough, HorizontalLine
 ];
 
 let mentionFeedsConfig;
@@ -97,11 +103,11 @@ export default class Editor {
 	}
 
 	set mode( mode ) {
-		if ( mode == Editor.modes.MARKDOWN ) {
-			if ( this.mode == Editor.modes.RTE ) {
+		if ( mode === Editor.modes.MARKDOWN ) {
+			if ( this.mode === Editor.modes.RTE ) {
 				this.updateTextarea();
 			}
-		} else if ( mode == Editor.modes.RTE ) {
+		} else if ( mode === Editor.modes.RTE ) {
 			// A small trick to enable the submit button while the editor is visible.
 			this.dom.textarea.textContent += ' ';
 		} else {
@@ -109,12 +115,12 @@ export default class Editor {
 		}
 
 		// Set the appropriate class to the root element according to the mode being set.
-		this.dom.root.classList.toggle( 'github-rte-mode-rte', mode == Editor.modes.RTE );
-		this.dom.root.classList.toggle( 'github-rte-mode-markdown', mode == Editor.modes.MARKDOWN );
+		this.dom.root.classList.toggle( 'github-rte-mode-rte', mode === Editor.modes.RTE );
+		this.dom.root.classList.toggle( 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
 	}
 
 	updateTextarea() {
-		if ( this.mode == Editor.modes.RTE ) {
+		if ( this.mode === Editor.modes.RTE ) {
 			this.dom.textarea.textContent = this.editor.getData();
 		}
 	}
@@ -160,7 +166,7 @@ export default class Editor {
 				let parent = this.dom.textarea;
 				let parentClone;
 
-				while ( parent != this.dom.editableRoot ) {
+				while ( parent !== this.dom.editableRoot ) {
 					parent = parent.parentElement;
 					parentClone = copyElement( parent, 'div', false );
 					parentClone.appendChild( outer );
@@ -196,23 +202,26 @@ export default class Editor {
 				element.classList.add( 'github-rte-button-markdown' );
 			} );
 
-			// Setup the kebab button.
-			{
-				const toolbarBlocks = this.dom.toolbar.querySelectorAll( 'div.d-md-inline-block' );
-
-				// Put the kebab button at the second-last block.
-				toolbarBlocks[ toolbarBlocks.length - 2 ].appendChild( createKebab( editor.locale ) );
-
-				// Hide the last block (it's contents should go into the kebab dropdown.
-				toolbarBlocks[ toolbarBlocks.length - 1 ].style.display = 'none';
-				toolbarBlocks[ toolbarBlocks.length - 2 ].classList.remove( 'mr-3' );
-			}
+			// Create the kebab button.
+			this.kebab = new KebabDropdown( this );
 
 			// Attach each feature to the editor.
 			featureClasses.forEach( Feature => {
 				const feature = new Feature( this );
 				feature.attach();
 			} );
+
+			// Setup the kebab button.
+			{
+				const toolbarBlocks = this.dom.toolbar.querySelectorAll( 'div.d-md-inline-block' );
+
+				// Put the kebab button at the second-last block.
+				toolbarBlocks[ toolbarBlocks.length - 2 ].appendChild( this.kebab.getElement() );
+
+				// Hide the last block (it's contents should go into the kebab dropdown.
+				toolbarBlocks[ toolbarBlocks.length - 1 ].style.display = 'none';
+				toolbarBlocks[ toolbarBlocks.length - 2 ].classList.remove( 'mr-3' );
+			}
 
 			// ### Done.
 

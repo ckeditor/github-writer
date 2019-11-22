@@ -3,15 +3,39 @@
  * For licensing, see LICENSE.md.
  */
 
+import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+
 import { copyElement } from './util';
 
 export default class Feature {
 	constructor( name, editor ) {
 		this.name = name;
 		this.editor = editor;
+		this.kebab = false;
 	}
 
 	attach() {
+		if ( this.kebab ) {
+			this._attachToKebab();
+		} else {
+			this._attachToGithubToolbar();
+		}
+	}
+
+	_attachToKebab() {
+		const view = new ButtonView();
+		view.set( {
+			label: this.name,
+			icon: this.icon
+		} );
+
+		view.on( 'execute', () => this.execute() );
+
+		// Add a simple button to the array of toolbar items.
+		this.editor.kebab.buttons.push( view );
+	}
+
+	_attachToGithubToolbar() {
 		const gitHubName = this.gitHubName || this.name;
 
 		// Get the original DOM button.
@@ -37,7 +61,7 @@ export default class Feature {
 	}
 
 	execute() {
-		this.editor.editor.execute( this.name );
+		this.editor.editor.execute( this.command || this.name );
 	}
 }
 

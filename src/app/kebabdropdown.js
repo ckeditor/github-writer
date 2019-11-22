@@ -5,37 +5,27 @@
 
 import { addToolbarToDropdown, createDropdown } from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
 
-import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-
 import kebabIcon from './icons/kebab.svg';
-import strikethroughIcon from '@ckeditor/ckeditor5-basic-styles/theme/icons/strikethrough.svg';
 
-export default function createKebab( locale ) {
-	const dropdownView = createDropdown( locale );
+export default class KebabDropdown {
+	constructor( editor ) {
+		this.view = createDropdown( editor.editor.locale );
 
-	dropdownView.buttonView.set( {
-		icon: kebabIcon,
-		class: 'github-rte-kebab-button toolbar-item tooltipped tooltipped-n'
-	} );
+		this.view.buttonView.set( {
+			icon: kebabIcon,
+			class: 'github-rte-kebab-button toolbar-item tooltipped tooltipped-n'
+		} );
 
-	const buttons = [];
+		this.buttons = [];
+	}
 
-	const strikethroughButton = new ButtonView();
-	strikethroughButton.set( {
-		// withText: true,
-		label: 'Strike',
-		icon: strikethroughIcon
-	} );
+	getElement() {
+		// Create a dropdown with a toolbar inside the panel.
+		addToolbarToDropdown( this.view, this.buttons );
 
-	// Add a simple button to the array of toolbar items.
-	buttons.push( strikethroughButton );
-
-	// Create a dropdown with a toolbar inside the panel.
-	addToolbarToDropdown( dropdownView, buttons );
-
-	dropdownView.render();
-
-	dropdownView.buttonView.element.setAttribute( 'aria-label', 'More options...' );
-
-	return dropdownView.element;
+		this.view.render();
+		this.view.buttonView.element.setAttribute( 'aria-label', 'More options...' );
+		return this.view.element;
+	}
 }
+
