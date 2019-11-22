@@ -104,25 +104,29 @@ export default class Editor {
 	}
 
 	set mode( mode ) {
-		if ( mode === Editor.modes.MARKDOWN ) {
-			if ( this.mode === Editor.modes.RTE ) {
-				this.updateTextarea();
-			}
-		} else if ( mode === Editor.modes.RTE ) {
+		this.syncEditors();
+
+		if ( mode === Editor.modes.RTE ) {
 			// A small trick to enable the submit button while the editor is visible.
-			this.dom.textarea.textContent += ' ';
-		} else {
-			throw new Error( 'Unknown mode "' + mode + '"' );
+			this.dom.textarea.value += ' ';
 		}
 
 		// Set the appropriate class to the root element according to the mode being set.
 		this.dom.root.classList.toggle( 'github-rte-mode-rte', mode === Editor.modes.RTE );
 		this.dom.root.classList.toggle( 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
+
+		this.dom.textarea.dispatchEvent( new Event( 'input' ) );
 	}
 
-	updateTextarea() {
+	syncEditors() {
+		if ( !this.editor ) {
+			return;
+		}
+
 		if ( this.mode === Editor.modes.RTE ) {
-			this.dom.textarea.textContent = this.editor.getData();
+			this.dom.textarea.value = this.editor.getData();
+		} else {
+			this.editor.setData( this.dom.textarea.value );
 		}
 	}
 
@@ -189,7 +193,7 @@ export default class Editor {
 
 			// Update the textarea on form post.
 			this.dom.form.addEventListener( 'submit', () => {
-				this.updateTextarea();
+				this.syncEditors();
 			} );
 
 			this.dom.form.addEventListener( 'reset', () => {
