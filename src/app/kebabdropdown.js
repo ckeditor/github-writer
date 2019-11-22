@@ -10,6 +10,7 @@ import kebabIcon from './icons/kebab.svg';
 export default class KebabDropdown {
 	constructor( editor ) {
 		this.view = createDropdown( editor.editor.locale );
+		this.view.panelPosition = 'sw';
 
 		this.view.buttonView.set( {
 			icon: kebabIcon,
