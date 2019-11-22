@@ -8,10 +8,14 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import { copyElement } from './util';
 
 export default class Feature {
-	constructor( name, editor ) {
+	constructor( name, editor, properties ) {
 		this.name = name;
 		this.editor = editor;
 		this.kebab = false;
+
+		if ( properties ) {
+			Object.assign( this, properties );
+		}
 	}
 
 	attach() {
@@ -26,10 +30,13 @@ export default class Feature {
 		const view = new ButtonView();
 		view.set( {
 			label: this.name,
-			icon: this.icon
+			icon: this.icon,
+			class: 'github-rte-toolbar-button toolbar-item tooltipped tooltipped-n'
 		} );
 
 		view.on( 'execute', () => this.execute() );
+
+		view.on( 'render', () => view.element.setAttribute( 'aria-label', this.text || this.name ), { priority: 'low' } );
 
 		// Add a simple button to the array of toolbar items.
 		this.editor.kebab.buttons.push( view );

@@ -3,7 +3,9 @@
  * For licensing, see LICENSE.md.
  */
 
-/* Override some of the Image plugin styles, so it matches visually with the GH final output. */
+:root {
+	--ck-color-toolbar-background: white;
+}
 
 .ck-content .image {
 	margin: 0;
@@ -57,7 +59,6 @@
 	height: .25em;
 	padding: 0;
 	margin: 24px 0;
-	background: transparent;
 	background-color: #e1e4e8;
 	border: 0;
 }
@@ -106,7 +107,8 @@
 	}
 }
 
-.ck-dropdown__button {
+.ck-dropdown__button,
+.ck-dropdown__panel .ck-button {
 	background: none !important;
 	cursor: pointer !important;
 

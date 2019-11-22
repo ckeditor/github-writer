@@ -8,9 +8,11 @@ import icon from '@ckeditor/ckeditor5-horizontal-line/theme/icons/horizontalline
 
 export default class HorizontalLine extends Feature {
 	constructor( editor ) {
-		super( 'horizontalline', editor );
-		this.command = 'horizontalLine';
-		this.kebab = true;
-		this.icon = icon;
+		super( 'horizontalline', editor, {
+			command: 'horizontalLine',
+			text: 'Add horizontal rule',
+			kebab: true,
+			icon
+		} );
 	}
 }

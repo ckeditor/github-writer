@@ -8,8 +8,10 @@ import icon from '@ckeditor/ckeditor5-basic-styles/theme/icons/strikethrough.svg
 
 export default class Strikethrough extends Feature {
 	constructor( editor ) {
-		super( 'strikethrough', editor );
-		this.kebab = true;
-		this.icon = icon;
+		super( 'strikethrough', editor, {
+			text: 'Add strikethrough text',
+			kebab: true,
+			icon
+		} );
 	}
 }
