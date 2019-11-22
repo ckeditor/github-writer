@@ -42,6 +42,18 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 	display: none !important;
 }
 
+/* Markdown mode */
+
+/* Hide the rte textarea outer box. */
+.github-rte-mode-markdown .github-rte-editableroot-rte {
+	display: none !important;
+}
+
+/* Hide all rte toolbar items. */
+.github-rte-mode-markdown .github-rte-button-rte {
+	display: none !important;
+}
+
 /* Classes are prefixed with "div" so they have higher specificity and override default rules. */
 
 /* The following rules are mainly overriding defaults coming from CKEditor and GitHub. */

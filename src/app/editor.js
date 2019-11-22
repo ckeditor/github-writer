@@ -21,6 +21,7 @@ import Link from './features/link';
 
 import Strikethrough from './features/strikethrough';
 import HorizontalLine from './features/horizontalline';
+import Markdown from './features/markdown';
 
 const featureClasses = [
 	// GH Toolbar
@@ -30,7 +31,7 @@ const featureClasses = [
 	BulletedList, NumberedList, TodoList,
 	Link,
 	// Kebab
-	Strikethrough, HorizontalLine
+	Strikethrough, HorizontalLine, Markdown
 ];
 
 let mentionFeedsConfig;
@@ -216,10 +217,10 @@ export default class Editor {
 				const toolbarBlocks = this.dom.toolbar.querySelectorAll( 'div.d-md-inline-block' );
 
 				// Put the kebab button at the second-last block.
-				toolbarBlocks[ toolbarBlocks.length - 2 ].appendChild( this.kebab.getElement() );
+				toolbarBlocks[ toolbarBlocks.length - 1 ].appendChild( this.kebab.getElement() );
 
-				// Hide the last block (it's contents should go into the kebab dropdown.
-				toolbarBlocks[ toolbarBlocks.length - 1 ].style.display = 'none';
+				// As the original GH items from the last block will move to the kebab, zero the margin with the previous block,
+				// so the kebab button will be closer to it.
 				toolbarBlocks[ toolbarBlocks.length - 2 ].classList.remove( 'mr-3' );
 			}
 
