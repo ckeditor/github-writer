@@ -6,6 +6,7 @@
 import { copyElement } from './util';
 
 import GitHubEditor from '../ckeditor/githubeditor';
+import createKebab from './kebabdropdown';
 import getMentionFeedsConfig from '../ckeditor/githubmentionfeeds';
 
 import Heading from './features/heading';
@@ -194,6 +195,18 @@ export default class Editor {
 			this.dom.toolbar.querySelectorAll( '.toolbar-item' ).forEach( element => {
 				element.classList.add( 'github-rte-button-markdown' );
 			} );
+
+			// Setup the kebab button.
+			{
+				const toolbarBlocks = this.dom.toolbar.querySelectorAll( 'div.d-md-inline-block' );
+
+				// Put the kebab button at the second-last block.
+				toolbarBlocks[ toolbarBlocks.length - 2 ].appendChild( createKebab( editor.locale ) );
+
+				// Hide the last block (it's contents should go into the kebab dropdown.
+				toolbarBlocks[ toolbarBlocks.length - 1 ].style.display = 'none';
+				toolbarBlocks[ toolbarBlocks.length - 2 ].classList.remove( 'mr-3' );
+			}
 
 			// Attach each feature to the editor.
 			featureClasses.forEach( Feature => {

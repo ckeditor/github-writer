@@ -91,3 +91,7 @@ div.github-rte-ckeditor {
 	padding: 0 !important;
 	/*	resize: vertical; */
 }
+
+.github-rte-kebab-button .ck-dropdown__arrow {
+	display: none;
+}

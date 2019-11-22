@@ -105,3 +105,24 @@
 		}
 	}
 }
+
+.ck-dropdown__button {
+	background: none !important;
+	cursor: pointer !important;
+
+	min-height: 29px !important;
+	min-width: auto !important;
+	width: auto !important;
+	border: 0 !important;
+	padding: 4px !important;
+	margin: 0 4px !important;
+
+	&:active {
+		box-shadow: none !important;
+	}
+
+	& svg.ck-button__icon {
+		height: 16px;
+		width: auto;
+	}
+}
