@@ -36,6 +36,8 @@ const featureClasses = [
 
 let mentionFeedsConfig;
 
+const markdownModeTag = '<!-- GitHub RTE: { mode:markdown } -->';
+
 export default class Editor {
 	/**
 	 * Creates a GitHub RTE editor.
@@ -142,7 +144,19 @@ export default class Editor {
 
 	create() {
 		// Take the initial markdown data to be loaded in the editor.
-		const data = this.dom.textarea.value;
+		let data = this.dom.textarea.value;
+		let startMode = Editor.modes.RTE;
+
+		// Sniff the start mode of the editor. Stays on markdown if the user posted at markdown.
+		{
+			if ( ( new RegExp( markdownModeTag ) ).test( data ) ) {
+				startMode = Editor.modes.MARKDOWN;
+				data = data.replace( new RegExp( '\\n{0,2}' + markdownModeTag, 'g' ), '' );
+
+				// Remove the tag from the textarea, like it never existed.
+				this.dom.textarea.value = this.dom.textarea.defaultValue = data;
+			}
+		}
 
 		GitHubEditor.create( data, {
 			mention: {
@@ -203,7 +217,13 @@ export default class Editor {
 
 			// Update the textarea on form post.
 			this.dom.form.addEventListener( 'submit', () => {
-				this.syncEditors();
+				// If in RTE, update the markdown textarea with the data to be submitted.
+				if ( this.mode === Editor.modes.RTE ) {
+					this.syncEditors();
+				} else {
+					// Mark the content so the next editing attempt will default to markdown.
+					this.dom.textarea.value = this.dom.textarea.value.replace( /\n$/, '' ) + '\n\n' + markdownModeTag;
+				}
 			} );
 
 			this.dom.form.addEventListener( 'reset', () => {
@@ -241,7 +261,9 @@ export default class Editor {
 			// ### Done.
 
 			// All done. Set the current editor mode.
-			this.mode = Editor.modes.RTE;
+			if ( startMode === Editor.modes.RTE ) {
+				this.mode = Editor.modes.RTE;
+			}
 		} );
 	}
 }
