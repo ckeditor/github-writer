@@ -17,6 +17,7 @@ import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
 import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 
+import CodeBlockEditing from '@ckeditor/ckeditor5-code-block/src/codeblockediting';
 import BlockQuoteEditing from '@ckeditor/ckeditor5-block-quote/src/blockquoteediting';
 
 import List from '@ckeditor/ckeditor5-list/src/list';
@@ -39,13 +40,13 @@ import './theme/githubeditor.css';
 
 export default class GitHubEditor extends DecoupledEditor {
 	constructor( initialData, extraConfig ) {
-		super( initialData, Object.assign({
+		super( initialData, Object.assign( {
 			plugins: [
 				Essentials, Paragraph, Autoformat, Mention,
 				Image, ImageUpload, GitHubUploadAdapter,
 				Heading,
 				Bold, Italic, Code, Strikethrough,
-				BlockQuoteEditing,
+				CodeBlockEditing, BlockQuoteEditing,
 				Link,
 				List, TodoList,
 				HorizontalLine

@@ -7,6 +7,8 @@ import Feature from '../feature';
 
 export default class Code extends Feature {
 	constructor( editor ) {
-		super( 'code', editor );
+		super( 'code', editor, {
+			command: 'codeBlock'
+		} );
 	}
 }

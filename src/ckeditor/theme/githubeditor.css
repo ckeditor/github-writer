@@ -63,6 +63,10 @@
 	border: 0;
 }
 
+.ck-content pre br {
+	display: initial !important;
+}
+
 .ck-mentions {
 	& li.ck-list__item {
 		border-bottom: 1px solid #dfe2e5 !important;
