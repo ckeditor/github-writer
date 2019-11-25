@@ -5,6 +5,8 @@
 
 import Editor from './editor';
 
+import './theme/githubrte.css';
+
 export default class App {
 	static run() {
 		if ( this.isRunning ) {

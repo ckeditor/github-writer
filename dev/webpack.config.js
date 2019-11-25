@@ -34,7 +34,7 @@ module.exports = [
 				{
 					test: [
 						/ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
-						/[/\\]+src[/\\]+ckeditor[/\\]+theme[/\\]+.+\.css$/
+						/[/\\]src[/\\]app[/\\]theme[/\\].+\.css$/
 					],
 
 					use: [
