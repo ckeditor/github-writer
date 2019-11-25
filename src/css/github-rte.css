@@ -37,8 +37,8 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 	display: none !important;
 }
 
-/* Hide all markdown toolbar items. */
-.github-rte-mode-rte .github-rte-button-markdown {
+/* Hide all markdown toolbar. */
+.github-rte-mode-rte markdown-toolbar {
 	display: none !important;
 }
 
@@ -50,7 +50,7 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 }
 
 /* Hide all rte toolbar items. */
-.github-rte-mode-markdown .github-rte-button-rte {
+.github-rte-mode-markdown .ck-toolbar {
 	display: none !important;
 }
 
