@@ -53,6 +53,7 @@ export default function getRteEditorConfig( rteEditor ) {
 		kebabToolbar: [
 			'strikethrough', 'horizontalLine'
 		],
+		placeholder: 'Leave a comment',
 		heading: {
 			// TODO: Check the class names here.
 			options: [
