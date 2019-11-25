@@ -60,7 +60,6 @@ module.exports = [
 
 		plugins: [
 			// Use GH svg icons to match their UI.
-			getIconReplacement( 'heading3', 'heading' ),
 			getIconReplacement( 'bold' ),
 			getIconReplacement( 'italic' ),
 			getIconReplacement( 'quote', 'blockquote' ),

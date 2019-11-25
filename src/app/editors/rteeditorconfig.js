@@ -7,13 +7,12 @@ import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import Autoformat from '../plugins/autoformat';
 
-import Heading from '@ckeditor/ckeditor5-heading/src/heading';
-import HeadingButtonsUI from '@ckeditor/ckeditor5-heading/src/headingbuttonsui';
-
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import SmartCode from '../plugins/smartcode';
 import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
+
+import HeadingSwitch from '../plugins/headingswitch';
 
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 
@@ -38,7 +37,7 @@ export default function getRteEditorConfig( rteEditor ) {
 		plugins: [
 			Essentials, Paragraph, Autoformat, Mention,
 			Image, ImageUpload, GitHubUploadAdapter,
-			Heading, HeadingButtonsUI,
+			HeadingSwitch,
 			Bold, Italic, SmartCode, Strikethrough,
 			BlockQuote,
 			Link,
@@ -47,7 +46,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			Kebab
 		],
 		toolbar: [
-			'heading3', 'bold', 'italic', '|',
+			'headingswitch', 'bold', 'italic', '|',
 			'blockquote', 'smartcode', 'link', '|',
 			'bulletedlist', 'numberedlist', 'todolist', 'kebab'
 		],
