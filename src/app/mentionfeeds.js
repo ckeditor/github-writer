@@ -209,7 +209,7 @@ export default function getMentionFeedsConfig( urls ) {
 					}
 
 					// Emojis don't come as JSON but HTML ul>li list. The worker expects the li elements.
-					if ( type == 'emoji' ) {
+					if ( type === 'emoji' ) {
 						const root = document.createElement( 'template' );
 						root.innerHTML = data;
 						data = Array.from( root.content.firstElementChild.getElementsByTagName( 'li' ) );
