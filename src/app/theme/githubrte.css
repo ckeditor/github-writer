@@ -9,7 +9,6 @@
 */
 
 :root {
-	--ck-color-toolbar-background: transparent;
 	--ck-color-toolbar-border: transparent;
 	--ck-icon-size: 16px;
 	--ck-ui-component-min-height: auto;
@@ -59,3 +58,10 @@
 	padding: 4px;
 }
 
+/* This will make the toolbar (including the kebab toolbar) inherit the color used by the GH toolbar space. */
+.ck.ck-toolbar,
+.ck.ck-toolbar__items,
+.ck.ck-dropdown.ck-toolbar-dropdown,
+.ck.ck-dropdown__panel {
+	background: inherit;
+}
