@@ -7,6 +7,7 @@
 
 'use strict';
 
+const webpack = require( 'webpack' );
 const path = require( 'path' );
 const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 
@@ -57,6 +58,19 @@ module.exports = [
 			]
 		},
 
+		plugins: [
+			// Use GH svg icons to match their UI.
+			getIconReplacement( 'heading3', 'heading' ),
+			getIconReplacement( 'bold' ),
+			getIconReplacement( 'italic' ),
+			getIconReplacement( 'quote', 'blockquote' ),
+			getIconReplacement( 'code' ),
+			getIconReplacement( 'link' ),
+			getIconReplacement( 'bulletedlist' ),
+			getIconReplacement( 'numberedlist' ),
+			getIconReplacement( 'todolist' )
+		],
+
 		// Useful for debugging.
 		devtool: 'source-map',
 
@@ -64,3 +78,9 @@ module.exports = [
 		performance: { hints: false }
 	}
 ];
+
+function getIconReplacement( name, replacement ) {
+	return new webpack.NormalModuleReplacementPlugin(
+		new RegExp( `${ name }\\.svg$` ),
+		path.resolve( __dirname, `../src/app/icons/${ replacement || name }.svg` ) );
+}
