@@ -83,9 +83,9 @@ export default function getMentionFeedsConfig( urls ) {
 			entryRenderer: entry => {
 				const template = document.createElement( 'template' );
 				template.innerHTML = `
-					<div>
+					<button>
 						${ entry.login } <small>${ entry.name }</small>
-					</div>
+					</button>
 				`;
 
 				return template.content.firstElementChild;
@@ -135,9 +135,9 @@ export default function getMentionFeedsConfig( urls ) {
 			entryRenderer: entry => {
 				const template = document.createElement( 'template' );
 				template.innerHTML = `
-					<div>
+					<button>
 						<g-emoji>${ entry.icon }</g-emoji> ${ entry.name }
-					</div>
+					</button>
 				`;
 
 				return template.content.firstElementChild;
