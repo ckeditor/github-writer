@@ -46,6 +46,11 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 	display: none !important;
 }
 
+/* Remove the maarkdown message when in RTE. */
+.github-rte-mode-rte + * .tabnav-extra {
+	display: none;
+}
+
 /* Markdown mode */
 
 /* Hide the rte textarea outer box. */
@@ -123,6 +128,8 @@ div.github-rte-ckeditor {
 	/*	resize: vertical; */
 }
 
+/* Do not show the arrow in the Kebab button. */
 .github-rte-kebab-button .ck-dropdown__arrow {
 	display: none;
 }
+
