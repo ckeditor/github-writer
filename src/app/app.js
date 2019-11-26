@@ -15,37 +15,11 @@ export default class App {
 
 		this.isRunning = true;
 
-		// Search for markdown editors already existing in the page.
-		searchMarkdownEditors( document.body );
+		// Search for the main editor available in the page, if any.
+		const mainEditorRoot = document.querySelector( '.timeline-comment:not(.comment)' );
 
-		// Watches for new markdown editor dynamically created.
-		createObserver();
-
-		function searchMarkdownEditors( root ) {
-			// Search for root elements that enclose each of the markdown editors.
-			root.querySelectorAll( '.js-previewable-comment-form' ).forEach( el => {
-				createEditor( el );
-			} );
-		}
-
-		function createObserver() {
-			const observer = new MutationObserver( mutations => {
-				mutations.forEach( mutation => {
-					for ( let i = 0; i < mutation.addedNodes.length; i++ ) {
-						const node = mutation.addedNodes[ i ];
-
-						// TODO: Maybe filter this better for performance?
-						if ( node instanceof HTMLElement ) {
-							searchMarkdownEditors( node );
-						}
-					}
-				} );
-			} );
-
-			observer.observe( document.body, {
-				childList: true,
-				subtree: true
-			} );
+		if ( mainEditorRoot ) {
+			createEditor( mainEditorRoot );
 		}
 
 		function createEditor( markdownEditorRootElement ) {
