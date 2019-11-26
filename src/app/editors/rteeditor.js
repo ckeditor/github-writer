@@ -5,6 +5,7 @@
 
 import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
 import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
+import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import getRteEditorConfig from './rteeditorconfig';
 import { copyElement } from '../util';
 
@@ -72,6 +73,9 @@ export default class RteEditor {
 						}
 					}
 
+					// Post-fix to enable the GH tooltip on the toolbar. Items are already rendered.
+					toolbarItemsPostfix( editor.ui.view.toolbar );
+
 					// Add the classes that will be used to switch the visibility of the textarea vs CKEditor.
 					editableRoot.classList.add( 'github-rte-editableroot-markdown' );
 					outer.classList.add( 'github-rte-editableroot-rte' );
@@ -102,4 +106,46 @@ class CKEditorGitHubEditor extends DecoupledEditor {
 			}
 		} );
 	}
+}
+
+// Used by the Kebab plugin as well.
+export function toolbarItemsPostfix( toolbar, tooltipPosition ) {
+	// Get the original labels used in GH.
+	const labels = {
+		'Bold': document.querySelector( 'md-bold' ).getAttribute( 'aria-label' ),
+		'Italic': document.querySelector( 'md-italic' ).getAttribute( 'aria-label' ),
+		'Block quote': document.querySelector( 'md-quote' ).getAttribute( 'aria-label' ),
+		'Code': document.querySelector( 'md-code' ).getAttribute( 'aria-label' ),
+		'Link': document.querySelector( 'md-link' ).getAttribute( 'aria-label' ),
+		'Bulleted List': document.querySelector( 'md-unordered-list' ).getAttribute( 'aria-label' ),
+		'Numbered List': document.querySelector( 'md-ordered-list' ).getAttribute( 'aria-label' ),
+		'To-do List': document.querySelector( 'md-task-list' ).getAttribute( 'aria-label' ),
+		'Strikethrough': 'Add strikethrough text',
+		'Horizontal line': 'Insert a horizontal line'
+	};
+
+	const items = Array.from( toolbar.items );
+
+	items.forEach( item => {
+		if ( item instanceof ButtonView ) {
+			const itemLabel = labels[ item.label ] || item.label;
+
+			// Disable the CKEditor tooltip.
+			item.set( 'tooltip', false );
+
+			if ( item.isRendered ) {
+				// Make the necessary changes for the GH tooltip to work.
+				item.element.setAttribute( 'aria-label', itemLabel );
+				item.set( 'class', ( ( item.class || '' ) + ' tooltipped tooltipped-' + ( tooltipPosition || 'n' ) ).trim() );
+			} else {
+				item.extendTemplate( {
+					attributes: {
+						// The GH tooltip text is taken from aria-label.
+						'aria-label': itemLabel,
+						'class': 'tooltipped tooltipped-' + ( tooltipPosition || 'n' )
+					}
+				} );
+			}
+		}
+	} );
 }

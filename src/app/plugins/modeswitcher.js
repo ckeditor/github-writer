@@ -31,9 +31,9 @@ export default class ModeSwitcher extends Plugin {
 				githubEditor.on( 'mode', () => {
 					const isMarkdown = githubEditor.mode === Editor.modes.MARKDOWN;
 					view.set( 'isOn', isMarkdown );
-					view.set( 'label', isMarkdown ?
+					view.element.setAttribute( 'aria-label', isMarkdown ?
 						'Switch to rich-text editing' :
-						'Edit markdown (nostalgia)' );
+						view.label );
 				} );
 
 				this.listenTo( view, 'execute', () => {
