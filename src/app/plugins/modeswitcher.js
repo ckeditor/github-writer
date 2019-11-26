@@ -16,23 +16,29 @@ export default class ModeSwitcher extends Plugin {
 			const view = new ButtonView( locale );
 
 			view.set( {
-				label: editor.t( 'Edit markdown (nostalgia)' ),
+				label: 'Edit markdown (nostalgia)',
 				icon,
 				class: 'github-rte-mode-button',
 				tooltip: true,
 				isToggleable: true
 			} );
 
-			// Bind the button state to both the 'code' and 'codeBlock' commands state.
-			// {
-			// 	const headingCommand = editor.commands.get( 'heading' );
-			// 	view.bind( 'isOn', 'isEnabled' ).to( headingCommand, 'value', 'isEnabled' );
-			// }
+			// Wait for the editor to be ready, so this.editor.githubEditor is available.
+			editor.once( 'reallyReady', () => {
+				const githubEditor = editor.githubEditor;
 
-			this.listenTo( view, 'execute', () => {
-				const githubEditor = this.editor.githubEditor;
+				// Make changes to the editor mode to be reflected by the button state.
+				githubEditor.on( 'mode', () => {
+					const isMarkdown = githubEditor.mode === Editor.modes.MARKDOWN;
+					view.set( 'isOn', isMarkdown );
+					view.set( 'label', isMarkdown ?
+						'Switch to rich-text editing' :
+						'Edit markdown (nostalgia)' );
+				} );
 
-				githubEditor.mode = githubEditor.mode === Editor.modes.RTE ? Editor.modes.MARKDOWN : Editor.modes.RTE;
+				this.listenTo( view, 'execute', () => {
+					githubEditor.mode = githubEditor.mode === Editor.modes.RTE ? Editor.modes.MARKDOWN : Editor.modes.RTE;
+				} );
 			} );
 
 			return view;

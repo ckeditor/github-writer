@@ -5,6 +5,8 @@
 
 import MarkdownEditor from './editors/markdowneditor';
 import RteEditor from './editors/rteeditor';
+import EmitterMixin from '@ckeditor/ckeditor5-utils/src/emittermixin';
+import mix from '@ckeditor/ckeditor5-utils/src/mix';
 
 const markdownModeTag = '<!-- GitHub RTE: { mode:markdown } -->';
 
@@ -63,6 +65,8 @@ export default class Editor {
 			textarea.dispatchEvent( new Event( 'change' ) );
 			textarea.form.dispatchEvent( new Event( 'change' ) );
 		}, 100 );
+
+		this.fire( 'mode' );
 	}
 
 	syncEditors() {
@@ -129,6 +133,8 @@ export default class Editor {
 			} );
 	}
 }
+
+mix( Editor, EmitterMixin );
 
 Editor.modes = {
 	RTE: 'rte',

@@ -34,8 +34,6 @@ export default class RteEditor {
 			.then( editor => {
 				const markdownEditor = this.githubEditor.markdownEditor;
 
-				editor.githubEditor = this.githubEditor;
-
 				// Append the rte toolbar right next to the markdown editor toolbar.
 				markdownEditor.dom.toolbar.insertAdjacentElement( 'afterend', editor.ui.view.toolbar.element );
 
@@ -82,7 +80,11 @@ export default class RteEditor {
 					editableRoot.insertAdjacentElement( 'afterend', outer );
 				}
 
+				// Expose the main objects of the API, for cross logic.
+				editor.githubEditor = this.githubEditor;
 				this.ckeditor = editor;
+
+				editor.fire( 'reallyReady' );
 			} );
 	}
 }
