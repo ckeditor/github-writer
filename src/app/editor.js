@@ -24,7 +24,7 @@ export default class Editor {
 		// Get the initial data loaded from GH.
 		const data = this.markdownEditor.getData();
 
-		this.rteEditor = new RteEditor( this.markdownEditor, data );
+		this.rteEditor = new RteEditor( this );
 
 		this.dom = {
 			root: markdownEditorRootElement

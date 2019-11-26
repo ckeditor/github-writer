@@ -4,12 +4,13 @@
  */
 
 import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
+import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
 import getRteEditorConfig from './rteeditorconfig';
 import { copyElement } from '../util';
 
 export default class RteEditor {
-	constructor( markdownEditor ) {
-		this.markdownEditor = markdownEditor;
+	constructor( githubEditor ) {
+		this.githubEditor = githubEditor;
 	}
 
 	getData() {
@@ -17,7 +18,7 @@ export default class RteEditor {
 			return this.ckeditor.getData();
 		}
 
-		return this.markdownEditor.getData();
+		return this.githubEditor.markdownEditor.getData();
 	}
 
 	setData( data ) {
@@ -29,10 +30,14 @@ export default class RteEditor {
 	create() {
 		const data = this.getData();
 
-		return DecoupledEditor.create( data, getRteEditorConfig( this ) )
+		return CKEditorGitHubEditor.create( data, getRteEditorConfig( this ) )
 			.then( editor => {
+				const markdownEditor = this.githubEditor.markdownEditor;
+
+				editor.githubEditor = this.githubEditor;
+
 				// Append the rte toolbar right next to the markdown editor toolbar.
-				this.markdownEditor.dom.toolbar.insertAdjacentElement( 'afterend', editor.ui.view.toolbar.element );
+				markdownEditor.dom.toolbar.insertAdjacentElement( 'afterend', editor.ui.view.toolbar.element );
 
 				// Inject the editable in the DOM within the appropriate DOM structure around it.
 				{
@@ -53,12 +58,12 @@ export default class RteEditor {
 
 					// The element containing the upload data is also the outermost element that we need to replicate to mimic
 					// the GH design around the textarea.
-					const editableRoot = this.markdownEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
+					const editableRoot = markdownEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
 
 					// Create a copy of the parent tree of the textarea (using divs only) up to the editableRoot,
 					// so we'll mimic the styles used by GH by copying the CSS classes of this tree.
 					{
-						let parent = this.markdownEditor.dom.textarea;
+						let parent = markdownEditor.dom.textarea;
 						let parentClone;
 
 						while ( parent !== editableRoot ) {
@@ -79,5 +84,20 @@ export default class RteEditor {
 
 				this.ckeditor = editor;
 			} );
+	}
+}
+
+// TODO: Check if there is a better way to set the data processor without having to override DecoupledEditor.
+class CKEditorGitHubEditor extends DecoupledEditor {
+	constructor( initialData, config ) {
+		super( initialData, config );
+
+		this.data.processor = new GFMDataProcessor();
+
+		this.ui.view.toolbar.extendTemplate( {
+			attributes: {
+				class: 'github-rte-toolbar'
+			}
+		} );
 	}
 }

@@ -50,8 +50,23 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 }
 
 /* Hide all rte toolbar items. */
-.github-rte-mode-markdown .ck-toolbar {
+.github-rte-mode-markdown .ck.ck-toolbar__separator,
+.github-rte-mode-markdown .ck.ck-button {
 	display: none !important;
+}
+
+/* Except the Kebab and Markdown buttons. */
+.github-rte-mode-markdown .ck.ck-button.github-rte-kebab-button,
+.github-rte-mode-markdown .ck.ck-button.github-rte-mode-button {
+	display: block !important;
+}
+
+/* Get the GH toolbar closer to the RTE one (which is always available with the the Kebab button). */
+.github-rte-mode-markdown markdown-toolbar.px-2 {
+	padding-right: 0 !important;
+}
+.github-rte-mode-markdown .ck.github-rte-toolbar {
+	margin-left: -4px;
 }
 
 /* Classes are prefixed with "div" so they have higher specificity and override default rules. */

@@ -21,7 +21,7 @@ export default class Kebab extends Plugin {
 			dropdown.buttonView.set( {
 				label: 'More options...',
 				icon: kebabIcon,
-				class: 'github-rte-kebab-button toolbar-item tooltipped tooltipped-n'
+				class: 'github-rte-kebab-button tooltipped tooltipped-n'
 			} );
 
 			// Initializes the 'toolbarView' property of the dropdown.

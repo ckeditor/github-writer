@@ -31,6 +31,7 @@ import Mention from '@ckeditor/ckeditor5-mention/src/mention';
 import getMentionFeedsConfig from '../mentionfeeds';
 
 import Kebab from '../plugins/kebab';
+import ModeSwitcher from '../plugins/modeswitcher';
 
 export default function getRteEditorConfig( rteEditor ) {
 	return {
@@ -43,7 +44,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			Link,
 			List, TodoList,
 			HorizontalLine,
-			Kebab
+			Kebab, ModeSwitcher
 		],
 		toolbar: [
 			'headingswitch', 'bold', 'italic', '|',
@@ -51,7 +52,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			'bulletedlist', 'numberedlist', 'todolist', 'kebab'
 		],
 		kebabToolbar: [
-			'strikethrough', 'horizontalLine'
+			'strikethrough', 'horizontalLine', 'mode'
 		],
 		placeholder: 'Leave a comment',
 		heading: {
@@ -76,7 +77,7 @@ export default function getRteEditorConfig( rteEditor ) {
 
 	function getUploadConfig() {
 		// The element holding upload related data.
-		const uploadData = rteEditor.markdownEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
+		const uploadData = rteEditor.githubEditor.markdownEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
 
 		return {
 			url: uploadData.getAttribute( 'data-upload-policy-url' ),
@@ -89,7 +90,7 @@ export default function getRteEditorConfig( rteEditor ) {
 
 	function getMentionConfig() {
 		// Get the GH DOM element that holds the urls from which retrieve mentions.
-		const textExpanderElement = rteEditor.markdownEditor.dom.textarea.closest( 'text-expander' );
+		const textExpanderElement = rteEditor.githubEditor.markdownEditor.dom.textarea.closest( 'text-expander' );
 
 		return getMentionFeedsConfig( {
 			issues: textExpanderElement.getAttribute( 'data-issue-url' ),
