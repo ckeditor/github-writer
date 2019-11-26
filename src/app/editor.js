@@ -123,7 +123,7 @@ export default class Editor {
 				// Enable the GitHub focus styles when the editor focus/blur.
 				{
 					// Take the element that GH styles on focus.
-					const focusBox = this.dom.root.querySelector( 'div.upload-enabled' );
+					const focusBox = this.dom.root.querySelector( '.github-rte-editableroot-rte div.write-content' );
 
 					// Watch for editor focus changes.
 					this.rteEditor.ckeditor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
