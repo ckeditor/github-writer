@@ -1,0 +1,68 @@
+/**
+ * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+/*
+	Mainly overriding Lark styles, so it matches the GH original styles.
+	The value of most of the rules here defined have been copied from GH as is.
+*/
+
+:root {
+	--ck-color-toolbar-border: transparent;
+	--ck-icon-size: 16px;
+	--ck-ui-component-min-height: auto;
+	--ck-color-button-default-hover-background: transparent;
+	--ck-color-button-on-background: transparent;
+	--ck-color-button-on-hover-background: transparent;
+}
+
+.ck.ck-icon {
+	width: auto;
+}
+
+.ck.ck-toolbar .ck-button {
+	/* Spacing between buttons */
+	padding: 4px;
+	margin: 0 4px;
+	border: 0;
+
+	/* Color */
+	color: #586069;
+
+	/* Height */
+	display: block;
+	line-height: 21px;
+	float: left;
+
+	/* Cursor */
+	cursor: pointer;
+}
+
+.ck.ck-button.ck-on,
+.ck.ck-button:not(.ck-disabled):hover {
+	color: #0366d6;
+}
+
+/* We're using the separator to mimic the margin that GH has between its toolbar blocks. */
+.ck.ck-toolbar .ck.ck-toolbar__separator {
+	margin-right: 16px;
+	width: 0;
+	min-width: 0;
+}
+
+.ck.ck-dropdown .ck.ck-toolbar > .ck.ck-toolbar__items > :last-child {
+	margin-right: 4px;
+}
+
+.ck.ck-dropdown .ck.ck-toolbar {
+	padding: 4px;
+}
+
+/* This will make the toolbar (including the kebab toolbar) inherit the color used by the GH toolbar space. */
+.ck.ck-toolbar,
+.ck.ck-toolbar__items,
+.ck.ck-dropdown.ck-toolbar-dropdown,
+.ck.ck-dropdown__panel {
+	background: inherit;
+}
