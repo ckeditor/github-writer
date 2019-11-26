@@ -14,6 +14,7 @@
 	--ck-ui-component-min-height: auto;
 	--ck-color-button-default-hover-background: transparent;
 	--ck-color-button-on-background: transparent;
+	--ck-color-button-on-hover-background: transparent;
 }
 
 .ck.ck-icon {
