@@ -65,7 +65,7 @@ class Adapter {
 				}
 
 				// The upload url has been also set by the GitHubEditor class.
-				this._initRequest( this.editor.config.get( 'githubRte.upload.uploadUrl' ) );
+				this._initRequest( this.editor.config.get( 'githubRte.upload.url' ) );
 
 				// Configure the request further to match the original GH request.
 				this.xhr.responseType = 'json';
