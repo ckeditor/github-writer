@@ -45,6 +45,17 @@ export default class Editor {
 	set mode( mode ) {
 		this.syncEditors();
 
+		if ( this.mode === Editor.modes.MARKDOWN && mode === Editor.modes.RTE ) {
+			if ( this._checkDataLoss() ) {
+				// eslint-disable-next-line no-alert
+				if ( !confirm( `This markdown contains markup that may not be compatible with the rich-text editor and may be lost.\n` +
+					`\n` +
+					`Do you confirm you want to switch to rich-text?` ) ) {
+					return;
+				}
+			}
+		}
+
 		// Ensure that we have the write tab active (not preview).
 		this.dom.root.querySelector( '.write-tab' ).click();
 
@@ -128,6 +139,21 @@ export default class Editor {
 		// }
 
 		this.mode = Editor.modes.RTE;
+	}
+
+	/**
+	 * Checks if the current data loaded in CKEditor is different (semantically) from the markdown available in the GH textarea.
+	 * @private
+	 */
+	_checkDataLoss() {
+		const rteData = this.rteEditor.getData();
+		const markdownData = this.markdownEditor.getData();
+
+		return stripSpaces( rteData ) !== stripSpaces( markdownData );
+
+		function stripSpaces( text ) {
+			return text.replace( /\s/g, '' );
+		}
 	}
 }
 
