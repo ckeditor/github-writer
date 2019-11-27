@@ -107,7 +107,11 @@ export default class Editor {
 		} );
 
 		form.addEventListener( 'reset', () => {
-			this.rteEditor.setData( this.markdownEditor.dom.textarea.defaultValue );
+			// We actually want it 'after-reset', so form elements are clean, thus setTimeout.
+			setTimeout( () => {
+				this.rteEditor.setData( this.markdownEditor.dom.textarea.defaultValue );
+				this._setInitialMode();
+			}, 0 );
 		} );
 	}
 
