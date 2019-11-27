@@ -45,6 +45,9 @@ export default class Editor {
 	set mode( mode ) {
 		this.syncEditors();
 
+		// Ensure that we have the write tab active (not preview).
+		this.dom.root.querySelector( '.write-tab' ).click();
+
 		// Set the appropriate class to the root element according to the mode being set.
 		this.dom.root.classList.toggle( 'github-rte-mode-rte', mode === Editor.modes.RTE );
 		this.dom.root.classList.toggle( 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
