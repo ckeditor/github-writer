@@ -19,12 +19,10 @@ export default class App {
 		const mainEditorRoot = document.querySelector( '.timeline-comment:not(.comment)' );
 
 		if ( mainEditorRoot ) {
-			createEditor( mainEditorRoot );
+			const editor = new Editor( mainEditorRoot );
+			return editor.create();
 		}
 
-		function createEditor( markdownEditorRootElement ) {
-			const editor = new Editor( markdownEditorRootElement );
-			editor.create();
-		}
+		return Promise.resolve();
 	}
 }
