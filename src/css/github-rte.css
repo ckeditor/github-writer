@@ -108,33 +108,15 @@ div.github-rte-ckeditor {
 	height: auto !important;
 }
 
-/* The following rules needed to be copied because they're applied to the textarea directly,
-   while the editable is a div.
-
+/* The following rules needed to be copied because they're applied to the textarea directly, while the editable is a div.
    Most of the CSS here are copies from teh markdown textarea CSS, sniffed with the inspector. */
-
-/* .previewable-comment-form textarea { */
-div.github-rte-ckeditor {
-	max-width: 100%;
-	margin: 0;
-	line-height: 1.6;
-}
-
-/* .upload-enabled textarea { */
-div.github-rte-ckeditor {
-	border-bottom: 1px dashed #dfe2e5;
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
-}
-
-/* .previewable-comment-form textarea { */
 div.github-rte-ckeditor {
 	display: block;
 	width: 100%;
-	/*	min-height: 100px; */
-	/*	padding: 8px; */
+	max-width: 100%;
 	padding: 0 !important;
-	/*	resize: vertical; */
+	margin: 0;
+	line-height: 1.6;
 }
 
 /* Do not show the arrow in the Kebab button. */
