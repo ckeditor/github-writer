@@ -21,22 +21,35 @@
 	width: auto;
 }
 
-.ck.ck-toolbar .ck-button {
-	/* Spacing between buttons */
-	padding: 4px;
-	margin: 0 4px;
-	border: 0;
+.ck.ck-toolbar {
+	margin: 0 15px 0 0;
+	padding: 0;
 
-	/* Color */
-	color: #586069;
+	& > .ck-toolbar__items {
+		margin: 0 !important;
 
-	/* Height */
-	display: block;
-	line-height: 21px;
-	float: left;
+		& .ck-button {
+			/* Spacing between buttons */
+			padding: 4px;
+			margin: 0 4px !important;
+			border: 0;
 
-	/* Cursor */
-	cursor: pointer;
+			/* Color */
+			color: #586069;
+
+			/* Height */
+			display: block;
+			line-height: 21px;
+			float: left;
+
+			/* Cursor */
+			cursor: pointer;
+		}
+
+		& > .ck-dropdown {
+			margin: 0;
+		}
+	}
 }
 
 .ck.ck-button.ck-on,
@@ -51,11 +64,8 @@
 	min-width: 0;
 }
 
-.ck.ck-dropdown .ck.ck-toolbar > .ck.ck-toolbar__items > :last-child {
-	margin-right: 4px;
-}
-
 .ck.ck-dropdown .ck.ck-toolbar {
+	margin: 0;
 	padding: 4px;
 }
 
