@@ -10,8 +10,23 @@ export default class MarkdownEditor {
 		this.dom = {
 			root: markdownEditorRootElement,
 			toolbar,
-			textarea: markdownEditorRootElement.querySelector( '#' + toolbar.getAttribute( 'for' ) )
+			textarea: markdownEditorRootElement.querySelector( '#' + toolbar.getAttribute( 'for' ) ),
+			// This is <tab-container> on New Issue and Add Comment and <div> on Edit Comment.
+			panelsContainer: markdownEditorRootElement.querySelector( '.previewable-comment-form' ),
+			panels: {
+				markdown: markdownEditorRootElement.querySelector( '.previewable-comment-form > file-attachment' ),
+				preview:
+				// This one is used on New Issue and Add Comment.
+					markdownEditorRootElement.querySelector( '.previewable-comment-form > .js-preview-panel' ) ||
+					// This one is used on Edit Comment.
+					markdownEditorRootElement.querySelector( '.previewable-comment-form > .preview-content' )
+			}
 		};
+
+		this.dom.panels.markdown.classList.add( 'github-rte-panel-markdown' );
+		this.dom.panels.preview.classList.add( 'github-rte-panel-preview' );
+
+		this.isEdit = this.dom.panelsContainer.nodeName === 'DIV';
 	}
 
 	getData() {

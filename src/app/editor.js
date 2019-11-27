@@ -8,8 +8,6 @@ import RteEditor from './editors/rteeditor';
 import EmitterMixin from '@ckeditor/ckeditor5-utils/src/emittermixin';
 import mix from '@ckeditor/ckeditor5-utils/src/mix';
 
-const markdownModeTag = '<!-- GitHub RTE: { mode:markdown } -->';
-
 export default class Editor {
 	/**
 	 * Creates a GitHub RTE editor.
@@ -69,12 +67,29 @@ export default class Editor {
 		this.fire( 'mode' );
 	}
 
+	create() {
+		return this.rteEditor.create()
+			.then( () => this._setupFocus() );
+	}
+
 	syncEditors() {
 		if ( this.mode === Editor.modes.RTE ) {
 			this.markdownEditor.setData( this.rteEditor.getData() );
 		} else {
 			this.rteEditor.setData( this.markdownEditor.getData() );
 		}
+	}
+
+	_setupFocus() {
+		// Enable the GitHub focus styles when the editor focus/blur.
+
+		// Take the element that GH styles on focus.
+		const focusBox = this.dom.root.querySelector( '.github-rte-panel-rte' );
+
+		// Watch for editor focus changes.
+		this.rteEditor.ckeditor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
+			focusBox.classList.toggle( 'focused', !!value );
+		} );
 	}
 
 	_setupForm() {
@@ -85,15 +100,6 @@ export default class Editor {
 			// If in RTE, update the markdown textarea with the data to be submitted.
 			if ( this.mode === Editor.modes.RTE ) {
 				this.syncEditors();
-			} else {
-				// Mark the content so the next editing attempt will default to markdown.
-				let data = this.markdownEditor.getData();
-
-				// Remove any trailing \n, and add it back with the tag.
-				data = data.replace( /\n$/, '' );
-				data += '\n\n' + markdownModeTag;
-
-				this.markdownEditor.setData( data );
 			}
 		} );
 
@@ -102,35 +108,19 @@ export default class Editor {
 		} );
 	}
 
-	_setInitialMode( data ) {
-		let startMode = Editor.modes.RTE;
+	_setInitialMode() {
+		// let startMode = Editor.modes.RTE;
 
 		// Sniff the start mode of the editor. Stays on markdown if the user posted at markdown.
-		if ( ( new RegExp( markdownModeTag ) ).test( data ) ) {
-			startMode = Editor.modes.MARKDOWN;
-			data = data.replace( new RegExp( '\\n{0,2}' + markdownModeTag, 'g' ), '' );
+		// if ( ( new RegExp( markdownModeTag ) ).test( data ) ) {
+		// 	startMode = Editor.modes.MARKDOWN;
+		// 	data = data.replace( new RegExp( '\\n{0,2}' + markdownModeTag, 'g' ), '' );
+		//
+		// 	// Remove the tag from the textarea, like it never existed.
+		// 	this.rteEditor.setData( data, true );
+		// }
 
-			// Remove the tag from the textarea, like it never existed.
-			this.rteEditor.setData( data, true );
-		}
-
-		this.mode = startMode;
-	}
-
-	create() {
-		return this.rteEditor.create()
-			.then( () => {
-				// Enable the GitHub focus styles when the editor focus/blur.
-				{
-					// Take the element that GH styles on focus.
-					const focusBox = this.dom.root.querySelector( '.github-rte-editableroot-rte div.write-content' );
-
-					// Watch for editor focus changes.
-					this.rteEditor.ckeditor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
-						focusBox.classList.toggle( 'focused', !!value );
-					} );
-				}
-			} );
+		this.mode = Editor.modes.RTE;
 	}
 }
 

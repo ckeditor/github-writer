@@ -37,7 +37,8 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 }
 
 /* Hide the markdown textarea outer box. */
-.github-rte-mode-rte .github-rte-editableroot-markdown {
+.github-rte-mode-rte .github-rte-panel-markdown,
+.github-rte-mode-rte .github-rte-panel-preview {
 	display: none !important;
 }
 
@@ -54,7 +55,7 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 /* Markdown mode */
 
 /* Hide the rte textarea outer box. */
-.github-rte-mode-markdown .github-rte-editableroot-rte {
+.github-rte-mode-markdown .github-rte-panel-rte {
 	display: none !important;
 }
 

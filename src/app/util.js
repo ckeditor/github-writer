@@ -20,3 +20,9 @@ export function copyElement( sourceElement, newName, deep = true ) {
 
 	return newElement;
 }
+
+export function createElementFromHtml( html ) {
+	const template = document.createElement( 'template' );
+	template.innerHTML = html;
+	return template.content.firstElementChild;
+}
