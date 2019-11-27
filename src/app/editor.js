@@ -95,15 +95,23 @@ export default class Editor {
 	}
 
 	_setupFocus() {
-		// Enable the GitHub focus styles when the editor focus/blur.
-
-		// Take the element that GH styles on focus.
-		const focusBox = this.dom.root.querySelector( '.github-rte-panel-rte' );
-
-		// Watch for editor focus changes.
-		this.rteEditor.ckeditor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
-			focusBox.classList.toggle( 'focused', !!value );
+		// Enable editor focus when clicking the "Write" tab.
+		this.dom.root.querySelector( '.write-tab' ).addEventListener( 'click', () => {
+			setTimeout( () => {
+				this.rteEditor.focus();
+			}, 0 );
 		} );
+
+		// Enable the GitHub focus styles when the editor focus/blur.
+		{
+			// Take the element that GH styles on focus.
+			const focusBox = this.dom.root.querySelector( '.github-rte-panel-rte' );
+
+			// Watch for editor focus changes.
+			this.rteEditor.ckeditor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
+				focusBox.classList.toggle( 'focused', !!value );
+			} );
+		}
 	}
 
 	_setupForm() {

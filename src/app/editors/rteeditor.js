@@ -28,6 +28,10 @@ export default class RteEditor {
 		}
 	}
 
+	focus() {
+		this.ckeditor.editing.view.focus();
+	}
+
 	create() {
 		const data = this.getData();
 
