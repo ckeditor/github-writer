@@ -122,8 +122,11 @@ div.github-rte-ckeditor {
 	line-height: 1.6;
 }
 
+div.github-rte-ckeditor:focus-within {
+	border-color: #2188ff;
+}
+
 /* Do not show the arrow in the Kebab button. */
 .github-rte-kebab-button .ck-dropdown__arrow {
 	display: none;
 }
-
