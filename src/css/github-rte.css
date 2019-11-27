@@ -82,10 +82,12 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 /* Change the text of the "Write" tab. */
 .github-rte-mode-markdown .write-tab {
 	font-size: 0;
+	line-height: 0;
 }
 .github-rte-mode-markdown .write-tab::after {
 	content: "Markdown";
 	font-size: 14px;
+	line-height: 20px;
 }
 
 /* Classes are prefixed with "div" so they have higher specificity and override default rules. */
