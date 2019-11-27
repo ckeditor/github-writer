@@ -43,7 +43,8 @@ export default class RteEditor {
 					// Here we mimic part of the GH dom, especially because of the classes.
 					const tree = createElementFromHtml( `
 						<div class="github-rte-panel-rte write-content upload-enabled mx-0 mt-2 mb-2 mx-md-2">
-							<div class="github-rte-ckeditor form-control input-contrast comment-form-textarea comment-body"></div>
+							<div class="github-rte-ckeditor form-control input-contrast
+								comment-form-textarea comment-body markdown-body"></div>
 						</div>
 					` );
 
