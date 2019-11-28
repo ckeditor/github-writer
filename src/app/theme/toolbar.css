@@ -15,6 +15,11 @@
 	--ck-color-button-default-hover-background: transparent;
 	--ck-color-button-on-background: transparent;
 	--ck-color-button-on-hover-background: transparent;
+	--ck-color-button-on-active-background: transparent;
+	--ck-color-button-default-active-background: transparent;
+	--ck-color-button-on-active-shadow: transparent;
+	--ck-color-button-default-active-shadow: transparent;
+	--ck-color-button-on-disabled-background: transparent;
 }
 
 .ck.ck-icon {
