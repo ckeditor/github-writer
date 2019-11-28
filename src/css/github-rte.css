@@ -4,7 +4,7 @@
  */
 
 /*
-	This are application specific styles, not the CKEditor theme.
+	These are application specific styles, not the CKEditor theme.
 */
 
 div.github-rte-ckeditor .ck-editor__editable {
@@ -129,4 +129,12 @@ div.github-rte-ckeditor:focus-within {
 /* Do not show the arrow in the Kebab button. */
 .github-rte-kebab-button .ck-dropdown__arrow {
 	display: none;
+}
+
+/* Here, we're fixing up a bit of mess from the GH CSS itself. The comment editing CSS is different from other editors in GH :/ */
+div.comment-form-head {
+	padding: 0 !important;
+}
+nav.tabnav-tabs {
+	margin: 8px 8px -1px 8px !important;
 }
