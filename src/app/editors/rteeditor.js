@@ -117,7 +117,10 @@ export function toolbarItemsPostfix( toolbar, tooltipPosition ) {
 		'Numbered List': document.querySelector( 'md-ordered-list' ).getAttribute( 'aria-label' ),
 		'To-do List': document.querySelector( 'md-task-list' ).getAttribute( 'aria-label' ),
 		'Strikethrough': 'Add strikethrough text',
-		'Horizontal line': 'Insert a horizontal line'
+		'Horizontal line': 'Insert a horizontal line',
+		'Insert image': 'Insert an image',
+		'Insert table': 'Insert a table',
+		'Remove Format': 'Remove text formatting'
 	};
 
 	const items = Array.from( toolbar.items );
