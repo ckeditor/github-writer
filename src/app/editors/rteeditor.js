@@ -126,6 +126,11 @@ export function toolbarItemsPostfix( toolbar, tooltipPosition ) {
 	const items = Array.from( toolbar.items );
 
 	items.forEach( item => {
+		// Some items, like Drop Downs and File Dialog, are containers for their buttons. Take the inner button then.
+		if ( item.buttonView ) {
+			item = item.buttonView;
+		}
+
 		if ( item instanceof ButtonView ) {
 			const itemLabel = labels[ item.label ] || item.label;
 
