@@ -3,61 +3,63 @@
  * For licensing, see LICENSE.md.
  */
 
-.ck-content .image {
-	margin: 0;
-	margin-bottom: 21px;
-
-	& > img {
+.ck-content {
+	& .image {
 		margin: 0;
-		min-width: auto;
-	}
-}
+		margin-bottom: 21px;
 
-.ck-content .todo-list {
-	& li {
-		margin-bottom: initial;
-
-		& .todo-list {
-			margin-top: initial;
+		& > img {
+			margin: 0;
+			min-width: auto;
 		}
 	}
 
-	& .todo-list__label {
-		& > input {
-			-webkit-appearance: checkbox;
-			width: auto;
-			height: auto;
-			margin-right: -18px;
-			margin-left: 4px;
+	& .todo-list {
+		& li {
+			margin-bottom: initial;
 
-			&::before {
-				content: none;
-			}
-
-			&::after {
-				content: none;
+			& .todo-list {
+				margin-top: initial;
 			}
 		}
 
-		& .todo-list__label__description {
-			vertical-align: middle;
+		& .todo-list__label {
+			& > input {
+				-webkit-appearance: checkbox;
+				width: auto;
+				height: auto;
+				margin-right: -18px;
+				margin-left: 4px;
+
+				&::before {
+					content: none;
+				}
+
+				&::after {
+					content: none;
+				}
+			}
+
+			& .todo-list__label__description {
+				vertical-align: middle;
+			}
 		}
 	}
-}
 
-.ck-content div.ck-horizontal-line {
-	padding: 0;
-	overflow: initial;
-
-	& hr {
-		height: .25em;
+	& div.ck-horizontal-line {
 		padding: 0;
-		margin: 24px 0;
-		background-color: #e1e4e8;
-		border: 0;
-	}
-}
+		overflow: initial;
 
-.ck-content pre br {
-	display: initial !important;
+		& hr {
+			height: .25em;
+			padding: 0;
+			margin: 24px 0;
+			background-color: #e1e4e8;
+			border: 0;
+		}
+	}
+
+	& pre br {
+		display: initial !important;
+	}
 }

@@ -53,20 +53,20 @@
 
 		& > .ck-dropdown {
 			margin: 0;
+
+			& .ck.ck-toolbar {
+				margin: 0;
+				padding: 4px;
+			}
+		}
+
+		/* We're using the separator to mimic the margin that GH has between its toolbar blocks. */
+		& .ck-toolbar__separator {
+			margin-right: 16px;
+			width: 0;
+			min-width: 0;
 		}
 	}
-}
-
-/* We're using the separator to mimic the margin that GH has between its toolbar blocks. */
-.ck.ck-toolbar .ck.ck-toolbar__separator {
-	margin-right: 16px;
-	width: 0;
-	min-width: 0;
-}
-
-.ck.ck-dropdown .ck.ck-toolbar {
-	margin: 0;
-	padding: 4px;
 }
 
 /* This will make the toolbar (including the kebab toolbar) inherit the color used by the GH toolbar space. */
