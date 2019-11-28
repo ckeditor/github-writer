@@ -77,7 +77,7 @@
 /* This will make the toolbar (including the kebab toolbar) inherit the color used by the GH toolbar space. */
 .ck.ck-toolbar,
 .ck.ck-toolbar__items,
-.ck.ck-dropdown.ck-toolbar-dropdown,
+.ck.ck-dropdown,
 .ck.ck-dropdown__panel {
 	background: inherit;
 }
