@@ -14,6 +14,7 @@ module.exports = {
 	rules: {
 		// We allow blocks to be used to organize the logic of longer functions.
 		'no-lone-blocks': 'off',
+		'no-inner-declarations': 'off',
 		'quotes': [ 'error', 'single', { 'allowTemplateLiterals': true } ]
 	},
 

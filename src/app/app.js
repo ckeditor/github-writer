@@ -25,9 +25,38 @@ export default class App {
 
 class PageManager {
 	constructor() {
-		// Start watching all edit buttons available in the page.
-		const editButtons = Array.from( document.querySelectorAll( '.js-comment-edit-button' ) );
-		editButtons.forEach( button => this.watchEditButton( button ) );
+		// Watch all edit buttons currently available in the page.
+		{
+			const editButtons = Array.from( document.querySelectorAll( '.js-comment-edit-button' ) );
+			editButtons.forEach( button => this.watchEditButton( button ) );
+		}
+
+		// Watch for thew edit buttons created on demand (when saving a comment).
+		{
+			createObserver.call( this );
+
+			function searchEditButtons( root ) {
+				root.querySelectorAll( '.js-comment-edit-button' )
+					.forEach( editButton => {
+						pageManager.watchEditButton( editButton );
+					} );
+			}
+
+			function createObserver() {
+				const observer = new MutationObserver( mutations => {
+					mutations.forEach( mutation => Array.from( mutation.addedNodes ).forEach( node => {
+						if ( node instanceof HTMLElement ) {
+							searchEditButtons.call( this, node );
+						}
+					} ) );
+				} );
+
+				observer.observe( document.body, {
+					childList: true,
+					subtree: true
+				} );
+			}
+		}
 	}
 
 	watchEditButton( editButton ) {
