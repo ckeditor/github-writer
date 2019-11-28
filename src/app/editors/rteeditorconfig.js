@@ -36,6 +36,8 @@ import getMentionFeedsConfig from '../mentionfeeds';
 import Kebab from '../plugins/kebab';
 import ModeSwitcher from '../plugins/modeswitcher';
 
+import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
+
 export default function getRteEditorConfig( rteEditor ) {
 	return {
 		plugins: [
@@ -47,7 +49,8 @@ export default function getRteEditorConfig( rteEditor ) {
 			Link,
 			List, TodoList,
 			HorizontalLine, Table, TableToolbar,
-			Kebab, ModeSwitcher
+			Kebab, ModeSwitcher,
+			PasteFromOffice
 		],
 		toolbar: [
 			'headingswitch', 'bold', 'italic', '|',
