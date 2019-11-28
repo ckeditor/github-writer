@@ -14,6 +14,12 @@
 		}
 	}
 
+	&.ck-blurred {
+		& .image > img {
+			mix-blend-mode: multiply;
+		}
+	}
+
 	& .todo-list {
 		& li {
 			margin-bottom: initial;
