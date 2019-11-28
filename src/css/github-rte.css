@@ -61,6 +61,7 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 
 /* Hide all rte toolbar items. */
 .github-rte-mode-markdown .ck.ck-toolbar__separator,
+.github-rte-mode-markdown .ck-file-dialog-button,
 .github-rte-mode-markdown .ck.ck-button {
 	display: none !important;
 }

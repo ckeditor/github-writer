@@ -52,7 +52,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			'bulletedlist', 'numberedlist', 'todolist', 'kebab'
 		],
 		kebabToolbar: [
-			'strikethrough', 'horizontalLine', 'mode'
+			'strikethrough', 'imageupload', 'horizontalline', '|', 'mode'
 		],
 		placeholder: 'Leave a comment',
 		heading: {
