@@ -44,17 +44,17 @@
 
 			/* Cursor */
 			cursor: pointer;
+
+			&.ck-on,
+			&:not(.ck-disabled):hover {
+				color: #0366d6;
+			}
 		}
 
 		& > .ck-dropdown {
 			margin: 0;
 		}
 	}
-}
-
-.ck.ck-button.ck-on,
-.ck.ck-button:not(.ck-disabled):hover {
-	color: #0366d6;
 }
 
 /* We're using the separator to mimic the margin that GH has between its toolbar blocks. */
