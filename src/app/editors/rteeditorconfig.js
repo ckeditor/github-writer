@@ -27,6 +27,9 @@ import GitHubUploadAdapter from '../uploadadapter';
 
 import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
 
+import Table from '@ckeditor/ckeditor5-table/src/table';
+import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
+
 import Mention from '@ckeditor/ckeditor5-mention/src/mention';
 import getMentionFeedsConfig from '../mentionfeeds';
 
@@ -43,7 +46,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			BlockQuote,
 			Link,
 			List, TodoList,
-			HorizontalLine,
+			HorizontalLine, Table, TableToolbar,
 			Kebab, ModeSwitcher
 		],
 		toolbar: [
@@ -52,8 +55,11 @@ export default function getRteEditorConfig( rteEditor ) {
 			'bulletedlist', 'numberedlist', 'todolist', 'kebab'
 		],
 		kebabToolbar: [
-			'strikethrough', 'imageupload', 'horizontalline', '|', 'mode'
+			'strikethrough', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode'
 		],
+		table: {
+			contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+		},
 		placeholder: 'Leave a comment',
 		heading: {
 			// TODO: Check the class names here.
