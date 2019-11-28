@@ -35,7 +35,7 @@ One of the goals of this extension is providing all features which are available
     *   [x] Images
         *   [x] Drag-and-drop
         *   [x] Paste
-        *   [ ] Open file dialog
+        *   [x] Open file dialog
     *   [ ] Files
         *   [ ] Drag-and-drop
         *   [ ] Open file dialog
@@ -47,7 +47,7 @@ One of the goals of this extension is providing all features which are available
         *   [x] OS, Unicode characters
         *   [x] Auto-complete (list when typing ":")
     *   [x] Escape markdown in text
-    *   [ ] Tables
+    *   [x] Tables
     *   [ ] Saved replies
     *   [ ] Load quoted text ("r" key)
 
