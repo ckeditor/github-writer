@@ -7,8 +7,11 @@ import App from './app/app';
 
 const startTime = new Date();
 
-App.run().then( () => {
-	// TODO: Remove this at some point.
-	console.log( 'GitHub RTE loaded and ready. Running time: ' + ( new Date() - startTime ) + 'ms.' );
-} );
-
+App.run()
+	.then( () => {
+		// TODO: Remove this at some point.
+		console.log( 'GitHub RTE loaded and ready. Running time: ' + ( new Date() - startTime ) + 'ms.' );
+	} )
+	.catch( reason => {
+		console.error( reason );
+	} );
