@@ -34,6 +34,7 @@ import Mention from '@ckeditor/ckeditor5-mention/src/mention';
 import getMentionFeedsConfig from '../mentionfeeds';
 
 import Kebab from '../plugins/kebab';
+import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
 import ModeSwitcher from '../plugins/modeswitcher';
 
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
@@ -49,7 +50,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			Link,
 			List, TodoList,
 			HorizontalLine, Table, TableToolbar,
-			Kebab, ModeSwitcher,
+			Kebab, RemoveFormat, ModeSwitcher,
 			PasteFromOffice
 		],
 		toolbar: [
@@ -58,7 +59,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			'bulletedlist', 'numberedlist', 'todolist', 'kebab'
 		],
 		kebabToolbar: [
-			'strikethrough', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode'
+			'strikethrough', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode'
 		],
 		table: {
 			contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
