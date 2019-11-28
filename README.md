@@ -60,9 +60,10 @@ The GitHub RTE should be enabled in all places where the original markdown edito
     *   [x] Editing
     *   [x] Comment
         *   [x] Editing
-*   [ ] Pull requests
-    *   [ ] Comment
-        *   [ ] Editing
+*   [x] Pull requests
+    *   [x] Create
+    *   [x] Comment
+        *   [x] Editing
 *   [ ] Commits
     *   [ ] Comment
     *   [ ] Line comment

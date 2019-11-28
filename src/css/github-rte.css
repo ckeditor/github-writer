@@ -137,6 +137,7 @@ div.comment-form-head {
 	padding: 0 !important;
 	align-items: center;
 }
+div.tabnav-tabs,
 nav.tabnav-tabs {
 	margin: 8px 8px -1px 8px !important;
 }
