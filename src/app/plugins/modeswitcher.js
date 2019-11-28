@@ -37,7 +37,7 @@ export default class ModeSwitcher extends Plugin {
 				} );
 
 				this.listenTo( view, 'execute', () => {
-					githubEditor.mode = githubEditor.mode === Editor.modes.RTE ? Editor.modes.MARKDOWN : Editor.modes.RTE;
+					githubEditor.setMode( githubEditor.getMode() === Editor.modes.RTE ? Editor.modes.MARKDOWN : Editor.modes.RTE );
 				} );
 			} );
 

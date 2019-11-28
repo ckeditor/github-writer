@@ -19,33 +19,35 @@ export default class Editor {
 		// This will expose the list of editors in the extension console.
 		( window.GITHUB_RTE_EDITORS = window.GITHUB_RTE_EDITORS || [] ).push( this );
 
-		this.markdownEditor = new MarkdownEditor( markdownEditorRootElement );
-
-		// Get the initial data loaded from GH.
-		const data = this.markdownEditor.getData();
-
-		this.rteEditor = new RteEditor( this );
-
 		this.dom = {
 			root: markdownEditorRootElement
 		};
 
-		this._setupForm();
-		this._setInitialMode( data );
+		this.markdownEditor = new MarkdownEditor( this );
+		this.rteEditor = new RteEditor( this );
 	}
 
-	get mode() {
+	getMode() {
 		if ( this.dom.root.classList.contains( 'github-rte-mode-rte' ) ) {
 			return Editor.modes.RTE;
-		} else {
+		} else if ( this.dom.root.classList.contains( 'github-rte-mode-markdown' ) ) {
 			return Editor.modes.MARKDOWN;
 		}
+		return Editor.modes.UNKNOWN;
 	}
 
-	set mode( mode ) {
-		this.syncEditors();
+	setMode( mode, options = { noSynch: false, noCheck: false } ) {
+		const currentMode = this.getMode();
 
-		if ( this.mode === Editor.modes.MARKDOWN && mode === Editor.modes.RTE ) {
+		if ( currentMode === mode ) {
+			return;
+		}
+
+		if ( !options.noSynch ) {
+			this.syncEditors();
+		}
+
+		if ( !options.noCheck && currentMode === Editor.modes.MARKDOWN && mode === Editor.modes.RTE ) {
 			if ( this._checkDataLoss() ) {
 				// eslint-disable-next-line no-alert
 				if ( !confirm( `This markdown contains markup that may not be compatible with the rich-text editor and may be lost.\n` +
@@ -57,37 +59,29 @@ export default class Editor {
 		}
 
 		// Ensure that we have the write tab active (not preview).
-		this.dom.root.querySelector( '.write-tab' ).click();
+		if ( currentMode !== Editor.modes.UNKNOWN ) {
+			this.dom.root.querySelector( '.write-tab' ).click();
+		}
 
 		// Set the appropriate class to the root element according to the mode being set.
 		this.dom.root.classList.toggle( 'github-rte-mode-rte', mode === Editor.modes.RTE );
 		this.dom.root.classList.toggle( 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
-
-		// This will enable the submit button.
-		// TODO: check if possible to remove setTimeout (ideally a document ready event).
-		setTimeout( () => {
-			const textarea = this.markdownEditor.dom.textarea;
-			if ( mode === Editor.modes.RTE ) {
-				// A small trick to enable the submit button while the editor is visible.
-				// TODO: ideally we should do this by checking if the editor contents changed.
-				if ( textarea.value === textarea.defaultValue ) {
-					textarea.value += '\n<!-- -->';
-				}
-			}
-			textarea.dispatchEvent( new Event( 'change' ) );
-			textarea.form.dispatchEvent( new Event( 'change' ) );
-		}, 100 );
 
 		this.fire( 'mode' );
 	}
 
 	create() {
 		return this.rteEditor.create()
-			.then( () => this._setupFocus() );
+			.then( () => {
+				this._setupFocus();
+				this._setupEmptyCheck();
+				this._setupForm();
+				this._setInitialMode();
+			} );
 	}
 
 	syncEditors() {
-		if ( this.mode === Editor.modes.RTE ) {
+		if ( this.getMode() === Editor.modes.RTE ) {
 			this.markdownEditor.setData( this.rteEditor.getData() );
 		} else {
 			this.rteEditor.setData( this.markdownEditor.getData() );
@@ -114,13 +108,29 @@ export default class Editor {
 		}
 	}
 
+	_setupEmptyCheck() {
+		this.rteEditor.ckeditor.on( 'change:isEmpty', ( eventInfo, name, isEmpty ) => {
+			if ( this.getMode() === Editor.modes.RTE ) {
+				// Take the GH textarea, which is now hidden.
+				const textarea = this.markdownEditor.dom.textarea;
+
+				// Add a bit of "safe dirt" to the GH textarea.
+				textarea.value = textarea.defaultValue + ( isEmpty ? '' : '\n<!-- -->' );
+
+				// Fire the change event, so GH will update the submit buttons.
+				textarea.dispatchEvent( new Event( 'change' ) );		// "Close issue" button.
+				textarea.form.dispatchEvent( new Event( 'change' ) );	// "Comment" button.
+			}
+		} );
+	}
+
 	_setupForm() {
 		const form = this.markdownEditor.dom.textarea.form;
 
 		// Update the textarea on form post.
 		form.addEventListener( 'submit', () => {
 			// If in RTE, update the markdown textarea with the data to be submitted.
-			if ( this.mode === Editor.modes.RTE ) {
+			if ( this.getMode() === Editor.modes.RTE ) {
 				this.syncEditors();
 			}
 		} );
@@ -135,18 +145,9 @@ export default class Editor {
 	}
 
 	_setInitialMode() {
-		// let startMode = Editor.modes.RTE;
-
-		// Sniff the start mode of the editor. Stays on markdown if the user posted at markdown.
-		// if ( ( new RegExp( markdownModeTag ) ).test( data ) ) {
-		// 	startMode = Editor.modes.MARKDOWN;
-		// 	data = data.replace( new RegExp( '\\n{0,2}' + markdownModeTag, 'g' ), '' );
-		//
-		// 	// Remove the tag from the textarea, like it never existed.
-		// 	this.rteEditor.setData( data, true );
-		// }
-
-		this.mode = Editor.modes.RTE;
+		// For safety, if the editor is not handling well the markdown data, stays in Markdown mode.
+		this.setMode( this._checkDataLoss() ? Editor.modes.MARKDOWN : Editor.modes.RTE,
+			{ noSynch: true, noCheck: true } );
 	}
 
 	/**
@@ -169,5 +170,6 @@ mix( Editor, EmitterMixin );
 
 Editor.modes = {
 	RTE: 'rte',
-	MARKDOWN: 'markdown'
+	MARKDOWN: 'markdown',
+	UNKNOWN: null
 };

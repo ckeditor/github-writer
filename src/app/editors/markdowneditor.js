@@ -4,22 +4,23 @@
  */
 
 export default class MarkdownEditor {
-	constructor( markdownEditorRootElement ) {
-		const toolbar = markdownEditorRootElement.querySelector( 'markdown-toolbar' );
+	constructor( githubEditor ) {
+		const root = githubEditor.dom.root;
+		const toolbar = root.querySelector( 'markdown-toolbar' );
 
 		this.dom = {
-			root: markdownEditorRootElement,
+			root,
 			toolbar,
-			textarea: markdownEditorRootElement.querySelector( '#' + toolbar.getAttribute( 'for' ) ),
+			textarea: root.querySelector( '#' + toolbar.getAttribute( 'for' ) ),
 			// This is <tab-container> on New Issue and Add Comment and <div> on Edit Comment.
-			panelsContainer: markdownEditorRootElement.querySelector( '.previewable-comment-form' ),
+			panelsContainer: root.querySelector( '.previewable-comment-form' ),
 			panels: {
-				markdown: markdownEditorRootElement.querySelector( '.previewable-comment-form > file-attachment' ),
+				markdown: root.querySelector( '.previewable-comment-form > file-attachment' ),
 				preview:
 				// This one is used on New Issue and Add Comment.
-					markdownEditorRootElement.querySelector( '.previewable-comment-form > .js-preview-panel' ) ||
+					root.querySelector( '.previewable-comment-form > .js-preview-panel' ) ||
 					// This one is used on Edit Comment.
-					markdownEditorRootElement.querySelector( '.previewable-comment-form > .preview-content' )
+					root.querySelector( '.previewable-comment-form > .preview-content' )
 			}
 		};
 

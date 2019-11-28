@@ -33,7 +33,14 @@ export default class RteEditor {
 	}
 
 	create() {
-		const data = this.getData();
+		if ( this.ckeditor ) {
+			return Promise.reject( new Error( 'RteEditor.prototype.create() can be called just once.' ) );
+		}
+
+		const markdownEditor = this.githubEditor.markdownEditor;
+
+		// Get the Markdown editor data at the exact moment of this editor creation.
+		const data = markdownEditor.getData();
 
 		return CKEditorGitHubEditor.create( data, getRteEditorConfig( this ) )
 			.then( editor => {
