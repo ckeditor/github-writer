@@ -37,8 +37,6 @@ export default class RteEditor {
 
 		return CKEditorGitHubEditor.create( data, getRteEditorConfig( this ) )
 			.then( editor => {
-				const markdownEditor = this.githubEditor.markdownEditor;
-
 				// Inject the rte toolbar right next to the markdown editor toolbar.
 				markdownEditor.dom.toolbar.insertAdjacentElement( 'afterend', editor.ui.view.toolbar.element );
 
@@ -89,6 +87,13 @@ class CKEditorGitHubEditor extends DecoupledEditor {
 				class: 'github-rte-toolbar'
 			}
 		} );
+
+		{
+			const document = this.model.document;
+			this.listenTo( document, 'change:data', () => {
+				this.set( 'isEmpty', !document.model.hasContent( document.getRoot() ) );
+			} );
+		}
 	}
 }
 
