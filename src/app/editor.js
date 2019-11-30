@@ -7,6 +7,7 @@ import MarkdownEditor from './editors/markdowneditor';
 import RteEditor from './editors/rteeditor';
 import EmitterMixin from '@ckeditor/ckeditor5-utils/src/emittermixin';
 import mix from '@ckeditor/ckeditor5-utils/src/mix';
+import { checkDom } from './util';
 
 export default class Editor {
 	/**
@@ -20,8 +21,13 @@ export default class Editor {
 		( window.GITHUB_RTE_EDITORS = window.GITHUB_RTE_EDITORS || [] ).push( this );
 
 		this.dom = {
-			root: markdownEditorRootElement
+			root: markdownEditorRootElement,
+			tabs: {
+				write: markdownEditorRootElement.querySelector( '.write-tab' )
+			}
 		};
+
+		checkDom( this.dom );
 
 		this.markdownEditor = new MarkdownEditor( this );
 		this.rteEditor = new RteEditor( this );
@@ -60,7 +66,7 @@ export default class Editor {
 
 		// Ensure that we have the write tab active (not preview).
 		if ( currentMode !== Editor.modes.UNKNOWN ) {
-			this.dom.root.querySelector( '.write-tab' ).click();
+			this.dom.tabs.write.click();
 		}
 
 		// Set the appropriate class to the root element according to the mode being set.
@@ -90,7 +96,7 @@ export default class Editor {
 
 	_setupFocus() {
 		// Enable editor focus when clicking the "Write" tab.
-		this.dom.root.querySelector( '.write-tab' ).addEventListener( 'click', () => {
+		this.dom.tabs.write.addEventListener( 'click', () => {
 			setTimeout( () => {
 				this.rteEditor.focus();
 			}, 0 );

@@ -2,6 +2,7 @@
  * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md.
  */
+import { checkDom } from '../util';
 
 export default class MarkdownEditor {
 	constructor( githubEditor ) {
@@ -11,7 +12,7 @@ export default class MarkdownEditor {
 		this.dom = {
 			root,
 			toolbar,
-			textarea: root.querySelector( '#' + toolbar.getAttribute( 'for' ) ),
+			textarea: toolbar && root.querySelector( '#' + toolbar.getAttribute( 'for' ) ),
 			// This is <tab-container> on New Issue and Add Comment and <div> on Edit Comment.
 			panelsContainer: root.querySelector( '.previewable-comment-form' ),
 			panels: {
@@ -23,6 +24,8 @@ export default class MarkdownEditor {
 					root.querySelector( '.previewable-comment-form > .preview-content' )
 			}
 		};
+
+		checkDom( this.dom );
 
 		this.dom.panels.markdown.classList.add( 'github-rte-panel-markdown' );
 		this.dom.panels.preview.classList.add( 'github-rte-panel-preview' );

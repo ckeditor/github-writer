@@ -4,6 +4,7 @@
  */
 
 import App from './app/app';
+import { PageIncompatibilityError } from './app/util';
 
 console.time( 'GitHub RTE loaded and ready' );
 
@@ -13,5 +14,9 @@ App.run()
 		console.timeEnd( 'GitHub RTE loaded and ready' );
 	} )
 	.catch( reason => {
-		console.error( reason );
+		if ( reason instanceof PageIncompatibilityError ) {
+			console.warn( reason );
+		} else {
+			console.error( reason );
+		}
 	} );

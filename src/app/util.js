@@ -26,3 +26,23 @@ export function createElementFromHtml( html ) {
 	template.innerHTML = html;
 	return template.content.firstElementChild;
 }
+
+export function checkDom( dom ) {
+	Object.getOwnPropertyNames( dom ).forEach( key => {
+		const value = dom[ key ];
+		if ( !value ) {
+			throw new PageIncompatibilityError();
+		}
+
+		if ( Object.getPrototypeOf( value ) === Object.prototype ) {
+			checkDom( value );
+		}
+	} );
+}
+
+export class PageIncompatibilityError extends Error {
+	constructor() {
+		super( `GitHub RTE error: this page doesn't seem to be compatible with this application anymore. ` +
+			`Upgrade to the latest version of the browser extension.` );
+	}
+}

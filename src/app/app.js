@@ -19,12 +19,24 @@ export default class App {
 
 		pageManager = new PageManager();
 
-		return pageManager.setupMainEditor();
+		const promise = pageManager.setupMainEditor();
+
+		// Check if the promise has been imediatelly rejected.
+		let rejected;
+		promise.catch( () => {
+			rejected = true;
+		} );
+
+		if ( !rejected ) {
+			pageManager.setupEdit();
+		}
+
+		return promise;
 	}
 }
 
 class PageManager {
-	constructor() {
+	setupEdit() {
 		// Watch all edit buttons currently available in the page.
 		{
 			const editButtons = Array.from( document.querySelectorAll( '.js-comment-edit-button' ) );
@@ -99,7 +111,14 @@ class PageManager {
 			return Promise.reject( error );
 		}
 
-		const editor = new Editor( commentRoot );
+		let editor;
+
+		try {
+			editor = new Editor( commentRoot );
+		} catch ( error ) {
+			return Promise.reject( error );
+		}
+
 		editors.set( commentRoot, editor );
 		return editor.create();
 	}
