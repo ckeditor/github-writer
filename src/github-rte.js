@@ -5,12 +5,12 @@
 
 import App from './app/app';
 
-const startTime = new Date();
+console.time( 'GitHub RTE loaded and ready' );
 
 App.run()
 	.then( () => {
 		// TODO: Remove this at some point.
-		console.log( 'GitHub RTE loaded and ready. Running time: ' + ( new Date() - startTime ) + 'ms.' );
+		console.timeEnd( 'GitHub RTE loaded and ready' );
 	} )
 	.catch( reason => {
 		console.error( reason );
