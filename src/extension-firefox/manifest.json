@@ -12,9 +12,9 @@
 	"content_scripts": [
 		{
 			"matches": [
-				"https://github.com/fredck/*/issues/*",
-				"https://github.com/fredck/*/pull/*",
-				"https://github.com/fredck/*/compare/*"
+				"https://github.com/*/issues/*",
+				"https://github.com/*/pull/*",
+				"https://github.com/*/compare/*"
 			],
 			"js": [
 				"github-rte.js"
