@@ -29,7 +29,7 @@ export default class ModeSwitcher extends Plugin {
 
 				// Make changes to the editor mode to be reflected by the button state.
 				githubEditor.on( 'mode', () => {
-					const isMarkdown = githubEditor.mode === Editor.modes.MARKDOWN;
+					const isMarkdown = githubEditor.getMode() === Editor.modes.MARKDOWN;
 					view.set( 'isOn', isMarkdown );
 					view.element.setAttribute( 'aria-label', isMarkdown ?
 						'Switch to rich-text editing' :
