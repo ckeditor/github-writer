@@ -44,7 +44,7 @@ describe( 'This test suite', function() {
 			await driver.get( getGitHubUrl( 'issues/new' ) );
 
 			// Be sure that we're still properly logged in.
-			await driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${ credentials.name }"]` ) ) );
+			await driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${ credentials.name }"]` ) ), 10000 );
 		}
 
 		// Check if the DOM looks like expected by the app.
@@ -61,7 +61,7 @@ describe( 'This test suite', function() {
 		// Type inside the editor and submit the form.
 		{
 			// Wait for the RTE editor to be created.
-			await driver.wait( until.elementLocated( By.css( '.timeline-comment:not(.comment) div.github-rte-ckeditor' ) ) );
+			await driver.wait( until.elementLocated( By.css( '.timeline-comment:not(.comment) div.github-rte-ckeditor' ) ), 10000 );
 
 			// Retrieve the root element, containing the whole GH editing form. Using the same selector we use in the app.
 			const rootElement = driver.findElement( By.css( '.timeline-comment:not(.comment)' ) );
@@ -83,7 +83,7 @@ describe( 'This test suite', function() {
 
 		// Check if the new issue has been properly created.
 		{
-			await driver.wait( until.elementLocated( By.css( '.timeline-comment.comment td.comment-body' ) ), 10000 );
+			await driver.wait( until.elementLocated( By.css( '.timeline-comment.comment td.comment-body' ) ), 5000 );
 
 			issueCreated = true;
 
@@ -115,7 +115,7 @@ describe( 'This test suite', function() {
 		// Type inside the editor and submit the form.
 		{
 			// Wait for the RTE editor to be created.
-			await driver.wait( until.elementLocated( By.css( '.timeline-comment:not(.comment) div.github-rte-ckeditor' ) ) );
+			await driver.wait( until.elementLocated( By.css( '.timeline-comment:not(.comment) div.github-rte-ckeditor' ) ), 5000 );
 
 			// Retrieve the root element, containing the whole GH editing form. Using the same selector we use in the app.
 			const rootElement = driver.findElement( By.css( '.timeline-comment:not(.comment)' ) );
@@ -186,7 +186,7 @@ describe( 'This test suite', function() {
 			// Wait for the RTE editor to be created.
 			await driver.wait( until.elementLocated( By.js( root => {
 				return root.querySelector( 'div.github-rte-ckeditor' );
-			}, dom.rootElement ) ) );
+			}, dom.rootElement ) ), 5000 );
 
 			// Get the RTE editor editable.
 			const editable = await dom.rootElement.findElement( By.css( 'div.github-rte-ckeditor > .ck-editor__editable' ) );
@@ -213,13 +213,9 @@ describe( 'This test suite', function() {
 			// Refresh the page.
 			await driver.navigate().refresh();
 
-			await driver.wait( until.elementLocated( By.js( () => {
-				const elements = document.querySelectorAll( '.timeline-comment.comment td.comment-body' );
-				return ( elements.length === 2 && elements[ 1 ] );
-			} ) ), 10000 );
-
 			const commentBody = driver.findElement( By.js( () => {
-				return document.querySelectorAll( '.timeline-comment.comment td.comment-body' )[ 1 ];
+				const elements = document.querySelectorAll( '.timeline-comment.comment td.comment-body' );
+				return elements[ elements.length - 1 ];
 			} ) );
 
 			const html = await driver.executeScript( commentBody => {

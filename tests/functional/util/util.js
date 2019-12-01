@@ -4,19 +4,25 @@
  */
 
 const { Builder } = require( 'selenium-webdriver' );
-const { Options } = require( 'selenium-webdriver/chrome' );
+const { Options: ChromeOptions } = require( 'selenium-webdriver/chrome' );
+const { Options: FirefoxOptions } = require( 'selenium-webdriver/firefox' );
 const path = require( 'path' );
 const repo = require( '../../config' ).github.repo;
 
 module.exports = {
 	buildDriver: () => {
-		const extensionPath = path.resolve( __dirname, '../../../build/extension-chrome' );
-		const options = new Options();
-		options.addArguments( 'load-extension=' + extensionPath );
+		const chromeOptions = new ChromeOptions();
+		chromeOptions.addArguments( 'load-extension=' + path.resolve( __dirname, '../../../build/extension-chrome' ) );
+		// chromeOptions.headless();
+
+		const firefoxOption = new FirefoxOptions();
+		firefoxOption.addExtensions( path.resolve( __dirname, '../../../build/github-rte-firefox.xpi' ) );
 
 		return new Builder()
 			.forBrowser( 'chrome' )
-			.setChromeOptions( options )
+			// .forBrowser( 'firefox' )
+			.setChromeOptions( chromeOptions )
+			.setFirefoxOptions( firefoxOption )
 			.build();
 	},
 

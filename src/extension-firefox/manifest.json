@@ -3,6 +3,11 @@
 	"name": "GitHub RTE",
 	"description": "Rich-text editing in GitHub. Powered by CKEditor.",
 	"version": "1.0",
+	"applications": {
+		"gecko": {
+		  	"id": "github-rte@cksource.com"
+		}
+	},
 	"permissions": [
 		// The following are domains used by GitHub to upload files. We need to have permissions on them,
 		// so we avoid cross-origin issues when mimicking the upload within the GitHubUploadAdapter class.
