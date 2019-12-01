@@ -2,6 +2,8 @@
  * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md.
  */
+
+import Editor from '../editor';
 import { checkDom } from '../util';
 
 export default class MarkdownEditor {
@@ -31,6 +33,13 @@ export default class MarkdownEditor {
 		this.dom.panels.preview.classList.add( 'github-rte-panel-preview' );
 
 		this.isEdit = this.dom.panelsContainer.nodeName === 'DIV';
+
+		githubEditor.on( 'mode', () => {
+			if ( githubEditor.getMode() === Editor.modes.MARKDOWN ) {
+				// This will fix the textarea height to adjust to it's size (GH logic).
+				this.dom.textarea.dispatchEvent( new Event( 'change' ) );
+			}
+		} );
 	}
 
 	getData() {
@@ -43,8 +52,5 @@ export default class MarkdownEditor {
 		if ( reset ) {
 			this.dom.textarea.defaultValue = data;
 		}
-
-		// This will fix the textarea height.
-		this.dom.textarea.dispatchEvent( new Event( 'change' ) );
 	}
 }
