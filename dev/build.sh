@@ -2,10 +2,10 @@
 
 # Be sure to be at the root of the project.
 DIRECTORY=$(
-  cd "$(dirname "${BASH_SOURCE[0]}")"
+  cd "$(dirname "${BASH_SOURCE[0]}")" || exit
   pwd -P
 )
-cd "$DIRECTORY"
+cd "$DIRECTORY" || exit
 cd ..
 
 echo "Removing the build directory..."
