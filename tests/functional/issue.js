@@ -194,6 +194,7 @@ describe( 'This test suite', function() {
 			// Type inside of it.
 			await editable.sendKeys(
 				// Select all. (Not working)
+				// editable.clear() also not working.
 				Key.CONTROL, 'a', Key.CONTROL,
 				// Delete.
 				Key.BACK_SPACE,
