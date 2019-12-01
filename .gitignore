@@ -6,3 +6,4 @@
 /build/
 /yarn.lock
 /packages/
+/tests/config.json

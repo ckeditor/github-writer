@@ -19,8 +19,19 @@ module.exports = {
 	},
 
 	// Bring in environment variables that touch the project, overall.
-	'env': {
+	env: {
 		'browser': true,
 		'commonjs': true
-	}
+	},
+
+	overrides: [
+		{
+			files: [ 'tests/**/*.js' ],
+			env: {
+				'browser': true,
+				'commonjs': true,
+				'node': true
+			}
+		}
+	]
 };

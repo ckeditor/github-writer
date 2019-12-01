@@ -48,16 +48,20 @@
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-inspector": "^1.4.0",
+    "chai": "^4.2.0",
+    "chromedriver": "^78.0.1",
     "eslint": "^5.5.0",
     "eslint-config-ckeditor5": "^2.0.0",
+    "mocha": "^6.2.2",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^3.1.0",
+    "selenium-webdriver": "^4.0.0-alpha.5",
     "style-loader": "^1.0.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/mocha ./tests/functional/*.js --timeout 15000",
     "build": "/bin/bash dev/build.sh",
     "lint": "eslint --quiet '**/*.js'"
   },
