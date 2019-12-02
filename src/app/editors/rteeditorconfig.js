@@ -38,6 +38,7 @@ import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
 import ModeSwitcher from '../plugins/modeswitcher';
 
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
+import QuoteSelection from '../plugins/quoteselection';
 
 export default function getRteEditorConfig( rteEditor ) {
 	return {
@@ -51,7 +52,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			List, TodoList,
 			HorizontalLine, Table, TableToolbar,
 			Kebab, RemoveFormat, ModeSwitcher,
-			PasteFromOffice
+			PasteFromOffice, QuoteSelection
 		],
 		toolbar: [
 			'headingswitch', 'bold', 'italic', '|',

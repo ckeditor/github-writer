@@ -4,22 +4,23 @@
  */
 
 import Editor from './editor';
+import EmitterMixin from '@ckeditor/ckeditor5-utils/src/emittermixin';
+import mix from '@ckeditor/ckeditor5-utils/src/mix';
 
 import './theme/githubrte.css';
 
-let pageManager;
 const editors = new WeakMap();
 const actionButtons = new WeakSet();
 
 export default class App {
 	static run() {
-		if ( pageManager ) {
+		if ( App.pageManager ) {
 			throw new Error( 'The application is already running.' );
 		}
 
-		pageManager = new PageManager();
+		App.pageManager = new PageManager();
 
-		const promise = pageManager.setupMainEditor();
+		const promise = App.pageManager.setupMainEditor();
 
 		// Check if the promise has been imediatelly rejected.
 		let rejected;
@@ -28,7 +29,7 @@ export default class App {
 		} );
 
 		if ( !rejected ) {
-			pageManager.setupEdit();
+			App.pageManager.setupEdit();
 		}
 
 		return promise;
@@ -50,7 +51,7 @@ class PageManager {
 			function searchEditButtons( root ) {
 				root.querySelectorAll( '.js-comment-edit-button' )
 					.forEach( editButton => {
-						pageManager.watchEditButton( editButton );
+						App.pageManager.watchEditButton( editButton );
 					} );
 			}
 
@@ -123,3 +124,5 @@ class PageManager {
 		return editor.create();
 	}
 }
+
+mix( PageManager, EmitterMixin );

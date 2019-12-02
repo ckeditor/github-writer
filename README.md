@@ -48,8 +48,8 @@ One of the goals of this extension is providing all features which are available
         *   [x] Auto-complete (list when typing ":")
     *   [x] Escape markdown in text
     *   [x] Tables
+    *   [x] Quote selection ("r" key)
     *   [ ] Saved replies
-    *   [ ] Load quoted text ("r" key)
 
 ### Pages enabled
 

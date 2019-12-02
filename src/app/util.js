@@ -46,3 +46,21 @@ export class PageIncompatibilityError extends Error {
 			`Upgrade to the latest version of the browser extension.` );
 	}
 }
+
+/**
+ * Injects a `<script>` element into the page, executing the provided function.
+ *
+ * Note that the function will be inlined as a string, so it'll not have access to any local references.
+ * @param fn The function to be executed.
+ */
+export function injectFunctionExecution( fn ) {
+	fn = fn.toString();
+
+	// Remove comments from the function as they can break the execution (the function is inlined as a single line).
+	fn = fn.replace( /\/\/.*$/mg, '' );
+
+	const script = document.createElement( 'script' );
+	script.innerText = '(' + ( fn ) + ')();';
+
+	( document.body || document.head ).appendChild( script );
+}
