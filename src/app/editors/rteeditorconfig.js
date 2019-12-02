@@ -41,11 +41,20 @@ import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefrom
 import QuoteSelection from '../plugins/quoteselection';
 import ResetListener from '../plugins/resetlistener';
 
+import App from '../app';
+
 export default function getRteEditorConfig( rteEditor ) {
+	const isCommentsPage = App.pageManager.type === 'comments';
+
+	// Plugins that should be included in pages of type "comments" only (no wiki).
+	const commentsPagePlugins = [
+		Mention, ImageUpload, GitHubUploadAdapter, QuoteSelection
+	];
+
 	return {
 		plugins: [
-			Essentials, Paragraph, Autoformat, Mention,
-			Image, ImageUpload, GitHubUploadAdapter,
+			Essentials, Paragraph, Autoformat,
+			Image,
 			HeadingSwitch,
 			Bold, Italic, SmartCode, Strikethrough,
 			BlockQuote,
@@ -53,20 +62,21 @@ export default function getRteEditorConfig( rteEditor ) {
 			List, TodoList,
 			HorizontalLine, Table, TableToolbar,
 			Kebab, RemoveFormat, ModeSwitcher,
-			PasteFromOffice, QuoteSelection, ResetListener
-		],
+			PasteFromOffice,
+			ResetListener
+		].concat( isCommentsPage ? commentsPagePlugins : [] ),
 		toolbar: [
 			'headingswitch', 'bold', 'italic', '|',
 			'blockquote', 'smartcode', 'link', '|',
 			'bulletedlist', 'numberedlist', 'todolist', 'kebab'
 		],
-		kebabToolbar: [
-			'strikethrough', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode'
-		],
+		kebabToolbar: isCommentsPage ?
+			[ 'strikethrough', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ] :
+			[ 'strikethrough', 'removeFormat', '|', 'horizontalline', 'insertTable', '|', 'mode' ],
 		table: {
 			contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
 		},
-		placeholder: 'Leave a comment',
+		placeholder: isCommentsPage ? 'Leave a comment' : null,
 		heading: {
 			// TODO: Check the class names here.
 			options: [
@@ -80,10 +90,10 @@ export default function getRteEditorConfig( rteEditor ) {
 			]
 		},
 		mention: {
-			feeds: getMentionConfig()
+			feeds: isCommentsPage && getMentionConfig()
 		},
 		githubRte: {
-			upload: getUploadConfig()
+			upload: isCommentsPage && getUploadConfig()
 		}
 	};
 

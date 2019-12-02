@@ -3,11 +3,25 @@
  * For licensing, see LICENSE.md.
  */
 
+import App from './app';
+
 import MarkdownEditor from './editors/markdowneditor';
 import RteEditor from './editors/rteeditor';
+import WikiMarkdownEditor from './editors/wikimarkdowneditor';
+import WikiRteEditor from './editors/wikirteeditor';
+
 import EmitterMixin from '@ckeditor/ckeditor5-utils/src/emittermixin';
 import mix from '@ckeditor/ckeditor5-utils/src/mix';
+
 import { checkDom } from './util';
+
+function getEditorClasses() {
+	const isWiki = App.pageManager.type === 'wiki';
+	return {
+		MarkdownEditor: isWiki ? WikiMarkdownEditor : MarkdownEditor,
+		RteEditor: isWiki ? WikiRteEditor : RteEditor
+	};
+}
 
 export default class Editor {
 	/**
@@ -29,8 +43,15 @@ export default class Editor {
 
 		checkDom( this.dom );
 
+		const { MarkdownEditor, RteEditor } = getEditorClasses();
+
 		this.markdownEditor = new MarkdownEditor( this );
 		this.rteEditor = new RteEditor( this );
+
+		// Mark the root when in a Wiki page, to enable a whole world of dedicated CSS for it.
+		if ( this.markdownEditor instanceof WikiMarkdownEditor ) {
+			markdownEditorRootElement.classList.add( 'github-rte-type-wiki' );
+		}
 	}
 
 	getMode() {

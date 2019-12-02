@@ -20,7 +20,9 @@
 	  "matches": [
 		"https://github.com/*/issues/*",
 		"https://github.com/*/pull/*",
-		"https://github.com/*/compare/*"
+		"https://github.com/*/compare/*",
+		"https://github.com/*/wiki/_new*",
+		"https://github.com/*/wiki/*/_edit"
 	  ],
 	  "js": [
 		"github-rte.js"

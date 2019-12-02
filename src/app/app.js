@@ -37,7 +37,22 @@ export default class App {
 }
 
 class PageManager {
+	constructor() {
+		// Detect if we're in a wiki page.
+		const meta = document.querySelector( 'meta[name="selected-link"' );
+		if ( meta && meta.getAttribute( 'value' ) === 'repo_wiki' ) {
+			this.type = 'wiki';
+		} else {
+			this.type = 'comments';
+		}
+	}
+
 	setupEdit() {
+		// Comments editing is available only on pages of type "comments".
+		if ( this.type !== 'comments' ) {
+			return;
+		}
+
 		// Watch all edit buttons currently available in the page.
 		{
 			const editButtons = Array.from( document.querySelectorAll( '.js-comment-edit-button' ) );
@@ -95,32 +110,37 @@ class PageManager {
 	}
 
 	setupMainEditor() {
-		// Search for the main editor available in the page, if any.
-		const commentRoot = document.querySelector( '.timeline-comment:not(.comment)' );
+		const rootSelectors = {
+			wiki: '#gollum-editor',
+			comments: '.timeline-comment:not(.comment)'
+		};
 
-		if ( commentRoot ) {
-			return this.setupEditor( commentRoot );
+		// Search for the main editor available in the page, if any.
+		const root = document.querySelector( rootSelectors[ this.type ] );
+
+		if ( root ) {
+			return this.setupEditor( root );
 		}
 
 		return Promise.resolve( false );
 	}
 
-	setupEditor( commentRoot ) {
-		if ( editors.has( commentRoot ) ) {
+	setupEditor( rootElement ) {
+		if ( editors.has( rootElement ) ) {
 			const error = new Error( 'GitHub RTE error: an editor has already been created for this element.' );
-			error.element = commentRoot;
+			error.element = rootElement;
 			return Promise.reject( error );
 		}
 
 		let editor;
 
 		try {
-			editor = new Editor( commentRoot );
+			editor = new Editor( rootElement );
 		} catch ( error ) {
 			return Promise.reject( error );
 		}
 
-		editors.set( commentRoot, editor );
+		editors.set( rootElement, editor );
 		return editor.create();
 	}
 }

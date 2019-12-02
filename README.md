@@ -64,11 +64,11 @@ The GitHub RTE should be enabled in all places where the original markdown edito
     *   [x] Create
     *   [x] Comment
         *   [x] Editing
+*   [x] Wiki pages
 *   [ ] Commits
     *   [ ] Comment
     *   [ ] Line comment
 *   [ ] Settings > Saved replies
-*   [ ] Wiki pages (well, that's s whole different editor, still a target)
 ---
 
 Copyright (c) 2003-2019, [CKSource](https://cksource.com/) Frederico Knabben.

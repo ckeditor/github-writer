@@ -141,3 +141,36 @@ div.tabnav-tabs,
 nav.tabnav-tabs {
 	margin: 8px 8px -1px 8px !important;
 }
+
+/*******************************
+	Wiki page specific stuff
+********************************/
+
+/* Fix the toolbar position. */
+.github-rte-type-wiki .comment-form-head {
+	display: flex;
+}
+.github-rte-type-wiki .comment-form-head > :first-child {
+	flex: auto;
+}
+
+/* Hide the markdown toolbar. */
+.github-rte-type-wiki.github-rte-mode-rte #gollum-editor-function-bar {
+	display: none;
+}
+
+/* Remove the editor margin, as we don't have the frame around in in wiki. */
+.github-rte-type-wiki .github-rte-panel-rte {
+	margin: 0 !important;
+}
+
+/* Make the editor bigger. Maybe GH calculates the best size, but we're going fixed. */
+.github-rte-type-wiki .github-rte-ckeditor > .ck-editor__editable {
+	max-height: initial !important;
+	height: 390px;
+}
+
+/* Although the blur effect is nices, we're removing it here so the editor stays aligned with other fields. */
+.github-rte-type-wiki .ck-editor__editable.ck-blurred {
+	background-color: white !important;
+}

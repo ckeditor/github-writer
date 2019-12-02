@@ -3,6 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
+import App from '../app';
 import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
 import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
@@ -44,18 +45,12 @@ export default class RteEditor {
 
 		return CKEditorGitHubEditor.create( data, getRteEditorConfig( this ) )
 			.then( editor => {
-				// Inject the rte toolbar right next to the markdown editor toolbar.
-				markdownEditor.dom.toolbar.insertAdjacentElement( 'afterend', editor.ui.view.toolbar.element );
+				this.injectToolbar( editor.ui.view.toolbar.element );
 
 				// Inject the editable in the DOM within the appropriate DOM structure around it.
 				{
 					// Here we mimic part of the GH dom, especially because of the classes.
-					const tree = createElementFromHtml( `
-						<div class="github-rte-panel-rte write-content mx-0 mt-2 mb-2 mx-md-2">
-							<div class="github-rte-ckeditor upload-enabled form-control input-contrast
-								comment-form-textarea comment-body markdown-body"></div>
-						</div>
-					` );
+					const tree = createElementFromHtml( this.getEditableParentTree() );
 
 					// Inject the editor tree.
 					tree.querySelector( '.github-rte-ckeditor' ).append( editor.ui.getEditableElement() );
@@ -79,6 +74,20 @@ export default class RteEditor {
 				// TODO: check if possible to fire Editor('ready') when everything is really ready.
 				editor.fire( 'reallyReady' );
 			} );
+	}
+
+	injectToolbar( toolbarElement ) {
+		// Inject the rte toolbar right next to the markdown editor toolbar.
+		this.githubEditor.markdownEditor.dom.toolbar.insertAdjacentElement( 'afterend', toolbarElement );
+	}
+
+	getEditableParentTree() {
+		return `
+			<div class="github-rte-panel-rte write-content mx-0 mt-2 mb-2 mx-md-2">
+				<div class="github-rte-ckeditor upload-enabled form-control input-contrast
+					comment-form-textarea comment-body markdown-body"></div>
+			</div>
+		`;
 	}
 }
 
@@ -106,6 +115,11 @@ class CKEditorGitHubEditor extends DecoupledEditor {
 
 // Used by the Kebab plugin as well.
 export function toolbarItemsPostfix( toolbar, tooltipPosition ) {
+	// Postfix is possible only in pages type "comments" (not "wiki").
+	if ( App.pageManager.type !== 'comments' ) {
+		return;
+	}
+
 	// Get the original labels used in GH.
 	const labels = {
 		'Bold': document.querySelector( 'md-bold' ).getAttribute( 'aria-label' ),
