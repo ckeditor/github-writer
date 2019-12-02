@@ -96,4 +96,8 @@
 			}
 		}
 	}
+
+	& blockquote {
+		font-style: initial;
+	}
 }
