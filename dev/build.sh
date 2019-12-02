@@ -22,12 +22,14 @@ echo "Removing manifest comments..."
 ./node_modules/.bin/strip-json-comments src/extension-chrome/manifest.json > build/extension-chrome/manifest.json
 ./node_modules/.bin/strip-json-comments src/extension-firefox/manifest.json > build/extension-firefox/manifest.json
 
-echo "Copying bundled scripts to the browser extensions..."
+echo "Copying files to the browser extensions..."
 cp build/js/*.* build/extension-chrome
-cp src/css/*.css build/extension-chrome
+cp src/css/*.* build/extension-chrome
+cp src/icons/*.* build/extension-chrome
 
 cp build/js/*.* build/extension-firefox
-cp src/css/*.css build/extension-firefox
+cp src/css/*.* build/extension-firefox
+cp src/icons/*.* build/extension-firefox
 
 echo "Creating extension files..."
 zip -jq build/github-rte-chrome.zip build/extension-chrome/*.*

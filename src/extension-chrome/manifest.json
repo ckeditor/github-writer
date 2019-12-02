@@ -26,5 +26,12 @@
 	  "run_at": "document_end"
 	}
   ],
+  "icons": {
+	"16": "github-rte-16.png",
+	"32": "github-rte-32.png",
+	"48": "github-rte-48.png",
+	"96": "github-rte-96.png",
+	"128": "github-rte-128.png"
+  },
   "manifest_version": 2
 }
