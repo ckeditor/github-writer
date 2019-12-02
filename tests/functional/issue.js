@@ -188,6 +188,11 @@ describe( 'This test suite', function() {
 				return root.querySelector( 'div.github-rte-ckeditor' );
 			}, dom.rootElement ) ), 5000 );
 
+			// This is the only reliable way to reset the editor contents. Unfortunally sending `ctrl+a` + `delete` doesn't work.
+			await driver.executeScript( () => {
+				window.postMessage( { type: 'GitHub-RTE-Reset-Editor' } );
+			} );
+
 			// Get the RTE editor editable.
 			const editable = await dom.rootElement.findElement( By.css( 'div.github-rte-ckeditor > .ck-editor__editable' ) );
 
@@ -195,9 +200,9 @@ describe( 'This test suite', function() {
 			await editable.sendKeys(
 				// Select all. (Not working)
 				// editable.clear() also not working.
-				Key.CONTROL, 'a', Key.CONTROL,
-				// Delete.
-				Key.BACK_SPACE,
+				// Key.CONTROL, 'a', Key.CONTROL,
+				// // Delete.
+				// Key.BACK_SPACE,
 				// Type.
 				'Editing comment using the ', Key.CONTROL, 'b', Key.CONTROL, 'RTE editor', Key.CONTROL, 'b', Key.CONTROL, '.',
 				Key.ENTER,
@@ -223,11 +228,9 @@ describe( 'This test suite', function() {
 				return commentBody.innerHTML.replace( /^\s+|\s+$/g, '' );
 			}, commentBody );
 
-			// This was the original check, but CTRL+A + DELETE is not working, so we got a simpler check.
-			// expect( html ).to.equal(
-			// 	'<p>Editing comment using the <strong>RTE editor</strong>.</p>\n' +
-			// 	`<p>Time stamp: ${ timestamp }.</p>` );
-			expect( html ).to.include( timestamp );
+			expect( html ).to.equal(
+				'<p>Editing comment using the <strong>RTE editor</strong>.</p>\n' +
+				`<p>Time stamp: ${ timestamp }.</p>` );
 		}
 	} );
 
