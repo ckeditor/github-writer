@@ -1,33 +1,35 @@
 {
-	"manifest_version": 2,
-	"name": "GitHub RTE",
-	"description": "Rich-text editing in GitHub. Powered by CKEditor.",
-	"version": "1.0",
-	"applications": {
-		"gecko": {
-		  	"id": "github-rte@cksource.com"
-		}
-	},
-	"permissions": [
-		// The following are domains used by GitHub to upload files. We need to have permissions on them,
-		// so we avoid cross-origin issues when mimicking the upload within the GitHubUploadAdapter class.
-		"https://github.com/",
-		"https://*.s3.amazonaws.com/"
-	],
-	"content_scripts": [
-		{
-			"matches": [
-				"https://github.com/*/issues/*",
-				"https://github.com/*/pull/*",
-				"https://github.com/*/compare/*"
-			],
-			"js": [
-				"github-rte.js"
-			],
-			"css": [
-				"github-rte.css"
-			],
-			"run_at": "document_end"
-		}
-	]
+  "name": "GitHub Rich-Text Editor (RTE)",
+  "short_name": "GitHub RTE",
+  "description": "WYSIWYG, rich-text editing in GitHub. Powered by CKEditor.",
+  "version": "0.1.0",
+  "author": "CKSource",
+  "applications": {
+	"gecko": {
+	  "id": "github-rte@cksource.com"
+	}
+  },
+  "permissions": [
+	// The following are domains used by GitHub to upload files. We need to have permissions on them,
+	// so we avoid cross-origin issues when mimicking the upload within the GitHubUploadAdapter class.
+	"https://github.com/",
+	"https://*.s3.amazonaws.com/"
+  ],
+  "content_scripts": [
+	{
+	  "matches": [
+		"https://github.com/*/issues/*",
+		"https://github.com/*/pull/*",
+		"https://github.com/*/compare/*"
+	  ],
+	  "js": [
+		"github-rte.js"
+	  ],
+	  "css": [
+		"github-rte.css"
+	  ],
+	  "run_at": "document_end"
+	}
+  ],
+  "manifest_version": 2
 }

@@ -16,7 +16,7 @@ module.exports = [
 		entry: './src/github-rte.js',
 
 		output: {
-			path: path.resolve( __dirname, '../build' ),
+			path: path.resolve( __dirname, '../build/js' ),
 			filename: 'github-rte.js'
 		},
 
