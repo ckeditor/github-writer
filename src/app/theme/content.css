@@ -65,6 +65,11 @@
 		}
 	}
 
+	& pre[data-language]:after {
+		/* Hide the inline label in code blocks as it's not working (and it's not relevant for now). */
+		content: '' !important;
+	}
+
 	& pre br {
 		display: initial !important;
 	}
