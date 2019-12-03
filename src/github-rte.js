@@ -3,15 +3,20 @@
  * For licensing, see LICENSE.md.
  */
 
+/* global process */
+
 import App from './app/app';
 import { PageIncompatibilityError } from './app/util';
 
-console.time( 'GitHub RTE loaded and ready' );
+if ( process.env.NODE_ENV !== 'production' ) {
+	console.time( 'GitHub RTE loaded and ready' );
+}
 
 App.run()
 	.then( () => {
-		// TODO: Remove this at some point.
-		console.timeEnd( 'GitHub RTE loaded and ready' );
+		if ( process.env.NODE_ENV !== 'production' ) {
+			console.timeEnd( 'GitHub RTE loaded and ready' );
+		}
 	} )
 	.catch( reason => {
 		if ( reason instanceof PageIncompatibilityError ) {
