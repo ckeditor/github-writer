@@ -10,6 +10,9 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import getRteEditorConfig from './rteeditorconfig';
 import { createElementFromHtml } from '../util';
 
+// Inject the our very own CKEditor theme overrides.
+import '../theme/githubrte.css';
+
 export default class RteEditor {
 	constructor( githubEditor ) {
 		this.githubEditor = githubEditor;

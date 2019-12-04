@@ -1,3 +1,9 @@
+// @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+// For licensing, see LICENSE.md.
+
+// This is the browser extension manifest file. Both Chrome and Firefox (and maybe even Edge) share the same standards
+// and syntax for the manifest, still there are some small differences, which force us to have to maintain separate files.
+
 {
   "name": "GitHub Rich-Text Editor (RTE)",
   "short_name": "GitHub RTE",

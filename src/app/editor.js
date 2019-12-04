@@ -3,6 +3,8 @@
  * For licensing, see LICENSE.md.
  */
 
+/* global process */
+
 import App from './app';
 
 import MarkdownEditor from './editors/markdowneditor';
@@ -15,6 +17,7 @@ import mix from '@ckeditor/ckeditor5-utils/src/mix';
 
 import { checkDom } from './util';
 
+// Gets the proper editor classes to be used, based on the type of page we're in.
 function getEditorClasses() {
 	const isWiki = App.pageManager.type === 'wiki';
 	return {
@@ -23,38 +26,80 @@ function getEditorClasses() {
 	};
 }
 
+/**
+ * A GitHub RTE editor, which is a complex editor containing two switchable editing modes: RTE and Markdown.
+ * It is created around a standard GitHub markdown editor, enhancing it.
+ *
+ * @mixes EmitterMixin
+ */
 export default class Editor {
 	/**
 	 * Creates a GitHub RTE editor.
 	 *
-	 * @param markdownEditorRootElement {HTMLElement} The element that contains the complete DOM of a single GitHub markdown
-	 * editor.
+	 * @param {HTMLElement} markdownEditorRootElement The outermost element that contains the complete dom of a single
+	 * GitHub markdown editor.
 	 */
 	constructor( markdownEditorRootElement ) {
-		// This will expose the list of editors in the extension console.
-		( window.GITHUB_RTE_EDITORS = window.GITHUB_RTE_EDITORS || [] ).push( this );
+		// This will expose the list of editors in the extension console in the dev build.
+		if ( process.env.NODE_ENV !== 'production' ) {
+			( window.GITHUB_RTE_EDITORS = window.GITHUB_RTE_EDITORS || [] ).push( this );
+		}
 
-		this.dom = {
-			root: markdownEditorRootElement,
-			tabs: {
-				write: markdownEditorRootElement.querySelector( '.write-tab' )
+		{
+			/**
+			 * The GitHub dom elements that are required for this class to operate.
+			 *
+			 * A check is made against these elements. If any element is missing, an error is thrown and the creation of
+			 * the editor is aborted without consequences to the end user, who can still use the original markdown editor.
+			 *
+			 * @type {{root: HTMLElement, tabs: {write: Element}}}
+			 */
+			this.dom = {
+				/**
+				 * The outermost element encompassing the structure around the original GitHub markdown editor.
+				 */
+				root: markdownEditorRootElement,
+				tabs: {
+					/**
+					 * The "Write" tab.
+					 */
+					write: markdownEditorRootElement.querySelector( '.write-tab' )
+				}
+			};
+
+			checkDom( this.dom );
+		}
+
+		{
+			// Take the proper classes to be used to create the editors.
+			const { MarkdownEditor, RteEditor } = getEditorClasses();
+
+			/**
+			 * The markdown editor used by this editor.
+			 * @type {MarkdownEditor|WikiMarkdownEditor}
+			 */
+			this.markdownEditor = new MarkdownEditor( this );
+
+			/**
+			 * The rte editor used by the editor.
+			 * @type {RteEditor|WikiRteEditor}
+			 */
+			this.rteEditor = new RteEditor( this );
+
+			// Mark the root when in a Wiki page, to enable a whole world of dedicated CSS for it.
+			if ( this.markdownEditor instanceof WikiMarkdownEditor ) {
+				markdownEditorRootElement.classList.add( 'github-rte-type-wiki' );
 			}
-		};
-
-		checkDom( this.dom );
-
-		const { MarkdownEditor, RteEditor } = getEditorClasses();
-
-		this.markdownEditor = new MarkdownEditor( this );
-		this.rteEditor = new RteEditor( this );
-
-		// Mark the root when in a Wiki page, to enable a whole world of dedicated CSS for it.
-		if ( this.markdownEditor instanceof WikiMarkdownEditor ) {
-			markdownEditorRootElement.classList.add( 'github-rte-type-wiki' );
 		}
 	}
 
+	/**
+	 * The currently active in the editor.
+	 *
+	 * @returns {String|null} One of the {Editor.modes}.
+	 */
 	getMode() {
+		// Take the mode from the dom directly.
 		if ( this.dom.root.classList.contains( 'github-rte-mode-rte' ) ) {
 			return Editor.modes.RTE;
 		} else if ( this.dom.root.classList.contains( 'github-rte-mode-markdown' ) ) {
@@ -63,6 +108,20 @@ export default class Editor {
 		return Editor.modes.UNKNOWN;
 	}
 
+	/**
+	 * Activates a given mode into the editor.
+	 *
+	 * When activating a mode, the following operations are, by default, executed:
+	 *   1. The data from the active editor is copied to the editor of the new mode.
+	 *   2. If moving to the rte mode, a check for data loss is done, following the above step. If loss is detected,
+	 *      a confirmation message is displayed to the user.
+	 *
+	 * @param {String} mode Either {Editor.modes.RTE} or {Editor.modes.MARKDOWN}.
+	 * @param {Object} [options] Options to configure the execution of setMode().
+	 * @param {Boolean} [options.noSynch=false] Do not synchronize the inner editors data before changing mode.
+	 * @param {Boolean} [options.noCheck=false] Do not perform data loss checks.
+	 * @fires Editor#mode
+	 */
 	setMode( mode, options = { noSynch: false, noCheck: false } ) {
 		const currentMode = this.getMode();
 
@@ -74,6 +133,7 @@ export default class Editor {
 			this.syncEditors();
 		}
 
+		// If moving markdown -> rte.
 		if ( !options.noCheck && currentMode === Editor.modes.MARKDOWN && mode === Editor.modes.RTE ) {
 			if ( this._checkDataLoss() ) {
 				// eslint-disable-next-line no-alert
@@ -85,7 +145,7 @@ export default class Editor {
 			}
 		}
 
-		// Ensure that we have the write tab active (not preview).
+		// Ensure that we have the write tab active otherwise the preview may still be visible.
 		if ( currentMode !== Editor.modes.UNKNOWN ) {
 			this.dom.tabs.write.click();
 		}
@@ -94,9 +154,19 @@ export default class Editor {
 		this.dom.root.classList.toggle( 'github-rte-mode-rte', mode === Editor.modes.RTE );
 		this.dom.root.classList.toggle( 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
 
+		/**
+		 * Fired after a new mode has been activated in the editor.
+		 *
+		 * @event Editor#mode
+		 */
 		this.fire( 'mode' );
 	}
 
+	/**
+	 * Creates and injects this editor into the page.
+	 *
+	 * @returns {Promise<Editor>} A promise that resolves once the rte editor instance used by this editor is created and ready.
+	 */
 	create() {
 		return this.rteEditor.create()
 			.then( () => {
@@ -104,9 +174,16 @@ export default class Editor {
 				this._setupEmptyCheck();
 				this._setupForm();
 				this._setInitialMode();
-			} );
+			} )
+			// Curiously, tests where failing when return `this` at the end of the above `then()`. Here it's fine.
+			.then( () => this );
 	}
 
+	/**
+	 * Copies the data from the editor of the currently active mode to the other mode editor.
+	 *
+	 * This operation is done when switching modes and before form post.
+	 */
 	syncEditors() {
 		if ( this.getMode() === Editor.modes.RTE ) {
 			this.markdownEditor.setData( this.rteEditor.getData() );
@@ -115,6 +192,11 @@ export default class Editor {
 		}
 	}
 
+	/**
+	 * Setups focus related features.
+	 *
+	 * @private
+	 */
 	_setupFocus() {
 		// Enable editor focus when clicking the "Write" tab.
 		this.dom.tabs.write.addEventListener( 'click', () => {
@@ -125,7 +207,7 @@ export default class Editor {
 
 		// Enable the GitHub focus styles when the editor focus/blur.
 		{
-			// Take the element that GH styles on focus.
+			// Take the element that GH would styles on focus.
 			const focusBox = this.dom.root.querySelector( '.github-rte-ckeditor' );
 
 			// Watch for editor focus changes.
@@ -135,7 +217,13 @@ export default class Editor {
 		}
 	}
 
+	/**
+	 * Setup empty checks in the rte editor that influence the page behavior.
+	 *
+	 * @private
+	 */
 	_setupEmptyCheck() {
+		// Enable/disable the submit buttons based on the editor emptyness.
 		this.rteEditor.ckeditor.on( 'change:isEmpty', ( eventInfo, name, isEmpty ) => {
 			if ( this.getMode() === Editor.modes.RTE ) {
 				// Take the GH textarea, which is now hidden.
@@ -151,6 +239,11 @@ export default class Editor {
 		} );
 	}
 
+	/**
+	 * Setups the form submit and reset.
+	 *
+	 * @private
+	 */
 	_setupForm() {
 		const form = this.markdownEditor.dom.textarea.form;
 
@@ -162,6 +255,7 @@ export default class Editor {
 			}
 		} );
 
+		// Reset the rte editor on form reset (e.g. after a new comment is added).
 		form.addEventListener( 'reset', () => {
 			// We actually want it 'after-reset', so form elements are clean, thus setTimeout.
 			setTimeout( () => {
@@ -171,17 +265,30 @@ export default class Editor {
 		} );
 	}
 
+	/**
+	 * Sets the most appropriate mode for this editor on startup.
+	 *
+	 * It defaults to rte but, when editing existing data, it may happen that the markdown to be loaded is not
+	 * compatible with the rte editor. In such case, start on markdown mode and let the it to user to decide whether
+	 * to move to rte or not by using the ui.
+	 *
+	 * @private
+	 */
 	_setInitialMode() {
-		// For safety, if the editor is not handling well the markdown data, stays in Markdown mode.
 		this.setMode( this._checkDataLoss() ? Editor.modes.MARKDOWN : Editor.modes.RTE,
 			{ noSynch: true, noCheck: true } );
 	}
 
 	/**
-	 * Checks if the current data loaded in CKEditor is different (semantically) from the markdown available in the GH textarea.
+	 * Checks if the data present in the rte editor may indicate a potential for data loss when compared
+	 * to the data in the markdown editor.
+	 *
 	 * @private
 	 */
 	_checkDataLoss() {
+		// The trick is very simple. Both editor produce markdown, so we check if the one produced with the rte editor
+		// is semantically similar to the one in the markdown editor.
+
 		const rteData = this.rteEditor.getData();
 		const markdownData = this.markdownEditor.getData();
 
@@ -195,6 +302,14 @@ export default class Editor {
 
 mix( Editor, EmitterMixin );
 
+/**
+ * The possible modes an {Editor} can be:
+ *   - RTE: the rte editor is active.
+ *   - MARKDOWN: the markdown editor is active.
+ *   - UNKNOWN: the current mode is not set (during initialization).
+ *
+ * @type {{RTE: string, MARKDOWN: string, UNKNOWN: null}}
+ */
 Editor.modes = {
 	RTE: 'rte',
 	MARKDOWN: 'markdown',

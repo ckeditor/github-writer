@@ -40,6 +40,11 @@ export function checkDom( dom ) {
 	} );
 }
 
+/**
+ * We do some initialization checks on the page, to minimize the risk of execution errors while injecting the editor.
+ * If GH will ever change the dom and make it incompatible, the PageIncompatibilityError is thrown.
+ * This should not affect the ability of the user to use the page as we'll leave things untouched and quit.
+ */
 export class PageIncompatibilityError extends Error {
 	constructor() {
 		super( `GitHub RTE error: this page doesn't seem to be compatible with this application anymore. ` +

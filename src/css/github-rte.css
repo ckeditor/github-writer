@@ -170,7 +170,7 @@ nav.tabnav-tabs {
 	height: 390px;
 }
 
-/* Although the blur effect is nices, we're removing it here so the editor stays aligned with other fields. */
+/* Although the blur effect is nice, we're removing it here so the editor stays aligned with other fields. */
 .github-rte-type-wiki .ck-editor__editable.ck-blurred {
 	background-color: white !important;
 }

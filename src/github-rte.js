@@ -3,6 +3,13 @@
  * For licensing, see LICENSE.md.
  */
 
+/**
+ * This file is the entry point of the application.
+ *
+ * The application runs on every page of GitHub that matches the rules specified in the extension's manifest file.
+ * In those pages, the application will search for GH native markdown editors and inject CKEditor around them.
+ */
+
 /* global process */
 
 import App from './app/app';
@@ -13,9 +20,11 @@ if ( process.env.NODE_ENV !== 'production' ) {
 }
 
 App.run()
-	.then( () => {
+	.then( editor => {
 		if ( process.env.NODE_ENV !== 'production' ) {
 			console.timeEnd( 'GitHub RTE loaded and ready' );
+			console.log( App.pageManager );
+			console.log( editor );
 		}
 	} )
 	.catch( reason => {
