@@ -7,32 +7,40 @@ import CKEditorAutoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 import InlineAutoformatEditing from '@ckeditor/ckeditor5-autoformat/src/inlineautoformatediting';
 import BlockAutoformatEditing from '@ckeditor/ckeditor5-autoformat/src/blockautoformatediting';
 
+/**
+ * An implementation of CKEditorAutoformat with additional auto-formatters for the GitHub RTE editor.
+ */
 export default class Autoformat extends CKEditorAutoformat {
+	/**
+	 * @inheritDoc
+	 */
 	afterInit() {
 		super.afterInit();
-		this.__addAutoformats();
-	}
 
-	__addAutoformats() {
-		const commands = this.editor.commands;
+		// Additional auto-formatters.
+		{
+			const commands = this.editor.commands;
 
-		if ( commands.get( 'strikethrough' ) ) {
-			/* eslint-disable no-new */
-			const codeCallback = getCallbackFunctionForInlineAutoformat( this.editor, 'strikethrough' );
+			// ~text~ -> strikethrough
+			if ( commands.get( 'strikethrough' ) ) {
+				/* eslint-disable no-new */
+				const codeCallback = getCallbackFunctionForInlineAutoformat( this.editor, 'strikethrough' );
 
-			new InlineAutoformatEditing( this.editor, /(~)([^~]+)(~)$/g, codeCallback );
-			/* eslint-enable no-new */
-		}
+				new InlineAutoformatEditing( this.editor, /(~)([^~]+)(~)$/g, codeCallback );
+				/* eslint-enable no-new */
+			}
 
-		if ( commands.get( 'horizontalLine' ) ) {
-			// eslint-disable-next-line no-new
-			new BlockAutoformatEditing( this.editor, /^-{3,}$/, 'horizontalLine' );
+			// --- (3 or more dashes) -> horizontal line
+			if ( commands.get( 'horizontalLine' ) ) {
+				// eslint-disable-next-line no-new
+				new BlockAutoformatEditing( this.editor, /^-{3,}$/, 'horizontalLine' );
+			}
 		}
 	}
 }
 
-// TODO: Maybe enhance the CKEditor Autoformat plugin to be more easier to configure new autoformaters.
-// Plain copy from @ckeditor/ckeditor5-autoformat/src/autoformat.
+// TODO: Maybe enhance the CKEditor Autoformat plugin to be easier to configure new autoformaters.
+// Plain copy from @ckeditor/ckeditor5-autoformat/src/autoformat, which is not exported.
 function getCallbackFunctionForInlineAutoformat( editor, attributeKey ) {
 	return ( writer, rangesToFormat ) => {
 		const command = editor.commands.get( attributeKey );

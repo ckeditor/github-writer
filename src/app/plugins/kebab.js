@@ -7,9 +7,18 @@ import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import { addToolbarToDropdown, createDropdown } from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
 import normalizeToolbarConfig from '@ckeditor/ckeditor5-ui/src/toolbar/normalizetoolbarconfig';
 import { toolbarItemsPostfix } from '../editors/rteeditor';
+
 import kebabIcon from '../icons/kebab.svg';
 
+/**
+ * Introduces the 'kebab' ui button dropdown.
+ *
+ * The items to be displayed in the dropdown toolbar are taken from the 'kebabToolbar' editor configuration.
+ */
 export default class Kebab extends Plugin {
+	/**
+	 * @inheritDoc
+	 */
 	init() {
 		const editor = this.editor;
 
@@ -40,6 +49,7 @@ export default class Kebab extends Plugin {
 			const toolbarConfig = normalizeToolbarConfig( editor.config.get( 'kebabToolbar' ) );
 			dropdown.toolbarView.fillFromConfig( toolbarConfig.items, editor.ui.componentFactory );
 
+			// Execute the toolbar items postfix, just like for the main toolbar.
 			toolbarItemsPostfix( dropdown.toolbarView, 's' );
 
 			return dropdown;

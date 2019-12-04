@@ -19,6 +19,9 @@ export default class SmartCode extends Plugin {
 		return [ Code, CodeBlock ];
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	init() {
 		const editor = this.editor;
 
@@ -33,6 +36,7 @@ export default class SmartCode extends Plugin {
 			} );
 
 			// Bind the button state to both the 'code' and 'codeBlock' commands state.
+			// If any of them is on/enabled, so is the button.
 			{
 				const codeCommand = editor.commands.get( 'code' );
 				const codeBlockCommand = editor.commands.get( 'codeBlock' );
@@ -67,7 +71,6 @@ export default class SmartCode extends Plugin {
 					}
 				}
 
-				// Finally, if the selection is not good for inline code, go ahead with code block.
 				editor.execute( command );
 			} );
 

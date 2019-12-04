@@ -5,13 +5,24 @@
 
 import RteEditor from './rteeditor';
 
+/**
+ * The rte editor, with CKEditor 5 under the hood, used in the wiki pages.
+ */
 export default class WikiRteEditor extends RteEditor {
+	/**
+	 * @inheritDoc
+	 */
 	injectToolbar( toolbarElement ) {
 		// Inject the rte toolbar at the end of the toolbar container.
 		this.githubEditor.markdownEditor.dom.toolbarContainer.appendChild( toolbarElement );
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	getEditableParentTree() {
+		// Mimic the minimum set of classes that are necessary for the editor, and its contents,
+		// to look like GitHub originals.
 		return `
 			<div class="github-rte-panel-rte">
 				<div class="github-rte-ckeditor upload-enabled form-control markdown-body"></div>

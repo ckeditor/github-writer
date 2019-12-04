@@ -6,19 +6,15 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import FileRepository from '@ckeditor/ckeditor5-upload/src/filerepository';
 
-export default class UploadAdapter extends Plugin {
+/**
+ * The upload adapter that integrates the GitHub file upload infrastructure with CKEditor.
+ */
+export default class GitHubUploadAdapter extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
 	static get requires() {
 		return [ FileRepository ];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	static get pluginName() {
-		return 'GitHubUploadAdapter';
 	}
 
 	/**
@@ -33,19 +29,41 @@ export default class UploadAdapter extends Plugin {
 	}
 }
 
+/**
+ * The adapter created on demand for each file upload request.
+ *
+ * @implements {UploadAdapter}
+ */
 class Adapter {
+	/**
+	 * Create an upload adapter
+	 * @param {FileLoader} loader The file loader instane active for this upload.
+	 * @param {Editor} editor The CKEditor instance of this adapter.
+	 */
 	constructor( loader, editor ) {
 		this.loader = loader;
 		this.editor = editor;
 	}
 
+	/**
+	 * Executes the upload process.
+	 *
+	 * @returns {Promise<{default: *}>} A promise that resolves to an object containing the url to reach the uploaded file.
+	 */
 	upload() {
 		// This variable holds the final result of the whole upload logic: the URL to the uploaded file.
 		let returnUrl;
 
-		// This is an async logic, so we return a promise.
+		// This is an async operation that involves 2 or 3 xhr requests.
+		//
+		// Start by taking the upload configuration, extracting it from the page.
+		//
+		// If the page will not have this information (wiki), a fallback solution is in place, making
+		// a xhr to issues/new and retrieving the configuration from there. All inside upload().
 		return this.editor.config.get( 'githubRte' ).upload()
+			// The upload configuration is passed along.
 			.then( config => {
+				// Now we wait for the file to get loaded in the CKEditor API.
 				return this.loader.file
 					// Uploading on GH is made out of two steps. In our logic we're trying to mimic the requests that
 					// the original GH pages do, including the exact sets of headers and data.
@@ -61,23 +79,26 @@ class Adapter {
 							data.append( 'size', file.size );
 							data.append( 'content_type', file.type );
 
-							// Append all form entries saved by the GitHubEditor class in the editor configuration.
+							// Append all form entries available in the editor configuration (taken from the page).
 							Object.entries( config.form )
 								.forEach( ( [ key, value ] ) => data.append( key, value ) );
 						}
 
-						// The upload url has been also set by the GitHubEditor class.
+						// The upload url is also retrieved from configuration.
 						this._initRequest( config.url );
 
-						// Configure the request further to match the original GH request.
+						// Setup the request further to match the original GH request.
 						this.xhr.responseType = 'json';
 						this.xhr.setRequestHeader( 'Accept', 'application/json' );
 						this.xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
 
-						// Run!
+						// _initListeners is the one responsible to resolve this promise.
 						this._initListeners( resolve, reject, file );
+
+						// Run!
 						this._sendRequest( data );
 					} ) )
+					// The file and the response from the above request are passed along.
 					.then( ( { file, response } ) => new Promise( ( resolve, reject ) => {
 						// Step 2: the real upload takes place this time to Amazon S3 servers,
 						// using information returned from Step 1.
@@ -99,9 +120,12 @@ class Adapter {
 							data.append( 'file', file );
 						}
 
-						// Run!
 						this._initRequest( uploadUrl );
+
+						// _initListeners is the one responsible to resolve this promise.
 						this._initListeners( resolve, reject, file );
+
+						// Run!
 						this._sendRequest( data );
 					} ) )
 					.then( ( /* { file, response } */ ) => {
@@ -113,20 +137,36 @@ class Adapter {
 			} );
 	}
 
-	// Aborts the upload process.
+	/**
+	 * Aborts the upload process.
+	 */
 	abort() {
 		if ( this.xhr ) {
 			this.xhr.abort();
 		}
 	}
 
-	// Initializes the XMLHttpRequest object using the URL passed to the constructor.
+	/**
+	 * Initializes the xhr object.
+	 *
+	 * @param {String} url The endpoint of the request to be made.
+	 * @private
+	 */
 	_initRequest( url ) {
 		const xhr = this.xhr = new XMLHttpRequest();
 		xhr.open( 'POST', url, true );
 	}
 
-	// Initializes XMLHttpRequest listeners.
+	/**
+	 * Setup event listeners (load/abort/error) of the xhr to be sent. These events are responsible for resolving or
+	 * rejecting the pending state of the promise returned by upload().
+	 *
+	 * @param {Function} resolve The function to be called once the xhr request is complete and successful.
+	 *   An object { file, response } is passed to this function.
+	 * @param {Function} reject The function to be called once the xhr aborts or returns an error.
+	 * @param {File} file The file being uploaded.
+	 * @private
+	 */
 	_initListeners( resolve, reject, file ) {
 		const xhr = this.xhr;
 		const loader = this.loader;
@@ -163,7 +203,12 @@ class Adapter {
 		}
 	}
 
-	// Prepares the data and sends the request.
+	/**
+	 * Sends the xhr request.
+	 *
+	 * @param {FormData} data The data being sent in this request.
+	 * @private
+	 */
 	_sendRequest( data ) {
 		this.xhr.send( data );
 	}

@@ -23,7 +23,7 @@ import Link from '@ckeditor/ckeditor5-link/src/link';
 
 import Image from '@ckeditor/ckeditor5-image/src/image';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
-import GitHubUploadAdapter from '../plugins/uploadadapter';
+import GitHubUploadAdapter from '../plugins/githubuploadadapter';
 
 import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
 
@@ -44,10 +44,17 @@ import ResetListener from '../plugins/resetlistener';
 import App from '../app';
 import { getNewIssuePageDom } from '../util';
 
+/**
+ * Gets the configuration for the CKEditor instances to be created by the rte editor.
+ *
+ * @param {RteEditor} rteEditor The rte editor asking for the configurations.
+ * @returns {Object} A configuration object ready to be loaded in a CKEditor instance creation.
+ */
 export default function getRteEditorConfig( rteEditor ) {
+	// There are some special differences among "comments" and "no-comments" (wiki) pages.
 	const isCommentsPage = App.pageManager.type === 'comments';
 
-	// Plugins that should be included in pages of type "comments" only (no wiki).
+	// Plugins that should be included in pages of type "comments" only.
 	const commentsPagePlugins = [
 		Mention, QuoteSelection
 	];
@@ -91,7 +98,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			]
 		},
 		mention: {
-			feeds: isCommentsPage && getMentionConfig()
+			feeds: getMentionsConfig()
 		},
 		githubRte: {
 			/**
@@ -162,10 +169,21 @@ export default function getRteEditorConfig( rteEditor ) {
 		}
 	}
 
-	function getMentionConfig() {
+	/**
+	 * Gets the configuration for mentions feeds.
+	 *
+	 * @returns {Object|null} The configuration object or `null` if the page is not compatible with mentions.
+	 */
+	function getMentionsConfig() {
 		// Get the GH DOM element that holds the urls from which retrieve mentions.
 		const textExpanderElement = rteEditor.githubEditor.markdownEditor.dom.textarea.closest( 'text-expander' );
 
+		// As for now, we don't have mentions in non "comments" pages (wiki).
+		if ( !textExpanderElement || !isCommentsPage ) {
+			return null;
+		}
+
+		// Call the util to build the configuration.
 		return getMentionFeedsConfig( {
 			issues: textExpanderElement.getAttribute( 'data-issue-url' ),
 			people: textExpanderElement.getAttribute( 'data-mention-url' ),

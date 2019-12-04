@@ -6,7 +6,8 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 
 /**
- * Adds the ability to reset the editor contents by focusing it and broadcasting a message with `window.postMessage`.
+ * Makes it possible for external code, including cross-domain, to reset the editor contents by focusing it and
+ * broadcasting a standard message with `window.postMessage( { type: 'GitHub-RTE-Reset-Editor' } )`.
  *
  * This feature is used by the GitHub RTE functional tests.
  */

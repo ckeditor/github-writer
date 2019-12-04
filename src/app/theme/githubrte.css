@@ -3,6 +3,10 @@
  * For licensing, see LICENSE.md.
  */
 
+/*
+	This is the entry point for the theme CSS.
+*/
+
 /* UI */
 @import "toolbar.css";
 @import "mentions.css";

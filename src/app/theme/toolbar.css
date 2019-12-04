@@ -9,9 +9,9 @@
 */
 
 :root {
-	--ck-color-toolbar-border: transparent;
 	--ck-icon-size: 16px;
 	--ck-ui-component-min-height: auto;
+	--ck-color-toolbar-border: transparent;
 	--ck-color-button-default-hover-background: transparent;
 	--ck-color-button-on-background: transparent;
 	--ck-color-button-on-hover-background: transparent;

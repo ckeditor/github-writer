@@ -3,7 +3,13 @@
  * For licensing, see LICENSE.md.
  */
 
+/*
+	Our goal here is making the editor content look as similar as possible with the final content
+	users will have after publishing.
+*/
+
 .ck-content {
+	/* Image */
 	& .image {
 		margin: 0;
 		margin-bottom: 21px;
@@ -20,6 +26,7 @@
 		}
 	}
 
+	/* To-do list */
 	& .todo-list {
 		& li {
 			margin-bottom: initial;
@@ -52,6 +59,7 @@
 		}
 	}
 
+	/* Horizontal line */
 	& div.ck-horizontal-line {
 		padding: 0;
 		overflow: initial;
@@ -65,6 +73,7 @@
 		}
 	}
 
+	/* Code block */
 	& pre[data-language]:after {
 		/* Hide the inline label in code blocks as it's not working (and it's not relevant for now). */
 		content: '' !important;
@@ -74,6 +83,7 @@
 		display: initial !important;
 	}
 
+	/* Table */
 	& .table {
 		margin: 0 0 16px 0;
 
@@ -102,6 +112,7 @@
 		}
 	}
 
+	/* Blockquote */
 	& blockquote {
 		font-style: initial;
 	}
