@@ -23,7 +23,7 @@ import Link from '@ckeditor/ckeditor5-link/src/link';
 
 import Image from '@ckeditor/ckeditor5-image/src/image';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
-import GitHubUploadAdapter from '../uploadadapter';
+import GitHubUploadAdapter from '../plugins/uploadadapter';
 
 import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
 
