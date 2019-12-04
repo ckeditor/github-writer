@@ -174,9 +174,9 @@ export default class Editor {
 				this._setupEmptyCheck();
 				this._setupForm();
 				this._setInitialMode();
-			} )
-			// Curiously, tests where failing when return `this` at the end of the above `then()`. Here it's fine.
-			.then( () => this );
+
+				return this;
+			} );
 	}
 
 	/**

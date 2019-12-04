@@ -216,13 +216,13 @@ describe( 'This test suite', function() {
 
 		// Check if the comment has been properly updated.
 		{
-			// Refresh the page.
-			await driver.navigate().refresh();
-
-			const commentBody = driver.findElement( By.js( () => {
+			const commentBody = await driver.findElement( By.js( () => {
 				const elements = document.querySelectorAll( '.timeline-comment.comment td.comment-body' );
 				return elements[ elements.length - 1 ];
 			} ) );
+
+			// Let's give time for the comment edit to be save until the content of the comment contains the new timestamp.
+			await driver.wait( until.elementTextContains( commentBody, timestamp ) );
 
 			const html = await driver.executeScript( commentBody => {
 				return commentBody.innerHTML.replace( /^\s+|\s+$/g, '' );
