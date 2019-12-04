@@ -6,7 +6,7 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import FileRepository from '@ckeditor/ckeditor5-upload/src/filerepository';
 
-export default class Uploadadapter extends Plugin {
+export default class UploadAdapter extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
