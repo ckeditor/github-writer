@@ -149,13 +149,15 @@ nav.tabnav-tabs {
 /* Fix the toolbar position. */
 .github-rte-type-wiki .comment-form-head {
 	display: flex;
-
-	/* Sticky toolbar. */
-	position: sticky !important;
-	top: 0;
 }
 .github-rte-type-wiki .comment-form-head > :first-child {
 	flex: auto;
+}
+
+.github-rte-type-wiki.github-rte-mode-rte .comment-form-head {
+	/* Sticky toolbar. */
+	position: sticky !important;
+	top: 0;
 }
 
 .github-rte-type-wiki .form-actions {
