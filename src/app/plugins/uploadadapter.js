@@ -44,69 +44,72 @@ class Adapter {
 		let returnUrl;
 
 		// This is an async logic, so we return a promise.
-		return this.loader.file
-		// Uploading on GH is made out of two steps. In our logic we're trying to mimic the requests that
-		// the original GH pages do, including the exact sets of headers and data.
-			.then( file => new Promise( ( resolve, reject ) => {
-				// Step 1: a setup request is made to the GH servers, returning the target upload URL
-				// and authentication tokens.
+		return this.editor.config.get( 'githubRte' ).upload()
+			.then( config => {
+				return this.loader.file
+					// Uploading on GH is made out of two steps. In our logic we're trying to mimic the requests that
+					// the original GH pages do, including the exact sets of headers and data.
+					.then( file => new Promise( ( resolve, reject ) => {
+						// Step 1: a setup request is made to the GH servers, returning the target upload URL
+						// and authentication tokens.
 
-				// Setup the form data for the request.
-				const data = new FormData();
-				{
-					// The necessary fields to be posted to GH.
-					data.append( 'name', file.name );
-					data.append( 'size', file.size );
-					data.append( 'content_type', file.type );
+						// Setup the form data for the request.
+						const data = new FormData();
+						{
+							// The necessary fields to be posted to GH.
+							data.append( 'name', file.name );
+							data.append( 'size', file.size );
+							data.append( 'content_type', file.type );
 
-					// Append all form entries saved by the GitHubEditor class in the editor configuration.
-					Object.entries( this.editor.config.get( 'githubRte.upload.form' ) )
-						.forEach( ( [ key, value ] ) => data.append( key, value ) );
-				}
+							// Append all form entries saved by the GitHubEditor class in the editor configuration.
+							Object.entries( config.form )
+								.forEach( ( [ key, value ] ) => data.append( key, value ) );
+						}
 
-				// The upload url has been also set by the GitHubEditor class.
-				this._initRequest( this.editor.config.get( 'githubRte.upload.url' ) );
+						// The upload url has been also set by the GitHubEditor class.
+						this._initRequest( config.url );
 
-				// Configure the request further to match the original GH request.
-				this.xhr.responseType = 'json';
-				this.xhr.setRequestHeader( 'Accept', 'application/json' );
-				this.xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
+						// Configure the request further to match the original GH request.
+						this.xhr.responseType = 'json';
+						this.xhr.setRequestHeader( 'Accept', 'application/json' );
+						this.xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
 
-				// Run!
-				this._initListeners( resolve, reject, file );
-				this._sendRequest( data );
-			} ) )
-			.then( ( { file, response } ) => new Promise( ( resolve, reject ) => {
-				// Step 2: the real upload takes place this time to Amazon S3 servers,
-				// using information returned from Step 1.
+						// Run!
+						this._initListeners( resolve, reject, file );
+						this._sendRequest( data );
+					} ) )
+					.then( ( { file, response } ) => new Promise( ( resolve, reject ) => {
+						// Step 2: the real upload takes place this time to Amazon S3 servers,
+						// using information returned from Step 1.
 
-				// The final URL of the file is already known, even before the upload. We save it here.
-				returnUrl = response.asset.href;
+						// The final URL of the file is already known, even before the upload. We save it here.
+						returnUrl = response.asset.href;
 
-				// Retrieve the target Amazon S3 upload URL.
-				const uploadUrl = response.upload_url;
+						// Retrieve the target Amazon S3 upload URL.
+						const uploadUrl = response.upload_url;
 
-				// Setup the form data for the request.
-				const data = new FormData();
-				{
-					// Append all form entries received from GH in Step 1.
-					Object.entries( response.form )
-						.forEach( ( [ key, value ] ) => data.append( key, value ) );
+						// Setup the form data for the request.
+						const data = new FormData();
+						{
+							// Append all form entries received from GH in Step 1.
+							Object.entries( response.form )
+								.forEach( ( [ key, value ] ) => data.append( key, value ) );
 
-					// Finally, the file to be uploaded. This must be the last entry in the form.
-					data.append( 'file', file );
-				}
+							// Finally, the file to be uploaded. This must be the last entry in the form.
+							data.append( 'file', file );
+						}
 
-				// Run!
-				this._initRequest( uploadUrl );
-				this._initListeners( resolve, reject, file );
-				this._sendRequest( data );
-			} ) )
-			.then( ( /* { file, response } */ ) => {
-				// Upload concluded! Simply send the file URL back, according to CKEditor specs.
-				return {
-					default: returnUrl
-				};
+						// Run!
+						this._initRequest( uploadUrl );
+						this._initListeners( resolve, reject, file );
+						this._sendRequest( data );
+					} ) )
+					.then( ( /* { file, response } */ ) => {
+						// Upload concluded! Simply send the file URL back, according to CKEditor specs.
+						return {
+							default: returnUrl
+						};
+					} );
 			} );
 	}
 

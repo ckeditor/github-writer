@@ -69,3 +69,33 @@ export function injectFunctionExecution( fn ) {
 
 	( document.body || document.head ).appendChild( script );
 }
+
+/**
+ * Gets the html of the "New Issue" page through an xhr request and returns it as a dom.
+ *
+ * @returns {Promise<DocumentFragment>} A document fragment with the whole dom of the page.
+ */
+export function getNewIssuePageDom() {
+	return new Promise( ( resolve, reject ) => {
+		// Build the url to the new issue page.
+		const location = document.location;
+		const path = document.location.pathname.match( /^\/.+?\/.+?\// ) + 'issues/new';
+		const url = `${ location.protocol }//${ location.host }${ path }`;
+
+		const xhr = new XMLHttpRequest();
+		xhr.open( 'GET', url, true );
+
+		xhr.addEventListener( 'error', () => reject( new Error( `Error loading mentions from $(url).` ) ) );
+		xhr.addEventListener( 'abort', () => reject() );
+		xhr.addEventListener( 'load', () => {
+			// Inject the returned html into a template element.
+			const template = document.createElement( 'template' );
+			template.innerHTML = xhr.response;
+
+			// Resolve the promise with the template dom.
+			resolve( template.content );
+		} );
+
+		xhr.send();
+	} );
+}

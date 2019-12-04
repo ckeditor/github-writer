@@ -42,19 +42,20 @@ import QuoteSelection from '../plugins/quoteselection';
 import ResetListener from '../plugins/resetlistener';
 
 import App from '../app';
+import { getNewIssuePageDom } from '../util';
 
 export default function getRteEditorConfig( rteEditor ) {
 	const isCommentsPage = App.pageManager.type === 'comments';
 
 	// Plugins that should be included in pages of type "comments" only (no wiki).
 	const commentsPagePlugins = [
-		Mention, ImageUpload, GitHubUploadAdapter, QuoteSelection
+		Mention, QuoteSelection
 	];
 
 	return {
 		plugins: [
 			Essentials, Paragraph, Autoformat,
-			Image,
+			Image, ImageUpload, GitHubUploadAdapter,
 			HeadingSwitch,
 			Bold, Italic, SmartCode, Strikethrough,
 			BlockQuote,
@@ -93,21 +94,72 @@ export default function getRteEditorConfig( rteEditor ) {
 			feeds: isCommentsPage && getMentionConfig()
 		},
 		githubRte: {
-			upload: isCommentsPage && getUploadConfig()
+			/**
+			 * A function that, when called, returns a promise that resolves with the upload configuration object,
+			 * used by the upload adapter with the following properties:
+			 *   - url: the GitHub url that makes the upload arrangements (see UploadAdapter).
+			 *   - form: an object with properties representing additional fields (name/value)
+			 *     to be posted to the above url.
+			 *
+			 * The reason for this being a function<promise> is that, for some pages (wiki), the upload
+			 * configuration is not available in the page and a xhr request is necessary to retrieve it.
+			 * We want this xhr request to be done on demand, for the first upload executed.
+			 *
+			 * @type {Function<Promise>} a function that, when called, returns a promise that resolves
+			 * with the upload configuration object.
+			 */
+			upload: getUploadConfig()
 		}
 	};
 
+	// Returns a function that, when called, will return a promise that resolves with the upload configuration object.
+	//
+	// The logic in this function may be a bit complex because the goal is making it in a way that the promise
+	// resolution logic (which in wiki pages involves a xhr request) is not executed here when setting up the
+	// configurations but on the first time the configuration is required (on the first attempt to upload a file).
 	function getUploadConfig() {
-		// The element holding upload related data.
-		const uploadData = rteEditor.githubEditor.markdownEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
+		// Try to get the element holding the upload related data.
+		const uploadDataElement = rteEditor.githubEditor.markdownEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
 
-		return {
-			url: uploadData.getAttribute( 'data-upload-policy-url' ),
-			form: {
-				authenticity_token: uploadData.getAttribute( 'data-upload-policy-authenticity-token' ),
-				repository_id: uploadData.getAttribute( 'data-upload-repository-id' )
-			}
-		};
+		// This element is most likely not present in wiki pages, so we need a different strategy for it.
+		if ( !uploadDataElement && App.pageManager.type === 'wiki' ) {
+			return getConfigFunction( () => {
+				// Make a xhr request to retrieve the dom of the "New Issue" page.
+				return getNewIssuePageDom()
+					// Take the element with the upload information out of that page.
+					.then( rootElement => rootElement.querySelector( '*[data-upload-policy-url]' ) )
+					.then( uploadDataElement => getConfigPromise( uploadDataElement ) );
+			} );
+		}
+
+		// If the element was found, we're all set.
+		return getConfigFunction( () => getConfigPromise( uploadDataElement ) );
+
+		// Builds the configuration function, which caches the returned promise so  its resolution logic is executed just once.
+		function getConfigFunction( promiseBuilder ) {
+			let configPromise;
+
+			// We don't return the promise straight, but a function that, once called, will generate the promise
+			// (if necessary) and return it.
+			return () => {
+				if ( !configPromise ) {
+					configPromise = promiseBuilder();
+				}
+
+				return configPromise;
+			};
+		}
+
+		// Builds the promise that resolves with the configuration object.
+		function getConfigPromise( element ) {
+			return Promise.resolve( {
+				url: element.getAttribute( 'data-upload-policy-url' ),
+				form: {
+					authenticity_token: element.getAttribute( 'data-upload-policy-authenticity-token' ),
+					repository_id: element.getAttribute( 'data-upload-repository-id' )
+				}
+			} );
+		}
 	}
 
 	function getMentionConfig() {
