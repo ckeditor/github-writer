@@ -54,14 +54,9 @@ export default function getRteEditorConfig( rteEditor ) {
 	// There are some special differences among "comments" and "no-comments" (wiki) pages.
 	const isCommentsPage = App.pageManager.type === 'comments';
 
-	// Plugins that should be included in pages of type "comments" only.
-	const commentsPagePlugins = [
-		Mention, QuoteSelection
-	];
-
 	return {
 		plugins: [
-			Essentials, Paragraph, Autoformat,
+			Essentials, Paragraph, Autoformat, Mention,
 			Image, ImageUpload, GitHubUploadAdapter,
 			HeadingSwitch,
 			Bold, Italic, SmartCode, Strikethrough,
@@ -71,8 +66,8 @@ export default function getRteEditorConfig( rteEditor ) {
 			HorizontalLine, Table, TableToolbar,
 			Kebab, RemoveFormat, ModeSwitcher,
 			PasteFromOffice,
-			ResetListener
-		].concat( isCommentsPage ? commentsPagePlugins : [] ),
+			QuoteSelection, ResetListener
+		],
 		toolbar: [
 			'headingswitch', 'bold', 'italic', '|',
 			'blockquote', 'smartcode', 'link', '|',
@@ -175,12 +170,15 @@ export default function getRteEditorConfig( rteEditor ) {
 	 * @returns {Object|null} The configuration object or `null` if the page is not compatible with mentions.
 	 */
 	function getMentionsConfig() {
-		// Get the GH DOM element that holds the urls from which retrieve mentions.
+		// Get the GH DOM element that holds the urls from which retrieve mentions, if available.
 		const textExpanderElement = rteEditor.githubEditor.markdownEditor.dom.textarea.closest( 'text-expander' );
 
-		// As for now, we don't have mentions in non "comments" pages (wiki).
-		if ( !textExpanderElement || !isCommentsPage ) {
-			return null;
+		// Some pages (wiki) don't have mentions in the native GH. In those, let's enable just emoji (for now).
+		if ( !textExpanderElement ) {
+			return {
+				// Emojis come, in fact, from a single absolute endpoint.
+				emoji: '/autocomplete/emoji'
+			};
 		}
 
 		// Call the util to build the configuration.

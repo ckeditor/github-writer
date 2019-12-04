@@ -209,23 +209,30 @@ export default function getMentionFeedsConfig( urls ) {
 	};
 
 	// Returns the CKEditor compatible configuration of the feeds.
-	return [
-		{
+	const config = [];
+
+	// Add just those available in the url list received.
+	{
+		urls.issues && config.push( {
 			marker: '#',
 			feed: query => find( 'issues', query ),
 			itemRenderer: db.issues.entryRenderer
-		},
-		{
+		} );
+
+		urls.people && config.push( {
 			marker: '@',
 			feed: query => find( 'people', query ),
 			itemRenderer: db.people.entryRenderer
-		},
-		{
+		} );
+
+		urls.emoji && config.push( {
 			marker: ':',
 			feed: query => find( 'emoji', query ),
 			itemRenderer: db.emoji.entryRenderer
-		}
-	];
+		} );
+	}
+
+	return config;
 
 	// Gets a short list of entries of a given type, filtered by the provided query.
 	//
