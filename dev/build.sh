@@ -45,11 +45,11 @@ echo "Removing manifest comments..."
 
 echo "Copying files to the browser extensions..."
 cp build/js/*.* build/github-rte-chrome
-cp src/css/*.* build/github-rte-chrome
+cp src/*.css build/github-rte-chrome
 cp src/extension/icons/*.* build/github-rte-chrome
 
 cp build/js/*.* build/github-rte-firefox
-cp src/css/*.* build/github-rte-firefox
+cp src/*.css build/github-rte-firefox
 cp src/extension/icons/*.* build/github-rte-firefox
 
 if [ "$MODE" = "production" ]; then
