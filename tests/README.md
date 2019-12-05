@@ -50,3 +50,8 @@ Now lay back and enjoy watching the test runner doing its job.
 Note that tests are run under a dedicated browser profile, not using the operating system one. So it's safe to assume that your everyday use browser is not at risk, neither your personal information.
 
 Additionally, because of the above, the browser session used for testing has no extensions installed. The only extension loaded, as expected, is your local build of GitHub RTE, which is reloaded from scratch for every test run.
+
+### Additional developer information
+
+*   [Development](../dev/README.md) (setup, build, run).
+*   [Architecture](../src/README.md).

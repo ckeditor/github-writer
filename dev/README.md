@@ -55,8 +55,8 @@ Now just reload GitHub pages and the updated extension will be executed.
 
 ### Additional developer information
 
-*   [Tests](tests/README.md) (architecture, configuration, run).
-*   [Architecture](src/README.md).
+*   [Tests](../tests/README.md) (architecture, configuration, run).
+*   [Architecture](../src/README.md).
 
 On the web:
 
