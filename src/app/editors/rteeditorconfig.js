@@ -13,6 +13,7 @@ import SmartCode from '../plugins/smartcode';
 import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 
 import HeadingSwitch from '../plugins/headingswitch';
+import HeadingTabKey from '../plugins/headingtabkey';
 
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 
@@ -58,7 +59,7 @@ export default function getRteEditorConfig( rteEditor ) {
 		plugins: [
 			Essentials, Paragraph, Autoformat, Mention,
 			Image, ImageUpload, GitHubUploadAdapter,
-			HeadingSwitch,
+			HeadingSwitch, HeadingTabKey,
 			Bold, Italic, SmartCode, Strikethrough,
 			BlockQuote,
 			Link,
