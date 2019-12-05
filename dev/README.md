@@ -38,7 +38,7 @@ Having successfully built from source, do the following to load the extension in
 
 1.  In Chrome, click **Window** > **Extensions**. Or navigate to [chrome://extensions/](chrome://extensions/).
 2.  Enable **Developer mode**, at the top right of the page.
-3.  Click the **Load unpacked** button and select the `build/extension-chrome` directory from the build directory.
+3.  Click the **Load unpacked** button and select the `build/github-rte-chrome` directory from the build directory.
 
 It's all set. Now visit [https://github.com/](https://github.com/) and start using the GitHub RTE editor inside issues, pull request and wiki pages.
 

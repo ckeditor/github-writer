@@ -18,7 +18,7 @@ module.exports = {
 	buildDriver: () => {
 		// During development, we point Chrome to the directory containing the extension files.
 		const chromeOptions = new ChromeOptions();
-		chromeOptions.addArguments( 'load-extension=' + path.resolve( __dirname, '../../../build/extension-chrome' ) );
+		chromeOptions.addArguments( 'load-extension=' + path.resolve( __dirname, '../../../build/github-rte-chrome' ) );
 
 		// Theoretically it's possible to run tests in a headless Chrome. Tests fail with this, though.
 		// chromeOptions.headless();
