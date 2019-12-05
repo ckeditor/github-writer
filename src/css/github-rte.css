@@ -158,11 +158,13 @@ nav.tabnav-tabs {
 	/* Sticky toolbar. */
 	position: sticky !important;
 	top: 0;
+	z-index: 1;  /* The editable may somehow show above the toolbar, so we raise its plane. */
 }
 
 .github-rte-type-wiki .form-actions {
 	position: sticky !important;
 	bottom: 10px;
+	z-index: 1;
 }
 
 /* Hide the markdown toolbar. */
