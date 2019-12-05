@@ -53,7 +53,7 @@ To test changes to the source code, the following steps must always be done:
 
 Now just reload GitHub pages and the updated extension will be executed.
 
-### Useful resource
+### Useful resources
 
 *   [CKEditor 5 documentation](https://ckeditor.com/docs/ckeditor5/latest/index.html)
 *   [Chrome extension development guide](https://developer.chrome.com/extensions)
