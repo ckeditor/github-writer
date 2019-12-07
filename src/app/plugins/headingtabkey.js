@@ -21,8 +21,9 @@ export default class HeadingTabKey extends Plugin {
 			editor.commands.add( 'decreaseHeading', command );
 
 			editor.keystrokes.set( 'Tab', ( undefined, cancel ) => {
-				command.execute();
-				cancel();
+				if ( command.execute() ) {
+					cancel();
+				}
 			} );
 		}
 
@@ -31,8 +32,9 @@ export default class HeadingTabKey extends Plugin {
 			editor.commands.add( 'increaseHeading', command );
 
 			editor.keystrokes.set( 'Shift+Tab', ( undefined, cancel ) => {
-				command.execute();
-				cancel();
+				if ( command.execute() ) {
+					cancel();
+				}
 			} );
 		}
 	}
@@ -63,9 +65,8 @@ export class ChangeHeadingLevelCommand extends Command {
 	 * @inheritDoc
 	 */
 	refresh() {
-		const { heading, next } = this._getCurrentHeadingAndIndex();
-
-		this.isEnabled = !!( heading && heading.name !== next );
+		const { next } = this._getCurrentHeadingAndNext();
+		this.isEnabled = !!next;
 	}
 
 	/**
@@ -73,7 +74,7 @@ export class ChangeHeadingLevelCommand extends Command {
 	 */
 	execute() {
 		const editor = this.editor;
-		const { heading, next } = this._getCurrentHeadingAndIndex();
+		const { heading, next } = this._getCurrentHeadingAndNext();
 
 		if ( heading && heading.name !== next ) {
 			editor.model.change( writer => {
@@ -81,6 +82,8 @@ export class ChangeHeadingLevelCommand extends Command {
 				writer.rename( heading, next );
 			} );
 		}
+
+		return next;
 	}
 
 	/**
@@ -92,7 +95,7 @@ export class ChangeHeadingLevelCommand extends Command {
 	 *          It could be the same as heading.name, if there are no more levels available.
 	 * @private
 	 */
-	_getCurrentHeadingAndIndex() {
+	_getCurrentHeadingAndNext() {
 		const editor = this.editor;
 		const selection = editor.model.document.selection;
 		const selectedBlocks = selection.getSelectedBlocks();
@@ -124,7 +127,7 @@ export class ChangeHeadingLevelCommand extends Command {
 					nextIndex = 0;
 				}
 
-				if ( nextIndex > headingElements.length ) {
+				if ( nextIndex >= headingElements.length ) {
 					nextIndex = headingElements.length - 1;
 				}
 
