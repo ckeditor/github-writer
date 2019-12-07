@@ -22,35 +22,32 @@
     "url": "https://github.com/fredck/github-rte/issues"
   },
   "homepage": "https://github.com/fredck/github-rte",
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
-    "@ckeditor/ckeditor5-autoformat": "^15.0.0",
-    "@ckeditor/ckeditor5-basic-styles": "^15.0.0",
-    "@ckeditor/ckeditor5-block-quote": "^15.0.0",
+    "@ckeditor/ckeditor5-autoformat": "^16.0.0",
+    "@ckeditor/ckeditor5-basic-styles": "^16.0.0",
+    "@ckeditor/ckeditor5-block-quote": "^16.0.0",
     "@ckeditor/ckeditor5-code-block": "fredck/ckeditor5-code-block#github-rte",
     "@ckeditor/ckeditor5-dev-utils": "^12.0.5",
-    "@ckeditor/ckeditor5-editor-decoupled": "^15.0.0",
-    "@ckeditor/ckeditor5-essentials": "^15.0.0",
-    "@ckeditor/ckeditor5-heading": "^15.0.0",
-    "@ckeditor/ckeditor5-horizontal-line": "^15.0.0",
-    "@ckeditor/ckeditor5-image": "^15.0.0",
-    "@ckeditor/ckeditor5-link": "^15.0.0",
-    "@ckeditor/ckeditor5-list": "^15.0.0",
+    "@ckeditor/ckeditor5-editor-decoupled": "^16.0.0",
+    "@ckeditor/ckeditor5-essentials": "^16.0.0",
+    "@ckeditor/ckeditor5-heading": "^16.0.0",
+    "@ckeditor/ckeditor5-horizontal-line": "^16.0.0",
+    "@ckeditor/ckeditor5-image": "^16.0.0",
+    "@ckeditor/ckeditor5-link": "^16.0.0",
+    "@ckeditor/ckeditor5-list": "^16.0.0",
     "@ckeditor/ckeditor5-markdown-gfm": "fredck/ckeditor5-markdown-gfm#github-rte",
-    "@ckeditor/ckeditor5-mention": "^15.0.0",
-    "@ckeditor/ckeditor5-paragraph": "^15.0.0",
-    "@ckeditor/ckeditor5-paste-from-office": "^15.0.0",
-    "@ckeditor/ckeditor5-remove-format": "^15.0.0",
-    "@ckeditor/ckeditor5-table": "^15.0.0",
-    "@ckeditor/ckeditor5-theme-lark": "^15.0.0",
-    "@ckeditor/ckeditor5-ui": "^15.0.0",
-    "@ckeditor/ckeditor5-upload": "^15.0.0",
-    "@ckeditor/ckeditor5-utils": "^15.0.0"
+    "@ckeditor/ckeditor5-mention": "^16.0.0",
+    "@ckeditor/ckeditor5-paragraph": "^16.0.0",
+    "@ckeditor/ckeditor5-paste-from-office": "^16.0.0",
+    "@ckeditor/ckeditor5-remove-format": "^16.0.0",
+    "@ckeditor/ckeditor5-table": "^16.0.0",
+    "@ckeditor/ckeditor5-theme-lark": "^16.0.0",
+    "@ckeditor/ckeditor5-ui": "^16.0.0",
+    "@ckeditor/ckeditor5-upload": "^16.0.0",
+    "@ckeditor/ckeditor5-utils": "^16.0.0"
   },
   "devDependencies": {
-    "@ckeditor/ckeditor5-inspector": "^1.4.0",
+    "@ckeditor/ckeditor5-inspector": "^1.5.0",
     "chai": "^4.2.0",
     "chromedriver": "^78.0.1",
     "eslint": "^5.5.0",
@@ -70,7 +67,6 @@
     "lint": "eslint --quiet '**/*.js'"
   },
   "eslintIgnore": [
-    "build/**",
-    "packages/**"
+    "build/**"
   ]
 }
