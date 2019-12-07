@@ -75,8 +75,8 @@
 
 	/* Code block */
 	& pre[data-language]:after {
-		/* Hide the inline label in code blocks as it's not working (and it's not relevant for now). */
-		content: '' !important;
+		/* Hide the inline label in code blocks as it's not relevant for now. */
+		display: none;
 	}
 
 	& pre br {
