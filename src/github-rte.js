@@ -19,18 +19,37 @@ if ( process.env.NODE_ENV !== 'production' ) {
 	console.time( 'GitHub RTE loaded and ready' );
 }
 
-App.run()
-	.then( editor => {
-		if ( process.env.NODE_ENV !== 'production' ) {
-			console.timeEnd( 'GitHub RTE loaded and ready' );
-			console.log( App.pageManager );
-			console.log( editor );
-		}
-	} )
-	.catch( reason => {
-		if ( reason instanceof PageIncompatibilityError ) {
-			console.warn( reason );
-		} else {
-			console.error( reason );
-		}
-	} );
+// We don't want things to break.
+try {
+	App.run()
+		.then( editor => {
+			if ( process.env.NODE_ENV !== 'production' ) {
+				console.timeEnd( 'GitHub RTE loaded and ready' );
+				console.log( App.pageManager );
+				console.log( editor );
+			}
+		} )
+		.catch( reason => {
+			if ( reason instanceof PageIncompatibilityError ) {
+				console.warn( reason );
+			} else {
+				console.error( reason );
+			}
+		} )
+		.finally( () => {
+			// Add this class to body so we turn off invasive initialization styles.
+			setTimeout( () => {
+				document.body.classList.add( 'github-rte-loaded' );
+			}, 0 );
+		} );
+} catch ( error ) {
+	// It is very important to add this class, so we disable any bootstrapping CSS that we included on load.
+	document.body.classList.add( 'github-rte-loaded' );
+
+	// In production, do no "break-break", just "kinda break".
+	if ( process.env.NODE_ENV === 'production' ) {
+		console.error( error );
+	} else {
+		throw error;
+	}
+}

@@ -7,6 +7,22 @@
 	These are application specific styles, not the CKEditor theme.
 */
 
+/*
+Here we hide some of the original GH elements that could be flashing on page load,
+right before being replaced with the rte editor.
+*/
+body:not(.github-rte-loaded) markdown-toolbar md-mention,
+body:not(.github-rte-loaded) markdown-toolbar md-ref,
+body:not(.github-rte-loaded) markdown-toolbar details,
+body:not(.github-rte-loaded) .preview-tab,
+body:not(.github-rte-loaded) .tabnav-extra,
+body:not(.github-rte-loaded) .drag-and-drop,
+body:not(.github-rte-loaded) #gollum-editor-function-bar,
+body:not(.github-rte-loaded) #gollum-editor-help,
+body:not(.github-rte-loaded) #gollum-editor-body {
+	display: none !important;
+}
+
 div.github-rte-ckeditor .ck-editor__editable {
 	min-height: inherit;
 
