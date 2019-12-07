@@ -78,7 +78,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			[ 'strikethrough', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ] :
 			[ 'strikethrough', 'removeFormat', '|', 'horizontalline', 'insertTable', '|', 'mode' ],
 		table: {
-			contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+			contentToolbar: [ 'tableColumn', 'tableRow' ]
 		},
 		placeholder: isCommentsPage ? 'Leave a comment' : null,
 		heading: {
