@@ -54,4 +54,4 @@ Additionally, because of the above, the browser session used for testing has no 
 ### Additional developer information
 
 *   [Development](../dev/README.md) (setup, build, run).
-*   [Architecture](../src/README.md).
+*   [Architecture](../src/README.md) (source code, API).
