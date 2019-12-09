@@ -60,7 +60,7 @@ export default class QuoteSelection extends Plugin {
 
 					// Show the editor to the user.
 					{
-						editor.editing.view.focus();
+						editor.focus();
 
 						// Timeout, so changes are applied and the editable will have its final size (autogrow).
 						setTimeout( () => {

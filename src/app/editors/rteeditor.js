@@ -60,7 +60,7 @@ export default class RteEditor {
 	 * Moves the selection focus into the editor contents.
 	 */
 	focus() {
-		this.ckeditor.editing.view.focus();
+		this.ckeditor.focus();
 	}
 
 	/**
@@ -177,6 +177,14 @@ class CKEditorGitHubEditor extends DecoupledEditor {
 				this.set( 'isEmpty', !document.model.hasContent( document.getRoot() ) );
 			} );
 		}
+	}
+
+	// Just for fun ;D
+	/**
+	 * Sets the use selection focus into the editor contents.
+	 */
+	focus() {
+		this.editing.view.focus();
 	}
 }
 
