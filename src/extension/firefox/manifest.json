@@ -8,7 +8,7 @@
   "name": "GitHub Rich-Text Editor (RTE)",
   "short_name": "GitHub RTE",
   "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "CKSource (cksource.com)",
   "applications": {
 	"gecko": {
