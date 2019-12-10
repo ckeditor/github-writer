@@ -125,3 +125,20 @@ export function getNewIssuePageDom() {
 		xhr.send();
 	} );
 }
+
+/**
+ * Concatenates the initials of words and names present in a string.
+ *
+ * @param {String} text The text to be parsed.
+ * @returns {String} A string with the concatenated initials. An empty string if nothing found.
+ */
+export function getInitials( text ) {
+	if ( text && text.match ) {
+		const initials = text.match( /\b\w/g );
+		if ( initials ) {
+			return initials.join( '' );
+		}
+	}
+
+	return '';
+}

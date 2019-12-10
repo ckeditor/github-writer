@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import { createElementFromHtml } from '../util';
+import { createElementFromHtml, getInitials } from '../util';
 
 /**
  * Builds the CKEditor configuration for mentions as well as their implementation.
@@ -70,7 +70,7 @@ export default function getMentionFeedsConfig( urls ) {
 				const key =
 					entryData.number + ' ' +
 					titleLow + ' ' +
-					titleLow.match( /\b\w/g ).join( '' );	// All initials.
+					getInitials( titleLow );
 
 				return {
 					key,
@@ -127,7 +127,7 @@ export default function getMentionFeedsConfig( urls ) {
 				const key =
 					loginLow + ' ' +
 					nameLow + ' ' +
-					nameLow.match( /\b\w/g ).join( '' );	// All initials.
+					getInitials( nameLow );
 
 				return {
 					key,
@@ -179,7 +179,7 @@ export default function getMentionFeedsConfig( urls ) {
 				// The search key is a string in the format "id title_lowercase title_initials_lowercase".
 				const key =
 					text + ' ' +
-					text.match( /\b\w/g ).join( '' );	// All initials.
+					getInitials( text );
 
 				const icon = entryLiElement.querySelector( 'g-emoji' ).textContent;
 				const name = entryLiElement.getAttribute( 'data-emoji-name' );
