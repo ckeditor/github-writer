@@ -3,13 +3,13 @@
  * For licensing, see LICENSE.md.
  */
 
-const { Builder } = require( 'selenium-webdriver' );
+const { Builder, Key, By, until } = require( 'selenium-webdriver' );
 const { Options: ChromeOptions } = require( 'selenium-webdriver/chrome' );
 const { Options: FirefoxOptions } = require( 'selenium-webdriver/firefox' );
 const path = require( 'path' );
-const repo = require( '../../config' ).github.repo;
+const { repo, credentials } = require( '../../config' ).github;
 
-module.exports = {
+let util = module.exports = {
 	/**
 	 * Bootstraps the Selenium WebDriver that runs the tests.
 	 *
@@ -46,6 +46,43 @@ module.exports = {
 	 * @returns {String} The full url for the provided path.
 	 */
 	getGitHubUrl: path => {
-		return `https://github.com/${ repo }/${ path }`;
+		return `https://github.com/${repo}/${path}`;
+	},
+
+	/**
+	 * Waits until the element that tells that the user is logged in to be available.
+	 * @returns {Promise<void>} A promise that resolves once the element is available.
+	 */
+	checkLoggedIn: async () => {
+		// Be sure that we're still properly logged in.
+		await global.driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${credentials.name}"]` ) ), 10000 );
+	},
+
+	/**
+	 * Login, if necessary, and return the WebDriver used for testing.
+	 * @returns {Promise<*|ThenableWebDriver>} The WebDriver.
+	 */
+	login: async () => {
+		let driver = global.driver || ( global.driver = util.buildDriver() );
+
+		const url = await driver.getCurrentUrl();
+		const loggedIn = url.match( /^https:\/\/github.com\// ) &&
+			await driver.findElement( By.css( `meta[name="user-login"][content="${credentials.name}"]` ) );
+
+		if ( !loggedIn ) {
+			await driver.get( 'https://github.com/login' );
+			await driver.findElement( By.name( 'login' ) ).sendKeys( credentials.name );
+			await driver.findElement( By.name( 'password' ) ).sendKeys( credentials.password, Key.ENTER );
+			await driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${credentials.name}"]` ) ) );
+		}
+
+		return driver;
+	},
+
+	/**
+	 * Quit the WebDriver. To be called once all tests are done.
+	 */
+	quit: () => {
+		global.driver && global.driver.quit();
 	}
 };

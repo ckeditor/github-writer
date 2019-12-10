@@ -3,25 +3,21 @@
  * For licensing, see LICENSE.md.
  */
 
+require( './root' );
+
 const { By, Key, until } = require( 'selenium-webdriver' );
-const { buildDriver, getGitHubUrl } = require( './util/util' );
-const credentials = require( '../config' ).github.credentials;
-
 const { expect } = require( 'chai' );
+const { login, getGitHubUrl, checkLoggedIn } = require( './util/util' );
 
-describe( 'This test suite', function() {
+describe( 'The "issue" test suite', function() {
 	// Stop on the first failure.
 	this.bail( true );
+	this.timeout( 0 );
 
-	const driver = buildDriver();
+	let driver;
+	before( async () => ( driver = await login() ) );
+
 	let issueCreated = false;
-
-	before( 'should login', async () => {
-		await driver.get( 'https://github.com/login' );
-		await driver.findElement( By.name( 'login' ) ).sendKeys( credentials.name );
-		await driver.findElement( By.name( 'password' ) ).sendKeys( credentials.password, Key.ENTER );
-		await driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${ credentials.name }"]` ) ) );
-	} );
 
 	after( 'should delete the issue', async () => {
 		if ( issueCreated ) {
@@ -33,18 +29,15 @@ describe( 'This test suite', function() {
 		}
 	} );
 
-	after( 'should close the browser', () => driver.quit() );
-
 	it( 'should create a new issue using the RTE editor', async () => {
-		const timestamp = ( new Date() ).toISOString();
-		const title = `Testing (${ timestamp })`;
+		const timestamp = Date.now();
+		const title = `Testing (${timestamp})`;
 
 		// Load the page.
 		{
 			await driver.get( getGitHubUrl( 'issues/new' ) );
 
-			// Be sure that we're still properly logged in.
-			await driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${ credentials.name }"]` ) ), 10000 );
+			await checkLoggedIn();
 		}
 
 		// Check if the DOM looks like expected by the app.
@@ -87,9 +80,9 @@ describe( 'This test suite', function() {
 
 			issueCreated = true;
 
-			const title = driver.findElement( By.css( '.js-issue-title' ) ).getText();
+			const domTitle = await driver.findElement( By.css( '.js-issue-title' ) ).getText();
 
-			expect( title ).to.equal( title );
+			expect( domTitle ).to.equal( title );
 
 			const commentBody = driver.findElement( By.css( '.timeline-comment.comment td.comment-body' ) );
 
@@ -99,7 +92,7 @@ describe( 'This test suite', function() {
 
 			expect( html ).to.equal(
 				'<p>Typing inside the <strong>RTE editor</strong>.</p>\n' +
-				`<p>Time stamp: ${ timestamp }.</p>` );
+				`<p>Time stamp: ${timestamp}.</p>` );
 		}
 	} );
 
