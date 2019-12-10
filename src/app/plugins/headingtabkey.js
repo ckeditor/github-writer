@@ -109,7 +109,7 @@ export class ChangeHeadingLevelCommand extends Command {
 		let next;
 
 		// The command allows one block selected only.
-		if ( oneBlock ) {
+		if ( block && oneBlock ) {
 			// Get the list of heading elements.
 			const headingElements = editor.commands.get( 'heading' ).modelElements;
 
