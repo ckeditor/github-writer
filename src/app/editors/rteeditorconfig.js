@@ -12,7 +12,7 @@ import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import SmartCode from '../plugins/smartcode';
 import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 
-import HeadingSwitch from '../plugins/headingswitch';
+import HeadingDropdown from "../plugins/headingdropdown";
 import HeadingTabKey from '../plugins/headingtabkey';
 
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
@@ -59,7 +59,7 @@ export default function getRteEditorConfig( rteEditor ) {
 		plugins: [
 			Essentials, Paragraph, Autoformat, Mention,
 			Image, ImageUpload, GitHubUploadAdapter,
-			HeadingSwitch, HeadingTabKey,
+			HeadingDropdown, HeadingTabKey,
 			Bold, Italic, SmartCode, Strikethrough,
 			BlockQuote,
 			Link,
@@ -70,7 +70,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			QuoteSelection, ResetListener
 		],
 		toolbar: [
-			'headingswitch', 'bold', 'italic', '|',
+			'headingdropdown', 'bold', 'italic', '|',
 			'blockquote', 'smartcode', 'link', '|',
 			'bulletedlist', 'numberedlist', 'todolist', 'kebab'
 		],

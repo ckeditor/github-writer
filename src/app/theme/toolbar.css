@@ -20,6 +20,8 @@
 	--ck-color-button-on-active-shadow: transparent;
 	--ck-color-button-default-active-shadow: transparent;
 	--ck-color-button-on-disabled-background: transparent;
+	--ck-color-split-button-hover-background: transparent;
+	--ck-color-split-button-hover-border: transparent;
 }
 
 .ck.ck-icon {
@@ -53,6 +55,14 @@
 			&.ck-on,
 			&:not(.ck-disabled):hover {
 				color: #0366d6;
+			}
+
+			&.ck-splitbutton__action {
+				margin-right: 0 !important;
+			}
+
+			&.ck-splitbutton__arrow {
+				margin-left: 0 !important;
 			}
 		}
 
