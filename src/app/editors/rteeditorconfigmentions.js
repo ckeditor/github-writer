@@ -111,30 +111,46 @@ export default function getMentionFeedsConfig( urls ) {
 				/*
 					entryData = [
 						{
-							type: [String]
+							type: [String]		// "user" | "team"
 							id: [Number],		// Unique person id in the whole GH.
-							login: [Number],	// User login name.
+
+							// For "user"
+							login: [String],	// User login name.
 							name: [String]		// User name.
+
+							// For "team"
+							name: [String],			// Team name.
+							description: [String]	// Description.
 						},
 						...
 					]
 				*/
 
-				const loginLow = entryData.login.toLowerCase();
-				const nameLow = entryData.name.toLowerCase();
+				let name, description;
+
+				if ( entryData.type === 'user' ) {
+					name = entryData.login || '';
+					description = entryData.name || '';
+				} else if ( entry.type === 'team' ) {
+					name = entryData.name || '';
+					description = entryData.description || '';
+				}
+
+				const nameLow = name && name.toLowerCase();
+				const descriptionLow = description && description.toLowerCase();
 
 				// The search key is a string in the format "id title_lowercase title_initials_lowercase".
 				const key =
-					loginLow + ' ' +
 					nameLow + ' ' +
-					getInitials( nameLow );
+					descriptionLow + ' ' +
+					getInitials( descriptionLow );
 
 				return {
 					key,
 					data: {
-						id: '@' + entryData.login,
-						login: entryData.login,
-						name: entryData.name
+						id: '@' + name,
+						name,
+						description
 					}
 				};
 			},
@@ -142,7 +158,7 @@ export default function getMentionFeedsConfig( urls ) {
 				const template = document.createElement( 'template' );
 				template.innerHTML = `
 					<button>
-						${ entry.login } <small>${ entry.name }</small>
+						${ entry.name } <small>${ entry.description }</small>
 					</button>
 				`;
 
