@@ -131,7 +131,7 @@ export default function getMentionFeedsConfig( urls ) {
 				if ( entryData.type === 'user' ) {
 					name = entryData.login || '';
 					description = entryData.name || '';
-				} else if ( entry.type === 'team' ) {
+				} else if ( entryData.type === 'team' ) {
 					name = entryData.name || '';
 					description = entryData.description || '';
 				}
