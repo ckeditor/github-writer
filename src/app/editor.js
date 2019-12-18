@@ -263,6 +263,13 @@ export default class Editor {
 				this._setInitialMode();
 			}, 0 );
 		} );
+
+		// Sync the editors when navigating away from this page, so content will load again when moving back.
+		window.addEventListener( 'pagehide', () => {
+			if ( this.getMode() === Editor.modes.RTE ) {
+				this.syncEditors();
+			}
+		} );
 	}
 
 	/**
