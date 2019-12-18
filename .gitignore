@@ -1,9 +1,7 @@
 /.idea/
 /node_modules/
-/package-lock.json
-/dist/
 /tmp/
 /build/
-/yarn.lock
-/packages/
+/.yalc/
 /tests/config.json
+/*.lock
