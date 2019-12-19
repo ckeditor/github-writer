@@ -12,7 +12,7 @@ import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import SmartCode from '../plugins/smartcode';
 import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 
-import HeadingDropdown from "../plugins/headingdropdown";
+import HeadingDropdown from '../plugins/headingdropdown';
 import HeadingTabKey from '../plugins/headingtabkey';
 
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
@@ -41,6 +41,7 @@ import ModeSwitcher from '../plugins/modeswitcher';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
 import QuoteSelection from '../plugins/quoteselection';
 import ResetListener from '../plugins/resetlistener';
+import EditorExtras from '../plugins/editorextras';
 
 import App from '../app';
 import { getNewIssuePageDom } from '../util';
@@ -67,7 +68,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			HorizontalLine, Table, TableToolbar,
 			Kebab, RemoveFormat, ModeSwitcher,
 			PasteFromOffice,
-			QuoteSelection, ResetListener
+			QuoteSelection, ResetListener, EditorExtras
 		],
 		toolbar: [
 			'headingdropdown', 'bold', 'italic', '|',

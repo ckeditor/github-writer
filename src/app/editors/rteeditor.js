@@ -162,29 +162,6 @@ class CKEditorGitHubEditor extends DecoupledEditor {
 				class: 'github-rte-toolbar'
 			}
 		} );
-
-		// TODO: Check if there is any interest of having this in core.
-		/**
-		 * Tells if the editor content is empty.
-		 *
-		 * @observable
-		 * @readonly
-		 * @member {Boolean} #isEmpty
-		 */
-		{
-			const document = this.model.document;
-			this.listenTo( document, 'change:data', () => {
-				this.set( 'isEmpty', !document.model.hasContent( document.getRoot() ) );
-			} );
-		}
-	}
-
-	// Just for fun ;D
-	/**
-	 * Sets the use selection focus into the editor contents.
-	 */
-	focus() {
-		this.editing.view.focus();
 	}
 }
 
