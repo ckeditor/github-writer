@@ -26,7 +26,7 @@ export default class PageManager {
 
 		/**
 		 * The type of GitHub page the application is running in. There are two possible types:
-		 *   - "comments": pages where editors are available in a comment thread structure. This includes: issues and pull reuests.
+		 *   - "comments": pages where editors are available in a comment thread structure. This includes: issues and pull requests.
 		 *   - "wiki": wiki pages editing.
 		 *
 		 * @readonly
@@ -44,14 +44,17 @@ export default class PageManager {
 	 * instance is created and ready or `false` if no editor was found.
 	 */
 	setupMainEditor() {
-		// These are the dom selectors for the outermost element that holds the whole markdown editor infrastructure in the page.
-		const rootSelectors = {
-			wiki: '#gollum-editor',
-			comments: '.timeline-comment:not(.comment)'
-		};
+		let root;
 
-		// Search for the main editor available in the page, if any.
-		const root = document.querySelector( rootSelectors[ this.type ] );
+		if ( ( root = document.querySelector( 'form#new_issue' ) ) ) {
+			this.type = 'comments';
+		}
+		else if ( ( root = document.querySelector( 'form.js-new-comment-form' ) ) ) {
+			this.type = 'comments';
+		}
+		else if ( ( root = document.querySelector( 'form[name="gollum-editor"]' ) ) ) {
+			this.type = 'wiki';
+		}
 
 		if ( root ) {
 			return this.setupEditor( root );
@@ -156,7 +159,7 @@ export default class PageManager {
 		if ( !actionButtons.has( actionButton ) ) {
 			// Create the Editor instance in the moment the button is clicked.
 			actionButton.addEventListener( 'click', () => {
-				const rootElement = actionButton.closest( '.timeline-comment' );
+				const rootElement = actionButton.closest( '.timeline-comment' ).querySelector( 'form.js-comment-update' );
 				this.setupEditor( rootElement );
 			}, { once: true, passive: true, capture: false } );
 
