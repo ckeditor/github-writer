@@ -193,6 +193,20 @@ export default class Editor {
 	}
 
 	/**
+	 * Simulates the native "quote selection" feature from GitHub (the "r" key).
+	 *
+	 * Basically, if the RTE editor is active, execute quote-selection in it. If the markdown editor is enabled instead,
+	 * do nothing and let the defautl behavior to happen (GH handles it).
+	 *
+	 * @param selectionMarkdown The markdown text to be quoted, most likely derived from the user selection.
+	 */
+	quoteSelection( selectionMarkdown ) {
+		if ( this.getMode() === Editor.modes.RTE ) {
+			this.rteEditor.ckeditor.quoteSelection( selectionMarkdown );
+		}
+	}
+
+	/**
 	 * Setups focus related features.
 	 *
 	 * @private

@@ -31,7 +31,7 @@ describe( 'The "issue" test suite', function() {
 
 	it( 'should create a new issue using the RTE editor', async () => {
 		const timestamp = Date.now();
-		const title = `Testing (${timestamp})`;
+		const title = `Testing (${ timestamp })`;
 
 		// Load the page.
 		{
@@ -42,7 +42,7 @@ describe( 'The "issue" test suite', function() {
 
 		// Check if the DOM looks like expected by the app.
 		{
-			const root = await driver.findElement( By.css( '.timeline-comment:not(.comment)' ) );
+			const root = await driver.findElement( By.css( 'form#new_issue' ) );
 			await checkDom( root );
 		}
 
@@ -54,10 +54,10 @@ describe( 'The "issue" test suite', function() {
 		// Type inside the editor and submit the form.
 		{
 			// Wait for the RTE editor to be created.
-			await driver.wait( until.elementLocated( By.css( '.timeline-comment:not(.comment) div.github-rte-ckeditor' ) ), 10000 );
+			await driver.wait( until.elementLocated( By.css( 'form#new_issue div.github-rte-ckeditor' ) ), 10000 );
 
 			// Retrieve the root element, containing the whole GH editing form. Using the same selector we use in the app.
-			const rootElement = driver.findElement( By.css( '.timeline-comment:not(.comment)' ) );
+			const rootElement = driver.findElement( By.css( 'form#new_issue' ) );
 
 			// Get the RTE editor editable.
 			const editable = rootElement.findElement( By.css( 'div.github-rte-ckeditor > .ck-editor__editable' ) );
@@ -92,7 +92,7 @@ describe( 'The "issue" test suite', function() {
 
 			expect( html ).to.equal(
 				'<p>Typing inside the <strong>RTE editor</strong>.</p>\n' +
-				`<p>Time stamp: ${timestamp}.</p>` );
+				`<p>Time stamp: ${ timestamp }.</p>` );
 		}
 	} );
 
@@ -101,17 +101,17 @@ describe( 'The "issue" test suite', function() {
 
 		// Check if the DOM looks like expected by the app.
 		{
-			const root = await driver.findElement( By.css( '.timeline-comment:not(.comment)' ) );
+			const root = await driver.findElement( By.css( 'form.js-new-comment-form' ) );
 			await checkDom( root );
 		}
 
 		// Type inside the editor and submit the form.
 		{
 			// Wait for the RTE editor to be created.
-			await driver.wait( until.elementLocated( By.css( '.timeline-comment:not(.comment) div.github-rte-ckeditor' ) ), 5000 );
+			await driver.wait( until.elementLocated( By.css( 'form.js-new-comment-form div.github-rte-ckeditor' ) ), 5000 );
 
 			// Retrieve the root element, containing the whole GH editing form. Using the same selector we use in the app.
-			const rootElement = driver.findElement( By.css( '.timeline-comment:not(.comment)' ) );
+			const rootElement = driver.findElement( By.css( 'form.js-new-comment-form' ) );
 
 			// Get the RTE editor editable.
 			const editable = rootElement.findElement( By.css( 'div.github-rte-ckeditor > .ck-editor__editable' ) );
@@ -160,9 +160,10 @@ describe( 'The "issue" test suite', function() {
 
 		// Check if the DOM looks like expected by the app.
 		{
-			// At this point, we have 2 comments in the page: main issue and comment. We want the second one.
+			// At this point, we have 2 comments in the page (each 2 forms): main issue and comment.
+			// We want the first for of the second one... indexes: ( 0, 1 ), ( *2*, 3 )
 			const root = await driver.findElement( By.js( () => {
-				return document.querySelectorAll( '.timeline-comment.comment' )[ 1 ];
+				return document.querySelectorAll( 'form.js-comment-update' )[ 2 ];
 			} ) );
 			dom = await checkDom( root, { includeEdit: true } );
 		}
@@ -249,8 +250,10 @@ describe( 'The "issue" test suite', function() {
 		};
 
 		if ( options.includeEdit ) {
-			// Logic from app.js t retrieve the action and edit buttons.
-			dom.editButton = await root.findElement( By.css( '.js-comment-edit-button' ) );
+			// Logic from pagemanager.js to retrieve the action and edit buttons.
+			dom.editButton = await driver.findElement( By.js( root => {
+				return root.closest( '.timeline-comment' ).querySelector( '.js-comment-edit-button' );
+			}, root ) );
 			dom.actionButton = await driver.findElement( By.js( editButton => {
 				return editButton.closest( 'details-menu' ).previousElementSibling;
 			}, dom.editButton ) );

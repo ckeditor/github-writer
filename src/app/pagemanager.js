@@ -6,6 +6,7 @@
 import Editor from './editor';
 import EmitterMixin from '@ckeditor/ckeditor5-utils/src/emittermixin';
 import mix from '@ckeditor/ckeditor5-utils/src/mix';
+import { injectFunctionExecution } from './util';
 
 // These variables hold references to elements already handled by the application, so they're not touched again.
 const editors = new WeakMap();
@@ -26,7 +27,7 @@ export default class PageManager {
 
 		/**
 		 * The type of GitHub page the application is running in. There are two possible types:
-		 *   - "comments": pages where editors are available in a comment thread structure. This includes: issues and pull reuests.
+		 *   - "comments": pages where editors are available in a comment thread structure. This includes: issues and pull requests.
 		 *   - "wiki": wiki pages editing.
 		 *
 		 * @readonly
@@ -44,14 +45,15 @@ export default class PageManager {
 	 * instance is created and ready or `false` if no editor was found.
 	 */
 	setupMainEditor() {
-		// These are the dom selectors for the outermost element that holds the whole markdown editor infrastructure in the page.
-		const rootSelectors = {
-			wiki: '#gollum-editor',
-			comments: '.timeline-comment:not(.comment)'
-		};
+		let root;
 
-		// Search for the main editor available in the page, if any.
-		const root = document.querySelector( rootSelectors[ this.type ] );
+		if ( ( root = document.querySelector( 'form#new_issue' ) ) ) {
+			this.type = 'comments';
+		} else if ( ( root = document.querySelector( 'form.js-new-comment-form' ) ) ) {
+			this.type = 'comments';
+		} else if ( ( root = document.querySelector( 'form[name="gollum-editor"]' ) ) ) {
+			this.type = 'wiki';
+		}
 
 		if ( root ) {
 			return this.setupEditor( root );
@@ -67,11 +69,10 @@ export default class PageManager {
 	 * @returns {Promise<Editor>} A promise that resolves to the editor created once its CKEditor instance is created and ready.
 	 */
 	setupEditor( rootElement ) {
-		// Do not create editors for elements which already have editors.
-		if ( editors.has( rootElement ) ) {
-			const error = new Error( 'GitHub RTE error: an editor has already been created for this element.' );
-			error.element = rootElement;
-			return Promise.reject( error );
+		let editorCreatePromise = editors.get( rootElement );
+
+		if ( editorCreatePromise ) {
+			return editorCreatePromise;
 		}
 
 		let editor;
@@ -82,10 +83,12 @@ export default class PageManager {
 			return Promise.reject( error );
 		}
 
-		// Save a reference to the root element, so we don't create editors for it again.
-		editors.set( rootElement, editor );
+		editorCreatePromise = editor.create();
 
-		return editor.create();
+		// Save a reference to the root element, so we don't create editors for it again.
+		editors.set( rootElement, editorCreatePromise );
+
+		return editorCreatePromise;
 	}
 
 	/**
@@ -156,13 +159,71 @@ export default class PageManager {
 		if ( !actionButtons.has( actionButton ) ) {
 			// Create the Editor instance in the moment the button is clicked.
 			actionButton.addEventListener( 'click', () => {
-				const rootElement = actionButton.closest( '.timeline-comment' );
+				const rootElement = actionButton.closest( '.timeline-comment' ).querySelector( 'form.js-comment-update' );
 				this.setupEditor( rootElement );
 			}, { once: true, passive: true, capture: false } );
 
 			// Save a reference to this button so we don't touch it again.
 			actionButtons.add( actionButton );
 		}
+	}
+
+	setupQuoteSelection() {
+		// Our dear friends from GH made our lives much easier. A custom event is fired, containing the markdown
+		// representation of the selection.
+		//
+		// Buuut... for security reasons, extensions can't access the CustomEvent.details property (where the markdown
+		// is stored) from CustomEvent's fired in the page.
+		//
+		// To solve the problem, we inject a script that runs in the page context, listening to the desired event.
+		// This script then takes the information we need from the event and broadcast it with `window.postMessage`.
+		//
+		// Finally, we intercept the broadcasted message within the extension context and send the quote to the editor.
+
+		injectFunctionExecution( function() {
+			document.addEventListener( 'quote-selection', ev => {
+				// Marks the comment thread container with a timestamp so we can retrieve it later.
+				const timestamp = Date.now();
+				ev.target.setAttribute( 'data-github-rte-quote-selection-timestamp', timestamp );
+
+				// Broadcast the event data that we need in the plugin.
+				window.postMessage( {
+					type: 'GitHub-RTE-Quote-Selection',
+					timestamp,
+					text: ev.detail.selectionText
+				}, '*' );
+			}, false );
+		} );
+
+		// Listen to the broadcasted message.
+		window.addEventListener( 'message', event => {
+			if ( event.data.type === 'GitHub-RTE-Quote-Selection' && event.data.text ) {
+				// Get the GH target container it holds an editor root element.
+				const target = document.querySelector( `[data-github-rte-quote-selection-timestamp="${ event.data.timestamp }"]` );
+
+				// The target should contain its own main editor inside a form, which has a few possible class names.
+				const rootSelectors = [
+					'form.js-new-comment-form',
+					'form.js-inline-comment-form'
+				];
+
+				// Take the first form element that matches any selector.
+				const root = rootSelectors.reduce( ( found, selector ) => {
+					return found || target.querySelector( selector );
+				}, null );
+
+				if ( root ) {
+					// Send the quote to the editor assigned to this root element, if any.
+					// TODO: create the editor on demand if not yet available for this root.
+					if ( editors.has( root ) ) {
+						this.setupEditor( root )
+							.then( editor => {
+								editor.quoteSelection( event.data.text );
+							} );
+					}
+				}
+			}
+		}, false );
 	}
 }
 
