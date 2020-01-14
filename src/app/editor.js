@@ -16,6 +16,7 @@ import EmitterMixin from '@ckeditor/ckeditor5-utils/src/emittermixin';
 import mix from '@ckeditor/ckeditor5-utils/src/mix';
 
 import { checkDom } from './util';
+import { keyCodes } from '@ckeditor/ckeditor5-utils/src/keyboard';
 
 // Gets the proper editor classes to be used, based on the type of page we're in.
 function getEditorClasses() {
@@ -173,6 +174,7 @@ export default class Editor {
 				this._setupFocus();
 				this._setupEmptyCheck();
 				this._setupForm();
+				this._setupEnter();
 				this._setInitialMode();
 
 				return this;
@@ -284,6 +286,53 @@ export default class Editor {
 				this.syncEditors();
 			}
 		} );
+	}
+
+	/**
+	 * Implements what GH calls "Quick Submit", and way to submit the form using (Shift+)Cmd/Ctrl+Enter.
+	 *
+	 * @private
+	 */
+	_setupEnter() {
+		const viewDocument = this.rteEditor.ckeditor.editing.view.document;
+
+		viewDocument.on( 'keydown', ( eventInfo, data ) => {
+			if ( data.keyCode === keyCodes.enter ) {
+				if ( data.ctrlKey && !data.altKey ) {
+					// By looking the GH code, it would be enough, and a better implementation, to re-dispatch the
+					// keydown event in the markdown textarea. For some unknown reason this is not working.
+					// {
+					// 	const domEvent = data.domEvent;
+					//
+					// 	const keyEvent = new KeyboardEvent( 'keydown', {
+					// 		key: domEvent.key,
+					// 		ctrlKey: domEvent.ctrlKey,
+					// 		altKey: domEvent.altKey,
+					// 		metaKey: domEvent.metaKey,
+					// 		repeat: domEvent.repeat,
+					// 	} );
+					//
+					// 	this.markdownEditor.dom.textarea.dispatchEvent( keyEvent );
+					// }
+
+					// As the above strategy is not working, we do exactly the same as the GH code is doing.
+					{
+						const form = this.markdownEditor.dom.textarea.form;
+						let e;
+
+						if ( data.shiftKey ) {
+							e = form.querySelector( '.js-quick-submit-alternative' );
+						} else {
+							e = form.querySelector(
+								'input[type=submit]:not(.js-quick-submit-alternative),' +
+								'button[type=submit]:not(.js-quick-submit-alternative)' );
+						}
+
+						e && e.click();
+					}
+				}
+			}
+		}, { priority: 'high' } );
 	}
 
 	/**
