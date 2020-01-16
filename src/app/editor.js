@@ -241,8 +241,31 @@ export default class Editor {
 	 */
 	_setupEmptyCheck() {
 		// Enable/disable the submit buttons based on the editor emptyness.
-		this.rteEditor.ckeditor.on( 'change:isEmpty', () => {
+		this.rteEditor.ckeditor.on( 'change:isEmpty', ( eventInfo, name, isEmpty ) => {
 			this._setSubmitStatus();
+
+			// In Issues and Pull Requests, the alternative submit buttons changes label when the editor is empty.
+			{
+				const page = App.pageManager.page;
+				const submitAlternative = this.dom.buttons.submitAlternative;
+
+				// This is the target element inside the button that holds the label.
+				const labelElement = submitAlternative && submitAlternative.querySelector( '.js-form-action-text' );
+
+				if ( labelElement && page === 'repo_issues' || page === 'repo_pulls' ) {
+					// The when-non-empty label is saved by GH in an attribute (we add also a generic fallback, just in case).
+					let label = submitAlternative.getAttribute( 'data-comment-text' ) || 'Close and comment';
+
+					if ( isEmpty ) {
+						// The when-empty label is kinda tricky, but the following should do the magic.
+						label = label.replace( /and .+$/, page === 'repo_issues' ?
+							'issue' :
+							'pull request' );
+					}
+
+					labelElement.textContent = label;
+				}
+			}
 		} );
 	}
 
