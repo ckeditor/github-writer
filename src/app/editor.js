@@ -175,6 +175,7 @@ export default class Editor {
 				this._setupEmptyCheck();
 				this._setupForm();
 				this._setupKeystrokes();
+				this._setupPendingActions();
 				this._setInitialMode();
 
 				return this;
@@ -241,16 +242,29 @@ export default class Editor {
 	_setupEmptyCheck() {
 		// Enable/disable the submit buttons based on the editor emptyness.
 		this.rteEditor.ckeditor.on( 'change:isEmpty', ( eventInfo, name, isEmpty ) => {
-			if ( this.getMode() === Editor.modes.RTE ) {
-				// Take the GH textarea, which is now hidden.
-				const textarea = this.markdownEditor.dom.textarea;
+			this._setSubmitStatus();
 
-				// Add a bit of "safe dirt" to the GH textarea.
-				textarea.value = textarea.defaultValue + ( isEmpty ? '' : '\n<!-- -->' );
+			// In Issues and Pull Requests, the alternative submit buttons changes label when the editor is empty.
+			{
+				const page = App.pageManager.page;
+				const submitAlternative = this.dom.buttons.submitAlternative;
 
-				// Fire the change event, so GH will update the submit buttons.
-				textarea.dispatchEvent( new Event( 'change' ) );		// "Close issue" button.
-				textarea.form.dispatchEvent( new Event( 'change' ) );	// "Comment" button.
+				// This is the target element inside the button that holds the label.
+				const labelElement = submitAlternative && submitAlternative.querySelector( '.js-form-action-text' );
+
+				if ( labelElement && page === 'repo_issues' || page === 'repo_pulls' ) {
+					// The when-non-empty label is saved by GH in an attribute (we add also a generic fallback, just in case).
+					let label = submitAlternative.getAttribute( 'data-comment-text' ) || 'Close and comment';
+
+					if ( isEmpty ) {
+						// The when-empty label is kinda tricky, but the following should do the magic.
+						label = label.replace( /and .+$/, page === 'repo_issues' ?
+							'issue' :
+							'pull request' );
+					}
+
+					labelElement.textContent = label;
+				}
 			}
 		} );
 	}
@@ -262,14 +276,6 @@ export default class Editor {
 	 */
 	_setupForm() {
 		const form = this.markdownEditor.dom.textarea.form;
-
-		// Update the textarea on form post.
-		form.addEventListener( 'submit', () => {
-			// If in RTE, update the markdown textarea with the data to be submitted.
-			if ( this.getMode() === Editor.modes.RTE ) {
-				this.syncEditors();
-			}
-		} );
 
 		// Reset the rte editor on form reset (e.g. after a new comment is added).
 		form.addEventListener( 'reset', () => {
@@ -319,18 +325,11 @@ export default class Editor {
 
 						// As the above strategy is not working, we do exactly the same as the GH code is doing.
 						{
-							const form = this.markdownEditor.dom.textarea.form;
-							let e;
+							const button = data.shiftKey ?
+								this.dom.buttons.submitAlternative :
+								this.dom.buttons.submit;
 
-							if ( data.shiftKey ) {
-								e = form.querySelector( '.js-quick-submit-alternative' );
-							} else {
-								e = form.querySelector(
-									'input[type=submit]:not(.js-quick-submit-alternative),' +
-									'button[type=submit]:not(.js-quick-submit-alternative)' );
-							}
-
-							e && e.click();
+							button && button.click();
 						}
 					}
 				}
@@ -345,6 +344,14 @@ export default class Editor {
 		}, { priority: 'high' } );
 	}
 
+	_setupPendingActions() {
+		const pendingActions = this.rteEditor.ckeditor.plugins.get( 'PendingActions' );
+
+		pendingActions.on( 'change:hasAny', () => {
+			this._setSubmitStatus();
+		} );
+	}
+
 	/**
 	 * Sets the most appropriate mode for this editor on startup.
 	 *
@@ -357,6 +364,112 @@ export default class Editor {
 	_setInitialMode() {
 		this.setMode( this._checkDataLoss() ? Editor.modes.MARKDOWN : Editor.modes.RTE,
 			{ noSynch: true, noCheck: true } );
+
+		// Retrieve and setup the submit buttons.
+		{
+			const form = this.markdownEditor.dom.textarea.form;
+
+			// Take the currently stored buttons.
+			let submit = this.dom.buttons && this.dom.buttons.submit;
+			let submitAlternative = this.dom.buttons && this.dom.buttons.submitAlternative;
+
+			this.dom.buttons = {
+				submit: form.querySelector(
+					'input[type=submit].btn-primary, button[type=submit].btn-primary' ),
+				submitAlternative: form.querySelector( '.js-quick-submit-alternative' )
+			};
+
+			// Sync the editors when submitting the form (which is always done by "click").
+			{
+				if ( this.dom.buttons.submit !== submit ) {
+					submit = this.dom.buttons.submit;
+					submit.addEventListener( 'click', () => {
+						if ( this.getMode() === Editor.modes.RTE ) {
+							this.syncEditors();
+						}
+					} );
+				}
+
+				if ( this.dom.buttons.submitAlternative !== submitAlternative ) {
+					submitAlternative = this.dom.buttons.submitAlternative;
+					submitAlternative && submitAlternative.addEventListener( 'click', () => {
+						if ( this.getMode() === Editor.modes.RTE ) {
+							this.syncEditors();
+						}
+					} );
+				}
+			}
+		}
+
+		// The submit status must always be updated when setting the initial mode.
+		this._setSubmitStatus();
+	}
+
+	/**
+	 * Set the disabled status of the Submit buttons based on a series of checks.
+	 *
+	 * @private
+	 */
+	_setSubmitStatus() {
+		// We do this job in RTE mode only. In Markdown, GH takes care of it.
+		if ( this.getMode() !== Editor.modes.RTE ) {
+			return;
+		}
+
+		const ckeditor = this.rteEditor.ckeditor;
+
+		// Default behavior.
+		let disabled = false;
+
+		// It must be for sure disabled if there are pending actions in the editor (upload in progress).
+		if ( ckeditor.plugins.get( 'PendingActions' ).hasAny ) {
+			disabled = true;
+		} else {
+			// Otherwise, we check the validity of the required form elements.
+
+			const textarea = this.markdownEditor.dom.textarea;
+			const form = this.markdownEditor.dom.textarea.form;
+
+			form.querySelectorAll( '[required]' ).forEach( element => {
+				if ( element === textarea ) {
+					// Instead of checking the markdown textarea, we check the RTE editor.
+					disabled = disabled || ckeditor.isEmpty;
+				} else {
+					// For other elements, we just use DOM checks.
+					if ( !element.checkValidity() ) {
+						disabled = true;
+					}
+				}
+			} );
+		}
+
+		// As we'll be setting the "disabled" attribute, we pause the mutation observer.
+		disconnectSubmitButtonObserver.call( this );
+
+		// Finally set the "disabled" property on the submit button.
+		this.dom.buttons.submit.disabled = disabled;
+
+		// Re-wire the mutation observer. In this way, we'll know when external code (GH) wants to change the "disabled"
+		// attribute of the submit button so we replace that change with our custom check.
+		connectSubmitButtonObserver.call( this );
+
+		function connectSubmitButtonObserver() {
+			if ( !this._submitButtonObserver ) {
+				const button = this.dom.buttons.submit;
+
+				this._submitButtonObserver = new MutationObserver( () => {
+					this._setSubmitStatus();
+				} );
+				this._submitButtonObserver.observe( button, { attributes: true, attributeFilter: [ 'disabled' ] } );
+			}
+		}
+
+		function disconnectSubmitButtonObserver() {
+			if ( this._submitButtonObserver ) {
+				this._submitButtonObserver.disconnect();
+				delete this._submitButtonObserver;
+			}
+		}
 	}
 
 	/**

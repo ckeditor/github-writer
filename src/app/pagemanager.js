@@ -22,8 +22,14 @@ export default class PageManager {
 	 * Creates and instance of this class.
 	 */
 	constructor() {
-		// Detect if we're in a wiki page.
-		const meta = document.querySelector( 'meta[name="selected-link"' );
+		/**
+		 * The GitHub name for the kind of page we're in.
+		 *
+		 * @readonly
+		 * @type {String}
+		 */
+		this.page = document.querySelector( 'meta[name="selected-link"]' );
+		this.page = this.page ? this.page.getAttribute( 'value' ) : 'unknown';
 
 		/**
 		 * The type of GitHub page the application is running in. There are two possible types:
@@ -33,7 +39,7 @@ export default class PageManager {
 		 * @readonly
 		 * @type {String} Either "comments" or "wiki".
 		 */
-		this.type = ( meta && meta.getAttribute( 'value' ) === 'repo_wiki' ) ?
+		this.type = ( this.page === 'repo_wiki' ) ?
 			'wiki' :
 			'comments';
 	}
