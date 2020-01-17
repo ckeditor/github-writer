@@ -8,7 +8,7 @@
   "name": "GitHub Rich-Text Editor (RTE)",
   "short_name": "GitHub RTE",
   "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor.",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "author": "CKSource (cksource.com)",
   "permissions": [
 	// The following are domains used by GitHub to upload files. We need to have permissions on them,
