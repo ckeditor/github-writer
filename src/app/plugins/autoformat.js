@@ -33,7 +33,11 @@ export default class Autoformat extends CKEditorAutoformat {
 			// --- (3 or more dashes) -> horizontal line
 			if ( commands.get( 'horizontalLine' ) ) {
 				// eslint-disable-next-line no-new
-				new BlockAutoformatEditing( this.editor, /^-{3,}$/, 'horizontalLine' );
+				new BlockAutoformatEditing( this.editor, /^-{3,}$/, () => {
+					this.editor.model.enqueueChange( () => {
+						this.editor.execute( 'horizontalLine' );
+					} );
+				} );
 			}
 		}
 	}
