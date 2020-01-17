@@ -252,7 +252,7 @@ export default class Editor {
 				// This is the target element inside the button that holds the label.
 				const labelElement = submitAlternative && submitAlternative.querySelector( '.js-form-action-text' );
 
-				if ( labelElement && page === 'repo_issues' || page === 'repo_pulls' ) {
+				if ( labelElement && ( page === 'repo_issues' || page === 'repo_pulls' ) ) {
 					// The when-non-empty label is saved by GH in an attribute (we add also a generic fallback, just in case).
 					let label = submitAlternative.getAttribute( 'data-comment-text' ) || 'Close and comment';
 
@@ -458,6 +458,7 @@ export default class Editor {
 				const button = this.dom.buttons.submit;
 
 				this._submitButtonObserver = new MutationObserver( () => {
+					// noinspection JSPotentiallyInvalidUsageOfClassThis
 					this._setSubmitStatus();
 				} );
 				this._submitButtonObserver.observe( button, { attributes: true, attributeFilter: [ 'disabled' ] } );

@@ -55,6 +55,8 @@ export default class PageManager {
 
 		if ( ( root = document.querySelector( 'form#new_issue' ) ) ) {
 			this.type = 'comments';
+		} else if ( ( root = document.querySelector( 'form#new_pull_request' ) ) ) {
+			this.type = 'comments';
 		} else if ( ( root = document.querySelector( 'form.js-new-comment-form' ) ) ) {
 			this.type = 'comments';
 		} else if ( ( root = document.querySelector( 'form[name="gollum-editor"]' ) ) ) {
@@ -134,6 +136,7 @@ export default class PageManager {
 			function searchEditButtons( root ) {
 				root.querySelectorAll( '.js-comment-edit-button' )
 					.forEach( editButton => {
+						// noinspection JSPotentiallyInvalidUsageOfClassThis
 						this.setupEditButton( editButton );
 					} );
 			}
