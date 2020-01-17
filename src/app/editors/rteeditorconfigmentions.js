@@ -91,14 +91,14 @@ export default function getMentionFeedsConfig( urls ) {
 			 * @returns {HTMLElement} The element to be inserted in the selection box list.
 			 */
 			entryRenderer: entry => {
-				const template = document.createElement( 'template' );
-				template.innerHTML = `
+				const div = document.createElement( 'div' );
+				div.innerHTML = `
 					<button>
 						<small>#${ entry.number }</small> ${ entry.title }
 					</button>
 				`;
 
-				return template.content.firstElementChild;
+				return div.firstElementChild;
 			}
 		},
 
@@ -155,14 +155,14 @@ export default function getMentionFeedsConfig( urls ) {
 				};
 			},
 			entryRenderer: entry => {
-				const template = document.createElement( 'template' );
-				template.innerHTML = `
+				const div = document.createElement( 'div' );
+				div.innerHTML = `
 					<button>
 						${ entry.name } <small>${ entry.description }</small>
 					</button>
 				`;
 
-				return template.content.firstElementChild;
+				return div.firstElementChild;
 			}
 		},
 
@@ -211,15 +211,15 @@ export default function getMentionFeedsConfig( urls ) {
 				};
 			},
 			entryRenderer: entry => {
-				const template = document.createElement( 'template' );
+				const div = document.createElement( 'div' );
 				// <g-emoji> is a GH element. We're borrowing some of its styles.
-				template.innerHTML = `
+				div.innerHTML = `
 					<button>
 						<g-emoji>${ entry.icon }</g-emoji> ${ entry.name }
 					</button>
 				`;
 
-				return template.content.firstElementChild;
+				return div.firstElementChild;
 			}
 		}
 	};
