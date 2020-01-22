@@ -231,19 +231,19 @@ export default function getMentionFeedsConfig( urls ) {
 	{
 		urls.issues && config.push( {
 			marker: '#',
-			feed: query => find( 'issues', query ),
+			feed( query ) { return find.call( this, 'issues', query ); },
 			itemRenderer: db.issues.entryRenderer
 		} );
 
 		urls.people && config.push( {
 			marker: '@',
-			feed: query => find( 'people', query ),
+			feed( query ) { return find.call( this, 'people', query ); },
 			itemRenderer: db.people.entryRenderer
 		} );
 
 		urls.emoji && config.push( {
 			marker: ':',
-			feed: query => find( 'emoji', query ),
+			feed( query ) { return find.call( this, 'emoji', query ); },
 			itemRenderer: db.emoji.entryRenderer
 		} );
 	}
@@ -256,6 +256,13 @@ export default function getMentionFeedsConfig( urls ) {
 	// @param {String} query The filtering substring query.
 	// @returns {Promise<Array>} A promise that resolves with a short list of entries.
 	function find( type, query ) {
+		// Mentions should not be enabled inside code (#30). This should be handled by the mentions plugin itself,
+		// but it's not, so we do a workaround here.
+		// `this` in feed functions point to `editor`.
+		if ( this.commands.get( 'code' ).value || this.commands.get( 'codeBlock' ).value ) {
+			return Promise.resolve( [] );
+		}
+
 		// Normalize the query to lowercase.
 		query = query.toLowerCase();
 
