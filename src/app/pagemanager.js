@@ -59,6 +59,8 @@ export default class PageManager {
 			this.type = 'comments';
 		} else if ( ( root = document.querySelector( 'form.js-new-comment-form' ) ) ) {
 			this.type = 'comments';
+		} else if ( ( root = document.querySelector( 'div.pull-request-review-menu > form' ) ) ) {
+			this.type = 'comments';
 		} else if ( ( root = document.querySelector( 'form[name="gollum-editor"]' ) ) ) {
 			this.type = 'wiki';
 		}
