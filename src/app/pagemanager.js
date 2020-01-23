@@ -185,7 +185,7 @@ export default class PageManager {
 		if ( !actionButtons.has( actionButton ) ) {
 			// Create the Editor instance in the moment the button is clicked.
 			actionButton.addEventListener( 'click', () => {
-				const rootElement = actionButton.closest( '.timeline-comment' ).querySelector( 'form.js-comment-update' );
+				const rootElement = actionButton.closest( '.js-comment' ).querySelector( 'form.js-comment-update' );
 				this.setupEditor( rootElement );
 			}, { once: true, passive: true, capture: false } );
 
