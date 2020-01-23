@@ -179,6 +179,23 @@ export default class PageManager {
 		}
 	}
 
+	/**
+	 * Setups additional page tweaks that makes things work right.
+	 */
+	setupPageHacks() {
+		// Disable pjax in the tabs of pull request pages. That's unfortunate but pjax makes things break hard.
+		{
+			if ( this.page === 'repo_pulls' ) {
+				document.querySelectorAll( 'nav.tabnav-tabs > a' )
+					.forEach( el => el.setAttribute( 'data-skip-pjax', 'true' ) );
+
+				// At this point, as a small enhancement, we can also remove the pjax prefetches that GH does.
+				document.querySelectorAll( 'link[rel="pjax-prefetch"]' )
+					.forEach( el => el.remove() );
+			}
+		}
+	}
+
 	setupQuoteSelection() {
 		// Our dear friends from GH made our lives much easier. A custom event is fired, containing the markdown
 		// representation of the selection.
