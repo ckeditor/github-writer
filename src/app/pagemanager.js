@@ -218,6 +218,13 @@ export default class PageManager {
 				// At this point, as a small enhancement, we can also remove the pjax prefetches that GH does.
 				document.querySelectorAll( 'link[rel="pjax-prefetch"]' )
 					.forEach( el => el.remove() );
+
+				// This is specific to the "Commits" tab.
+				document.querySelectorAll( 'a[data-pjax="true"], a.sha' )
+					.forEach( el => {
+						el.removeAttribute( 'data-pjax' );
+						el.setAttribute( 'data-skip-pjax', 'true' );
+					} );
 			}
 		}
 	}
