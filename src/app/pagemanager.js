@@ -102,10 +102,53 @@ export default class PageManager {
 	}
 
 	/**
+	 * Creates a mutation observer that will watch for elements created on demand, which should trigger
+	 * the creation of editors.
+	 *
+	 * Examples of on demand elements:
+	 *   * Edit buttons for new comments posted.
+	 *   * The review button in a PR.
+	 */
+	setupObserver() {
+		// Creates a mutation observer that will waiting for any dom element to be added to tha page.
+		{
+			const observer = new MutationObserver( mutations => {
+				mutations.forEach( mutation => Array.from( mutation.addedNodes ).forEach( node => {
+					if ( node instanceof HTMLElement ) {
+						searchEditButtons.call( this, node );
+						searchInlineReviewComments.call( this, node );
+					}
+				} ) );
+			} );
+
+			observer.observe( document.body, {
+				childList: true,
+				subtree: true
+			} );
+		}
+
+		// Searches for edit buttons inside the given element and setup them for creating editors on demand.
+		function searchEditButtons( element ) {
+			element.querySelectorAll( '.js-comment-edit-button' )
+				.forEach( editButton => {
+					// noinspection JSPotentiallyInvalidUsageOfClassThis
+					this.setupEditButton( editButton );
+				} );
+		}
+
+		// Search for inline review comments (created with the + button in source lines).
+		function searchInlineReviewComments( element ) {
+			// noinspection JSPotentiallyInvalidUsageOfClassThis
+			element.querySelectorAll( 'form.js-inline-comment-form' )
+				.forEach( root => this.setupEditor( root ) );
+		}
+	}
+
+	/**
 	 * Setups comments editing buttons for the on-demand creation of editors.
 	 */
 	setupEdit() {
-		// Comments editing is available only on pages of type "comments". Do nothign otherwise.
+		// Comments editing is available only on pages of type "comments". Do nothing otherwise.
 		if ( this.type !== 'comments' ) {
 			return;
 		}
@@ -114,34 +157,6 @@ export default class PageManager {
 		{
 			const editButtons = Array.from( document.querySelectorAll( '.js-comment-edit-button' ) );
 			editButtons.forEach( button => this.setupEditButton( button ) );
-		}
-
-		// Watch for edit buttons created on demand (when saving a comment).
-		{
-			// Creates a mutation observer that will waiting for any dom element to be added to tha page.
-			{
-				const observer = new MutationObserver( mutations => {
-					mutations.forEach( mutation => Array.from( mutation.addedNodes ).forEach( node => {
-						if ( node instanceof HTMLElement ) {
-							searchEditButtons.call( this, node );
-						}
-					} ) );
-				} );
-
-				observer.observe( document.body, {
-					childList: true,
-					subtree: true
-				} );
-			}
-
-			// Searches for edit buttons inside the given element adn setup them for creating editors on demand.
-			function searchEditButtons( root ) {
-				root.querySelectorAll( '.js-comment-edit-button' )
-					.forEach( editButton => {
-						// noinspection JSPotentiallyInvalidUsageOfClassThis
-						this.setupEditButton( editButton );
-					} );
-			}
 		}
 	}
 
@@ -170,13 +185,27 @@ export default class PageManager {
 		if ( !actionButtons.has( actionButton ) ) {
 			// Create the Editor instance in the moment the button is clicked.
 			actionButton.addEventListener( 'click', () => {
-				const rootElement = actionButton.closest( '.timeline-comment' ).querySelector( 'form.js-comment-update' );
+				const rootElement = actionButton.closest( '.js-comment' ).querySelector( 'form.js-comment-update' );
 				this.setupEditor( rootElement );
 			}, { once: true, passive: true, capture: false } );
 
 			// Save a reference to this button so we don't touch it again.
 			actionButtons.add( actionButton );
 		}
+	}
+
+	/**
+	 * Setup buttons that toggle the creation of inline comments, like the "+" button in comment lines.
+	 */
+	setupInlineCommentTogglers() {
+		document.querySelectorAll( '.js-toggle-inline-comment-form' )
+			.forEach( toggler => {
+				toggler.addEventListener( 'click', () => {
+					const container = toggler.closest( '.js-inline-comment-form-container' );
+					const root = container && container.querySelector( 'form' );
+					this.setupEditor( root );
+				} );
+			} );
 	}
 
 	/**
@@ -192,6 +221,13 @@ export default class PageManager {
 				// At this point, as a small enhancement, we can also remove the pjax prefetches that GH does.
 				document.querySelectorAll( 'link[rel="pjax-prefetch"]' )
 					.forEach( el => el.remove() );
+
+				// This is specific to the "Commits" tab.
+				document.querySelectorAll( 'a[data-pjax="true"], a.sha' )
+					.forEach( el => {
+						el.removeAttribute( 'data-pjax' );
+						el.setAttribute( 'data-skip-pjax', 'true' );
+					} );
 			}
 		}
 	}

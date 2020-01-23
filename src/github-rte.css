@@ -156,12 +156,19 @@ div.github-rte-ckeditor.comment-body:focus-within {
 
 /* Here, we're fixing up a bit of mess from the GH CSS itself. The comment editing CSS is different from other editors in GH :/ */
 div.comment-form-head {
-	padding: 0 !important;
+	padding: 8px 0 0 !important;
+	display: flex;
 	align-items: center;
+}
+div.comment-form-head > * {
+	margin-top: -8px !important;
 }
 div.tabnav-tabs,
 nav.tabnav-tabs {
-	margin: 8px 8px -1px 8px !important;
+	flex: auto;
+	margin: auto 8px -1px 8px !important;
+	order: -1;
+	white-space: nowrap;
 }
 
 /*******************************

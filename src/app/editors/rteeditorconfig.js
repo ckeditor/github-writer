@@ -38,6 +38,7 @@ import getMentionFeedsConfig from './rteeditorconfigmentions';
 import Kebab from '../plugins/kebab';
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
 import ModeSwitcher from '../plugins/modeswitcher';
+import Suggestion from '../plugins/suggestion';
 
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
 import QuoteSelection from '../plugins/quoteselection';
@@ -57,7 +58,7 @@ export default function getRteEditorConfig( rteEditor ) {
 	// There are some special differences among "comments" and "no-comments" (wiki) pages.
 	const isCommentsPage = App.pageManager.type === 'comments';
 
-	return {
+	const config = {
 		plugins: [
 			Essentials, Paragraph, Enter, Autoformat, Mention,
 			Image, ImageUpload, GitHubUploadAdapter,
@@ -67,7 +68,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			Link,
 			List, TodoList,
 			HorizontalLine, Table, TableToolbar,
-			Kebab, RemoveFormat, ModeSwitcher,
+			Kebab, RemoveFormat, ModeSwitcher, Suggestion,
 			PasteFromOffice,
 			QuoteSelection, ResetListener, EditorExtras
 		],
@@ -113,9 +114,26 @@ export default function getRteEditorConfig( rteEditor ) {
 			 * @type {Function<Promise>} a function that, when called, returns a promise that resolves
 			 * with the upload configuration object.
 			 */
-			upload: getUploadConfig()
+			upload: getUploadConfig(),
+
+			/**
+			 * Configurations for the "suggestion" feature.
+			 */
+			suggestion: {
+				/**
+				 * Indicates that the suggestion feature should be enabled in the editor.
+				 */
+				enabled: checkSuggestionEnabled( rteEditor )
+			}
 		}
 	};
+
+	// Add the suggestion button to the toolbar only if the suggestion is enabled.
+	if ( config.githubRte.suggestion.enabled ) {
+		config.toolbar.unshift( 'suggestion', '|' );
+	}
+
+	return config;
 
 	// Returns a function that, when called, will return a promise that resolves with the upload configuration object.
 	//
@@ -190,5 +208,17 @@ export default function getRteEditorConfig( rteEditor ) {
 			people: textExpanderElement.getAttribute( 'data-mention-url' ),
 			emoji: textExpanderElement.getAttribute( 'data-emoji-url' )
 		} );
+	}
+
+	/**
+	 * Checks if this editor should have the suggestion button.
+	 * @param rteEditor
+	 * @returns {boolean}
+	 */
+	function checkSuggestionEnabled( rteEditor ) {
+		// It should be enabled if the suggestion button is available in the markdown toolbar.
+		const toolbar = rteEditor.githubEditor.markdownEditor.dom.toolbar;
+		const button = toolbar && toolbar.querySelector( 'button.js-suggested-change-toolbar-item' );
+		return !!button;
 	}
 }
