@@ -63,8 +63,6 @@ export default class MarkdownEditor {
 	 * @returns {Object} The object which is assigned to {MarkdownEditor#dom} by its constructor.
 	 */
 	getDom( root ) {
-		const toolbar = root.querySelector( 'markdown-toolbar' );
-
 		return {
 			/**
 			 * The outermost element encompassing the structure around the original GitHub markdown editor.
@@ -80,7 +78,7 @@ export default class MarkdownEditor {
 			 * @type {HTMLElement}
 			 * @memberOf MarkdownEditor#dom
 			 */
-			toolbar,
+			toolbar: root.querySelector( 'markdown-toolbar' ),
 
 			/**
 			 * The markdown textarea.
@@ -88,7 +86,7 @@ export default class MarkdownEditor {
 			 * @type {HTMLElement}
 			 * @memberOf MarkdownEditor#dom
 			 */
-			textarea: toolbar && root.querySelector( '#' + toolbar.getAttribute( 'for' ) ),
+			textarea: root.querySelector( 'textarea' ),
 
 			/**
 			 * The container for the editor panels body (Write and Preview)
