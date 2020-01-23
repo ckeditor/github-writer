@@ -59,6 +59,8 @@ export default class PageManager {
 			this.type = 'comments';
 		} else if ( ( root = document.querySelector( 'form.js-new-comment-form' ) ) ) {
 			this.type = 'comments';
+		} else if ( ( root = document.querySelector( 'div.pull-request-review-menu > form' ) ) ) {
+			this.type = 'comments';
 		} else if ( ( root = document.querySelector( 'form[name="gollum-editor"]' ) ) ) {
 			this.type = 'wiki';
 		}
@@ -174,6 +176,23 @@ export default class PageManager {
 
 			// Save a reference to this button so we don't touch it again.
 			actionButtons.add( actionButton );
+		}
+	}
+
+	/**
+	 * Setups additional page tweaks that makes things work right.
+	 */
+	setupPageHacks() {
+		// Disable pjax in the tabs of pull request pages. That's unfortunate but pjax makes things break hard.
+		{
+			if ( this.page === 'repo_pulls' ) {
+				document.querySelectorAll( 'nav.tabnav-tabs > a' )
+					.forEach( el => el.setAttribute( 'data-skip-pjax', 'true' ) );
+
+				// At this point, as a small enhancement, we can also remove the pjax prefetches that GH does.
+				document.querySelectorAll( 'link[rel="pjax-prefetch"]' )
+					.forEach( el => el.remove() );
+			}
 		}
 	}
 
