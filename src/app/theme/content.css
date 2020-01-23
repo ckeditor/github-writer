@@ -74,7 +74,7 @@
 	}
 
 	/* Code block */
-	& pre[data-language]:after {
+	& pre[data-language]:not([data-language="Suggestion"]):after {
 		/* Hide the inline label in code blocks as it's not relevant for now. */
 		display: none;
 	}
