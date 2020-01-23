@@ -64,6 +64,8 @@ The GitHub RTE should be enabled in all places where the original markdown edito
     *   [x] Comment
         *   [x] Editing
     *   [x] Review
+    *   [x] Code comments
+        *   [x] Editing
 *   [x] Wiki pages
 *   [ ] Commits
     *   [ ] Comment
