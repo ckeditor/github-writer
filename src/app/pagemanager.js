@@ -102,22 +102,6 @@ export default class PageManager {
 	}
 
 	/**
-	 * Setups comments editing buttons for the on-demand creation of editors.
-	 */
-	setupEdit() {
-		// Comments editing is available only on pages of type "comments". Do nothing otherwise.
-		if ( this.type !== 'comments' ) {
-			return;
-		}
-
-		// Setup all edit buttons currently available in the page.
-		{
-			const editButtons = Array.from( document.querySelectorAll( '.js-comment-edit-button' ) );
-			editButtons.forEach( button => this.setupEditButton( button ) );
-		}
-	}
-
-	/**
 	 * Creates a mutation observer that will watch for elements created on demand, which should trigger
 	 * the creation of editors.
 	 *
@@ -161,6 +145,22 @@ export default class PageManager {
 	}
 
 	/**
+	 * Setups comments editing buttons for the on-demand creation of editors.
+	 */
+	setupEdit() {
+		// Comments editing is available only on pages of type "comments". Do nothing otherwise.
+		if ( this.type !== 'comments' ) {
+			return;
+		}
+
+		// Setup all edit buttons currently available in the page.
+		{
+			const editButtons = Array.from( document.querySelectorAll( '.js-comment-edit-button' ) );
+			editButtons.forEach( button => this.setupEditButton( button ) );
+		}
+	}
+
+	/**
 	 * Setups an edit button so it creates an editor on demand.
 	 *
 	 * In reality, the editor is not created when the edit button is clicked but when it's displayed, by clicking its
@@ -194,6 +194,9 @@ export default class PageManager {
 		}
 	}
 
+	/**
+	 * Setup buttons that toggle the creation of inline comments, like the "+" button in comment lines.
+	 */
 	setupInlineCommentTogglers() {
 		document.querySelectorAll( '.js-toggle-inline-comment-form' )
 			.forEach( toggler => {
