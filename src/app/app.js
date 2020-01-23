@@ -43,6 +43,7 @@ export default class App {
 			// Setup the comment "Edit" buttons, if any.
 			App.pageManager.setupEdit();
 			App.pageManager.setupPageHacks();
+			App.pageManager.setupObserver();
 			App.pageManager.setupQuoteSelection();
 		}
 

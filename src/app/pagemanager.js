@@ -105,7 +105,7 @@ export default class PageManager {
 	 * Setups comments editing buttons for the on-demand creation of editors.
 	 */
 	setupEdit() {
-		// Comments editing is available only on pages of type "comments". Do nothign otherwise.
+		// Comments editing is available only on pages of type "comments". Do nothing otherwise.
 		if ( this.type !== 'comments' ) {
 			return;
 		}
@@ -115,33 +115,48 @@ export default class PageManager {
 			const editButtons = Array.from( document.querySelectorAll( '.js-comment-edit-button' ) );
 			editButtons.forEach( button => this.setupEditButton( button ) );
 		}
+	}
 
-		// Watch for edit buttons created on demand (when saving a comment).
+	/**
+	 * Creates a mutation observer that will watch for elements created on demand, which should trigger
+	 * the creation of editors.
+	 *
+	 * Examples of on demand elements:
+	 *   * Edit buttons for new comments posted.
+	 *   * The review button in a PR.
+	 */
+	setupObserver() {
+		// Creates a mutation observer that will waiting for any dom element to be added to tha page.
 		{
-			// Creates a mutation observer that will waiting for any dom element to be added to tha page.
-			{
-				const observer = new MutationObserver( mutations => {
-					mutations.forEach( mutation => Array.from( mutation.addedNodes ).forEach( node => {
-						if ( node instanceof HTMLElement ) {
-							searchEditButtons.call( this, node );
-						}
-					} ) );
-				} );
+			const observer = new MutationObserver( mutations => {
+				mutations.forEach( mutation => Array.from( mutation.addedNodes ).forEach( node => {
+					if ( node instanceof HTMLElement ) {
+						searchEditButtons.call( this, node );
+						searchInlineReviewComments.call( this, node );
+					}
+				} ) );
+			} );
 
-				observer.observe( document.body, {
-					childList: true,
-					subtree: true
-				} );
-			}
+			observer.observe( document.body, {
+				childList: true,
+				subtree: true
+			} );
+		}
 
-			// Searches for edit buttons inside the given element adn setup them for creating editors on demand.
-			function searchEditButtons( root ) {
-				root.querySelectorAll( '.js-comment-edit-button' )
-					.forEach( editButton => {
-						// noinspection JSPotentiallyInvalidUsageOfClassThis
-						this.setupEditButton( editButton );
-					} );
-			}
+		// Searches for edit buttons inside the given element and setup them for creating editors on demand.
+		function searchEditButtons( element ) {
+			element.querySelectorAll( '.js-comment-edit-button' )
+				.forEach( editButton => {
+					// noinspection JSPotentiallyInvalidUsageOfClassThis
+					this.setupEditButton( editButton );
+				} );
+		}
+
+		// Search for inline review comments (created with the + button in source lines).
+		function searchInlineReviewComments( element ) {
+			// noinspection JSPotentiallyInvalidUsageOfClassThis
+			element.querySelectorAll( 'form.js-inline-comment-form' )
+				.forEach( root => this.setupEditor( root ) );
 		}
 	}
 
