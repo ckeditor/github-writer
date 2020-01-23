@@ -194,6 +194,17 @@ export default class PageManager {
 		}
 	}
 
+	setupInlineCommentTogglers() {
+		document.querySelectorAll( '.js-toggle-inline-comment-form' )
+			.forEach( toggler => {
+				toggler.addEventListener( 'click', () => {
+					const container = toggler.closest( '.js-inline-comment-form-container' );
+					const root = container && container.querySelector( 'form' );
+					this.setupEditor( root );
+				} );
+			} );
+	}
+
 	/**
 	 * Setups additional page tweaks that makes things work right.
 	 */

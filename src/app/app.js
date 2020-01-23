@@ -42,6 +42,7 @@ export default class App {
 		if ( !rejected ) {
 			// Setup the comment "Edit" buttons, if any.
 			App.pageManager.setupEdit();
+			App.pageManager.setupInlineCommentTogglers();
 			App.pageManager.setupPageHacks();
 			App.pageManager.setupObserver();
 			App.pageManager.setupQuoteSelection();
