@@ -48,6 +48,7 @@ One of the goals of this extension is providing all features which are available
     *   [x] Escape markdown in text
     *   [x] Tables
     *   [x] Quote selection ("r" key)
+    *   [x] PR code suggestions
     *   [ ] Saved replies
 
 ### Pages enabled
