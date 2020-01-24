@@ -158,7 +158,7 @@ export default function getRteEditorConfig( rteEditor ) {
 		// If the element was found, we're all set.
 		return getConfigFunction( () => getConfigPromise( uploadDataElement ) );
 
-		// Builds the configuration function, which caches the returned promise so  its resolution logic is executed just once.
+		// Builds the configuration function, which caches the returned promise so its resolution logic is executed just once.
 		function getConfigFunction( promiseBuilder ) {
 			let configPromise;
 
@@ -175,10 +175,18 @@ export default function getRteEditorConfig( rteEditor ) {
 
 		// Builds the promise that resolves with the configuration object.
 		function getConfigPromise( element ) {
+			let authenticityToken = element.getAttribute( 'data-upload-policy-authenticity-token' );
+
+			// GitHub changed and the token may not be available as an attribute anymore but inside an input[hidden].
+			if ( !authenticityToken ) {
+				const tokenElement = element.querySelector( '.js-data-upload-policy-url-csrf' );
+				authenticityToken = tokenElement && tokenElement.value;
+			}
+
 			return Promise.resolve( {
 				url: element.getAttribute( 'data-upload-policy-url' ),
 				form: {
-					authenticity_token: element.getAttribute( 'data-upload-policy-authenticity-token' ),
+					authenticity_token: authenticityToken,
 					repository_id: element.getAttribute( 'data-upload-repository-id' )
 				}
 			} );
