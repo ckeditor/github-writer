@@ -418,6 +418,9 @@ export default class Editor {
 
 		const ckeditor = this.rteEditor.ckeditor;
 
+		// In wiki pages, the button is always on no matter the value of required fields.
+		const isWiki = ( App.pageManager.page === 'repo_wiki' );
+
 		// Default behavior.
 		let disabled = false;
 
@@ -434,7 +437,7 @@ export default class Editor {
 				if ( element === textarea ) {
 					// Instead of checking the markdown textarea, we check the RTE editor.
 					disabled = disabled || ckeditor.isEmpty;
-				} else {
+				} else if ( !isWiki ) {
 					// For other elements, we just use DOM checks.
 					if ( !element.checkValidity() ) {
 						disabled = true;
