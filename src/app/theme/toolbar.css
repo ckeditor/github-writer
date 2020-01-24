@@ -81,6 +81,25 @@
 			width: 0;
 			min-width: 0;
 		}
+
+		/* Fixes the toogle button in dropdown lists (#41) */
+		& .ck-list {
+			& > .ck-list__item {
+				padding: 0 4px;
+
+				& > .ck-button {
+					margin: 0 !important;
+				}
+
+				& > .ck-switchbutton {
+					display: flex;
+
+					& .ck-button__toggle {
+						margin-right: 4px;
+					}
+				}
+			}
+		}
 	}
 }
 
