@@ -26,6 +26,13 @@
 		}
 	}
 
+	/* Mentions */
+	& .mention {
+		/* We actually unstyle mentions altogether, leaving it to the autolinking feature */
+		background: unset;
+		color: unset;
+	}
+
 	/* To-do list */
 	& .todo-list {
 		& li {
