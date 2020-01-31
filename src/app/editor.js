@@ -449,8 +449,12 @@ export default class Editor {
 		// As we'll be setting the "disabled" attribute, we pause the mutation observer.
 		disconnectSubmitButtonObserver.call( this );
 
-		// Finally set the "disabled" property on the submit button.
-		this.dom.buttons.submit.disabled = disabled;
+		// Finally set the "disabled" property on all submit buttons.
+		{
+			// GH marks submit buttons that are sensitive to form validation with [data-disable-invalid].
+			this.dom.root.querySelectorAll( 'button[type="submit"][data-disable-invalid]' )
+				.forEach( button => ( button.disabled = disabled ) );
+		}
 
 		// Re-wire the mutation observer. In this way, we'll know when external code (GH) wants to change the "disabled"
 		// attribute of the submit button so we replace that change with our custom check.
