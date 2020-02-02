@@ -107,7 +107,7 @@ class AutoLinkStyler {
 		}
 
 		this._matchStyle = new WordMatchStyler( 'autolink' );
-		this._matchStyle.watch( editor.model );
+		this._matchStyle.watch( editor );
 	}
 
 	addPattern( pattern, type, callback ) {
@@ -136,7 +136,9 @@ class WordMatchStyler {
 		this._matchers.push( { regex, regexGlobal, callback } );
 	}
 
-	watch( model ) {
+	watch( editor ) {
+		const model = editor.model;
+
 		const attribute = this.attribute;
 		const matchers = this._matchers;
 
@@ -167,60 +169,21 @@ class WordMatchStyler {
 				// Enlarge the range to whichever text it's touching.
 				range = TextExpander.word( range );
 
-				const walker = range.getWalker();
-
-				// Walk through the range, processing all text sequences available inside it.
-				while ( !walker.position.isEqual( range.end ) ) {
-					// Find the next available text sequence positions.
-
-					// Step 1: Set the start position right before the first text node found.
-					walker.skip( value => value.type !== 'text' );
-					const textStart = walker.position;
-
-					// Step 2: Set the end position after all consecutive text nodes available.
-					walker.skip( value => value.type === 'text' );
-					const textEnd = walker.position;
-
-					// Step 3: If the above positions are different, text to be processed has been found.
-					if ( !textStart.isEqual( textEnd ) ) {
-						// Create a range that encloses the whole text found.
-						const textRange = new Range( textStart, textEnd );
-
-						// Concat the text nodes and return the final value as a string.
-						const text = Array.from( textRange.getItems() )
-							.reduce( ( text, textNode ) => ( text += textNode.data ), '' );
-
-						const matches = [];
-
-						// Run all matchers over the text, accumulating all matches found in the above array.
-						matchers.forEach( ( { regexGlobal, callback } ) => {
-							for ( const match of text.matchAll( regexGlobal ) ) {
-								const matchRange = getWordMatchRange( match, textRange );
-								matchRange.callback = callback;
-								matches.push( matchRange );
-							}
-						} );
-
-						if ( matches.length ) {
-							// Remove ranges that are intersecting (just one matcher on the whole word).
-							matches.forEach( ( range, index ) => {
-								while ( ++index < matches.length ) {
-									if ( range.isIntersecting( matches[ index ] ) ) {
-										delete matches[ index ];
-									}
-								}
-							} );
-
-							// Finally, style every word found.
-							model.enqueueChange( 'transparent', writer => {
-								matches.forEach( range => {
-									styleMatchedWord( writer, range.text, range, range.callback );
-								} );
-							} );
-						}
-					}
-				}
+				// Style all words found in the range.
+				styleWordsInRange( range );
 			}
+		}
+
+		// Watch editor data initialization.
+		{
+			editor.data.on( 'init', evt => {
+				// The init event is a decoration to init(), which returns a promise when data has been initialized.
+				evt.return.then( () => {
+					const root = model.document.getRoot( 'main' );
+					const range = model.createRangeIn( root );
+					styleWordsInRange( range );
+				} );
+			}, { priority: 'low' } );
 		}
 
 		// Fix selection.
@@ -309,6 +272,62 @@ class WordMatchStyler {
 				const textFinder = new TextFinder();
 				textFinder.findAtPosition( matchRange.start );
 				checkWords( textFinder.texts );
+			}
+		}
+
+		function styleWordsInRange( range ) {
+			const walker = range.getWalker();
+
+			// Walk through the range, processing all text sequences available inside it.
+			while ( !walker.position.isEqual( range.end ) ) {
+				// Find the next available text sequence positions.
+
+				// Step 1: Set the start position right before the first text node found.
+				walker.skip( value => value.type !== 'text' );
+				const textStart = walker.position;
+
+				// Step 2: Set the end position after all consecutive text nodes available.
+				walker.skip( value => value.type === 'text' );
+				const textEnd = walker.position;
+
+				// Step 3: If the above positions are different, text to be processed has been found.
+				if ( !textStart.isEqual( textEnd ) ) {
+					// Create a range that encloses the whole text found.
+					const textRange = new Range( textStart, textEnd );
+
+					// Concat the text nodes and return the final value as a string.
+					const text = Array.from( textRange.getItems() )
+						.reduce( ( text, textNode ) => ( text += textNode.data ), '' );
+
+					const matches = [];
+
+					// Run all matchers over the text, accumulating all matches found in the above array.
+					matchers.forEach( ( { regexGlobal, callback } ) => {
+						for ( const match of text.matchAll( regexGlobal ) ) {
+							const matchRange = getWordMatchRange( match, textRange );
+							matchRange.callback = callback;
+							matches.push( matchRange );
+						}
+					} );
+
+					if ( matches.length ) {
+						// Remove ranges that are intersecting (just one matcher on the whole word).
+						matches.forEach( ( range, index ) => {
+							while ( ++index < matches.length ) {
+								if ( range.isIntersecting( matches[ index ] ) ) {
+									delete matches[ index ];
+								}
+							}
+						} );
+
+						// Finally, style every word found.
+						model.enqueueChange( 'transparent', writer => {
+							matches.forEach( range => {
+								styleMatchedWord( writer, range.text, range, range.callback );
+							} );
+						} );
+					}
+				}
 			}
 		}
 
