@@ -169,13 +169,19 @@ class WordMatchStyler {
 
 				const walker = range.getWalker();
 
+				// Walk through the range, processing all text sequences available inside it.
 				while ( !walker.position.isEqual( range.end ) ) {
+					// Find the next available text sequence positions.
+
+					// Step 1: Set the start position right before the first text node found.
 					walker.skip( value => value.type !== 'text' );
 					const textStart = walker.position;
 
+					// Step 2: Set the end position after all consecutive text nodes available.
 					walker.skip( value => value.type === 'text' );
 					const textEnd = walker.position;
 
+					// Step 3: If the above positions are different, text to be processed has been found.
 					if ( !textStart.isEqual( textEnd ) ) {
 						// Create a range that encloses the whole text found.
 						const textRange = new Range( textStart, textEnd );
@@ -186,6 +192,7 @@ class WordMatchStyler {
 
 						const matches = [];
 
+						// Run all matchers over the text, accumulating all matches found in the above array.
 						matchers.forEach( ( { regexGlobal, callback } ) => {
 							for ( const match of text.matchAll( regexGlobal ) ) {
 								const matchRange = getWordMatchRange( match, textRange );
@@ -204,10 +211,9 @@ class WordMatchStyler {
 								}
 							} );
 
+							// Finally, style every word found.
 							model.enqueueChange( 'transparent', writer => {
 								matches.forEach( range => {
-									// console.log( Array.from( range.getItems() ) );
-
 									styleMatchedWord( writer, range.text, range, range.callback );
 								} );
 							} );
@@ -219,6 +225,9 @@ class WordMatchStyler {
 
 		// Fix selection.
 		{
+			// The selection cannot have the styler attribute otherwise it'll enlarge styled words
+			// when typing space at the end of them.
+
 			const selection = model.document.selection;
 
 			selection.on( 'change:range', checkSelection );
@@ -227,6 +236,7 @@ class WordMatchStyler {
 			function checkSelection() {
 				if ( selection.hasAttribute( attribute ) ) {
 					const pos = selection.anchor;
+					// We don't want to remove the attribute when inside the text node but when over its boundaries.
 					if ( !pos.textNode ) {
 						model.change( writer => {
 							writer.removeSelectionAttribute( attribute );
