@@ -125,36 +125,7 @@ export default function getRteEditorConfig( rteEditor ) {
 				 * Indicates that the suggestion feature should be enabled in the editor.
 				 */
 				enabled: checkSuggestionEnabled( rteEditor )
-			},
-
-			autoLinking: [
-				{
-					// @user-name
-					// @organization/user-name
-					pattern: /@(?:[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+(?:\/[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+)?)/i,
-					type: 'person'
-				},
-				{
-					// #1
-					// mojombo#1
-					// mojombo/github-flavored-markdown#1
-					pattern: /(?:[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+(?:\/[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+)?)?#\d+/i,
-					type: 'issue'
-				},
-				{
-					// 16c999e8c71134401a78d4d46435517b2271d6ac
-					// mojombo@16c999e8c71134401a78d4d46435517b2271d6ac
-					// mojombo/github-flavored-markdown@16c999e8c71134401a78d4d46435517b2271d6ac
-					pattern: /(?:[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+(?:\/[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+)?@)?[a-f\d]{7,40}/i,
-					type: 'sha'
-				},
-				{
-					// urls
-					// eslint-disable-next-line max-len
-					pattern: /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
-					type: 'url'
-				}
-			]
+			}
 		}
 	};
 

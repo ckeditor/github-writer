@@ -3,8 +3,8 @@
  * For licensing, see LICENSE.md.
  */
 
-github-rte-autolink {
-	&[data-autolink="true"] {
+.ck-content autolink {
+	&[data-enabled="true"] {
 		color: #0366d6;
 
 		&[data-type="person"] {
@@ -24,7 +24,7 @@ github-rte-autolink {
 		}
 	}
 
-	&[data-autolink="false"] {
+	&[data-enabled="false"] {
 		color: inherit;
 		text-decoration: dashed red;
 	}
