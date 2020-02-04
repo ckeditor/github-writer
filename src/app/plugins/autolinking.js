@@ -18,7 +18,7 @@ export default class AutoLinking extends Plugin {
 		const editor = this.editor;
 		const linkDataLoader = new GitHubLinkDataLoader();
 
-		const autolink = this.autolink = new AutoLinkStyler( editor );
+		const autolink = new AutoLinkStyler( editor );
 
 		// @user-name
 		// @organization/user-name
@@ -142,99 +142,93 @@ class WordMatchStyler {
 		const attribute = this.attribute;
 		const matchers = this._matchers;
 
-		// Watch words.
-		{
-			WordsWatcher.watch( model, words => checkWords( words ) );
-		}
-
-		// Watch insertion.
-		{
-			model.on( 'insertContent', evt => autolinkRange( evt.return ), { priority: 'low' } );
-
-			function autolinkRange( range ) {
-				// Check if we're just adding text inside a single text node (like typing).
-				// If true and the text has no spaces, do nothing here and let the model#change logic handle autolinking.
-				{
-					const startNode = range.start.textNode || range.start.nodeAfter;
-					const endNode = range.end.textNode || range.end.nodeBefore;
-
-					if ( startNode && startNode.is( 'text' ) && startNode === endNode ) {
-						const text = range.getWalker().next().value.item.data;
-						if ( !/ /.test( text ) || text === ' ' ) {
-							return;
-						}
-					}
-				}
-
-				// Enlarge the range to whichever text it's touching.
-				range = TextExpander.word( range );
-
-				// Style all words found in the range.
-				styleWordsInRange( range );
-			}
-		}
-
-		// Watch editor data initialization.
-		{
-			editor.data.on( 'init', evt => {
-				// The init event is a decoration to init(), which returns a promise when data has been initialized.
-				evt.return.then( () => {
-					const root = model.document.getRoot( 'main' );
-					const range = model.createRangeIn( root );
-					styleWordsInRange( range );
-				} );
-			}, { priority: 'low' } );
-		}
+		// Watch for changes.
+		watchChanges();
 
 		// Fix selection.
-		{
-			// The selection cannot have the styler attribute otherwise it'll enlarge styled words
-			// when typing space at the end of them.
+		fixSelection();
 
-			const selection = model.document.selection;
+		function watchChanges() {
+			model.document.registerPostFixer( writer => {
+				const changes = model.document.differ.getChanges();
 
-			selection.on( 'change:range', checkSelection );
-			selection.on( 'change:attribute', checkSelection );
+				if ( changes.length ) {
+					const textFinder = new TextFinder();
 
-			function checkSelection() {
-				if ( selection.hasAttribute( attribute ) ) {
-					const pos = selection.anchor;
-					// We don't want to remove the attribute when inside the text node but when over its boundaries.
-					if ( !pos.textNode ) {
-						model.change( writer => {
-							writer.removeSelectionAttribute( attribute );
-						} );
-					}
-				}
-			}
-		}
+					changes.forEach( change => {
+						switch ( change.type ) {
+							case 'attribute': {
+								if ( change.attributeKey !== attribute ) {
+									textFinder.findWordAtPosition( change.range.start );
+									textFinder.findWordAtPosition( change.range.end );
+								}
+								break;
+							}
+							case 'insert': {
+								// Create a range that embraces the whole change.
+								let range = writer.createRange(
+									change.position,
+									change.position.getShiftedBy( change.length )
+								);
 
-		function checkWords( words ) {
-			model.enqueueChange( 'transparent', writer => {
-				words.forEach( ( { text, range } ) => {
-					const matched = matchers.find( ( { regex, callback } ) => {
-						const match = text.match( regex );
+								// For a text insertion, expand the range to include whole words in the boundaries.
+								if ( change.name === '$text' ) {
+									range = TextExpander.word( range );
+								}
 
-						if ( match ) {
-							const matchRange = getWordMatchRange( match, range );
-							text = matchRange.text;
-
-							// Remove autolink from the parts of the range we'll not be touching.
-							range.getDifference( matchRange ).forEach( excludedRange => {
-								writer.removeAttribute( attribute, excludedRange );
-							} );
-
-							styleMatchedWord( writer, text, matchRange, callback );
-
-							return true;
+								textFinder.findInRange( range );
+								break;
+							}
+							case 'remove': {
+								textFinder.findWordAtPosition( change.position );
+								break;
+							}
 						}
 					} );
 
-					// If nothing has been matched, clean up the range from autolink.
-					if ( !matched ) {
-						writer.removeAttribute( attribute, range );
+					checkTexts( textFinder.texts, writer );
+				}
+			} );
+		}
+
+		function checkTexts( texts ) {
+			texts.forEach( styleWordsInRange );
+		}
+
+		function styleWordsInRange( { text, range } ) {
+			model.enqueueChange( 'transparent', writer => {
+				const matches = [];
+
+				// Remove the attribute from the whole range first.
+				writer.removeAttribute( attribute, range );
+
+				// Run all matchers over the text, accumulating all matches found in the above array.
+				matchers.forEach( ( { regexGlobal, callback } ) => {
+					for ( const match of text.matchAll( regexGlobal ) ) {
+						const matchRange = getWordMatchRange( match, range );
+
+						if ( checkWordRangeValid( matchRange ) ) {
+							matchRange.callback = callback;
+							matches.push( matchRange );
+						}
 					}
 				} );
+
+				if ( matches.length ) {
+					// Remove ranges that are intersecting (just one matcher on the whole word).
+					matches.forEach( ( range, index ) => {
+						while ( ++index < matches.length ) {
+							if ( range.isIntersecting( matches[ index ] ) ) {
+								delete matches[ index ];
+							}
+						}
+					} );
+
+					// Finally, style every word found.
+					matches.forEach( range => {
+						styleMatchedWord( writer, range.text, range, range.callback );
+					} );
+				}
 			} );
 		}
 
@@ -252,12 +246,12 @@ class WordMatchStyler {
 					// If nothing change, the same word will be checked and this time we expect
 					// a non promise to be returned by the callback.
 					const textFinder = new TextFinder();
-					textFinder.findAtPosition( liveMatchRange.start );
-					textFinder.findAtPosition( liveMatchRange.end );
+					textFinder.findWordAtPosition( liveMatchRange.start );
+					textFinder.findWordAtPosition( liveMatchRange.end );
 
 					liveMatchRange.detach();
 
-					checkWords( textFinder.texts );
+					checkTexts( textFinder.texts );
 				} );
 			}
 
@@ -267,67 +261,11 @@ class WordMatchStyler {
 				writer.setAttribute( attribute, attribs, matchRange );
 			} else {
 				writer.remove( matchRange );
-				writer.insertText( attribs.text, { autolink: attribs }, matchRange.start );
+				writer.insertText( attribs.text, { [ attribute ]: attribs }, matchRange.start );
 
 				const textFinder = new TextFinder();
-				textFinder.findAtPosition( matchRange.start );
-				checkWords( textFinder.texts );
-			}
-		}
-
-		function styleWordsInRange( range ) {
-			const walker = range.getWalker();
-
-			// Walk through the range, processing all text sequences available inside it.
-			while ( !walker.position.isEqual( range.end ) ) {
-				// Find the next available text sequence positions.
-
-				// Step 1: Set the start position right before the first text node found.
-				walker.skip( value => value.type !== 'text' );
-				const textStart = walker.position;
-
-				// Step 2: Set the end position after all consecutive text nodes available.
-				walker.skip( value => value.type === 'text' );
-				const textEnd = walker.position;
-
-				// Step 3: If the above positions are different, text to be processed has been found.
-				if ( !textStart.isEqual( textEnd ) ) {
-					// Create a range that encloses the whole text found.
-					const textRange = new Range( textStart, textEnd );
-
-					// Concat the text nodes and return the final value as a string.
-					const text = Array.from( textRange.getItems() )
-						.reduce( ( text, textNode ) => ( text += textNode.data ), '' );
-
-					const matches = [];
-
-					// Run all matchers over the text, accumulating all matches found in the above array.
-					matchers.forEach( ( { regexGlobal, callback } ) => {
-						for ( const match of text.matchAll( regexGlobal ) ) {
-							const matchRange = getWordMatchRange( match, textRange );
-							matchRange.callback = callback;
-							matches.push( matchRange );
-						}
-					} );
-
-					if ( matches.length ) {
-						// Remove ranges that are intersecting (just one matcher on the whole word).
-						matches.forEach( ( range, index ) => {
-							while ( ++index < matches.length ) {
-								if ( range.isIntersecting( matches[ index ] ) ) {
-									delete matches[ index ];
-								}
-							}
-						} );
-
-						// Finally, style every word found.
-						model.enqueueChange( 'transparent', writer => {
-							matches.forEach( range => {
-								styleMatchedWord( writer, range.text, range, range.callback );
-							} );
-						} );
-					}
-				}
+				textFinder.findWordAtPosition( matchRange.start );
+				checkTexts( textFinder.texts );
 			}
 		}
 
@@ -348,104 +286,61 @@ class WordMatchStyler {
 
 			return wordRange;
 		}
-	}
-}
 
-/**
- * Watch for user actions that may potentially change words available in the model.
- */
-class WordsWatcher {
-	/**
-	 * Fires a callback including a list of words that may have been potentially changed due to user actions.
-	 */
-	static watch( model, callback ) {
-		model.document.on( 'change:data', ( evt, batch ) => {
-			if ( batch.type === 'transparent' ) {
-				return;
+		function checkWordRangeValid( range ) {
+			const nodes = Array.from( range.getItems() );
+			let valid = true;
+
+			if ( nodes.length > 1 ) {
+				const attribs = Array.from( nodes.shift().getAttributeKeys() )
+					.filter( attribute => model.schema.getAttributeProperties( attribute ).isFormatting );
+
+				valid = !nodes.find( node => {
+					const otherAttribs = Array.from( node.getAttributeKeys() )
+						.filter( attribute => model.schema.getAttributeProperties( attribute ).isFormatting );
+
+					return otherAttribs.length !== attribs.length ||
+						otherAttribs.find( otherAttrib => !attribs.includes( otherAttrib ) );
+				} );
 			}
 
-			const changes = model.document.differ.getChanges();
-			let wasTextRemoved, isTextChange;
-			const textFinder = new TextFinder();
+			return valid;
+		}
 
-			changes.forEach( change => {
-				switch ( change.type ) {
-					case 'attribute':
-						textFinder.findAtPosition( change.range.start );
-						textFinder.findAtPosition( change.range.end );
-						break;
-					case 'insert':
-					case 'remove':
-						textFinder.findAtPosition( change.position );
+		function fixSelection() {
+			// The selection cannot have the styler attribute otherwise it'll enlarge styled words
+			// when typing space at the end of them.
 
-						isTextChange = change.name === '$text';
+			const selection = model.document.selection;
 
-						if ( change.type === 'insert' ) {
-							textFinder.findAtPosition( change.position.getShiftedBy( change.length ) );
+			selection.on( 'change:range', checkSelection );
+			selection.on( 'change:attribute', checkSelection );
 
-							if ( !isTextChange && wasTextRemoved ) {
-								// Take the inserted element.
-								const node = change.position.nodeAfter;
-								if ( node ) {
-									// We want to check text that is at the beginning and the end of the element.
-									textFinder.findAtPosition( model.createPositionAt( node, 0 ) );
-								}
-							}
-						} else if ( isTextChange ) {
-							wasTextRemoved = true;
-						}
-						break;
+			function checkSelection() {
+				if ( selection.hasAttribute( attribute ) ) {
+					const pos = selection.anchor;
+					// We don't want to remove the attribute when inside the text node but when over its boundaries.
+					if ( !pos.textNode ) {
+						model.change( writer => {
+							writer.removeSelectionAttribute( attribute );
+						} );
+					}
 				}
-			} );
-
-			callback( textFinder.texts );
-		} );
+			}
+		}
 	}
 }
 
 /**
- * Builds a list of words that touch certain model positions.
+ * Builds a list of text sequences that touch certain model positions.
  */
 class TextFinder {
 	constructor() {
 		this.texts = [];
 	}
 
-	static getRangeFromPosition( pos ) {
-		let startPos, endPos;
-		{
-			const walker = new TreeWalker( {
-				direction: 'backward',
-				startPosition: pos,
-				singleCharacters: true
-			} );
-			walker.skip( value => {
-				return value.type === 'text' && value.item.data !== ' ';
-			} );
-
-			startPos = walker.position;
-		}
-
-		{
-			const walker = new TreeWalker( {
-				direction: 'forward',
-				startPosition: pos,
-				singleCharacters: true
-			} );
-			walker.skip( value => {
-				return value.type === 'text' && value.item.data !== ' ';
-			} );
-
-			endPos = walker.position;
-		}
-
-		if ( !startPos.isEqual( endPos ) ) {
-			return new Range( startPos, endPos );
-		}
-	}
-
-	findAtPosition( pos ) {
-		const range = TextFinder.getRangeFromPosition( pos );
+	findWordAtPosition( pos ) {
+		const range = getWordRangeFromPosition( pos );
 
 		if ( range ) {
 			if ( !this.texts.find( item => {
@@ -456,6 +351,68 @@ class TextFinder {
 						.reduce( ( output, item ) => ( output + item.data ), '' ),
 					range
 				} );
+			}
+		}
+
+		function getWordRangeFromPosition( pos ) {
+			let startPos, endPos;
+			{
+				const walker = new TreeWalker( {
+					direction: 'backward',
+					startPosition: pos,
+					singleCharacters: true
+				} );
+				walker.skip( value => {
+					return value.type === 'text' && value.item.data !== ' ';
+				} );
+
+				startPos = walker.position;
+			}
+
+			{
+				const walker = new TreeWalker( {
+					direction: 'forward',
+					startPosition: pos,
+					singleCharacters: true
+				} );
+				walker.skip( value => {
+					return value.type === 'text' && value.item.data !== ' ';
+				} );
+
+				endPos = walker.position;
+			}
+
+			if ( !startPos.isEqual( endPos ) ) {
+				return new Range( startPos, endPos );
+			}
+		}
+	}
+
+	findInRange( range ) {
+		const walker = range.getWalker();
+
+		// Walk through the range, processing all text sequences available inside it.
+		while ( !walker.position.isEqual( range.end ) ) {
+			// Find the next available text sequence positions.
+
+			// Step 1: Set the start position right before the first text node found.
+			walker.skip( value => value.type !== 'text' );
+			const textStart = walker.position;
+
+			// Step 2: Set the end position after all consecutive text nodes available.
+			walker.skip( value => value.type === 'text' );
+			const textEnd = walker.position;
+
+			// Step 3: If the above positions are different, text to be processed has been found.
+			if ( !textStart.isEqual( textEnd ) ) {
+				// Create a range that encloses the whole text found.
+				const textRange = new Range( textStart, textEnd );
+
+				// Concat the text nodes and return the final value as a string.
+				const text = Array.from( textRange.getItems() )
+					.reduce( ( text, textNode ) => ( text += textNode.data ), '' );
+
+				this.texts.push( { text, range: textRange } );
 			}
 		}
 	}
@@ -512,7 +469,7 @@ class TextWalker {
 
 		let char;
 		while ( ( char = charWalker.char() ) ) {
-			if ( /s/.test( char ) ) {
+			if ( /\s/.test( char ) ) {
 				break;
 			}
 
