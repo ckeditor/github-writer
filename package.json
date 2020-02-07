@@ -47,6 +47,7 @@
     "@ckeditor/ckeditor5-utils": "^16.0.0"
   },
   "devDependencies": {
+    "@ckeditor/ckeditor5-dev-tests": "ckeditor/ckeditor5-dev/packages/ckeditor5-dev-tests#github-rte",
     "chai": "^4.2.0",
     "chromedriver": "^78.0.1",
     "eslint": "^5.5.0",
@@ -62,6 +63,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha ./tests/functional/*.js --timeout 15000",
+    "test-unit": "node ./node_modules/.bin/ckeditor5-dev-tests -sc --files=./tests/unit/**/*.js --coverage-paths=./src/**/*.js",
     "build": "/bin/bash dev/build.sh",
     "lint": "eslint --quiet '**/*.js'"
   },
