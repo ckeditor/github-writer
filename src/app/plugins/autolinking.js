@@ -106,7 +106,7 @@ export default class AutoLinking extends Plugin {
 /**
  * Watches for text patterns during changes in the editor and applies the "autolink" attribute to matching words.
  */
-class AutoLinkStyler {
+export class AutoLinkStyler {
 	/**
 	 * Creates and instance of the AutoLinkStyler class and enabled it in an editor.
 	 * @param editor The editor to enable auto-link in.
@@ -128,10 +128,12 @@ class AutoLinkStyler {
 					let attribs;
 
 					if ( modelValue ) {
-						attribs = {
+						attribs = {};
+
+						if ( modelValue.enabled !== false ) {
 							// Disable spell-checking in auto-links.
-							spellcheck: 'false'
-						};
+							attribs.spellcheck = 'false';
+						}
 
 						// All properties available in the attribute value are converted to data attributes.
 						Object.keys( modelValue ).forEach( name => ( attribs[ 'data-' + name ] = modelValue[ name ] ) );
@@ -180,7 +182,7 @@ class AutoLinkStyler {
 /**
  * Keep a desired attribute applied to all (and only to) occurrences of matched words in the document.
  */
-class WordMatchStyler {
+export class WordMatchStyler {
 	/**
 	 * Creates an instance of the WordMatchStyler class.
 	 *
@@ -341,9 +343,10 @@ class WordMatchStyler {
 				if ( matches.length ) {
 					// Remove ranges that are intersecting (just one matcher per word).
 					matches.forEach( ( range, index ) => {
-						while ( ++index < matches.length ) {
-							if ( range.isIntersecting( matches[ index ] ) ) {
-								delete matches[ index ];
+						for ( let i = index + 1; i < matches.length; i++ ) {
+							const next = matches[ i ];
+							if ( next && range.isIntersecting( next ) ) {
+								delete matches[ i ];
 							}
 						}
 					} );
@@ -355,6 +358,13 @@ class WordMatchStyler {
 				}
 			} );
 
+			/**
+			 * Gets a range containing only the word part of the match (without the prefix).
+			 *
+			 * @param match A match from a matcher regex.
+			 * @param parentRange The original range into which the regex has been executed.
+			 * @return {Range} A range for the word part of the match.
+			 */
 			function getWordMatchRange( match, parentRange ) {
 				// Take the matched text from 2nd matching group.
 				const text = match[ 2 ];
@@ -368,23 +378,37 @@ class WordMatchStyler {
 					parentRange.start.getShiftedBy( index ),
 					parentRange.start.getShiftedBy( index + length )
 				);
+
+				// Saves the text into the range.
 				wordRange.text = text;
 
 				return wordRange;
 			}
 
+			/**
+			 * Checks if a range is valid for the styler by ensuring that there is not formatting attributes
+			 * set to just part of it.
+			 *
+			 * @param range The range to be checked.
+			 * @return {boolean} `true` if the range is valid.
+			 */
 			function checkWordRangeValid( range ) {
+				// Get all nodes inside the range.
 				const nodes = Array.from( range.getItems() );
 				let valid = true;
 
 				if ( nodes.length > 1 ) {
+					// Get all formatting attributes from the first node.
 					const attribs = Array.from( nodes.shift().getAttributeKeys() )
 						.filter( attribute => model.schema.getAttributeProperties( attribute ).isFormatting );
 
+					// Search throw the next nodes for one that doesn't have exactly the same above attributes.
 					valid = !nodes.find( node => {
+						// Take the formatting attributes of the next node.
 						const otherAttribs = Array.from( node.getAttributeKeys() )
 							.filter( attribute => model.schema.getAttributeProperties( attribute ).isFormatting );
 
+						// Ensure that the first node and this one have the very same formatting attributes.
 						return otherAttribs.length !== attribs.length ||
 							otherAttribs.find( otherAttrib => !attribs.includes( otherAttrib ) );
 					} );
@@ -407,7 +431,7 @@ class WordMatchStyler {
 			const attribs = { text: matchText };
 
 			// Call the callback.
-			const callbackReturn = matcherCallback( attribs );
+			const callbackReturn = matcherCallback && matcherCallback( attribs );
 
 			// The callback can return a promise, which will enable a second step on the attribute setting,
 			// once such promise resolves.
@@ -482,7 +506,7 @@ class WordMatchStyler {
 /**
  * Builds a list of text sequences that touch or are included in certain parts of the model.
  */
-class TextFinder {
+export class TextFinder {
 	/**
 	 * Creates an instance of the TextFinder class.
 	 */
@@ -599,7 +623,7 @@ class TextFinder {
 /**
  * Expand a range to contain text touched by its boundaries according to a criteria.
  */
-class TextExpander {
+export class TextExpander {
 	/**
 	 * Return an expanded range that includes any word touched by the boundaries of a range.
 	 *
@@ -624,7 +648,7 @@ class TextExpander {
 /**
  * Moves a model position over consecutive characters.
  */
-class TextWalker {
+export class TextWalker {
 	/**
 	 * Initializes a new instance of the TextWalker class.
 	 *
@@ -632,9 +656,9 @@ class TextWalker {
 	 * @param options.startPosition {Position} The position where to start walking from.
 	 * @param options.direction = 'forward' {String} The walking direction ('forward' or 'backward').
 	 */
-	constructor( options = { direction: 'forward' } ) {
+	constructor( options ) {
 		this._walker = new TreeWalker( {
-			direction: options.direction,
+			direction: options.direction || 'forward',
 			startPosition: options.startPosition,
 			singleCharacters: true
 		} );
@@ -700,7 +724,7 @@ class TextWalker {
 /**
  * Checks if a piece of text is a GitHub auto-link and download extra data about it in such case.
  */
-class GitHubLinkDataLoader {
+export class GitHubLinkDataLoader {
 	/**
 	 * Creates and instance of the GitHubLinkDataLoader class.
 	 */
@@ -710,7 +734,7 @@ class GitHubLinkDataLoader {
 		 *
 		 * @type {Object}
 		 */
-		this.cache = {};
+		this._cache = {};
 	}
 
 	/**
@@ -729,6 +753,8 @@ class GitHubLinkDataLoader {
 					url: urlElement.getAttribute( 'data-preview-url' ),
 					token: tokenElement.value
 				};
+			} else {
+				console.error( 'GitHub RTE error: could not retrieve the preview url.' );
 			}
 		}
 
@@ -749,11 +775,10 @@ class GitHubLinkDataLoader {
 	load( text ) {
 		const key = text;
 
-		if ( !this.cache.hasOwnProperty( key ) ) {
-			// TODO: handle promise rejection.
-			this.cache[ key ] = new Promise( resolve => {
-				// Get the GitHub preview for this text.
-				return downloadPreview.call( this )
+		if ( !this._cache.hasOwnProperty( key ) ) {
+			// Get the GitHub preview for this text.
+			this._cache[ key ] = new Promise( resolve => {
+				downloadPreview.call( this )
 					.then( container => {
 						// If a link is returned, then auto-link is available for this text.
 						const link = container.querySelector( 'a' );
@@ -774,7 +799,7 @@ class GitHubLinkDataLoader {
 
 							// If the text changed, cache the data for the new text as well.
 							if ( linkData.text !== text ) {
-								this.cache[ linkData.text ] = linkData;
+								this._cache[ linkData.text ] = linkData;
 							}
 						} else {
 							// No link, so disable auto-linking.
@@ -782,14 +807,22 @@ class GitHubLinkDataLoader {
 						}
 
 						// The cache now points to the data itself, not to the promise anymore.
-						this.cache[ key ] = linkData;
+						this._cache[ key ] = linkData;
 
 						resolve( linkData );
+					} )
+					.catch( err => {
+						if ( err ) {
+							console.error( err );
+						}
+
+						this._cache[ key ] = false;
+						resolve( false );
 					} );
 			} );
 		}
 
-		return this.cache[ key ];
+		return this._cache[ key ];
 
 		/**
 		 * Gets a promise that resolves with the html returned by the preview feature of GitHub.
