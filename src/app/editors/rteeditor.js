@@ -149,7 +149,7 @@ export default class RteEditor {
 /**
  * The CKEditor used inside the rte editor.
  */
-class CKEditorGitHubEditor extends DecoupledEditor {
+export class CKEditorGitHubEditor extends DecoupledEditor {
 	constructor( initialData, config ) {
 		super( initialData, config );
 

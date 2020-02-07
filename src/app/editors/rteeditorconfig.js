@@ -41,6 +41,7 @@ import ModeSwitcher from '../plugins/modeswitcher';
 import Suggestion from '../plugins/suggestion';
 
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
+import AutoLinking from '../plugins/autolinking';
 import QuoteSelection from '../plugins/quoteselection';
 import ResetListener from '../plugins/resetlistener';
 import EditorExtras from '../plugins/editorextras';
@@ -70,7 +71,7 @@ export default function getRteEditorConfig( rteEditor ) {
 			HorizontalLine, Table, TableToolbar,
 			Kebab, RemoveFormat, ModeSwitcher, Suggestion,
 			PasteFromOffice,
-			QuoteSelection, ResetListener, EditorExtras
+			AutoLinking, QuoteSelection, ResetListener, EditorExtras
 		],
 		toolbar: [
 			'headingdropdown', 'bold', 'italic', '|',

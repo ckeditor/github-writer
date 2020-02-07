@@ -2,6 +2,7 @@
 /node_modules/
 /tmp/
 /build/
+/coverage/
 /.yalc/
 /tests/config.json
 /*.lock
