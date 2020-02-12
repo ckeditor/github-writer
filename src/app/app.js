@@ -29,25 +29,6 @@ export default class App {
 
 		App.pageManager = new PageManager();
 
-		// Setups the main editor available in the page, if any.
-		const promise = App.pageManager.setupMainEditor();
-
-		// Check if the promise has been rejected during the above attempt, due to error.
-		let rejected;
-		promise.catch( () => {
-			rejected = true;
-		} );
-
-		// Do not touch the page further if any error happened.
-		if ( !rejected ) {
-			// Setup the comment "Edit" buttons, if any.
-			App.pageManager.setupEdit();
-			App.pageManager.setupInlineCommentTogglers();
-			App.pageManager.setupPageHacks();
-			App.pageManager.setupObserver();
-			App.pageManager.setupQuoteSelection();
-		}
-
-		return promise;
+		return App.pageManager.init();
 	}
 }
