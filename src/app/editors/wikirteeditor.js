@@ -14,7 +14,7 @@ export default class WikiRteEditor extends RteEditor {
 	 */
 	injectToolbar( toolbarElement ) {
 		// Inject the rte toolbar at the end of the toolbar container.
-		this.githubEditor.markdownEditor.dom.toolbarContainer.appendChild( toolbarElement );
+		this.githubEditor.domManipulator.append( this.githubEditor.markdownEditor.dom.toolbarContainer, toolbarElement );
 	}
 
 	/**

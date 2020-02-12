@@ -33,9 +33,11 @@ export default class MarkdownEditor {
 		// Before touching the page, we check the dom.
 		checkDom( this.dom );
 
+		githubEditor.domManipulator.addRollbackOperation( () => delete this.dom );
+
 		/**
 		 * Tells if the dom around the editor is like the one used to edit comments, which is different from
-		 * the one used in the main editor avaiable in the page (GH inconsistency).
+		 * the one used in the main editor available in the page (GH inconsistency).
 		 *
 		 * It should be true when editing comments and wiki pages.
 		 *
@@ -44,8 +46,8 @@ export default class MarkdownEditor {
 		this.isEdit = this.dom.panelsContainer.nodeName === 'DIV';
 
 		// Inject our classes in the dom. These will help controlling the editor through CSS.
-		this.dom.panels.markdown.classList.add( 'github-rte-panel-markdown' );
-		this.dom.panels.preview.classList.add( 'github-rte-panel-preview' );
+		githubEditor.domManipulator.addClass( this.dom.panels.markdown, 'github-rte-panel-markdown' );
+		githubEditor.domManipulator.addClass( this.dom.panels.preview, 'github-rte-panel-preview' );
 
 		// Perform some mode change tweaks.
 		githubEditor.on( 'mode', () => {
@@ -59,7 +61,7 @@ export default class MarkdownEditor {
 	/**
 	 * Gets all dom elements that are required for the logic of this class.
 	 *
-	 * @param {Element} root The outermost element enclosing the structure of the original markdown editor.
+	 * @param {HTMLElement} root The outermost element enclosing the structure of the original markdown editor.
 	 * @returns {Object} The object which is assigned to {MarkdownEditor#dom} by its constructor.
 	 */
 	getDom( root ) {

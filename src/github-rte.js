@@ -22,11 +22,10 @@ if ( process.env.NODE_ENV !== 'production' ) {
 // We don't want things to break.
 try {
 	App.run()
-		.then( editor => {
+		.then( () => {
 			if ( process.env.NODE_ENV !== 'production' ) {
 				console.timeEnd( 'GitHub RTE loaded and ready' );
 				console.log( App.pageManager );
-				console.log( editor );
 			}
 		} )
 		.catch( reason => {

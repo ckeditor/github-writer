@@ -34,12 +34,12 @@ export function copyElement( sourceElement, newName, deep = true ) {
  * Creates an element out of its outer html string.
  *
  * @param {String} html The outer html of the element.
- * @returns {HTMLElement} The element created.
+ * @returns {Element} The element created.
  */
 export function createElementFromHtml( html ) {
-	const template = document.createElement( 'template' );
-	template.innerHTML = html;
-	return template.content.firstElementChild;
+	const div = document.createElement( 'div' );
+	div.innerHTML = html;
+	return div.firstElementChild;
 }
 
 /**
@@ -52,7 +52,7 @@ export function checkDom( dom ) {
 	Object.getOwnPropertyNames( dom ).forEach( key => {
 		const value = dom[ key ];
 		if ( !value ) {
-			throw new PageIncompatibilityError();
+			throw new PageIncompatibilityError( key );
 		}
 
 		if ( Object.getPrototypeOf( value ) === Object.prototype ) {
@@ -69,8 +69,8 @@ export function checkDom( dom ) {
  * This should not affect the ability of the user to use the page as we'll leave things untouched and quit.
  */
 export class PageIncompatibilityError extends Error {
-	constructor() {
-		super( `GitHub RTE error: this page doesn't seem to be compatible with this application anymore. ` +
+	constructor( elementKey ) {
+		super( `GitHub RTE error: ("${ elementKey }") not found. This page doesn't seem to be compatible with this application anymore. ` +
 			`Upgrade to the latest version of the browser extension.` );
 	}
 }
@@ -85,13 +85,13 @@ export class PageIncompatibilityError extends Error {
 export function injectFunctionExecution( fn ) {
 	// We give the convenience of passing a function here, but we have to make it a string
 	// to inject it into the script element.
-	fn = fn.toString();
+	let fnBody = fn.toString();
 
 	// Remove comments they can break the execution (the browser may inline it as as a single line).
-	fn = fn.replace( /\/\/.*$/mg, '' );
+	fnBody = fnBody.replace( /\/\/.*$/mg, '' );
 
 	const script = document.createElement( 'script' );
-	script.innerText = '(' + ( fn ) + ')();';
+	script.innerText = '(' + ( fnBody ) + ')();';
 
 	( document.body || document.head ).appendChild( script );
 }
@@ -141,4 +141,118 @@ export function getInitials( text ) {
 	}
 
 	return '';
+}
+
+/**
+ * Acts as a container for dom manipulations, make it possible to easily revert them.
+ */
+export class DomManipulator {
+	/**
+	 * Creates an instance of the DomManipulator class.
+	 */
+	constructor() {
+		this._rollbackOperations = [];
+	}
+
+	/**
+	 * Adds an attribute to an element with a desired value. It overwrites if it already exists.
+	 *
+	 * The rollback operation for this action will always remove the attribute, even if it existed earlier.
+	 *
+	 * @param target {HTMLElement} The target element.
+	 * @param name {String} The attribute name.
+	 * @param value {*} The value to be set. It is converted to a string.
+	 */
+	addAttribute( target, name, value ) {
+		target.setAttribute( name, value );
+
+		this.addRollbackOperation( () => target.removeAttribute( name ) );
+	}
+
+	/**
+	 * Adds a class to an element.
+	 *
+	 * The rollback operation will always remove the class, even if it existed already.
+	 *
+	 * @param target {HTMLElement} The target element.
+	 * @param name {String} The class name.
+	 */
+	addClass( target, name ) {
+		target.classList.add( name );
+
+		this.addRollbackOperation( () => target.classList.remove( name ) );
+	}
+
+	/**
+	 * Toggles a class in an element.
+	 *
+	 * The rollback operation will always remove the class, even if it existed already.
+	 *
+	 * @param target {HTMLElement} The target element.
+	 * @param name {String} The class name.
+	 * @param force {Boolean} `true` to force add the class. `false` to force remove it.
+	 */
+	toogleClass( target, name, force ) {
+		target.classList.toggle( name, force );
+
+		this.addRollbackOperation( () => target.classList.remove( name ) );
+	}
+
+	/**
+	 * Appends a node into another node (usually an HTMLElement).
+	 *
+	 * @param target {ParentNode} The target element.
+	 * @param node {Node|String} The node to be added.
+	 */
+	append( target, node ) {
+		target.append( node );
+
+		this.addRollbackOperation( () => node.remove() );
+	}
+
+	/**
+	 * Appends a node after another one.
+	 *
+	 * @param existingNode {ChildNode} The existing node.
+	 * @param node {Node|String} The node to be appended.
+	 */
+	appendAfter( existingNode, node ) {
+		existingNode.after( node );
+
+		this.addRollbackOperation( () => node.remove() );
+	}
+
+	/**
+	 * Setup an event listener to the given target.
+	 *
+	 * @param target {EventTarget} The target.
+	 * @param event {String} The event name.
+	 * @param callback {Function} The listener to be executed when the event fires.
+	 * @param [options] {Object} An options object specifies characteristics about the event listener.
+	 *        See the dom documentation for EventTarget.addEventListener for options.
+	 */
+	addEventListner( target, event, callback, options ) {
+		target.addEventListener( event, callback, options );
+
+		this.addRollbackOperation( () => target.removeEventListener( event, callback, options ) );
+	}
+
+	/**
+	 * Adds an operation to be executed during rollback.
+	 *
+	 * These operations will be removed after rollback and will not be executed again.
+	 *
+	 * @param operation {Function} The operation.
+	 */
+	addRollbackOperation( operation ) {
+		this._rollbackOperations.push( operation );
+	}
+
+	/**
+	 * Reverts all manipulations made through the class instance since its creation or the last call of this method.
+	 */
+	rollback() {
+		this._rollbackOperations.forEach( operation => operation() );
+		this._rollbackOperations = [];
+	}
 }

@@ -8,9 +8,9 @@ import EmitterMixin from '@ckeditor/ckeditor5-utils/src/emittermixin';
 import mix from '@ckeditor/ckeditor5-utils/src/mix';
 import { injectFunctionExecution } from './util';
 
-// These variables hold references to elements already handled by the application, so they're not touched again.
+// The list of created editor promises. The key in this list is the root element.
 const editors = new WeakMap();
-const actionButtons = new WeakSet();
+let quoteSelectionReady = false;
 
 /**
  * Detects page features, creates editors and setups triggers for on-demand editors injection.
@@ -44,41 +44,125 @@ export default class PageManager {
 			'comments';
 	}
 
+	init() {
+		// Control buttons that fire the creation of editors.
+		{
+			// Edit option for comments: listen to "comment action" buttons and create the editor.
+			this.addClickListener( '.timeline-comment-action', actionsButton => {
+				let editButton = actionsButton.closest( 'details' );
+				editButton = editButton && editButton.querySelector( '.js-comment-edit-button' );
+
+				if ( editButton ) {
+					const rootElement = editButton.closest( '.js-comment' ).querySelector( 'form.js-comment-update' );
+					this.setupEditor( rootElement, true );
+				}
+			} );
+
+			// Inline comments in PRs: the "Reply..." field-like button.
+			this.addClickListener( '.js-toggle-inline-comment-form', button => {
+				const container = button.closest( '.js-inline-comment-form-container' );
+				const root = container && container.querySelector( 'form' );
+				root && this.setupEditor( root );
+			} );
+
+			// Code line comments: the "+" button...fires an event when the form for code comments is injected.
+			document.addEventListener( 'inlinecomment:focus', ev => {
+				const root = ev.target.querySelector( 'form' );
+				root && this.setupEditor( root );
+			} );
+		}
+
+		// Handle editors inside pjax containers.
+		{
+			document.addEventListener( 'pjax:start', ( { target } ) => {
+				this.destroyEditors( target );
+			}, { passive: true } );
+
+			document.addEventListener( 'pjax:end', () => {
+				setTimeout( () => {
+					this.scan();
+				}, 0 );
+			}, { passive: true } );
+		}
+
+		this.setupQuoteSelection();
+
+		return this.scan();
+	}
+
+	addClickListener( selector, callback ) {
+		if ( !this._clickListeners ) {
+			this._clickListeners = [];
+
+			document.addEventListener( 'click', ( { target } ) => {
+				this._clickListeners.forEach( ( { selector, callback } ) => {
+					const wantedTarget = target.closest( selector );
+
+					if ( wantedTarget ) {
+						callback.call( this, wantedTarget );
+					}
+				} );
+			}, { passive: true, capture: true } );
+		}
+
+		this._clickListeners.push( { selector, callback } );
+	}
+
 	/**
-	 * Searches for the main markdown editor available in the page and injects the RTE around it.
+	 * Searches for visible markdown editors available in the page and injects the RTE around them.
 	 *
-	 * @returns {Promise<Editor>|Promise<Boolean>} A promise that resolves to the editor created once its CKEditor
-	 * instance is created and ready or `false` if no editor was found.
+	 * @returns {Promise<[Editor]>} A promise that resolves with all editors created, if any.
 	 */
-	setupMainEditor() {
-		let root;
+	scan() {
+		const promises = [];
 
-		if ( ( root = document.querySelector( 'form#new_issue' ) ) ) {
-			this.type = 'comments';
-		} else if ( ( root = document.querySelector( 'form#new_pull_request' ) ) ) {
-			this.type = 'comments';
-		} else if ( ( root = document.querySelector( 'form.js-new-comment-form' ) ) ) {
-			this.type = 'comments';
-		} else if ( ( root = document.querySelector( 'div.pull-request-review-menu > form' ) ) ) {
-			this.type = 'comments';
-		} else if ( ( root = document.querySelector( 'form[name="gollum-editor"]' ) ) ) {
-			this.type = 'wiki';
+		// Setup comment editors that are visible to the user.
+		{
+			[
+				'.inline-comment-form-container.open form.js-inline-comment-form',
+				'.is-comment-editing form.js-comment-update'
+			].forEach( selector => {
+				document.querySelectorAll( selector ).forEach( root => {
+					promises.push( this.setupEditor( root ) );
+				} );
+			} );
 		}
 
-		if ( root ) {
-			return this.setupEditor( root );
+		// Setup the main editor.
+		{
+			let root;
+			( root = document.querySelector( 'form#new_issue' ) ) ||
+			( root = document.querySelector( 'form#new_pull_request' ) ) ||
+			( root = document.querySelector( 'form.js-new-comment-form' ) ) ||
+			( root = document.querySelector( 'div.pull-request-review-menu > form' ) ) ||
+			( root = document.querySelector( 'form[name="gollum-editor"]' ) );
+
+			if ( root ) {
+				promises.push( this.setupEditor( root ) );
+			}
 		}
 
-		return Promise.resolve( false );
+		return Promise.all( promises );
 	}
 
 	/**
 	 * Creates an editor around the GitHub markdown editor enclosed by the given dom element.
 	 *
 	 * @param {HTMLElement} rootElement The outermost DOM element that contains the whole structure around a GitHub markdown editor.
+	 * @param {Boolean} [withTimeout] If the setup should happen with timeout, hopefully in the next available idle loop of the browser.
 	 * @returns {Promise<Editor>} A promise that resolves to the editor created once its CKEditor instance is created and ready.
 	 */
-	setupEditor( rootElement ) {
+	setupEditor( rootElement, withTimeout ) {
+		if ( withTimeout ) {
+			return new Promise( resolve => {
+				if ( window.requestIdleCallback ) {
+					window.requestIdleCallback( () => resolve( this.setupEditor( rootElement ) ), { timeout: PageManager.MAX_TIMEOUT } );
+				} else {
+					setTimeout( () => resolve( this.setupEditor( rootElement ) ), 1 );
+				}
+			} );
+		}
+
 		let editorCreatePromise = editors.get( rootElement );
 
 		if ( editorCreatePromise ) {
@@ -88,151 +172,57 @@ export default class PageManager {
 		let editor;
 
 		try {
+			// Check if we're in a dirty dom.
+			{
+				const existingId = rootElement.getAttribute( 'data-github-rte-id' );
+				if ( existingId ) {
+					// This is most likely a clone from a previous existing editor, landing into a pjax snapshot.
+					// Clean it up so a new editor can be started on it.
+					Editor.cleanup( rootElement );
+
+					// Ensure that things here are also clean (all references to this editor are dead).
+					editors.delete( existingId );
+					delete editors[ existingId ];
+				}
+			}
+
 			editor = new Editor( rootElement );
 		} catch ( error ) {
 			return Promise.reject( error );
 		}
+
+		editor.domManipulator.addAttribute( rootElement, 'data-github-rte-id', editor.id );
 
 		editorCreatePromise = editor.create();
 
 		// Save a reference to the root element, so we don't create editors for it again.
 		editors.set( rootElement, editorCreatePromise );
 
+		// Save also an id reference, this time to the editor itself.
+		editors[ editor.id ] = editor;
+
 		return editorCreatePromise;
 	}
 
-	/**
-	 * Creates a mutation observer that will watch for elements created on demand, which should trigger
-	 * the creation of editors.
-	 *
-	 * Examples of on demand elements:
-	 *   * Edit buttons for new comments posted.
-	 *   * The review button in a PR.
-	 */
-	setupObserver() {
-		// Creates a mutation observer that will waiting for any dom element to be added to tha page.
-		{
-			const observer = new MutationObserver( mutations => {
-				mutations.forEach( mutation => Array.from( mutation.addedNodes ).forEach( node => {
-					if ( node instanceof HTMLElement ) {
-						searchEditButtons.call( this, node );
-						searchInlineReviewComments.call( this, node );
-					}
-				} ) );
-			} );
-
-			observer.observe( document.body, {
-				childList: true,
-				subtree: true
-			} );
-		}
-
-		// Searches for edit buttons inside the given element and setup them for creating editors on demand.
-		function searchEditButtons( element ) {
-			element.querySelectorAll( '.js-comment-edit-button' )
-				.forEach( editButton => {
-					// noinspection JSPotentiallyInvalidUsageOfClassThis
-					this.setupEditButton( editButton );
-				} );
-		}
-
-		// Search for inline review comments (created with the + button in source lines).
-		function searchInlineReviewComments( element ) {
-			// noinspection JSPotentiallyInvalidUsageOfClassThis
-			element.querySelectorAll( 'form.js-inline-comment-form' )
-				.forEach( root => this.setupEditor( root ) );
-		}
-	}
-
-	/**
-	 * Setups comments editing buttons for the on-demand creation of editors.
-	 */
-	setupEdit() {
-		// Comments editing is available only on pages of type "comments". Do nothing otherwise.
-		if ( this.type !== 'comments' ) {
-			return;
-		}
-
-		// Setup all edit buttons currently available in the page.
-		{
-			const editButtons = Array.from( document.querySelectorAll( '.js-comment-edit-button' ) );
-			editButtons.forEach( button => this.setupEditButton( button ) );
-		}
-	}
-
-	/**
-	 * Setups an edit button so it creates an editor on demand.
-	 *
-	 * In reality, the editor is not created when the edit button is clicked but when it's displayed, by clicking its
-	 * parent kebab action button.
-	 *
-	 * @param {HTMLElement} editButton The edit button element.
-	 */
-	setupEditButton( editButton ) {
-		// Take the kebab button that opens the menu where "Edit" is in.
-		const actionButton = editButton.closest( 'details-menu' ).previousElementSibling;
-
-		// This check should never be true but we have it here just in case.
-		if ( !actionButton ) {
-			// Shows the error in the console but don't break the code execution.
-			const error = new Error( 'GitHub RTE error: no action button found for the edit button element.' );
-			error.element = editButton;
-			console.error( error );
-			return;
-		}
-
-		// Be sure to not touch a button that has already been setup.
-		if ( !actionButtons.has( actionButton ) ) {
-			// Create the Editor instance in the moment the button is clicked.
-			actionButton.addEventListener( 'click', () => {
-				const rootElement = actionButton.closest( '.js-comment' ).querySelector( 'form.js-comment-update' );
-				this.setupEditor( rootElement );
-			}, { once: true, passive: true, capture: false } );
-
-			// Save a reference to this button so we don't touch it again.
-			actionButtons.add( actionButton );
-		}
-	}
-
-	/**
-	 * Setup buttons that toggle the creation of inline comments, like the "+" button in comment lines.
-	 */
-	setupInlineCommentTogglers() {
-		document.querySelectorAll( '.js-toggle-inline-comment-form' )
-			.forEach( toggler => {
-				toggler.addEventListener( 'click', () => {
-					const container = toggler.closest( '.js-inline-comment-form-container' );
-					const root = container && container.querySelector( 'form' );
-					this.setupEditor( root );
-				} );
-			} );
-	}
-
-	/**
-	 * Setups additional page tweaks that makes things work right.
-	 */
-	setupPageHacks() {
-		// Disable pjax in the tabs of pull request pages. That's unfortunate but pjax makes things break hard.
-		{
-			if ( this.page === 'repo_pulls' ) {
-				document.querySelectorAll( 'nav.tabnav-tabs > a' )
-					.forEach( el => el.setAttribute( 'data-skip-pjax', 'true' ) );
-
-				// At this point, as a small enhancement, we can also remove the pjax prefetches that GH does.
-				document.querySelectorAll( 'link[rel="pjax-prefetch"]' )
-					.forEach( el => el.remove() );
-
-				// This is specific to the "Commits" tab.
-				document.querySelectorAll( 'a[data-pjax="true"], a.sha' )
-					.forEach( el => {
-						el.removeAttribute( 'data-pjax' );
-						el.setAttribute( 'data-skip-pjax', 'true' );
-					} );
+	destroyEditors( container ) {
+		const promises = [];
+		container.querySelectorAll( '[data-github-rte-id]' ).forEach( rootElement => {
+			const editorPromise = editors.get( rootElement );
+			if ( editorPromise ) {
+				promises.push( editorPromise.then( editor => editor.destroy() ) );
 			}
-		}
+			editors.delete( rootElement );
+		} );
+
+		return Promise.all( promises );
 	}
 
 	setupQuoteSelection() {
+		if ( quoteSelectionReady ) {
+			return;
+		}
+		quoteSelectionReady = true;
+
 		// Our dear friends from GH made our lives much easier. A custom event is fired, containing the markdown
 		// representation of the selection.
 		//
@@ -244,7 +234,7 @@ export default class PageManager {
 		//
 		// Finally, we intercept the broadcasted message within the extension context and send the quote to the editor.
 
-		injectFunctionExecution( function() {
+		injectFunctionExecution( /* istanbul ignore next */function() {
 			document.addEventListener( 'quote-selection', ev => {
 				// Marks the comment thread container with a timestamp so we can retrieve it later.
 				const timestamp = Date.now();
@@ -272,7 +262,7 @@ export default class PageManager {
 				];
 
 				// Take the first form element that matches any selector.
-				const root = rootSelectors.reduce( ( found, selector ) => {
+				const root = target && rootSelectors.reduce( ( found, selector ) => {
 					return found || target.querySelector( selector );
 				}, null );
 
@@ -290,6 +280,8 @@ export default class PageManager {
 		}, false );
 	}
 }
+
+PageManager.MAX_TIMEOUT = 500;
 
 // The emitter features are not used here but are exposed so any part of the app can have a way to fire "global" events
 // (e.g. QuoteSelection plugin).

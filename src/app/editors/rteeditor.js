@@ -7,10 +7,9 @@ import App from '../app';
 import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
 import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import getRteEditorConfig from './rteeditorconfig';
+import RteEditorConfig from './rteeditorconfig';
 import { createElementFromHtml } from '../util';
-
-// Inject the our very own CKEditor theme overrides.
+// Inject our very own CKEditor theme overrides.
 import '../theme/githubrte.css';
 
 /**
@@ -40,9 +39,7 @@ export default class RteEditor {
 		if ( this.ckeditor ) {
 			return this.ckeditor.getData();
 		}
-
-		// Borrow the data from the markdown editor if this one hasn't been initialized yet.
-		return this.githubEditor.markdownEditor.getData();
+		return this._pendingData || '';
 	}
 
 	/**
@@ -53,6 +50,8 @@ export default class RteEditor {
 	setData( data ) {
 		if ( this.ckeditor ) {
 			this.ckeditor.setData( data );
+		} else {
+			this._pendingData = data;
 		}
 	}
 
@@ -60,7 +59,7 @@ export default class RteEditor {
 	 * Moves the selection focus into the editor contents.
 	 */
 	focus() {
-		this.ckeditor.focus();
+		this.ckeditor && this.ckeditor.focus();
 	}
 
 	/**
@@ -69,18 +68,12 @@ export default class RteEditor {
 	 * @returns {Promise} A promise that resolves once the editor is created and ready.
 	 */
 	create() {
-		// Just in case.
-		if ( this.ckeditor ) {
-			return Promise.reject( new Error( 'RteEditor.prototype.create() can be called just once.' ) );
+		if ( this._creationPromise ) {
+			return this._creationPromise;
 		}
 
-		const markdownEditor = this.githubEditor.markdownEditor;
-
-		// Get the Markdown editor data at the exact moment of this editor creation.
-		const data = markdownEditor.getData();
-
 		// Returns the promise that follows the creation of the internal CKEditor instance.
-		return CKEditorGitHubEditor.create( data, getRteEditorConfig( this ) )
+		return ( this._creationPromise = CKEditorGitHubEditor.create( '', RteEditorConfig.get( this ) )
 			.then( editor => {
 				this.injectToolbar( editor.ui.view.toolbar.element );
 
@@ -92,21 +85,29 @@ export default class RteEditor {
 					// Inject the editor in the above tree.
 					tree.querySelector( '.github-rte-ckeditor' ).append( editor.ui.getEditableElement() );
 
+					const markdownEditor = this.githubEditor.markdownEditor;
+
 					if ( markdownEditor.isEdit ) {
 						// On edit, the GH dom is totally different. Add the editor after the preview panel.
-						markdownEditor.dom.panels.preview.insertAdjacentElement( 'afterend', tree );
+						this.githubEditor.domManipulator.appendAfter( markdownEditor.dom.panels.preview, tree );
 					} else {
 						// Add the editor after the actual GH panels container, to avoid the GH panels show/hide logic to touch it.
-						markdownEditor.dom.panelsContainer.insertAdjacentElement( 'afterend', tree );
+						this.githubEditor.domManipulator.appendAfter( markdownEditor.dom.panelsContainer, tree );
 					}
 				}
 
 				// Post-fix to enable the GH tooltip on the toolbar. (Items are already rendered)
-				toolbarItemsPostfix( editor.ui.view.toolbar );
+				RteEditor.toolbarItemsPostfix( editor.ui.view.toolbar );
 
 				// Expose the main objects of the API, for cross logic.
 				editor.githubEditor = this.githubEditor;
 				this.ckeditor = editor;
+
+				// If somehow the data has been set before the creation, this is the time to load it.
+				if ( this._pendingData ) {
+					editor.setData( this._pendingData );
+					delete this._pendingData;
+				}
 
 				// TODO: check if possible to fire Editor('ready') when everything is really ready.
 				/**
@@ -115,7 +116,19 @@ export default class RteEditor {
 				 * @memberOf CKEditorGitHubEditor
 				 */
 				editor.fire( 'reallyReady' );
-			} );
+			} ) );
+	}
+
+	destroy() {
+		if ( this._creationPromise ) {
+			return this._creationPromise
+				.then( () => {
+					return this.ckeditor.destroy();
+				} )
+				.then( () => true );
+		}
+
+		return Promise.resolve( false );
 	}
 
 	/**
@@ -125,7 +138,7 @@ export default class RteEditor {
 	 */
 	injectToolbar( toolbarElement ) {
 		// Inject the rte toolbar right next to the markdown editor toolbar.
-		this.githubEditor.markdownEditor.dom.toolbar.insertAdjacentElement( 'afterend', toolbarElement );
+		this.githubEditor.domManipulator.appendAfter( this.githubEditor.markdownEditor.dom.toolbar, toolbarElement );
 	}
 
 	/**
@@ -172,7 +185,7 @@ export class CKEditorGitHubEditor extends DecoupledEditor {
  * @param  {String} tooltipPosition='n' The tooltip position: 'n' (north, top) or 's' (south, bottom).
  */
 // Used by the Kebab plugin as well, so we're exporting.
-export function toolbarItemsPostfix( toolbar, tooltipPosition = 'n' ) {
+RteEditor.toolbarItemsPostfix = ( toolbar, tooltipPosition = 'n' ) => {
 	// Postfix is possible only in pages type "comments" (not "wiki").
 	if ( App.pageManager.type !== 'comments' ) {
 		return;
@@ -234,4 +247,12 @@ export function toolbarItemsPostfix( toolbar, tooltipPosition = 'n' ) {
 			}
 		}
 	} );
-}
+};
+
+RteEditor.cleanup = rootElement => {
+	let element = rootElement.querySelector( '.github-rte-panel-rte' );
+	element && element.remove();
+
+	element = rootElement.querySelector( '.github-rte-toolbar' );
+	element && element.remove();
+};

@@ -15,8 +15,10 @@ import WikiRteEditor from './editors/wikirteeditor';
 import EmitterMixin from '@ckeditor/ckeditor5-utils/src/emittermixin';
 import mix from '@ckeditor/ckeditor5-utils/src/mix';
 
-import { checkDom } from './util';
+import { checkDom, DomManipulator } from './util';
 import { keyCodes } from '@ckeditor/ckeditor5-utils/src/keyboard';
+
+let idCounter = 0;
 
 // Gets the proper editor classes to be used, based on the type of page we're in.
 function getEditorClasses() {
@@ -41,9 +43,16 @@ export default class Editor {
 	 * GitHub markdown editor.
 	 */
 	constructor( markdownEditorRootElement ) {
+		this.id = ++idCounter;
+
+		this.domManipulator = new DomManipulator();
+
 		// This will expose the list of editors in the extension console in the dev build.
+		/* istanbul ignore next */
 		if ( process.env.NODE_ENV !== 'production' ) {
 			( window.GITHUB_RTE_EDITORS = window.GITHUB_RTE_EDITORS || [] ).push( this );
+			this.domManipulator.addRollbackOperation(
+				() => window.GITHUB_RTE_EDITORS.splice( window.GITHUB_RTE_EDITORS.indexOf( this ), 1 ) );
 		}
 
 		{
@@ -69,6 +78,8 @@ export default class Editor {
 			};
 
 			checkDom( this.dom );
+
+			this.domManipulator.addRollbackOperation( () => delete this.dom );
 		}
 
 		{
@@ -89,7 +100,7 @@ export default class Editor {
 
 			// Mark the root when in a Wiki page, to enable a whole world of dedicated CSS for it.
 			if ( this.markdownEditor instanceof WikiMarkdownEditor ) {
-				markdownEditorRootElement.classList.add( 'github-rte-type-wiki' );
+				this.domManipulator.addClass( markdownEditorRootElement, 'github-rte-type-wiki' );
 			}
 		}
 	}
@@ -100,6 +111,10 @@ export default class Editor {
 	 * @returns {String|null} One of the {Editor.modes}.
 	 */
 	getMode() {
+		if ( this._destroyed ) {
+			return Editor.modes.DESTROYED;
+		}
+
 		// Take the mode from the dom directly.
 		if ( this.dom.root.classList.contains( 'github-rte-mode-rte' ) ) {
 			return Editor.modes.RTE;
@@ -130,30 +145,34 @@ export default class Editor {
 			return;
 		}
 
-		if ( !options.noSynch ) {
-			this.syncEditors();
-		}
+		if ( mode === Editor.modes.DESTROYED ) {
+			this._destroyed = true;
+		} else {
+			if ( !options.noSynch ) {
+				this.syncEditors();
+			}
 
-		// If moving markdown -> rte.
-		if ( !options.noCheck && currentMode === Editor.modes.MARKDOWN && mode === Editor.modes.RTE ) {
-			if ( this._checkDataLoss() ) {
-				// eslint-disable-next-line no-alert
-				if ( !confirm( `This markdown contains markup that may not be compatible with the rich-text editor and may be lost.\n` +
-					`\n` +
-					`Do you confirm you want to switch to rich-text?` ) ) {
-					return;
+			// If moving markdown -> rte.
+			if ( !options.noCheck && currentMode === Editor.modes.MARKDOWN && mode === Editor.modes.RTE ) {
+				if ( this._checkDataLoss() ) {
+					// eslint-disable-next-line no-alert
+					if ( !confirm( `This markdown contains markup that may not be compatible with the rich-text editor and may be lost.\n` +
+						`\n` +
+						`Do you confirm you want to switch to rich-text?` ) ) {
+						return;
+					}
 				}
 			}
-		}
 
-		// Ensure that we have the write tab active otherwise the preview may still be visible.
-		if ( currentMode !== Editor.modes.UNKNOWN ) {
-			this.dom.tabs.write.click();
-		}
+			// Ensure that we have the write tab active otherwise the preview may still be visible.
+			if ( currentMode !== Editor.modes.UNKNOWN ) {
+				this.dom.tabs.write.click();
+			}
 
-		// Set the appropriate class to the root element according to the mode being set.
-		this.dom.root.classList.toggle( 'github-rte-mode-rte', mode === Editor.modes.RTE );
-		this.dom.root.classList.toggle( 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
+			// Set the appropriate class to the root element according to the mode being set.
+			this.domManipulator.toogleClass( this.dom.root, 'github-rte-mode-rte', mode === Editor.modes.RTE );
+			this.domManipulator.toogleClass( this.dom.root, 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
+		}
 
 		/**
 		 * Fired after a new mode has been activated in the editor.
@@ -171,14 +190,42 @@ export default class Editor {
 	create() {
 		return this.rteEditor.create()
 			.then( () => {
+				this._setInitialData();
+				this._setInitialMode();
 				this._setupFocus();
 				this._setupEmptyCheck();
 				this._setupForm();
 				this._setupKeystrokes();
 				this._setupPendingActions();
-				this._setInitialMode();
+
+				/* istanbul ignore next */
+				if ( process.env.NODE_ENV !== 'production' ) {
+					console.log( `Editor id "${ this.id }" created.`, this );
+				}
 
 				return this;
+			} );
+	}
+
+	destroy() {
+		if ( this.getMode() === Editor.modes.DESTROYED ) {
+			return;
+		}
+
+		if ( this.getMode() === Editor.modes.RTE ) {
+			this.syncEditors();
+		}
+
+		this.setMode( Editor.modes.DESTROYED );
+
+		return this.rteEditor.destroy()
+			.then( () => {
+				this.domManipulator.rollback();
+
+				/* istanbul ignore next */
+				if ( process.env.NODE_ENV !== 'production' ) {
+					console.log( `Editor id "${ this.id }" destroyed.`, this );
+				}
 			} );
 	}
 
@@ -216,7 +263,7 @@ export default class Editor {
 	 */
 	_setupFocus() {
 		// Enable editor focus when clicking the "Write" tab.
-		this.dom.tabs.write.addEventListener( 'click', () => {
+		this.domManipulator.addEventListner( this.dom.tabs.write, 'click', () => {
 			setTimeout( () => {
 				this.rteEditor.focus();
 			}, 0 );
@@ -278,7 +325,7 @@ export default class Editor {
 		const form = this.markdownEditor.dom.textarea.form;
 
 		// Reset the rte editor on form reset (e.g. after a new comment is added).
-		form.addEventListener( 'reset', () => {
+		this.domManipulator.addEventListner( form, 'reset', () => {
 			// We actually want it 'after-reset', so form elements are clean, thus setTimeout.
 			setTimeout( () => {
 				this.rteEditor.setData( this.markdownEditor.dom.textarea.defaultValue );
@@ -287,7 +334,7 @@ export default class Editor {
 		} );
 
 		// Sync the editors when navigating away from this page, so content will load again when moving back.
-		window.addEventListener( 'pagehide', () => {
+		this.domManipulator.addEventListner( window, 'pagehide', () => {
 			if ( this.getMode() === Editor.modes.RTE ) {
 				this.syncEditors();
 			}
@@ -345,11 +392,19 @@ export default class Editor {
 	}
 
 	_setupPendingActions() {
-		const pendingActions = this.rteEditor.ckeditor.plugins.get( 'PendingActions' );
+		if ( this.rteEditor.ckeditor.plugins.has( 'PendingActions' ) ) {
+			const pendingActions = this.rteEditor.ckeditor.plugins.get( 'PendingActions' );
 
-		pendingActions.on( 'change:hasAny', () => {
-			this._setSubmitStatus();
-		} );
+			pendingActions.on( 'change:hasAny', () => {
+				this._setSubmitStatus();
+			} );
+		}
+	}
+
+	_setInitialData() {
+		// Bootstrapping the editor data before create() may be too early as GH may be still working
+		// on restoring session data. We do this at this stage, which seems to be late enough.
+		this.rteEditor.setData( this.markdownEditor.getData() );
 	}
 
 	/**
@@ -383,7 +438,7 @@ export default class Editor {
 			{
 				if ( this.dom.buttons.submit !== submit ) {
 					submit = this.dom.buttons.submit;
-					submit.addEventListener( 'click', () => {
+					this.domManipulator.addEventListner( submit, 'click', () => {
 						if ( this.getMode() === Editor.modes.RTE ) {
 							this.syncEditors();
 						}
@@ -392,7 +447,7 @@ export default class Editor {
 
 				if ( this.dom.buttons.submitAlternative !== submitAlternative ) {
 					submitAlternative = this.dom.buttons.submitAlternative;
-					submitAlternative && submitAlternative.addEventListener( 'click', () => {
+					submitAlternative && this.domManipulator.addEventListner( submitAlternative, 'click', () => {
 						if ( this.getMode() === Editor.modes.RTE ) {
 							this.syncEditors();
 						}
@@ -425,7 +480,7 @@ export default class Editor {
 		let disabled = false;
 
 		// It must be for sure disabled if there are pending actions in the editor (upload in progress).
-		if ( ckeditor.plugins.get( 'PendingActions' ).hasAny ) {
+		if ( ckeditor.plugins.has( 'PendingActions' ) && ckeditor.plugins.get( 'PendingActions' ).hasAny ) {
 			disabled = true;
 		} else {
 			// Otherwise, we check the validity of the required form elements.
@@ -469,6 +524,8 @@ export default class Editor {
 					this._setSubmitStatus();
 				} );
 				this._submitButtonObserver.observe( button, { attributes: true, attributeFilter: [ 'disabled' ] } );
+
+				this.domManipulator.addRollbackOperation( () => disconnectSubmitButtonObserver.call( this ) );
 			}
 		}
 
@@ -499,6 +556,12 @@ export default class Editor {
 			return text.replace( /\s/g, '' );
 		}
 	}
+
+	static cleanup( rootElement ) {
+		rootElement.classList.remove( 'github-rte-mode-rte' );
+		rootElement.classList.remove( 'github-rte-mode-markdown' );
+		RteEditor.cleanup( rootElement );
+	}
 }
 
 mix( Editor, EmitterMixin );
@@ -514,5 +577,6 @@ mix( Editor, EmitterMixin );
 Editor.modes = {
 	RTE: 'rte',
 	MARKDOWN: 'markdown',
+	DESTROYED: 'destroyed',
 	UNKNOWN: null
 };
