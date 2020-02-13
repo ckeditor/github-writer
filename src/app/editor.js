@@ -192,6 +192,7 @@ export default class Editor {
 			.then( () => {
 				this._setInitialData();
 				this._setInitialMode();
+				this._setupSessionResume();
 				this._setupFocus();
 				this._setupEmptyCheck();
 				this._setupForm();
@@ -209,7 +210,7 @@ export default class Editor {
 
 	destroy() {
 		if ( this.getMode() === Editor.modes.DESTROYED ) {
-			return;
+			return Promise.resolve( false );
 		}
 
 		if ( this.getMode() === Editor.modes.RTE ) {
@@ -254,6 +255,34 @@ export default class Editor {
 		if ( this.getMode() === Editor.modes.RTE ) {
 			this.rteEditor.ckeditor.quoteSelection( selectionMarkdown );
 		}
+	}
+
+	/**
+	 * Integrates with the "session resume" feature of GitHub, which updates the markdown textarea
+	 * with data from previous sessions during the page bootstrap.
+	 *
+	 * @private
+	 */
+	_setupSessionResume() {
+		// GitHub fires an event before setting the data of elements during page bootstrap and resume their session value.
+		// The markdown textarea of this editor may be one of these elements, so we bootstrap the editor data again.
+		this.domManipulator.addEventListener( document, 'session:resume', () => {
+			if ( this.getMode() !== Editor.modes.DESTROYED ) {
+				// At this stage, the data hasn't been updated in the textarea, so we save a snapshot of it.
+				const dataBefore = this.markdownEditor.getData();
+
+				setTimeout( () => {
+					// The editor may have been destroyed during the timeout.
+					if ( this.getMode() !== Editor.modes.DESTROYED ) {
+						// After the timeout, the textarea may have new data.
+						if ( this.markdownEditor.getData() !== dataBefore ) {
+							this._setInitialData();
+							this._setInitialMode();
+						}
+					}
+				}, 0 );
+			}
+		}, { once: true, capture: true } );
 	}
 
 	/**
