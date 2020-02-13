@@ -344,6 +344,204 @@ describe( 'Editor', () => {
 					expect( spy.firstCall.args[ 0 ] ).to.equals( Editor.modes.MARKDOWN );
 				} );
 		} );
+
+		it( 'should call some of the initialization methods in the right order', () => {
+			const root = GitHubPage.appendRoot( {} );
+			const editor = new Editor( root );
+
+			sinon.spy( editor, '_setInitialData' );
+			sinon.spy( editor, '_setInitialMode' );
+			sinon.spy( editor, '_setupSessionResume' );
+
+			return editor.create()
+				.then( () => {
+					expect( editor._setInitialData.calledImmediatelyBefore( editor._setInitialMode ) ).to.be.true;
+					expect( editor._setInitialMode.calledImmediatelyBefore( editor._setupSessionResume ) ).to.be.true;
+				} );
+		} );
+
+		describe( 'session resume', () => {
+			it( 'should setup session resume', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				const stub = sinon.stub( editor, '_setupSessionResume' );
+
+				return editor.create()
+					.then( () => {
+						expect( stub.callCount ).to.equals( 1 );
+					} );
+			} );
+
+			// Destroy tests.
+			{
+				// Creates a spy for the callback function that the editor code creates to listen the event.
+				function setupCallbackSpy( editor ) {
+					// The spy is really a stub, but we don't have to let anyone outside the function to know it.
+					const callbackStub = sinon.stub();
+
+					sinon.stub( editor.domManipulator, 'addEventListener' )
+						.withArgs( document, 'session:resume' )
+						.callsFake( ( target, event, callback, options ) => {
+							editor.domManipulator.addEventListener
+								.wrappedMethod.call( editor.domManipulator, target, event, callbackStub.callsFake( callback ), options );
+						} );
+
+					return callbackStub;
+				}
+
+				it( 'should listen to document event and call the callback just once', () => {
+					const editor = new Editor( GitHubPage.appendRoot() );
+
+					const callbackStub = setupCallbackSpy( editor );
+
+					// Stubbed in setupCallbackStub().
+					const eventStub = editor.domManipulator.addEventListener.withArgs( document, 'session:resume' );
+
+					return editor.create()
+						.then( () => {
+							expect( eventStub.callCount, 'event registered' ).to.equals( 1 );
+
+							expect( callbackStub.callCount, 'callback before' ).to.equals( 0 );
+							document.dispatchEvent( new CustomEvent( 'session:resume' ), { bubbles: true } );
+							expect( callbackStub.callCount, 'callback 1st call' ).to.equals( 1 );
+
+							document.dispatchEvent( new CustomEvent( 'session:resume' ), { bubbles: true } );
+							expect( callbackStub.callCount, 'callback 2dn call' ).to.equals( 1 );
+						} );
+				} );
+
+				it( 'should do nothing after destroy resolves', () => {
+					const editor = new Editor( GitHubPage.appendRoot() );
+
+					const callbackStub = setupCallbackSpy( editor );
+
+					return editor.create()
+						.then( () => {
+							return editor.destroy()
+								.then( () => {
+									expect( callbackStub.callCount, 'callback before' ).to.equals( 0 );
+									document.dispatchEvent( new CustomEvent( 'session:resume' ), { bubbles: true } );
+
+									// Destroy removes the event listener, so no callback call should happen "after" destroy.
+									expect( callbackStub.callCount, 'callback after' ).to.equals( 0 );
+								} );
+						} );
+				} );
+
+				it( 'should do nothing while waiting for destroy', () => {
+					const editor = new Editor( GitHubPage.appendRoot() );
+
+					const callbackStub = setupCallbackSpy( editor );
+
+					return editor.create()
+						.then( () => {
+							// Note that we don't return the promise because this is a synchronous test, unlike the previous one.
+							editor.destroy();
+
+							const spy = sinon.spy( editor.markdownEditor, 'getData' );
+
+							expect( callbackStub.callCount, 'callback before' ).to.equals( 0 );
+							document.dispatchEvent( new CustomEvent( 'session:resume' ), { bubbles: true } );
+							expect( callbackStub.callCount, 'callback after' ).to.equals( 1 );
+
+							expect( spy.callCount, 'getData' ).to.equals( 0 );
+						} );
+				} );
+
+				it( 'should do nothing if the event is fired right before destroy', done => {
+					const editor = new Editor( GitHubPage.appendRoot() );
+
+					const callbackStub = setupCallbackSpy( editor );
+
+					editor.create()
+						.then( () => {
+							const spy = sinon.spy( editor.markdownEditor, 'getData' );
+
+							expect( callbackStub.callCount, 'callback before' ).to.equals( 0 );
+							document.dispatchEvent( new CustomEvent( 'session:resume' ), { bubbles: true } );
+							expect( callbackStub.callCount, 'callback after' ).to.equals( 1 );
+
+							// First call that saves the data snapshot for comparison.
+							expect( spy.callCount, 'getData' ).to.equals( 1 );
+
+							editor.destroy();
+
+							setTimeout( () => {
+								// Second call should not have happened because not the editor is destroyed.
+								expect( spy.callCount, 'getData' ).to.equals( 1 );
+								done();
+							}, 0 );
+						} );
+				} );
+			}
+
+			// Proper resume tests.
+			{
+				// Simulate the work done by GH itself when firing the event.
+				function simulateDataResume( editor ) {
+					// First fire the event.
+					document.dispatchEvent( new CustomEvent( 'session:resume' ), { bubbles: true } );
+
+					// Then update the element data.
+					editor.markdownEditor.dom.textarea.value = 'resumed data';
+				}
+
+				it( 'should update the editor if fired before create', () => {
+					const editor = new Editor( GitHubPage.appendRoot( { text: 'initial data' } ) );
+
+					simulateDataResume( editor );
+
+					return editor.create()
+						.then( () => {
+							expect( editor.rteEditor.getData() ).to.equals( 'resumed data' );
+						} );
+				} );
+
+				it( 'should update the editor if fired during create', () => {
+					const editor = new Editor( GitHubPage.appendRoot( { text: 'initial data' } ) );
+
+					const promise = editor.create();
+
+					simulateDataResume( editor );
+
+					return promise
+						.then( () => {
+							expect( editor.rteEditor.getData() ).to.equals( 'resumed data' );
+						} );
+				} );
+
+				it( 'should update the editor if fired after create', done => {
+					const editor = new Editor( GitHubPage.appendRoot( { text: 'initial data' } ) );
+
+					editor.create()
+						.then( () => {
+							simulateDataResume( editor );
+
+							setTimeout( () => {
+								expect( editor.rteEditor.getData() ).to.equals( 'resumed data' );
+								done();
+							}, 0 );
+						} );
+				} );
+
+				it( 'should call the editor update methods in the right order', done => {
+					const editor = new Editor( GitHubPage.appendRoot( { text: 'initial data' } ) );
+
+					editor.create()
+						.then( () => {
+							sinon.spy( editor, '_setInitialData' );
+							sinon.spy( editor, '_setInitialMode' );
+
+							simulateDataResume( editor );
+
+							setTimeout( () => {
+								expect( editor._setInitialData.calledImmediatelyBefore( editor._setInitialMode ) ).to.be.true;
+								done();
+							}, 0 );
+						} );
+				} );
+			}
+		} );
 	} );
 
 	describe( 'destroy()', () => {
@@ -370,9 +568,11 @@ describe( 'Editor', () => {
 
 					const spy = sinon.spy( editor, 'setMode' );
 
-					editor.destroy();
-
-					expect( spy.callCount ).to.equals( 0 );
+					return editor.destroy()
+						.then( result => {
+							expect( result ).to.be.false;
+							expect( spy.callCount ).to.equals( 0 );
+						} );
 				} );
 		} );
 
