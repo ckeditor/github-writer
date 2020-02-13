@@ -263,7 +263,7 @@ export default class Editor {
 	 */
 	_setupFocus() {
 		// Enable editor focus when clicking the "Write" tab.
-		this.domManipulator.addEventListner( this.dom.tabs.write, 'click', () => {
+		this.domManipulator.addEventListener( this.dom.tabs.write, 'click', () => {
 			setTimeout( () => {
 				this.rteEditor.focus();
 			}, 0 );
@@ -325,7 +325,7 @@ export default class Editor {
 		const form = this.markdownEditor.dom.textarea.form;
 
 		// Reset the rte editor on form reset (e.g. after a new comment is added).
-		this.domManipulator.addEventListner( form, 'reset', () => {
+		this.domManipulator.addEventListener( form, 'reset', () => {
 			// We actually want it 'after-reset', so form elements are clean, thus setTimeout.
 			setTimeout( () => {
 				this.rteEditor.setData( this.markdownEditor.dom.textarea.defaultValue );
@@ -334,7 +334,7 @@ export default class Editor {
 		} );
 
 		// Sync the editors when navigating away from this page, so content will load again when moving back.
-		this.domManipulator.addEventListner( window, 'pagehide', () => {
+		this.domManipulator.addEventListener( window, 'pagehide', () => {
 			if ( this.getMode() === Editor.modes.RTE ) {
 				this.syncEditors();
 			}
@@ -438,7 +438,7 @@ export default class Editor {
 			{
 				if ( this.dom.buttons.submit !== submit ) {
 					submit = this.dom.buttons.submit;
-					this.domManipulator.addEventListner( submit, 'click', () => {
+					this.domManipulator.addEventListener( submit, 'click', () => {
 						if ( this.getMode() === Editor.modes.RTE ) {
 							this.syncEditors();
 						}
@@ -447,7 +447,7 @@ export default class Editor {
 
 				if ( this.dom.buttons.submitAlternative !== submitAlternative ) {
 					submitAlternative = this.dom.buttons.submitAlternative;
-					submitAlternative && this.domManipulator.addEventListner( submitAlternative, 'click', () => {
+					submitAlternative && this.domManipulator.addEventListener( submitAlternative, 'click', () => {
 						if ( this.getMode() === Editor.modes.RTE ) {
 							this.syncEditors();
 						}

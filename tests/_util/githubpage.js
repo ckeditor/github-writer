@@ -147,7 +147,7 @@ export const GitHubPage = {
 		const button = container.querySelector( '.test-button' );
 
 		if ( type === 'code-line-comment' ) {
-			domManipulator.addEventListner( button, 'click', () => {
+			domManipulator.addEventListener( button, 'click', () => {
 				container.dispatchEvent( new CustomEvent( 'inlinecomment:focus', { bubbles: true } ) );
 			} );
 		}

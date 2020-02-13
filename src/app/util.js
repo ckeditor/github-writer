@@ -231,7 +231,7 @@ export class DomManipulator {
 	 * @param [options] {Object} An options object specifies characteristics about the event listener.
 	 *        See the dom documentation for EventTarget.addEventListener for options.
 	 */
-	addEventListner( target, event, callback, options ) {
+	addEventListener( target, event, callback, options ) {
 		target.addEventListener( event, callback, options );
 
 		this.addRollbackOperation( () => target.removeEventListener( event, callback, options ) );

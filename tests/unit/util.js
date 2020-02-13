@@ -13,7 +13,7 @@ describe( 'Util', () => {
 
 				const callback = sinon.spy();
 
-				domManipulator.addEventListner( document.body, 'click', callback );
+				domManipulator.addEventListener( document.body, 'click', callback );
 
 				document.body.click();
 				expect( callback.calledOnce, 'first call' ).to.be.true;

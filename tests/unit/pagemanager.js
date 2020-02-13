@@ -480,7 +480,7 @@ describe( 'PageManager', () => {
 
 			const container = GitHubPage.appendElementHtml( '<div></div>' );
 
-			GitHubPage.domManipulator.addEventListner( window, 'message', event => {
+			GitHubPage.domManipulator.addEventListener( window, 'message', event => {
 				expect( event.data.type ).to.equals( 'GitHub-RTE-Quote-Selection' );
 				expect( event.data.text ).to.equals( 'test' );
 				expect( event.data.timestamp ).to.be.a( 'number' ).greaterThan( 0 );
