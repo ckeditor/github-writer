@@ -37,7 +37,7 @@
     "@ckeditor/ckeditor5-image": "^16.0.0",
     "@ckeditor/ckeditor5-link": "^16.0.0",
     "@ckeditor/ckeditor5-list": "^16.0.0",
-    "@ckeditor/ckeditor5-markdown-gfm": "file:.yalc/@ckeditor/ckeditor5-markdown-gfm",
+    "@ckeditor/ckeditor5-markdown-gfm": "ckeditor/ckeditor5-markdown-gfm#github-rte",
     "@ckeditor/ckeditor5-mention": "^16.0.0",
     "@ckeditor/ckeditor5-paragraph": "^16.0.0",
     "@ckeditor/ckeditor5-paste-from-office": "^16.0.0",
