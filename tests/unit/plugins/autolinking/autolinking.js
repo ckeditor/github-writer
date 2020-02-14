@@ -71,7 +71,10 @@ describe( 'Plugins', () => {
 					'org/repo#1',
 					'org/repo#1234',
 					'org-name/repo-name#1',
-					'org-name/repo-name#1234' ],
+					'org-name/repo-name#1234',
+					'https://github.com/org/repo/issues/1',
+					'https://github.com/org/repo/pull/1'
+				],
 				sha: [
 					'16c999e8c71134401a78d4d46435517b2271d6ac',
 					'16c999e8c71134401a',
@@ -81,7 +84,18 @@ describe( 'Plugins', () => {
 					'org/repo@16c999e',
 					'org-name/repo-name@16c999e8c71134401a78d4d46435517b2271d6ac',
 					'org-name/repo-name@16c999e8c71134401a',
-					'org-name/repo-name@16c999e'
+					'org-name/repo-name@16c999e',
+					'https://github.com/org/repo/commit/abcde123'
+				],
+				url: [
+					'http://test.com',
+					'https://test.com',
+					'https://test.com/path',
+					'https://test.com/path/',
+					'https://test.com/path/path',
+					'https://test.com?x',
+					'https://test.com?x=1',
+					'https://test.com?x=1&y=2'
 				]
 			};
 
@@ -90,8 +104,10 @@ describe( 'Plugins', () => {
 					it( `should auto-link (${ test })`, done => {
 						editor.setData( `Test ${ test } should auto-link.` );
 
-						xhr.respond( 200, { 'Content-Type': 'text/html' },
-							`<p><a href="/test/${ test.toLowerCase() }">${ test.toLowerCase() }</a></p>` );
+						if ( type !== 'url' ) {
+							xhr.respond( 200, { 'Content-Type': 'text/html' },
+								`<p><a href="/test/${ test.toLowerCase() }">${ test.toLowerCase() }</a></p>` );
+						}
 
 						setTimeout( () => {
 							expect( getViewData( editor.editing.view, { withoutSelection: true } ) ).to.equal(
@@ -101,7 +117,8 @@ describe( 'Plugins', () => {
 								'data-enabled="true" ' +
 								`data-text="${ test.toLowerCase() }" ` +
 								`data-type="${ type }" ` +
-								`data-url="/test/${ test.toLowerCase() }" ` +
+								( type === 'url' ? '' :
+									`data-url="/test/${ test.toLowerCase() }" ` ) +
 								'spellcheck="false">' +
 								test.toLowerCase() +
 								'</autolink>' +
@@ -109,6 +126,72 @@ describe( 'Plugins', () => {
 								'</p>' );
 
 							expect( editor.getData() ).to.equals( `Test ${ test.toLowerCase() } should auto-link.` );
+
+							done();
+						}, 0 );
+					} );
+				} );
+			}
+		} );
+
+		describe( 'valid auto-links followed by punctuation', () => {
+			let editor;
+
+			{
+				before( 'create test editor', () => {
+					return createTestEditor( '', [ AutoLinking ] )
+						.then( ret => ( { editor } = ret ) );
+				} );
+
+				after( 'cleanup test editor', () => {
+					editor.destroy();
+				} );
+			}
+
+			const validTests = {
+				person: [
+					'@user'
+				],
+				issue: [
+					'#1',
+					'https://github.com/org/repo/issues/1'
+				],
+				sha: [
+					'16c999e',
+					'https://github.com/org/repo/commit/abcde123'
+				],
+				url: [
+					'https://test.com'
+				]
+			};
+
+			for ( const [ type, tests ] of Object.entries( validTests ) ) {
+				tests.forEach( test => {
+					it( `should auto-link (${ test }) followed by punctuation`, done => {
+						editor.setData( `Test ${ test }. Should auto-link.` );
+
+						if ( type !== 'url' ) {
+							xhr.respond( 200, { 'Content-Type': 'text/html' },
+								`<p><a href="/test/${ test.toLowerCase() }">${ test.toLowerCase() }</a></p>` );
+						}
+
+						setTimeout( () => {
+							expect( getViewData( editor.editing.view, { withoutSelection: true } ) ).to.equal(
+								'<p>' +
+								'Test ' +
+								'<autolink ' +
+								'data-enabled="true" ' +
+								`data-text="${ test.toLowerCase() }" ` +
+								`data-type="${ type }" ` +
+								( type === 'url' ? '' :
+									`data-url="/test/${ test.toLowerCase() }" ` ) +
+								'spellcheck="false">' +
+								test.toLowerCase() +
+								'</autolink>' +
+								'. Should auto-link.' +
+								'</p>' );
+
+							expect( editor.getData() ).to.equals( `Test ${ test.toLowerCase() }. Should auto-link.` );
 
 							done();
 						}, 0 );
@@ -138,10 +221,12 @@ describe( 'Plugins', () => {
 					'@Org-Name/User-Name' ],
 				issue: [
 					'#1',
-					'org-name/repo-name#1234' ],
+					'org-name/repo-name#1234',
+					'https://github.com/org/repo/issues/1' ],
 				sha: [
 					'16c999e8c71134401a',
-					'16c999e' ]
+					'16c999e',
+					'https://github.com/org/repo/commit/abcde123' ]
 			};
 
 			for ( const [ type, tests ] of Object.entries( validTests ) ) {

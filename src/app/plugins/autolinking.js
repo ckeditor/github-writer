@@ -59,11 +59,11 @@ export default class AutoLinking extends Plugin {
 
 			// GitHub urls
 			autolink.addPattern(
-				/https:\/\/github\.com\/.*\/(?:issues|pull)\/.+/i,
+				/https:\/\/github\.com\/.*\/(?:issues|pull)\/[^\s]+?/i,
 				'issue',
 				githubLinkCallback );
 			autolink.addPattern(
-				/https:\/\/github\.com\/.*\/commit\/.+/i,
+				/https:\/\/github\.com\/.*\/commit\/[^\s]+?/i,
 				'sha',
 				githubLinkCallback );
 
@@ -220,7 +220,7 @@ export class WordMatchStyler {
 		const flags = pattern.flags.replace( /g|$/, 'g' );
 
 		// Build the regex used to match words. It includes characters that can be around words, like punctuation.
-		const regex = new RegExp( `([ "'(]|^)(${ pattern.source })(?=(?: |[ "'.,:;)?!](?: |$))|$)`, flags );
+		const regex = new RegExp( `([ "'(]|^)(${ pattern.source })(?=(?: |[ "'.,:;)?!]+(?: |$))|$)`, flags );
 
 		// Save it as a matcher definition object.
 		this._matchers.push( { regex, callback } );

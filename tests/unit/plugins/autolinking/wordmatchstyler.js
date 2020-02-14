@@ -420,6 +420,65 @@ describe( 'Plugins', () => {
 						expect( node.getAttribute( attribute ) ).to.have.property( 'text', 'ef' );
 					} );
 
+					it( 'should be able to change the matched text followed by punctuation', () => {
+						const styler = new WordMatchStyler( attribute );
+
+						styler.addMatcher( /[EF]+/i, attribs => ( attribs.text = 'ef' ) );
+
+						styler.watch( editor );
+
+						editor.setData( 'AB CD EF, GH' );
+
+						let node = root.getChild( 0 ).getChild( 0 );
+						expect( node.data ).to.equals( 'AB CD ' );
+
+						node = root.getChild( 0 ).getChild( 1 );
+						expect( node.data ).to.equals( 'ef' );
+						expect( node.getAttribute( attribute ) ).to.have.property( 'text', 'ef' );
+
+						node = root.getChild( 0 ).getChild( 2 );
+						expect( node.data ).to.equals( ', GH' );
+					} );
+
+					it( 'should be able to change the matched text followed by punctuation (promise)', done => {
+						const styler = new WordMatchStyler( attribute );
+						let promiseCalled = false;
+
+						styler.addMatcher( /EF/i, attribs => {
+							if ( promiseCalled ) {
+								attribs.text = 'ef';
+								setTimeout( check, 0 );
+							} else {
+								return new Promise( resolve => {
+									promiseCalled = true;
+									resolve();
+								} );
+							}
+						} );
+
+						styler.watch( editor );
+
+						editor.setData( 'AB CD EF, GH' );
+
+						const node = root.getChild( 0 ).getChild( 1 );
+						expect( node.data ).to.equals( 'EF' );
+						expect( node.getAttribute( attribute ) ).to.not.have.property( 'test' );
+
+						function check() {
+							let node = root.getChild( 0 ).getChild( 0 );
+							expect( node.data ).to.equals( 'AB CD ' );
+
+							node = root.getChild( 0 ).getChild( 1 );
+							expect( node.data ).to.equals( 'ef' );
+							expect( node.getAttribute( attribute ) ).to.have.property( 'text', 'ef' );
+
+							node = root.getChild( 0 ).getChild( 2 );
+							expect( node.data ).to.equals( ', GH' );
+
+							done();
+						}
+					} );
+
 					it( 'should be able to return a promise', done => {
 						const styler = new WordMatchStyler( attribute );
 						let promiseCalled = false;
