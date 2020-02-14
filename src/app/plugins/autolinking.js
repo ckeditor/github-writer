@@ -304,6 +304,7 @@ export class WordMatchStyler {
 		 * @param texts {Object[]} The list of texts.
 		 * @param texts.text {String} The text to be checked.
 		 * @param texts.range {Range} The range in the model that contains the text.
+		 * @param batch {Batch} The batch into which insert model changes.
 		 */
 		function checkTexts( texts, batch ) {
 			// We don't do much here. Still, `checkTexts` is called in more than one part of the code.
@@ -316,6 +317,7 @@ export class WordMatchStyler {
 		 *
 		 * @param text {String} The text to be checked.
 		 * @param range {Range} The range in the model that contains the text.
+		 * @param batch {Batch} The batch into which insert model changes.
 		 */
 		function styleWordsInRange( { text, range }, batch ) {
 			model.enqueueChange( batch, writer => {
