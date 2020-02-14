@@ -22,3 +22,17 @@ afterEach( 'reset the page', () => {
 afterEach( () => {
 	sinon.restore();
 } );
+
+afterEach( 'Cleanup created editors', () => {
+	if ( window.GITHUB_RTE_EDITORS && window.GITHUB_RTE_EDITORS.length ) {
+		const promises = [];
+
+		sinon.stub( console, 'log' );	// Silence the dev log.
+		window.GITHUB_RTE_EDITORS.forEach( editor => promises.push( editor.destroy() ) );
+
+		window.GITHUB_RTE_EDITORS = [];
+
+		return Promise.all( promises )
+			.then( () => console.log.restore() );
+	}
+} );

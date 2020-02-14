@@ -67,13 +67,13 @@ export default class RteEditor {
 	 *
 	 * @returns {Promise} A promise that resolves once the editor is created and ready.
 	 */
-	create() {
+	create( initialData ) {
 		if ( this._creationPromise ) {
 			return this._creationPromise;
 		}
 
 		// Returns the promise that follows the creation of the internal CKEditor instance.
-		return ( this._creationPromise = CKEditorGitHubEditor.create( '', RteEditorConfig.get( this ) )
+		return ( this._creationPromise = CKEditorGitHubEditor.create( initialData || '', RteEditorConfig.get( this ) )
 			.then( editor => {
 				this.injectToolbar( editor.ui.view.toolbar.element );
 

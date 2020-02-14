@@ -13,6 +13,7 @@ import templateButtonPrInlineComment from './html/button-pr-inline-comment.html'
 import templateButtonCodeLineComment from './html/button-code-line-comment.html';
 
 const domManipulator = new DomManipulator();
+let textareaId = 0;
 
 export const GitHubPage = {
 	domManipulator,
@@ -110,6 +111,8 @@ export const GitHubPage = {
 		if ( options.text ) {
 			root.querySelector( 'textarea' ).value = options.text;
 		}
+
+		root.querySelector( 'textarea' ).id = 'test-' + ( ++textareaId );
 
 		domManipulator.append( target, container );
 		return root;

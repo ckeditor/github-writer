@@ -103,6 +103,8 @@ export default class Editor {
 				this.domManipulator.addClass( markdownEditorRootElement, 'github-rte-type-wiki' );
 			}
 		}
+
+		this.sessionKey = 'github-rte-session:' + window.location.pathname + '?' + this.markdownEditor.dom.textarea.id;
 	}
 
 	/**
@@ -188,10 +190,29 @@ export default class Editor {
 	 * @returns {Promise<Editor>} A promise that resolves once the rte editor instance used by this editor is created and ready.
 	 */
 	create() {
-		return this.rteEditor.create()
+		let initialMode, initialData;
+
+		// Retrieve the initial mode and data.
+		{
+			// Try to get it from session storage.
+			let sessionData = sessionStorage.getItem( this.sessionKey );
+
+			if ( sessionData ) {
+				sessionStorage.removeItem( this.sessionKey );
+
+				sessionData = JSON.parse( sessionData );
+
+				initialMode = sessionData.mode;
+				initialData = sessionData.data || '';	// Available with RTE only.
+			} else {
+				// Otherwise, the initial data is a copy of the markdown editor data.
+				initialData = this.markdownEditor.getData();
+			}
+		}
+
+		return this.rteEditor.create( initialData )
 			.then( () => {
-				this._setInitialData();
-				this._setInitialMode();
+				this._setInitialMode( initialMode );
 				this._setupSessionResume();
 				this._setupFocus();
 				this._setupEmptyCheck();
@@ -209,25 +230,29 @@ export default class Editor {
 	}
 
 	destroy() {
-		if ( this.getMode() === Editor.modes.DESTROYED ) {
-			return Promise.resolve( false );
+		let promise = Promise.resolve( false );
+
+		if ( this.getMode() !== Editor.modes.DESTROYED ) {
+			if ( this.getMode() === Editor.modes.RTE ) {
+				this.syncEditors();
+			}
+
+			this.setMode( Editor.modes.DESTROYED );
+
+			if ( this.rteEditor ) {
+				promise = this.rteEditor.destroy()
+					.then( () => {
+						this.domManipulator.rollback();
+
+						/* istanbul ignore next */
+						if ( process.env.NODE_ENV !== 'production' ) {
+							console.log( `Editor id "${ this.id }" destroyed.`, this );
+						}
+					} );
+			}
 		}
 
-		if ( this.getMode() === Editor.modes.RTE ) {
-			this.syncEditors();
-		}
-
-		this.setMode( Editor.modes.DESTROYED );
-
-		return this.rteEditor.destroy()
-			.then( () => {
-				this.domManipulator.rollback();
-
-				/* istanbul ignore next */
-				if ( process.env.NODE_ENV !== 'production' ) {
-					console.log( `Editor id "${ this.id }" destroyed.`, this );
-				}
-			} );
+		return promise;
 	}
 
 	/**
@@ -247,7 +272,7 @@ export default class Editor {
 	 * Simulates the native "quote selection" feature from GitHub (the "r" key).
 	 *
 	 * Basically, if the RTE editor is active, execute quote-selection in it. If the markdown editor is enabled instead,
-	 * do nothing and let the defautl behavior to happen (GH handles it).
+	 * do nothing and let the default behavior to happen (GH handles it).
 	 *
 	 * @param selectionMarkdown The markdown text to be quoted, most likely derived from the user selection.
 	 */
@@ -258,31 +283,30 @@ export default class Editor {
 	}
 
 	/**
-	 * Integrates with the "session resume" feature of GitHub, which updates the markdown textarea
-	 * with data from previous sessions during the page bootstrap.
+	 * Setup event listeners that save the editor data in the session storage if the user navigates away.
 	 *
 	 * @private
 	 */
 	_setupSessionResume() {
-		// GitHub fires an event before setting the data of elements during page bootstrap and resume their session value.
-		// The markdown textarea of this editor may be one of these elements, so we bootstrap the editor data again.
-		this.domManipulator.addEventListener( document, 'session:resume', () => {
-			if ( this.getMode() !== Editor.modes.DESTROYED ) {
-				// At this stage, the data hasn't been updated in the textarea, so we save a snapshot of it.
-				const dataBefore = this.markdownEditor.getData();
+		const saveSession = () => {
+			const sessionData = {
+				mode: this.getMode()
+			};
 
-				setTimeout( () => {
-					// The editor may have been destroyed during the timeout.
-					if ( this.getMode() !== Editor.modes.DESTROYED ) {
-						// After the timeout, the textarea may have new data.
-						if ( this.markdownEditor.getData() !== dataBefore ) {
-							this._setInitialData();
-							this._setInitialMode();
-						}
-					}
-				}, 0 );
+			if ( this.getMode() === Editor.modes.RTE ) {
+				sessionData.data = this.rteEditor.getData();
 			}
-		}, { once: true, capture: true } );
+
+			sessionStorage.setItem( this.sessionKey, JSON.stringify( sessionData ) );
+		};
+
+		// The following are the two events that catch a navigation from this page (or unloading part of it).
+		this.domManipulator.addEventListener( window, 'pagehide', saveSession );
+		this.domManipulator.addEventListener( document, 'pjax:start', ( { target } ) => {
+			if ( target.contains( this.dom.root ) ) {
+				saveSession();
+			}
+		} );
 	}
 
 	/**
@@ -361,13 +385,6 @@ export default class Editor {
 				this._setInitialMode();
 			}, 0 );
 		} );
-
-		// Sync the editors when navigating away from this page, so content will load again when moving back.
-		this.domManipulator.addEventListener( window, 'pagehide', () => {
-			if ( this.getMode() === Editor.modes.RTE ) {
-				this.syncEditors();
-			}
-		} );
 	}
 
 	/**
@@ -430,24 +447,21 @@ export default class Editor {
 		}
 	}
 
-	_setInitialData() {
-		// Bootstrapping the editor data before create() may be too early as GH may be still working
-		// on restoring session data. We do this at this stage, which seems to be late enough.
-		this.rteEditor.setData( this.markdownEditor.getData() );
-	}
-
 	/**
 	 * Sets the most appropriate mode for this editor on startup.
 	 *
 	 * It defaults to rte but, when editing existing data, it may happen that the markdown to be loaded is not
-	 * compatible with the rte editor. In such case, start on markdown mode and let the it to user to decide whether
+	 * compatible with the rte editor. In such case, start on markdown mode and let it to the user to decide whether
 	 * to move to rte or not by using the ui.
+	 *
+	 * @param [initialMode] {Boolean} The mode forced to be set.
 	 *
 	 * @private
 	 */
-	_setInitialMode() {
-		this.setMode( this._checkDataLoss() ? Editor.modes.MARKDOWN : Editor.modes.RTE,
-			{ noSynch: true, noCheck: true } );
+	_setInitialMode( initialMode ) {
+		initialMode = initialMode || ( this._checkDataLoss() ? Editor.modes.MARKDOWN : Editor.modes.RTE );
+
+		this.setMode( initialMode, { noSynch: true, noCheck: true } );
 
 		// Retrieve and setup the submit buttons.
 		{

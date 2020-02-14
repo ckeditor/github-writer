@@ -34,7 +34,7 @@ export function copyElement( sourceElement, newName, deep = true ) {
  * Creates an element out of its outer html string.
  *
  * @param {String} html The outer html of the element.
- * @returns {Element} The element created.
+ * @returns {HTMLElement} The element created.
  */
 export function createElementFromHtml( html ) {
 	const div = document.createElement( 'div' );
