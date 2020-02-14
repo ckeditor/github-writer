@@ -293,7 +293,7 @@ export class WordMatchStyler {
 					} );
 
 					// Finally, check all texts found.
-					checkTexts( textFinder.texts );
+					checkTexts( textFinder.texts, writer.batch );
 				}
 			} );
 		}
@@ -304,10 +304,11 @@ export class WordMatchStyler {
 		 * @param texts {Object[]} The list of texts.
 		 * @param texts.text {String} The text to be checked.
 		 * @param texts.range {Range} The range in the model that contains the text.
+		 * @param batch {Batch} The batch into which insert model changes.
 		 */
-		function checkTexts( texts ) {
+		function checkTexts( texts, batch ) {
 			// We don't do much here. Still, `checkTexts` is called in more than one part of the code.
-			texts.forEach( styleWordsInRange );
+			texts.forEach( textInfo => styleWordsInRange( textInfo, batch ) );
 		}
 
 		/**
@@ -316,11 +317,10 @@ export class WordMatchStyler {
 		 *
 		 * @param text {String} The text to be checked.
 		 * @param range {Range} The range in the model that contains the text.
+		 * @param batch {Batch} The batch into which insert model changes.
 		 */
-		function styleWordsInRange( { text, range } ) {
-			// Use a 'transparent' batch. Don't care about getting into the undo/redo stack because the whole styling
-			// process will happen again when undo and redo are executed.
-			model.enqueueChange( 'transparent', writer => {
+		function styleWordsInRange( { text, range }, batch ) {
+			model.enqueueChange( batch, writer => {
 				// Remove the attribute from the whole range first.
 				writer.removeAttribute( attribute, range );
 
@@ -453,7 +453,7 @@ export class WordMatchStyler {
 
 					liveMatchRange.detach();
 
-					checkTexts( textFinder.texts );
+					checkTexts( textFinder.texts, writer.batch );
 				} );
 			}
 
@@ -474,7 +474,7 @@ export class WordMatchStyler {
 				// This change may have a cascade effect with other matchers, so we check the replacement now.
 				const textFinder = new TextFinder();
 				textFinder.findWordAtPosition( matchRange.start );
-				checkTexts( textFinder.texts );
+				checkTexts( textFinder.texts, writer.batch );
 			}
 		}
 
