@@ -1,6 +1,6 @@
 {
   "name": "github-rte",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor.",
   "private": true,
   "main": "src/github-rte.js",
