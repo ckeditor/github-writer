@@ -136,6 +136,38 @@ describe( 'Plugins', () => {
 					return promise;
 				} );
 
+				it( 'should resolve not return text with space', () => {
+					const loader = new GitHubLinkDataLoader();
+
+					let xhr;
+
+					sinonXhr.onCreate = createdXhr => ( xhr = createdXhr );
+
+					const promise = loader.load( 'test' )
+						.then( urlInfo => {
+							expect( urlInfo ).to.deep.equals( {
+								url: 'https://test.com/test',
+								text: 'test',
+								'hovercard-type': 'test-type',
+								'hovercard-url': '/test/hovercard'
+							} );
+						} );
+
+					expect( promise ).to.be.an.instanceOf( Promise );
+
+					checkXhr( xhr );
+
+					xhr.respond( 200, { 'Content-Type': 'text/html' },
+						'<p><a ' +
+						'data-hovercard-type="test-type" ' +
+						'data-hovercard-url="/test/hovercard" ' +
+						'href="https://test.com/test">' +
+						'response with space' +
+						'</a></p>' );
+
+					return promise;
+				} );
+
 				it( 'should take from cache on second call', () => {
 					const loader = new GitHubLinkDataLoader();
 
