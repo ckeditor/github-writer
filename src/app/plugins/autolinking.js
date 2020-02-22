@@ -785,12 +785,15 @@ export class GitHubLinkDataLoader {
 						let linkData;
 
 						if ( link ) {
+							const returnedText = link.textContent;
+
 							// Get the extra data from the link itself.
 							linkData = {
 								url: link.getAttribute( 'href' ),
 
 								// GitHub may have a different text for this as well. e.g. when pasting an issue url.
-								text: link.textContent,
+								// Ignore the returned text if it contains space (it's not a single word).
+								text: /\s/.test( returnedText ) ? text : returnedText,
 
 								// This enables hover cards on the auto-link.
 								'hovercard-type': link.getAttribute( 'data-hovercard-type' ),
