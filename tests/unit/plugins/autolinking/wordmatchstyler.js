@@ -694,6 +694,8 @@ describe( 'Plugins', () => {
 							checkTextNodes( editor.model.document.getRoot().getNodeByPath( [ 0, 0 ] ),
 								[ 'AB ', 'CD', ' EF' ],
 								[ false, true, false ] );
+
+							return editor.destroy(); // After test cleanup.
 						} );
 				} );
 			} );

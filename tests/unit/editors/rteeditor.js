@@ -45,6 +45,8 @@ describe( 'Editors', () => {
 						const spy = sinon.spy( rteEditor.ckeditor, 'getData' );
 						rteEditor.getData();
 						expect( spy.callCount ).to.equals( 1 );
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 			} );
 
@@ -74,6 +76,8 @@ describe( 'Editors', () => {
 						rteEditor.setData( 'test' );
 						expect( spy.callCount ).to.equals( 1 );
 						expect( spy.firstCall.args[ 0 ] ).to.equals( 'test' );
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 			} );
 
@@ -87,6 +91,8 @@ describe( 'Editors', () => {
 				return rteEditor.create()
 					.then( () => {
 						expect( rteEditor.getData() ).to.equals( 'test' );
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 			} );
 		} );
@@ -98,6 +104,8 @@ describe( 'Editors', () => {
 				const promise = rteEditor.create()
 					.then( resolution => {
 						expect( resolution ).to.be.undefined;
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 
 				expect( promise ).to.be.an.instanceOf( Promise );
@@ -111,6 +119,8 @@ describe( 'Editors', () => {
 
 				promise.then( () => {
 					expect( rteEditor.create() ).to.equals( promise );
+
+					return rteEditor.destroy(); // After test cleanup.
 				} );
 
 				return promise;
@@ -124,6 +134,8 @@ describe( 'Editors', () => {
 				return rteEditor.create()
 					.then( () => {
 						expect( spy.callCount ).to.equals( 1 );
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 			} );
 
@@ -137,6 +149,8 @@ describe( 'Editors', () => {
 					.then( () => {
 						const editorTree = editor.markdownEditor.dom.panels.preview.nextSibling;
 						expect( editorTree.classList.contains( 'github-rte-panel-rte' ) ).to.be.true;
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 			} );
 
@@ -150,6 +164,8 @@ describe( 'Editors', () => {
 					.then( () => {
 						const editorTree = editor.markdownEditor.dom.panelsContainer.nextSibling;
 						expect( editorTree.classList.contains( 'github-rte-panel-rte' ) ).to.be.true;
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 			} );
 
@@ -165,6 +181,8 @@ describe( 'Editors', () => {
 					.then( () => {
 						expect( RteEditor.toolbarItemsPostfix.callCount ).to.equals( 1 );
 						expect( RteEditor.toolbarItemsPostfix.calledAfter( rteEditor.injectToolbar ) ).to.be.true;
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 			} );
 
@@ -176,6 +194,8 @@ describe( 'Editors', () => {
 					.then( () => {
 						expect( rteEditor.ckeditor ).to.be.an.instanceOf( CKEditorGitHubEditor );
 						expect( rteEditor.ckeditor.githubEditor ).to.equals( editor );
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 			} );
 
@@ -187,6 +207,8 @@ describe( 'Editors', () => {
 				return rteEditor.create()
 					.then( () => {
 						expect( spy.callCount ).to.equals( 1 );
+
+						return rteEditor.destroy(); // After test cleanup.
 					} );
 			} );
 		} );

@@ -90,8 +90,12 @@ export function injectFunctionExecution( fn ) {
 	// Remove comments they can break the execution (the browser may inline it as as a single line).
 	fnBody = fnBody.replace( /\/\/.*$/mg, '' );
 
+	const id = 'GitHub-RTE-' + Date.now();
 	const script = document.createElement( 'script' );
-	script.innerText = '(' + ( fnBody ) + ')();';
+	script.id = id;
+	script.innerText =
+		'(' + ( fnBody ) + ')();' +
+		'document.getElementById("' + id + '").remove();';
 
 	( document.body || document.head ).appendChild( script );
 }
