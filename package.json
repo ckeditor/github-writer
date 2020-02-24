@@ -54,6 +54,7 @@
     "chromedriver": "^78.0.1",
     "eslint": "^5.5.0",
     "eslint-config-ckeditor5": "^2.0.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
     "mocha": "^6.2.2",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^3.1.0",
