@@ -41,6 +41,7 @@ import ModeSwitcher from '../plugins/modeswitcher';
 import Suggestion from '../plugins/suggestion';
 
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
+import PasteFixer from '../plugins/pastefixer';
 import AutoLinking from '../plugins/autolinking';
 import QuoteSelection from '../plugins/quoteselection';
 import ResetListener from '../plugins/resetlistener';
@@ -71,7 +72,7 @@ const RteEditorConfig = {
 				List, TodoList,
 				HorizontalLine, Table, TableToolbar,
 				Kebab, RemoveFormat, ModeSwitcher, Suggestion,
-				PasteFromOffice,
+				PasteFromOffice, PasteFixer,
 				AutoLinking, QuoteSelection, ResetListener, EditorExtras
 			],
 			toolbar: [
