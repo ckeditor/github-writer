@@ -43,6 +43,7 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 .ck.ck-editor__editable > .ck-placeholder::before {
 	color: #6a737d;
 	opacity: .54;
+	position: absolute;
 }
 
 /* RTE mode */
