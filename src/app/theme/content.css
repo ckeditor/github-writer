@@ -80,6 +80,11 @@
 		}
 	}
 
+	/* Inline code */
+	& code br[data-cke-filler="true"] {
+		display: inline;
+	}
+
 	/* Code block */
 	& pre[data-language]:not([data-language="Suggestion"]):after {
 		/* Hide the inline label in code blocks as it's not relevant for now. */
