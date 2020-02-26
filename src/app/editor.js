@@ -289,6 +289,11 @@ export default class Editor {
 	 */
 	_setupSessionResume() {
 		const saveSession = () => {
+			// Do nothing if we're submitting the form. (#79)
+			if ( this._isSubmitting ) {
+				return;
+			}
+
 			const sessionData = {
 				mode: this.getMode()
 			};
@@ -480,27 +485,37 @@ export default class Editor {
 			// Sync the editors when submitting the form (which is always done by "click").
 			{
 				if ( this.dom.buttons.submit !== submit ) {
+					// Reset the submit flag.
+					delete this._isSubmitting;
+
 					submit = this.dom.buttons.submit;
-					this.domManipulator.addEventListener( submit, 'click', () => {
-						if ( this.getMode() === Editor.modes.RTE ) {
-							this.syncEditors();
-						}
-					} );
+					this.domManipulator.addEventListener( submit, 'click',
+						() => syncOnSubmit( this ) );
 				}
 
 				if ( this.dom.buttons.submitAlternative !== submitAlternative ) {
 					submitAlternative = this.dom.buttons.submitAlternative;
-					submitAlternative && this.domManipulator.addEventListener( submitAlternative, 'click', () => {
-						if ( this.getMode() === Editor.modes.RTE ) {
-							this.syncEditors();
-						}
-					} );
+					submitAlternative && this.domManipulator.addEventListener( submitAlternative, 'click',
+						() => syncOnSubmit( this ) );
 				}
 			}
 		}
 
 		// The submit status must always be updated when setting the initial mode.
 		this._setSubmitStatus();
+
+		/**
+		 * Sync's the editors and saves the submit time.
+		 * @param editor {Editor} The editor to be sync'ed.
+		 */
+		function syncOnSubmit( editor ) {
+			// Flag the submit.
+			editor._isSubmitting = true;
+
+			if ( editor.getMode() === Editor.modes.RTE ) {
+				editor.syncEditors();
+			}
+		}
 	}
 
 	/**

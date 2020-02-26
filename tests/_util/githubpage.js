@@ -52,7 +52,7 @@ export const GitHubPage = {
 	 * @param options {Object}
 	 * @return {HTMLElement}
 	 */
-	appendRoot: ( options = { type: 'issue', target: document.body, text: '' } ) => {
+	appendRoot: ( options = { type: 'issue', target: document.body, text: '', submitAlternative: false } ) => {
 		const type = options.type || 'issue';
 		const target = options.target || document.body;
 
@@ -110,6 +110,11 @@ export const GitHubPage = {
 
 		if ( options.text ) {
 			root.querySelector( 'textarea' ).value = options.text;
+		}
+
+		if ( options.submitAlternative ) {
+			root.querySelector( 'button[type="submit"]' ).insertAdjacentHTML( 'afterend',
+				'<button class="js-quick-submit-alternative">Alternative</button>' );
 		}
 
 		root.querySelector( 'textarea' ).id = 'test-' + ( ++textareaId );
