@@ -384,6 +384,68 @@ describe( 'Editor', () => {
 						} );
 				} );
 
+				it( 'should do nothing on window#pagehide when submitting the form', () => {
+					const root = GitHubPage.appendRoot( { text: 'initial data' } );
+					const textareaId = root.querySelector( 'textarea' ).id;
+					const editor = new Editor( root );
+
+					return editor.create()
+						.then( () => {
+							editor.rteEditor.setData( 'new data' );
+
+							editor.dom.buttons.submit.dispatchEvent( new Event( 'click' ) );
+
+							window.dispatchEvent( new Event( 'pagehide' ) );
+
+							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.null;
+
+							return editor.destroy()
+								.then( () => {
+									root.remove();
+
+									const newRoot = GitHubPage.appendRoot( { text: 'initial data' } );
+									newRoot.querySelector( 'textarea' ).id = textareaId;
+									const newEditor = new Editor( newRoot );
+
+									return newEditor.create()
+										.then( () => {
+											expect( newEditor.rteEditor.getData() ).to.equals( 'initial data' );
+										} );
+								} );
+						} );
+				} );
+
+				it( 'should do nothing on window#pagehide when submitting the form (alternative)', () => {
+					const root = GitHubPage.appendRoot( { text: 'initial data', submitAlternative: true } );
+					const textareaId = root.querySelector( 'textarea' ).id;
+					const editor = new Editor( root );
+
+					return editor.create()
+						.then( () => {
+							editor.rteEditor.setData( 'new data' );
+
+							editor.dom.buttons.submitAlternative.dispatchEvent( new Event( 'click' ) );
+
+							window.dispatchEvent( new Event( 'pagehide' ) );
+
+							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.null;
+
+							return editor.destroy()
+								.then( () => {
+									root.remove();
+
+									const newRoot = GitHubPage.appendRoot( { text: 'initial data' } );
+									newRoot.querySelector( 'textarea' ).id = textareaId;
+									const newEditor = new Editor( newRoot );
+
+									return newEditor.create()
+										.then( () => {
+											expect( newEditor.rteEditor.getData() ).to.equals( 'initial data' );
+										} );
+								} );
+						} );
+				} );
+
 				it( 'should save session on pjax', () => {
 					const root = GitHubPage.appendRoot( { text: 'initial data' } );
 					const textareaId = root.querySelector( 'textarea' ).id;
