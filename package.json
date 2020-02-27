@@ -53,14 +53,15 @@
     "@ckeditor/ckeditor5-dev-tests": "ckeditor/ckeditor5-dev/packages/ckeditor5-dev-tests#github-rte",
     "chai": "^4.2.0",
     "chromedriver": "^78.0.1",
+    "copy-webpack-plugin": "^5.1.1",
     "eslint": "^5.5.0",
     "eslint-config-ckeditor5": "^2.0.0",
+    "filemanager-webpack-plugin": "^2.0.5",
     "istanbul-instrumenter-loader": "^3.0.1",
     "mocha": "^6.2.2",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^3.1.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
-    "strip-json-comments-cli": "^1.0.1",
     "style-loader": "^1.0.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
@@ -68,7 +69,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha ./tests/functional/*.js --timeout 15000",
     "test-unit": "node ./node_modules/.bin/ckeditor5-dev-tests -sc --files=./tests/unit/**/*.js --coverage-paths=./src/**/*.js",
-    "build": "/bin/bash dev/build.sh",
+    "build": "webpack --mode production --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
+    "build-dev": "webpack --mode development --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "lint": "eslint --quiet '**/*.js'"
   },
   "eslintIgnore": [

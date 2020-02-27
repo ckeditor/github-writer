@@ -1,14 +1,11 @@
-// @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+// @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
 // For licensing, see LICENSE.md.
-
-// This is the browser extension manifest file. Both Chrome and Firefox (and maybe even Edge) share the same standards
-// and syntax for the manifest, still there are some small differences, which force us to have to maintain separate files.
 
 {
   "name": "GitHub Rich-Text Editor (RTE)",
   "short_name": "GitHub RTE",
   "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor.",
-  "version": "0.12.0",
+  "version": "{package.json -> version}",
   "author": "CKSource (cksource.com)",
   "permissions": [
 	// The following are domains used by GitHub to upload files. We need to have permissions on them,
@@ -35,11 +32,17 @@
 	}
   ],
   "icons": {
-	"16": "github-rte-16.png",
-	"32": "github-rte-32.png",
-	"48": "github-rte-48.png",
-	"96": "github-rte-96.png",
-	"128": "github-rte-128.png"
+	"16": "icons/github-rte-16.png",
+	"32": "icons/github-rte-32.png",
+	"48": "icons/github-rte-48.png",
+	"96": "icons/github-rte-96.png",
+	"128": "icons/github-rte-128.png"
+  },
+  // The following will be removed for Chrome during build.
+  "browser_specific_settings": {
+	"gecko": {
+	  "id": "github-rte@cksource.com"
+	}
   },
   "manifest_version": 2
 }
