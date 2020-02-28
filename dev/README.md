@@ -25,10 +25,16 @@ The source code must be built so it can be used in the browser as an extension:
 2.  Execute the build script:
 
 ```plaintext
-yarn run build -d
+yarn run build
 ```
 
-The `-d` flag instructs the builder to produce a development friendly build. Without that flag, the build is optimized for production distribution.
+or
+
+```plaintext
+yarn run build-dev
+```
+
+The `build-dev` option produces a development friendly build, while `build` make it optimized for production distribution.
 
 You'll find the build files in the newly created `build/` directory. Note that this directory is silently deleted and recreated when executing the build script.
 
@@ -46,7 +52,7 @@ It's all set. Now visit [https://github.com/](https://github.com/) and start usi
 
 To test changes to the source code, the following steps must always be done:
 
-1.  Re-build by executing `yarn run build -d`.
+1.  Re-build by executing `yarn run build-dev`.
 2.  Refresh the extension in the browser:
     1.  In Chrome, click **Window** > **Extensions**. Or navigate to [chrome://extensions/](chrome://extensions/).
     2.  Click the reload button (⟳).
