@@ -38,6 +38,10 @@
 	"96": "icons/github-rte-96.png",
 	"128": "icons/github-rte-128.png"
   },
+  "browser_action": {
+	"default_popup": "popup/popup.html",
+	"default_title": "GitHub RTE"
+  },
   // The following will be removed for Chrome during build.
   "browser_specific_settings": {
 	"gecko": {

@@ -1,0 +1,112 @@
+<!--
+  ~ @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+  ~ For licensing, see LICENSE.md.
+  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>GitHub RTE</title>
+	<style>
+		:root {
+			--popup-width: 340px;
+			--text-primary: hsl(0, 0%, 15%);
+			--border-color: hsl(0, 0%, 92%);
+			--link-color: hsl(207, 81%, 44%);
+		}
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		}
+
+		body,
+		html {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		a {
+			color: var(--link-color);
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		.popup-wrapper {
+			width: var(--popup-width);
+			padding: 20px;
+		}
+
+		.popup-wrapper h1 {
+			display: flex;
+			align-items: center;
+			padding-bottom: 10px;
+			border-bottom: 1px solid var(--border-color);
+			margin-top: 0;
+			font-size: 24px;
+			color: var(--text-primary);
+		}
+
+		.popup-wrapper h1 img {
+			width: 40px;
+			height: 40px;
+			margin-right: 10px;
+		}
+
+		.contents {
+			font-size: 14px;
+			line-height: 1.5;
+		}
+
+		details summary:focus {
+			outline: none;
+		}
+
+		details summary {
+			color: var(--link-color);
+			cursor: pointer;
+			user-select: none;
+		}
+
+		.footer {
+			margin-top: 10px;
+			border-top: 1px solid var(--border-color);
+		}
+
+		.footer p {
+			color: hsl(0, 0%, 45%);
+			text-align: center;
+			margin-bottom: 0;
+		}
+	</style>
+</head>
+<body>
+<div class="popup-wrapper">
+	<h1><img src="../icons/github-rte-128.png" alt="GitHub RTE logo"> GitHub RTE</h1>
+
+	<div class="contents">
+		<p>Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor,
+			powered by CKEditor.</p>
+		<details>
+			<summary>Report issues and suggestions</summary>
+			<p> Find us on GitHub to report issues and suggestions:<br>
+				<a href="https://github.com/cksource/github-rte" target="_blank" rel="noopener noreferrer">https://github.com/cksource/github-rte</a>
+			</p>
+		</details>
+	</div>
+
+	<div class="footer">
+		<p>Made with ❤️ by the <a href="https://ckeditor.com?github-rte" target="_blank" rel="noopener noreferrer">CKEditor</a>
+			team</p>
+	</div>
+</div>
+</body>
+</html>
