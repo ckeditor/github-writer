@@ -226,15 +226,18 @@ export default class PageManager {
 		// Our dear friends from GH made our lives much easier. A custom event is fired, containing the markdown
 		// representation of the selection.
 		//
-		// Buuut... for security reasons, extensions can't access the CustomEvent.details property (where the markdown
-		// is stored) from CustomEvent's fired in the page.
+		// Buuut... for security reasons, Chrome extensions can't access the CustomEvent.details property
+		// (where the markdown is stored) from CustomEvent's fired in the page.
 		//
 		// To solve the problem, we inject a script that runs in the page context, listening to the desired event.
 		// This script then takes the information we need from the event and broadcast it with `window.postMessage`.
 		//
+		// Buuuut... for security reasons, Firefox extensions can't inject scripts in the page context.
+		// But, unlike with Chrome, they're allowed to access CustomEvent.details. So we run the script directly.
+		//
 		// Finally, we intercept the broadcasted message within the extension context and send the quote to the editor.
 
-		injectFunctionExecution( /* istanbul ignore next */function() {
+		const addEventProxy = /* istanbul ignore next */function() {
 			document.addEventListener( 'quote-selection', ev => {
 				// Marks the comment thread container with a timestamp so we can retrieve it later.
 				const timestamp = Date.now();
@@ -247,7 +250,16 @@ export default class PageManager {
 					text: ev.detail.selectionText
 				}, '*' );
 			}, false );
-		} );
+		};
+
+		// Firefox.
+		if ( typeof InstallTrigger !== 'undefined' ) {
+			addEventProxy();
+		}
+		// Chrome.
+		else {
+			injectFunctionExecution( addEventProxy );
+		}
 
 		// Listen to the broadcasted message.
 		window.addEventListener( 'message', event => {

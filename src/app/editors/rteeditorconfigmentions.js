@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import { createElementFromHtml, getInitials } from '../util';
+import { createElementFromHtml, getInitials, openXmlHttpRequest } from '../util';
 
 /**
  * Builds the CKEditor configuration for mentions as well as their implementation.
@@ -371,16 +371,12 @@ export default function getMentionFeedsConfig( urls ) {
 	// @returns {Promise<String>} A promise that with the raw response data.
 	function downloadData( url, json ) {
 		return new Promise( ( resolve, reject ) => {
-			const xhr = new XMLHttpRequest();
-			xhr.open( 'GET', url, true );
+			const xhr = openXmlHttpRequest( url, 'GET' );
 
 			if ( json ) {
 				xhr.responseType = 'json';
 				xhr.setRequestHeader( 'Accept', 'application/json' );
 			}
-
-			// It doesn't work without this one.
-			xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
 
 			xhr.addEventListener( 'error', () => reject( new Error( `Error loading mentions from $(url).` ) ) );
 			xhr.addEventListener( 'abort', () => reject() );
