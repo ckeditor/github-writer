@@ -101,19 +101,38 @@ export function injectFunctionExecution( fn ) {
 }
 
 /**
+ * Creates and opens a XMLHttpRequest matching the requirements of GitHub and browsers.
+ *
+ * @param url {String} The request url.
+ * @param [method] {String} The request method. Defaults to 'POST'.
+ * @return {XMLHttpRequest} The created XMLHttpRequest instance.
+ */
+export function openXmlHttpRequest( url, method = 'POST' ) {
+	// Firefox needs the whole url, so we fix it here, if necessary.
+	if ( url.startsWith( '/' ) ) {
+		url = `${ location.protocol }//${ location.host }${ url }`;
+	}
+
+	const xhr = new XMLHttpRequest();
+	xhr.open( method, url, true );
+
+	// Some of the requests don't work without this one.
+	xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
+
+	return xhr;
+}
+
+/**
  * Gets the html of the "New Issue" page through an xhr request and returns it as a dom.
  *
  * @returns {Promise<DocumentFragment>} A document fragment with the whole dom of the page.
  */
 export function getNewIssuePageDom() {
 	return new Promise( ( resolve, reject ) => {
-		// Build the url to the new issue page.
-		const location = document.location;
-		const path = document.location.pathname.match( /^\/.+?\/.+?\// ) + 'issues/new';
-		const url = `${ location.protocol }//${ location.host }${ path }`;
+		// Build the url for the new issue page => /organization/repo/isses/new
+		const url = document.location.pathname.match( /^\/.+?\/.+?\// ) + 'issues/new';
 
-		const xhr = new XMLHttpRequest();
-		xhr.open( 'GET', url, true );
+		const xhr = openXmlHttpRequest( url, 'GET' );
 
 		xhr.addEventListener( 'error', () => reject( new Error( `Error loading mentions from $(url).` ) ) );
 		xhr.addEventListener( 'abort', () => reject() );

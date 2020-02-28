@@ -8,7 +8,7 @@ import Range from '@ckeditor/ckeditor5-engine/src/model/range';
 import LiveRange from '@ckeditor/ckeditor5-engine/src/model/liverange';
 import TreeWalker from '@ckeditor/ckeditor5-engine/src/model/treewalker';
 
-import { createElementFromHtml } from '../util';
+import { createElementFromHtml, openXmlHttpRequest } from '../util';
 
 /**
  * The auto-linking feature, which makes plain text that will be converted to links by GitHub to behave just like
@@ -838,11 +838,7 @@ export class GitHubLinkDataLoader {
 				// noinspection JSPotentiallyInvalidUsageOfClassThis
 				const urlInfo = this.getPreviewUrlInfo();
 
-				const xhr = new XMLHttpRequest();
-				xhr.open( 'POST', urlInfo.url, true );
-
-				// It doesn't work without this one.
-				xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
+				const xhr = openXmlHttpRequest( urlInfo.url );
 
 				xhr.addEventListener( 'error', () => reject(
 					new Error( `Error loading preview for auto-linking from ${ urlInfo.url }.` ) ) );

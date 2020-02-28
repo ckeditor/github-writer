@@ -5,6 +5,7 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import FileRepository from '@ckeditor/ckeditor5-upload/src/filerepository';
+import { openXmlHttpRequest } from '../util';
 
 /**
  * The upload adapter that integrates the GitHub file upload infrastructure with CKEditor.
@@ -90,7 +91,6 @@ class Adapter {
 						// Setup the request further to match the original GH request.
 						this.xhr.responseType = 'json';
 						this.xhr.setRequestHeader( 'Accept', 'application/json' );
-						this.xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
 
 						// _initListeners is the one responsible to resolve this promise.
 						this._initListeners( resolve, reject, file );
@@ -153,8 +153,7 @@ class Adapter {
 	 * @private
 	 */
 	_initRequest( url ) {
-		const xhr = this.xhr = new XMLHttpRequest();
-		xhr.open( 'POST', url, true );
+		this.xhr = openXmlHttpRequest( url );
 	}
 
 	/**
