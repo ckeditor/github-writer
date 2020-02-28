@@ -87,24 +87,37 @@ module.exports = ( env, argv ) => {
 			] ),
 
 			new FileManagerPlugin( {
-				onStart: {
-					delete: [ 'build' ]
-				},
+				onStart: [
+					{
+						delete: [ 'build' ]
+					},
+					{
+						copy: [
+							{ source: 'src/extension', destination: 'build/github-rte-chrome' },
+							{ source: 'src/github-rte.css', destination: 'build/github-rte-chrome' },
+
+							{ source: 'src/extension', destination: 'build/github-rte-firefox' },
+							{ source: 'src/github-rte.css', destination: 'build/github-rte-firefox' }
+						]
+					},
+					{
+						// Delete the manifest templates. They'll be recreated by the CopyPlugin.
+						delete: [
+							'build/github-rte-chrome/manifest.json',
+							'build/github-rte-firefox/manifest.json'
+						]
+					}
+				],
 				onEnd: [
 					{
 						copy: [
-							{ source: 'build/github-rte.*', destination: 'build/github-rte-chrome' },
-							{ source: 'src/github-rte.css', destination: 'build/github-rte-chrome' },
-							{ source: 'src/extension/icons', destination: 'build/github-rte-chrome/icons' },
-
-							{ source: 'build/github-rte.*', destination: 'build/github-rte-firefox' },
-							{ source: 'src/github-rte.css', destination: 'build/github-rte-firefox' },
-							{ source: 'src/extension/icons', destination: 'build/github-rte-firefox/icons' }
+							{ source: 'build/github-rte.js*', destination: 'build/github-rte-chrome' },
+							{ source: 'build/github-rte.js*', destination: 'build/github-rte-firefox' }
 						]
 					},
 					{
 						delete: [
-							'build/github-rte.*'
+							'build/github-rte.js*'
 						]
 					},
 					( argv.mode === 'production' ) ?
