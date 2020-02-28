@@ -66,14 +66,11 @@ export default function getMentionFeedsConfig( urls ) {
 
 				const titleLow = entryData.title.toLowerCase();
 
-				// The search key is a string in the format "id title_lowercase title_initials_lowercase".
-				const key =
-					entryData.number + ' ' +
-					titleLow + ' ' +
-					getInitials( titleLow );
-
 				return {
-					key,
+					keys: {
+						id: entryData.number.toString(),
+						text: entryData.number + titleLow + getInitials( titleLow )
+					},
 					data: {
 						id: '#' + entryData.number,
 						number: entryData.number,
@@ -139,14 +136,11 @@ export default function getMentionFeedsConfig( urls ) {
 				const nameLow = name && name.toLowerCase();
 				const descriptionLow = description && description.toLowerCase();
 
-				// The search key is a string in the format "id title_lowercase title_initials_lowercase".
-				const key =
-					nameLow + ' ' +
-					descriptionLow + ' ' +
-					getInitials( descriptionLow );
-
 				return {
-					key,
+					keys: {
+						id: nameLow,
+						text: nameLow + descriptionLow + getInitials( descriptionLow )
+					},
 					data: {
 						id: '@' + name,
 						name,
@@ -190,20 +184,16 @@ export default function getMentionFeedsConfig( urls ) {
 					return;
 				}
 
-				const text = entryLiElement.getAttribute( 'data-text' );
-
-				// The search key is a string in the format "id title_lowercase title_initials_lowercase".
-				const key =
-					text + ' ' +
-					getInitials( text );
-
-				const icon = entryLiElement.querySelector( 'g-emoji' ).textContent;
 				const name = entryLiElement.getAttribute( 'data-emoji-name' );
+				const text = entryLiElement.getAttribute( 'data-text' );
+				const icon = entryLiElement.querySelector( 'g-emoji' ).textContent;
 
 				return {
-					key,
+					keys: {
+						id: name,
+						text: text + getInitials( text )
+					},
 					data: {
-						// TODO: Show the icon to the user, instead of the ":name:". CKEditor forces the id to start with the marker.
 						id: ':' + name + ':',
 						icon,
 						name
@@ -281,12 +271,24 @@ export default function getMentionFeedsConfig( urls ) {
 
 					// Got though all entries, searching for keys that include the query substring.
 					// Fill it up until we have 5 results (just like GH).
-					for ( let i = 0; i < entries.length && results.length < 5; i++ ) {
-						const entry = entries[ i ];
 
-						// There is not much logic during filtering other then a substring search.
-						// Pre-processing in {mentionFeed#entryWorker} already figured the searching cases.
-						if ( entry.key.includes( query ) ) {
+					// If the query is empty, we don't search by id and default to the first 5 entries of byText.
+					if ( query ) {
+						const entriesById = entries.byId;
+						for ( let i = 0; i < entriesById.length && results.length < 5; i++ ) {
+							const entry = entriesById[ i ];
+
+							if ( entry.key.startsWith( query ) && !results.includes( entry.data ) ) {
+								results.push( entry.data );
+							}
+						}
+					}
+
+					const entriesByText = entries.byText;
+					for ( let i = 0; i < entriesByText.length && results.length < 5; i++ ) {
+						const entry = entriesByText[ i ];
+
+						if ( entry.key.includes( query ) && !results.includes( entry.data ) ) {
 							results.push( entry.data );
 						}
 					}
@@ -330,19 +332,31 @@ export default function getMentionFeedsConfig( urls ) {
 
 					// Take the worker that will preprocess every item received.
 					const entryWorker = db[ type ].entryWorker;
+					const entries = db[ type ].entries = {
+						byId: [],
+						byText: []
+					};
 
-					// Instead of map(), we use reduce() so workers can ignore entries, if necessary.
-					const entries = db[ type ].entries = data.reduce( ( entries, dataEntry ) => {
+					data.forEach( dataEntry => {
 						// Let the worker do its job.
 						const entry = entryWorker( dataEntry );
 
 						// Workers can return falsy to ignore an entry.
 						if ( entry ) {
-							entries.push( entry );
-						}
+							entries.byId.push( {
+								key: String( entry.keys.id ).toLowerCase(),
+								data: entry.data
+							} );
 
-						return entries;
-					}, [] ); 	// Pass to reduce() the initial state of the return value -> an empty array.
+							entries.byText.push( {
+								key: String( entry.keys.text ).toLowerCase(),
+								data: entry.data
+							} );
+						}
+					} );
+
+					// The first list should be matched with 1:1 priortiy, so we sort it alphabetically.
+					entries.byId = entries.byId.sort( ( x, y ) => x.key.localeCompare( y.key, undefined, { sensitivity: 'base' } ) );
 
 					resolve( entries );
 				} )
