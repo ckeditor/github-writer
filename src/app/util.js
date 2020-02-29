@@ -4,31 +4,15 @@
  */
 
 /**
- * Makes a copy of a dom element, with a different name.
+ * For testing purposes, we inject this function in the document, so we're able to stub it (document.location cannot
+ * be changed).
  *
- * Note that all elements ending up in the copy are clones of the originals.
- *
- * @param {HTMLElement} sourceElement The original element.
- * @param {String} newName The name of the element copy.
- * @param {Boolean} deep=true Whether the child tree must also be copied.
- * @returns {HTMLElement} The element copy.
+ * @return {Location} A document location object.
+ * @private
  */
-export function copyElement( sourceElement, newName, deep = true ) {
-	const newElement = document.createElement( newName );
-
-	for ( let i = 0; i < sourceElement.attributes.length; i++ ) {
-		const att = sourceElement.attributes[ i ];
-		newElement.setAttribute( att.name, att.value );
-	}
-
-	if ( deep ) {
-		sourceElement.childNodes.forEach( child => {
-			newElement.appendChild( child.cloneNode( true ) );
-		} );
-	}
-
-	return newElement;
-}
+window.__getLocation = () => {
+	return window.location;
+};
 
 /**
  * Creates an element out of its outer html string.
@@ -69,6 +53,11 @@ export function checkDom( dom ) {
  * This should not affect the ability of the user to use the page as we'll leave things untouched and quit.
  */
 export class PageIncompatibilityError extends Error {
+	/**
+	 * Creates a instance of the PageIncompatibilityError class.
+	 *
+	 * @param elementKey {String} The object key (usually meant to point to an element), which caused the error.
+	 */
 	constructor( elementKey ) {
 		super( `GitHub RTE error: ("${ elementKey }") not found. This page doesn't seem to be compatible with this application anymore. ` +
 			`Upgrade to the latest version of the browser extension.` );
@@ -97,7 +86,7 @@ export function injectFunctionExecution( fn ) {
 		'(' + ( fnBody ) + ')();' +
 		'document.getElementById("' + id + '").remove();';
 
-	( document.body || document.head ).appendChild( script );
+	( document.body || /* istanbul ignore next */ document.head ).appendChild( script );
 }
 
 /**
@@ -108,9 +97,11 @@ export function injectFunctionExecution( fn ) {
  * @return {XMLHttpRequest} The created XMLHttpRequest instance.
  */
 export function openXmlHttpRequest( url, method = 'POST' ) {
+	const location = window.__getLocation();
+
 	// Firefox needs the whole url, so we fix it here, if necessary.
 	if ( url.startsWith( '/' ) ) {
-		url = `${ location.protocol }//${ location.host }${ url }`;
+		url = `${ location.protocol }://${ location.host }${ url }`;
 	}
 
 	const xhr = new XMLHttpRequest();
@@ -129,12 +120,14 @@ export function openXmlHttpRequest( url, method = 'POST' ) {
  */
 export function getNewIssuePageDom() {
 	return new Promise( ( resolve, reject ) => {
+		const location = window.__getLocation();
+
 		// Build the url for the new issue page => /organization/repo/isses/new
-		const url = document.location.pathname.match( /^\/.+?\/.+?\// ) + 'issues/new';
+		const url = location.pathname.match( /^\/.+?\/.+?\// ) + 'issues/new';
 
 		const xhr = openXmlHttpRequest( url, 'GET' );
 
-		xhr.addEventListener( 'error', () => reject( new Error( `Error loading mentions from $(url).` ) ) );
+		xhr.addEventListener( 'error', () => reject( new Error( `Error loading $(url).` ) ) );
 		xhr.addEventListener( 'abort', () => reject() );
 		xhr.addEventListener( 'load', () => {
 			// Inject the returned html into a template element.
