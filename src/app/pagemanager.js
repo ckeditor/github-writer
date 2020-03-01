@@ -237,7 +237,7 @@ export default class PageManager {
 		//
 		// Finally, we intercept the broadcasted message within the extension context and send the quote to the editor.
 
-		const addEventProxy = /* istanbul ignore next */function() {
+		const addEventProxy = /* istanbul ignore next */ function() {
 			document.addEventListener( 'quote-selection', ev => {
 				// Marks the comment thread container with a timestamp so we can retrieve it later.
 				const timestamp = Date.now();
@@ -252,13 +252,14 @@ export default class PageManager {
 			}, false );
 		};
 
-		// Firefox.
-		if ( typeof InstallTrigger !== 'undefined' ) {
-			addEventProxy();
-		}
 		// Chrome.
-		else {
+		/* istanbul ignore else */
+		if ( window.chrome ) {
 			injectFunctionExecution( addEventProxy );
+		}
+		// Firefox.
+		else {
+			addEventProxy();
 		}
 
 		// Listen to the broadcasted message.
