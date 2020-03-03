@@ -80,9 +80,7 @@ const RteEditorConfig = {
 				'blockquote', 'smartcode', 'link', '|',
 				'bulletedlist', 'numberedlist', 'todolist', 'kebab'
 			],
-			kebabToolbar: isCommentsPage ?
-				[ 'strikethrough', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ] :
-				[ 'strikethrough', 'removeFormat', '|', 'horizontalline', 'insertTable', '|', 'mode' ],
+			kebabToolbar: [ 'strikethrough', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ],
 			table: {
 				contentToolbar: [ 'tableColumn', 'tableRow' ]
 			},
