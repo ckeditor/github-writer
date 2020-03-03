@@ -102,6 +102,9 @@ export const GitHubPage = {
 				const panelContainer = container.querySelector( 'tab-container' );
 				const panelContainerDiv = createElementFromHtml( panelContainer.outerHTML.replace( 'tab-container', 'div' ) );
 				panelContainer.parentElement.replaceChild( panelContainerDiv, panelContainer );
+
+				// Remove the wrong preview pane class for this case.
+				root.querySelector( '.preview-content' ).classList.remove( 'js-preview-panel' );
 				break;
 			}
 			case 'wiki': {
