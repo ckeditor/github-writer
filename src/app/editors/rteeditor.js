@@ -225,25 +225,13 @@ RteEditor.toolbarItemsPostfix = ( toolbar, tooltipPosition = 'n' ) => {
 			// Disable the CKEditor tooltip as we'll use the GH lib for that.
 			item.set( 'tooltip', false );
 
-			// If it is already rendered, we touch the dom.
-			if ( item.isRendered ) {
+			// Items inside toolbars are always rendered (item.isRendered) so we touch the DOM element for fixes.
+			{
 				// Make the necessary changes for the GH tooltip to work.
 				// Set the text visible in the tooltip.
 				item.element.setAttribute( 'aria-label', itemLabel );
 				// Enable tooltips.
 				item.set( 'class', ( ( item.class || '' ) + ' tooltipped tooltipped-' + tooltipPosition ).trim() );
-			}
-			// Otherwise, we touch the template used for rendering.
-			else {
-				item.extendTemplate( {
-					attributes: {
-						// Make the necessary changes for the GH tooltip to work.
-						// Set the text visible in the tooltip.
-						'aria-label': itemLabel,
-						// Enable tooltips.
-						'class': 'tooltipped tooltipped-' + tooltipPosition
-					}
-				} );
 			}
 		}
 	} );

@@ -32,6 +32,10 @@ export const GitHubPage = {
 		}
 
 		meta.setAttribute( 'value', name || 'repo_issue' );
+
+		if ( App.pageManager ) {
+			GitHubPage.setApp();
+		}
 	},
 
 	/**

@@ -11,8 +11,8 @@ before( () => {
 } );
 
 beforeEach( () => {
-	GitHubPage.setApp();
 	GitHubPage.setPageName();
+	GitHubPage.setApp();
 } );
 
 afterEach( 'reset the page', () => {

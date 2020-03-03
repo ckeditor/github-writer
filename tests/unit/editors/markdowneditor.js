@@ -11,6 +11,15 @@ import { GitHubPage } from '../../_util/githubpage';
 
 describe( 'Editors', () => {
 	describe( 'MarkdownEditor', () => {
+		beforeEach( () => {
+			// Mute dev logging.
+			sinon.stub( console, 'log' ).callsFake( ( ...args ) => {
+				if ( !( args[ 1 ] instanceof Editor ) ) {
+					console.log.wrappedMethod.apply( console, args );
+				}
+			} );
+		} );
+
 		describe( 'constructor()', () => {
 			it( 'should save dom references', () => {
 				const root = GitHubPage.appendRoot();

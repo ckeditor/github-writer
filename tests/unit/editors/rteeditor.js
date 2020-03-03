@@ -8,8 +8,17 @@ import RteEditor, { CKEditorGitHubEditor } from '../../../src/app/editors/rteedi
 
 import RteEditorConfig from '../../../src/app/editors/rteeditorconfig';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import EditorExtras from '../../../src/app/plugins/editorextras';
+
+import Locale from '@ckeditor/ckeditor5-utils/src/locale';
+import ToolbarView from '@ckeditor/ckeditor5-ui/src/toolbar/toolbarview';
+import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+import LabelView from '@ckeditor/ckeditor5-ui/src/label/labelview';
+import DropdownView from '@ckeditor/ckeditor5-ui/src/dropdown/dropdownview';
+import DropdownPanelView from '@ckeditor/ckeditor5-ui/src/dropdown/dropdownpanelview';
 
 import { GitHubPage } from '../../_util/githubpage';
+import { createElementFromHtml } from '../../../src/app/util';
 
 describe( 'Editors', () => {
 	describe( 'RteEditor', () => {
@@ -94,6 +103,30 @@ describe( 'Editors', () => {
 
 						return rteEditor.destroy(); // After test cleanup.
 					} );
+			} );
+		} );
+
+		describe( 'focus()', () => {
+			it( 'should set focus into ckeditor', () => {
+				// Stubbed in beforeEach.
+				RteEditorConfig.get.returns( { plugins: [ Paragraph, EditorExtras ] } );
+
+				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
+
+				return rteEditor.create()
+					.then( () => {
+						const spy = sinon.spy( rteEditor.ckeditor, 'focus' );
+						rteEditor.focus();
+						expect( spy.callCount ).to.equals( 1 );
+
+						return rteEditor.destroy(); // After test cleanup.
+					} );
+			} );
+
+			it( 'should do nothing before ckeditor creation', () => {
+				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
+
+				expect( () => rteEditor.focus() ).to.not.throw();
 			} );
 		} );
 
@@ -199,6 +232,20 @@ describe( 'Editors', () => {
 					} );
 			} );
 
+			it( 'should load data that was set before create()', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const rteEditor = new RteEditor( editor );
+
+				rteEditor.setData( 'Test' );
+
+				return rteEditor.create()
+					.then( () => {
+						expect( rteEditor.getData() ).to.equals( 'Test' );
+
+						return rteEditor.destroy(); // After test cleanup.
+					} );
+			} );
+
 			it( 'should fire "reallyReady" on ckeditor', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
 
@@ -262,6 +309,159 @@ describe( 'Editors', () => {
 					expect( destroyed ).to.be.true;
 					expect( spy.callCount ).to.equals( 1 );
 				} );
+			} );
+		} );
+
+		describe( 'injectToolbar()', () => {
+			it( 'should inject the toolbar after the markdown toolbar', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const rteEditor = new RteEditor( editor );
+				const toolbar = document.createElement( 'div' );
+
+				rteEditor.injectToolbar( toolbar );
+
+				expect( editor.markdownEditor.dom.toolbar.nextElementSibling ).to.equals( toolbar );
+			} );
+		} );
+
+		describe( 'getEditableParentTree()', () => {
+			it( 'should return a string that converts into an element', () => {
+				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
+
+				const treeHtml = rteEditor.getEditableParentTree();
+				expect( treeHtml ).to.be.a( 'string' );
+
+				const tree = createElementFromHtml( treeHtml );
+				expect( tree ).to.be.an.instanceOf( HTMLElement );
+			} );
+
+			it( 'should have an element with class github-rte-ckeditor', () => {
+				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
+
+				const tree = createElementFromHtml( rteEditor.getEditableParentTree() );
+				expect( tree.querySelector( '.github-rte-ckeditor' ) ).to.be.an.instanceOf( HTMLElement );
+			} );
+		} );
+
+		describe( 'toolbarItemsPostfix()', () => {
+			beforeEach( () => {
+				GitHubPage.appendElementHtml(
+					'<div>' +
+					'<md-bold aria-label="test Bold"></md-bold>' +
+					'<md-italic aria-label="test Italic"></md-italic>' +
+					'<md-quote aria-label="test Block quote"></md-quote>' +
+					'<md-code aria-label="test Code"></md-code>' +
+					'<md-link aria-label="test Link"></md-link>' +
+					'<md-unordered-list aria-label="test Bulleted List"></md-unordered-list>' +
+					'<md-ordered-list aria-label="test Numbered List"></md-ordered-list>' +
+					'<md-task-list aria-label="test To-do List"></md-task-list>' +
+					'</div>'
+				);
+
+				// Restore the stubbed method.
+				RteEditor.toolbarItemsPostfix.restore();
+			} );
+
+			it( 'should fix simple buttons', () => {
+				const locale = new Locale();
+				const toolbar = new ToolbarView( locale );
+
+				const button = new ButtonView( locale );
+				button.set( {
+					label: 'Bold',
+					tooltip: true
+				} );
+
+				toolbar.items.add( button );
+
+				// Check if it's rendered just as a future safeguard because we've removing part of the code inside
+				// toolbarItemsPostfix which was dealing with the non-rendered case when writing this test.
+				// Somehow this seems to not be possible anymore to have toolbars with non-rendered items,
+				// but we don't know if this may change in the future.
+				expect( button.isRendered ).to.be.true;
+
+				RteEditor.toolbarItemsPostfix( toolbar );
+
+				expect( button.tooltip ).to.be.false;
+				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'test Bold' );
+			} );
+
+			it( 'should fix complex buttons', () => {
+				const locale = new Locale();
+				const toolbar = new ToolbarView( locale );
+
+				const button = new ButtonView( locale );
+				button.set( {
+					label: 'Bold',
+					tooltip: true
+				} );
+
+				const dropdown = new DropdownView( locale, button, new DropdownPanelView( locale ) );
+
+				toolbar.items.add( dropdown );
+
+				RteEditor.toolbarItemsPostfix( toolbar );
+
+				expect( button.tooltip ).to.be.false;
+				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'test Bold' );
+			} );
+
+			it( 'should buttons fix unknown buttons', () => {
+				const locale = new Locale();
+				const toolbar = new ToolbarView( locale );
+
+				const button = new ButtonView( locale );
+				button.set( {
+					label: 'Test',
+					tooltip: true
+				} );
+
+				toolbar.items.add( button );
+
+				RteEditor.toolbarItemsPostfix( toolbar );
+
+				expect( button.tooltip ).to.be.false;
+				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'Test' );
+			} );
+
+			it( 'should ignore non buttons', () => {
+				const locale = new Locale();
+				const toolbar = new ToolbarView( locale );
+
+				const label = new LabelView( locale );
+				label.set( {
+					text: 'Test',
+					tooltip: true
+				} );
+
+				toolbar.items.add( label );
+
+				RteEditor.toolbarItemsPostfix( toolbar );
+
+				expect( label.tooltip ).to.be.true;
+				expect( label.element.getAttribute( 'aria-label' ) ).to.be.null;
+			} );
+
+			it( 'should do nothing in non comments page', () => {
+				GitHubPage.setPageName( 'repo_wiki' );
+
+				const locale = new Locale();
+				const toolbar = new ToolbarView( locale );
+
+				const button = new ButtonView( locale );
+				button.set( {
+					label: 'Bold',
+					tooltip: true
+				} );
+
+				toolbar.items.add( button );
+
+				expect( button.isRendered ).to.be.true;
+
+				RteEditor.toolbarItemsPostfix( toolbar );
+
+				expect( button.tooltip ).to.be.true;
+				expect( button.element.getAttribute( 'aria-label' ) ).to.be.null;
 			} );
 		} );
 

@@ -79,9 +79,7 @@ describe( 'Editor', () => {
 		} );
 
 		it( 'should use the right classes for inner editors (wiki)', () => {
-			GitHubPage.reset();
 			GitHubPage.setPageName( 'repo_wiki' );
-			GitHubPage.setApp();
 
 			const editor = new Editor( GitHubPage.appendRoot( { type: 'wiki' } ) );
 
@@ -93,9 +91,7 @@ describe( 'Editor', () => {
 		} );
 
 		it( 'should root to have wiki class when in wiki', () => {
-			GitHubPage.reset();
 			GitHubPage.setPageName( 'repo_wiki' );
-			GitHubPage.setApp();
 
 			const editor = new Editor( GitHubPage.appendRoot( { type: 'wiki' } ) );
 
@@ -606,9 +602,7 @@ describe( 'Editor', () => {
 			} );
 
 			it( 'should set the submit alternative button label (issue)', () => {
-				GitHubPage.reset();
 				GitHubPage.setPageName( 'repo_issues' );
-				GitHubPage.setApp();
 
 				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
 
@@ -626,9 +620,7 @@ describe( 'Editor', () => {
 			} );
 
 			it( 'should set the submit alternative button label (pr)', () => {
-				GitHubPage.reset();
 				GitHubPage.setPageName( 'repo_pulls' );
-				GitHubPage.setApp();
 
 				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
 
@@ -646,9 +638,7 @@ describe( 'Editor', () => {
 			} );
 
 			it( 'should not touch the submit alternative button if not issue or pr', () => {
-				GitHubPage.reset();
 				GitHubPage.setPageName( 'repo_test' );
-				GitHubPage.setApp();
 
 				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
 
