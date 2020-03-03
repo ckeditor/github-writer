@@ -297,7 +297,7 @@ describe( 'Util', () => {
 
 		it( 'should fix URLs starting with "/"', () => {
 			sinon.stub( window, '__getLocation' ).returns( {
-				protocol: 'https',
+				protocol: 'https:',
 				host: 'test.com'
 			} );
 
@@ -316,7 +316,7 @@ describe( 'Util', () => {
 
 		beforeEach( 'stub location', () => {
 			sinon.stub( window, '__getLocation' ).returns( {
-				protocol: 'https',
+				protocol: 'https:',
 				host: 'test.com',
 				pathname: '/org/repo/test'
 			} );

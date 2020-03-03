@@ -101,7 +101,7 @@ export function openXmlHttpRequest( url, method = 'POST' ) {
 
 	// Firefox needs the whole url, so we fix it here, if necessary.
 	if ( url.startsWith( '/' ) ) {
-		url = `${ location.protocol }://${ location.host }${ url }`;
+		url = `${ location.protocol }//${ location.host }${ url }`;
 	}
 
 	const xhr = new XMLHttpRequest();
