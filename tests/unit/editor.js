@@ -11,10 +11,14 @@ import WikiMarkdownEditor from '../../src/app/editors/wikimarkdowneditor';
 
 import RteEditorConfig from '../../src/app/editors/rteeditorconfig';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import QuoteSelection from '../../src/app/plugins/quoteselection';
+import PendingActions from '@ckeditor/ckeditor5-core/src/pendingactions';
+import EditorExtras from '../../src/app/plugins/editorextras';
 
-import { DomManipulator, PageIncompatibilityError } from '../../src/app/util';
+import { createElementFromHtml, DomManipulator, PageIncompatibilityError } from '../../src/app/util';
 
 import { GitHubPage } from '../_util/githubpage';
+import { keyCodes } from '@ckeditor/ckeditor5-utils/src/keyboard';
 
 describe( 'Editor', () => {
 	beforeEach( () => {
@@ -556,6 +560,426 @@ describe( 'Editor', () => {
 				} );
 			}
 		} );
+
+		describe( 'focus', () => {
+			it( 'should focus on write tab click', done => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				sinon.stub( editor.rteEditor, 'focus' ).callsFake( () => done() );
+
+				editor.create()
+					.then( () => {
+						editor.dom.tabs.write.dispatchEvent( new Event( 'click' ) );
+					} );
+			} );
+
+			it( 'should set focus styles', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						const target = editor.dom.root.querySelector( '.github-rte-ckeditor' );
+
+						editor.rteEditor.ckeditor.ui.focusTracker.fire( 'change:isFocused', 'isFocused', true );
+						expect( target.classList.contains( 'focused' ) ).to.be.true;
+
+						editor.rteEditor.ckeditor.ui.focusTracker.fire( 'change:isFocused', 'isFocused', false );
+						expect( target.classList.contains( 'focused' ) ).to.be.false;
+					} );
+			} );
+		} );
+
+		describe( 'empty check', () => {
+			it( 'should call _setSubmitStatus on change', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						const spy = sinon.spy( editor, '_setSubmitStatus' );
+
+						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', true );
+						expect( spy.callCount ).to.equals( 1 );
+
+						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', false );
+						expect( spy.callCount ).to.equals( 2 );
+					} );
+			} );
+
+			it( 'should set the submit alternative button label (issue)', () => {
+				GitHubPage.reset();
+				GitHubPage.setPageName( 'repo_issues' );
+				GitHubPage.setApp();
+
+				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
+
+				return editor.create()
+					.then( () => {
+						const actionTextEl = createElementFromHtml( '<span class="js-form-action-text">Test</span>' );
+						editor.dom.buttons.submitAlternative.append( actionTextEl );
+
+						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', true );
+						expect( actionTextEl.textContent ).to.equals( 'Close issue' );
+
+						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', false );
+						expect( actionTextEl.textContent ).to.equals( 'Close and comment' );
+					} );
+			} );
+
+			it( 'should set the submit alternative button label (pr)', () => {
+				GitHubPage.reset();
+				GitHubPage.setPageName( 'repo_pulls' );
+				GitHubPage.setApp();
+
+				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
+
+				return editor.create()
+					.then( () => {
+						const actionTextEl = createElementFromHtml( '<span class="js-form-action-text">Test</span>' );
+						editor.dom.buttons.submitAlternative.append( actionTextEl );
+
+						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', true );
+						expect( actionTextEl.textContent ).to.equals( 'Close pull request' );
+
+						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', false );
+						expect( actionTextEl.textContent ).to.equals( 'Close and comment' );
+					} );
+			} );
+
+			it( 'should not touch the submit alternative button if not issue or pr', () => {
+				GitHubPage.reset();
+				GitHubPage.setPageName( 'repo_test' );
+				GitHubPage.setApp();
+
+				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
+
+				return editor.create()
+					.then( () => {
+						const actionTextEl = createElementFromHtml( '<span class="js-form-action-text">Test</span>' );
+						editor.dom.buttons.submitAlternative.append( actionTextEl );
+
+						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', true );
+						expect( actionTextEl.textContent ).to.equals( 'Test' );
+
+						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', false );
+						expect( actionTextEl.textContent ).to.equals( 'Test' );
+					} );
+			} );
+		} );
+
+		describe( 'form setup', () => {
+			it( 'should reset the editor data on form reset', done => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				editor.dom.root.querySelector( 'textarea' ).defaultValue = 'Test';
+
+				editor.create()
+					.then( () => {
+						editor.rteEditor.setData( 'Changed data' );
+						expect( editor.rteEditor.getData() ).to.equals( 'Changed data' );
+
+						editor.markdownEditor.dom.textarea.form.dispatchEvent( new Event( 'reset' ) );
+
+						setTimeout( () => {
+							expect( editor.rteEditor.getData() ).to.equals( 'Test' );
+							done();
+						}, 1 );
+					} );
+			} );
+		} );
+
+		describe( 'keystrokes', () => {
+			// Submit shortcuts.
+			{
+				it( 'should click the submit button on cmd/ctrl+enter', () => {
+					const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
+
+					return editor.create()
+						.then( () => {
+							// Stubbed in beforeEach.
+							const stub = editor.dom.buttons.submit.click;
+							const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
+
+							expect( stub.callCount ).to.equals( 0 );
+							viewDocument.fire( 'keydown', {
+								keyCode: keyCodes.enter,
+								ctrlKey: true
+							} );
+							expect( stub.callCount ).to.equals( 1 );
+						} );
+				} );
+
+				it( 'should click the submit alternative button on shift+cmd/ctrl+enter', () => {
+					const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
+
+					return editor.create()
+						.then( () => {
+							// Stubbed in beforeEach.
+							const stub = editor.dom.buttons.submitAlternative.click;
+							const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
+
+							expect( stub.callCount ).to.equals( 0 );
+							viewDocument.fire( 'keydown', {
+								keyCode: keyCodes.enter,
+								ctrlKey: true,
+								shiftKey: true
+							} );
+							expect( stub.callCount ).to.equals( 1 );
+						} );
+				} );
+
+				[
+					{
+						name: 'enter',
+						keyCode: keyCodes.enter
+					},
+					{
+						name: 'shift+enter',
+						keyCode: keyCodes.enter,
+						shiftKey: true
+					},
+					{
+						name: 'non-enter',
+						keyCode: keyCodes.space,
+						ctrlKey: true
+					},
+					{
+						name: 'alt+cmd/ctrl+enter',
+						keyCode: keyCodes.enter,
+						ctrlKey: true,
+						altKey: true
+					},
+					{
+						name: 'alt+shift+cmd/ctrl+enter',
+						keyCode: keyCodes.enter,
+						ctrlKey: true,
+						altKey: true
+					}
+				].forEach( keystroke => {
+					it( `should do nothing on enter (${ keystroke.name })`, () => {
+						const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
+
+						return editor.create()
+							.then( () => {
+								// Stubbed in beforeEach.
+								const stub = editor.dom.buttons.submit.click;
+								const stubAlternative = editor.dom.buttons.submitAlternative.click;
+
+								const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
+
+								expect( stub.callCount ).to.equals( 0 );
+								expect( stubAlternative.callCount ).to.equals( 0 );
+								viewDocument.fire( 'keydown', keystroke );
+								expect( stub.callCount ).to.equals( 0 );
+								expect( stubAlternative.callCount ).to.equals( 0 );
+							} );
+					} );
+				} );
+			}
+
+			// Block switch to preview.
+			{
+				it( 'should block cmd/ctrl+shit+p', () => {
+					const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
+
+					return editor.create()
+						.then( () => {
+							const domEvent = new Event( 'keydown' );
+							const spy = sinon.spy( domEvent, 'preventDefault' );
+
+							const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
+							viewDocument.fire( 'keydown', {
+								keyCode: 80,
+								ctrlKey: true,
+								shiftKey: true,
+								domEvent
+							} );
+
+							expect( spy.callCount ).to.equals( 1 );
+						} );
+				} );
+			}
+		} );
+
+		describe( 'pending actions', () => {
+			it( 'should call _setSubmitStatus on change', () => {
+				// Stubbed in beforeEach.
+				RteEditorConfig.get.returns( { plugins: [ Paragraph, QuoteSelection, PendingActions ] } );
+
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						const spy = sinon.spy( editor, '_setSubmitStatus' );
+
+						const pendingActions = editor.rteEditor.ckeditor.plugins.get( 'PendingActions' );
+
+						pendingActions.fire( 'change:hasAny', 'hasAny', true );
+						expect( spy.callCount ).to.equals( 1 );
+
+						pendingActions.fire( 'change:hasAny', 'hasAny', false );
+						expect( spy.callCount ).to.equals( 2 );
+					} );
+			} );
+		} );
+
+		describe( 'submit buttons status', () => {
+			beforeEach( () => {
+				// Stubbed in beforeEach.
+				RteEditorConfig.get.returns( { plugins: [ Paragraph, EditorExtras, PendingActions ] } );
+			} );
+
+			it( 'should react to the editor emptiness', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+
+						editor.rteEditor.setData( 'Test' );
+						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+
+						editor.rteEditor.setData( '' );
+						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+					} );
+			} );
+
+			it( 'should check other required elements (empty)', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'Test' } ) );
+				editor.dom.root.insertAdjacentHTML( 'afterbegin', '<input value="" required>' );
+
+				return editor.create()
+					.then( () => {
+						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+					} );
+			} );
+
+			it( 'should check other required elements (filled)', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'Test' } ) );
+				editor.dom.root.insertAdjacentHTML( 'afterbegin', '<input value="Test" required>' );
+
+				return editor.create()
+					.then( () => {
+						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+					} );
+			} );
+
+			it( 'should not check other required elements in wiki', () => {
+				GitHubPage.reset();
+				GitHubPage.setPageName( 'repo_wiki' );
+				GitHubPage.setApp();
+
+				const editor = new Editor( GitHubPage.appendRoot( { type: 'wiki', text: 'Test' } ) );
+				editor.dom.root.insertAdjacentHTML( 'afterbegin', '<input value="" required>' );
+
+				return editor.create()
+					.then( () => {
+						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+					} );
+			} );
+
+			it( 'should react to pending actions', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'Test' } ) );
+
+				return editor.create()
+					.then( () => {
+						const pendingActions = editor.rteEditor.ckeditor.plugins.get( 'PendingActions' );
+
+						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+
+						const action = pendingActions.add( 'Testing' );
+						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+
+						pendingActions.remove( action );
+						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+					} );
+			} );
+
+			it( 'should do nothing if not RTE mode', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+
+						editor.setMode( Editor.modes.MARKDOWN );
+
+						editor.rteEditor.setData( 'Test' );
+						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+					} );
+			} );
+
+			it( 'should observe external changes to submit.disabled', done => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const otherInput = createElementFromHtml( '<input class="test-el" value="" required>' );
+				editor.dom.root.insertAdjacentElement( 'afterbegin', otherInput );
+
+				editor.create()
+					.then( () => {
+						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+
+						otherInput.value = 'Testing';
+						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+
+						editor.dom.buttons.submit.disabled = false;
+
+						// Mutation observers are asynchronous, so we should still not see the editor fixup here.
+						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+
+						// So we use a timout to give a chance to the observer to be invoked.
+						setTimeout( () => {
+							expect( editor.dom.buttons.submit.disabled ).to.be.true;
+
+							otherInput.value = '';
+							expect( editor.dom.buttons.submit.disabled ).to.be.true;
+
+							editor.dom.buttons.submit.disabled = true;
+							setTimeout( () => {
+								expect( editor.dom.buttons.submit.disabled ).to.be.true;
+								done();
+							}, 0 );
+						}, 0 );
+					} );
+			} );
+		} );
+
+		describe( 'submit buttons click', () => {
+			it( 'should sync editors on submit.click', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						const spy = sinon.spy( editor, 'syncEditors' );
+						editor.dom.buttons.submit.dispatchEvent( new Event( 'click' ) );
+
+						expect( spy.callCount ).to.equals( 1 );
+					} );
+			} );
+
+			it( 'should sync editors on submitAlternative.click', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
+
+				return editor.create()
+					.then( () => {
+						const spy = sinon.spy( editor, 'syncEditors' );
+						editor.dom.buttons.submitAlternative.dispatchEvent( new Event( 'click' ) );
+
+						expect( spy.callCount ).to.equals( 1 );
+					} );
+			} );
+
+			it( 'should do nothing on submit.click if not RTE mode', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						editor.setMode( Editor.modes.MARKDOWN );
+
+						const spy = sinon.spy( editor, 'syncEditors' );
+						editor.dom.buttons.submit.dispatchEvent( new Event( 'click' ) );
+
+						expect( spy.callCount ).to.equals( 0 );
+					} );
+			} );
+		} );
 	} );
 
 	describe( 'destroy()', () => {
@@ -702,6 +1126,40 @@ describe( 'Editor', () => {
 					Editor.cleanup( rootClone );
 
 					expect( spy.callCount ).be.equals( 1 );
+				} );
+		} );
+	} );
+
+	describe( 'quoteSelection()', () => {
+		beforeEach( () => {
+			// Stubbed in beforeEach.
+			RteEditorConfig.get.returns( { plugins: [ Paragraph, QuoteSelection ] } );
+		} );
+
+		it( 'should call quoteSelection in CKEditor', () => {
+			const editor = new Editor( GitHubPage.appendRoot() );
+
+			return editor.create()
+				.then( () => {
+					const spy = sinon.stub( editor.rteEditor.ckeditor, 'quoteSelection' );
+
+					editor.quoteSelection( 'test' );
+
+					expect( spy.callCount ).to.equals( 1 );
+					expect( spy.firstCall.args[ 0 ] ).to.equals( 'test' );
+				} );
+		} );
+		it( 'should do nothing if not RTE', () => {
+			const editor = new Editor( GitHubPage.appendRoot() );
+
+			return editor.create()
+				.then( () => {
+					sinon.stub( editor, 'getMode' ).returns( 'markdown' );
+					const spy = sinon.stub( editor.rteEditor.ckeditor, 'quoteSelection' );
+
+					editor.quoteSelection( 'test' );
+
+					expect( spy.callCount ).to.equals( 0 );
 				} );
 		} );
 	} );

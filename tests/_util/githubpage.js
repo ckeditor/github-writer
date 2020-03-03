@@ -49,7 +49,12 @@ export const GitHubPage = {
 	/**
 	 * Appends to the page a valid root element that can be used to create editors.
 	 *
-	 * @param options {Object}
+	 * @param [options] {Object}
+	 * @param [options.type='issue'] {String} The type of root to be create.
+	 * @param [options.target=document.body] {HTMLElement} The parent element of the new root element.
+	 * @param [options.text=''] {String} The initial value of the root textarea.
+	 * @param [options.submitAlternative=false] {Boolean} Whether to include a "submit alternative" button in the root.
+	 *
 	 * @return {HTMLElement}
 	 */
 	appendRoot: ( options = { type: 'issue', target: document.body, text: '', submitAlternative: false } ) => {

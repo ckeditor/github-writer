@@ -345,7 +345,7 @@ export default class Editor {
 	 * @private
 	 */
 	_setupEmptyCheck() {
-		// Enable/disable the submit buttons based on the editor emptyness.
+		// Enable/disable the submit buttons based on the editor emptiness.
 		this.rteEditor.ckeditor.on( 'change:isEmpty', ( eventInfo, name, isEmpty ) => {
 			this._setSubmitStatus();
 
@@ -574,17 +574,15 @@ export default class Editor {
 		connectSubmitButtonObserver.call( this );
 
 		function connectSubmitButtonObserver() {
-			if ( !this._submitButtonObserver ) {
-				const button = this.dom.buttons.submit;
+			const button = this.dom.buttons.submit;
 
-				this._submitButtonObserver = new MutationObserver( () => {
-					// noinspection JSPotentiallyInvalidUsageOfClassThis
-					this._setSubmitStatus();
-				} );
-				this._submitButtonObserver.observe( button, { attributes: true, attributeFilter: [ 'disabled' ] } );
+			this._submitButtonObserver = new MutationObserver( () => {
+				// noinspection JSPotentiallyInvalidUsageOfClassThis
+				this._setSubmitStatus();
+			} );
+			this._submitButtonObserver.observe( button, { attributes: true, attributeFilter: [ 'disabled' ] } );
 
-				this.domManipulator.addRollbackOperation( () => disconnectSubmitButtonObserver.call( this ) );
-			}
+			this.domManipulator.addRollbackOperation( () => disconnectSubmitButtonObserver.call( this ) );
 		}
 
 		function disconnectSubmitButtonObserver() {
