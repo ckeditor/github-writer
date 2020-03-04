@@ -127,11 +127,17 @@ const RteEditorConfigMentions = {
 					let name, description;
 
 					if ( entryData.type === 'user' ) {
-						name = entryData.login || '';
+						name = entryData.login;
 						description = entryData.name || '';
 					} else if ( entryData.type === 'team' ) {
-						name = entryData.name || '';
+						name = entryData.name;
 						description = entryData.description || '';
+					} else {
+						return;
+					}
+
+					if ( !name ) {
+						return;
 					}
 
 					const nameLow = name && name.toLowerCase();
@@ -256,55 +262,56 @@ const RteEditorConfigMentions = {
 			// Mentions should not be enabled inside code (#30). This should be handled by the mentions plugin itself,
 			// but it's not, so we do a workaround here.
 			// `this` in feed functions point to `editor`.
-			if ( this.commands.get( 'code' ).value || this.commands.get( 'codeBlock' ).value ) {
+			if ( ( this.commands.get( 'code' ) && this.commands.get( 'code' ).value ) ||
+				( this.commands.get( 'codeBlock' ) && this.commands.get( 'codeBlock' ).value ) ) {
 				return Promise.resolve( [] );
 			}
 
 			// Normalize the query to lowercase.
 			query = query.toLowerCase();
 
-			return new Promise( ( resolve, reject ) => {
-				// Try to take the results from the cache, if this query has already been made.
-				if ( db[ type ].cache[ query ] ) {
-					resolve( db[ type ].cache[ query ] );
-					return;
-				}
+			// Try to take it from the cache, if this query has already been requested.
+			let promise = db[ type ].cache[ query ];
 
-				// Get all entries available for this feed type.
-				getEntries( type )
-					.then( entries => {
-						// Put the results in the cache.
-						const results = db[ type ].cache[ query ] = [];
+			if ( !promise ) {
+				promise = db[ type ].cache[ query ] = new Promise( ( resolve, reject ) => {
+					// Get all entries available for this feed type.
+					getEntries( type )
+						.then( entries => {
+							const results = [];
 
-						// Got though all entries, searching for keys that include the query substring.
-						// Fill it up until we have 5 results (just like GH).
+							// Got though all entries, searching for keys that include the query substring.
+							// Fill it up until we have 5 results (just like GH).
 
-						// If the query is empty, we don't search by id and default to the first 5 entries of byText.
-						if ( query ) {
-							const entriesById = entries.byId;
-							for ( let i = 0; i < entriesById.length && results.length < 5; i++ ) {
-								const entry = entriesById[ i ];
+							// If the query is empty, we don't search by id and default to the first 5 entries of byText.
+							if ( query ) {
+								const entriesById = entries.byId;
+								for ( let i = 0; i < entriesById.length && results.length < 5; i++ ) {
+									const entry = entriesById[ i ];
 
-								if ( entry.key.startsWith( query ) && !results.includes( entry.data ) ) {
+									if ( entry.key.startsWith( query ) && !results.includes( entry.data ) ) {
+										results.push( entry.data );
+									}
+								}
+							}
+
+							const entriesByText = entries.byText;
+							for ( let i = 0; i < entriesByText.length && results.length < 5; i++ ) {
+								const entry = entriesByText[ i ];
+
+								if ( entry.key.includes( query ) && !results.includes( entry.data ) ) {
 									results.push( entry.data );
 								}
 							}
-						}
 
-						const entriesByText = entries.byText;
-						for ( let i = 0; i < entriesByText.length && results.length < 5; i++ ) {
-							const entry = entriesByText[ i ];
+							resolve( results );
+						} )
+						// Do not break, just let CKEditor know that it didn't work.
+						.catch( reason => reject( reason ) );
+				} );
+			}
 
-							if ( entry.key.includes( query ) && !results.includes( entry.data ) ) {
-								results.push( entry.data );
-							}
-						}
-
-						resolve( results );
-					} )
-					// Do not break, just let CKEditor know that it didn't work.
-					.catch( reason => reject( reason ) );
-			} );
+			return promise;
 		}
 
 		// Gets the preprocessed full list of entries of a given type.
@@ -315,61 +322,63 @@ const RteEditorConfigMentions = {
 		// @param {String} type The type of entries.
 		// @returns {Promise<Array>} A promise that resolves with the preprocessed, full list of entries.
 		function getEntries( type ) {
-			return new Promise( ( resolve, reject ) => {
-				// If the entries have already been downloaded and processed, just return them straight.
-				if ( db[ type ].entries ) {
-					resolve( db[ type ].entries );
-					return;
-				}
+			// If the entries have already been downloaded and processed, just return them straight.
+			let promise = db[ type ].entries;
 
-				// Download the mentions data from GH.
-				downloadData( urls[ type ], [ 'issues', 'people' ].includes( type ) )
-					.then( data => {
-						if ( !data ) {
-							reject( new Error( 'Error when loading mentions from GitHub. No data returned.' ) );
-							return;
-						}
-
-						// The returned data is either an array of objects, each being an entry or, in the case of emojis,
-						// a HTML ul>li list. In such a case, the worker implementation expects the li elements.
-						if ( type === 'emoji' ) {
-							const root = createElementFromHtml( data );
-							data = Array.from( root.getElementsByTagName( 'li' ) );
-						}
-
-						// Take the worker that will preprocess every item received.
-						const entryWorker = db[ type ].entryWorker;
-						const entries = db[ type ].entries = {
-							byId: [],
-							byText: []
-						};
-
-						data.forEach( dataEntry => {
-							// Let the worker do its job.
-							const entry = entryWorker( dataEntry );
-
-							// Workers can return falsy to ignore an entry.
-							if ( entry ) {
-								entries.byId.push( {
-									key: String( entry.keys.id ).toLowerCase(),
-									data: entry.data
-								} );
-
-								entries.byText.push( {
-									key: String( entry.keys.text ).toLowerCase(),
-									data: entry.data
-								} );
+			if ( !promise ) {
+				promise = new Promise( ( resolve, reject ) => {
+					// Download the mentions data from GH.
+					downloadData( urls[ type ], [ 'issues', 'people' ].includes( type ) )
+						.then( data => {
+							if ( !data ) {
+								reject( new Error( 'Error when loading mentions from GitHub. No data returned.' ) );
+								return;
 							}
-						} );
 
-						// The first list should be matched with 1:1 priortiy, so we sort it alphabetically.
-						entries.byId = entries.byId.sort( ( x, y ) => x.key.localeCompare( y.key, undefined, { sensitivity: 'base' } ) );
+							// The returned data is either an array of objects, each being an entry or, in the case of emojis,
+							// a HTML ul>li list. In such a case, the worker implementation expects the li elements.
+							if ( type === 'emoji' ) {
+								const root = createElementFromHtml( data );
+								data = Array.from( root.getElementsByTagName( 'li' ) );
+							}
 
-						resolve( entries );
-					} )
-					// Do not break, just let CKEditor know that it didn't work.
-					.catch( reason => reject( reason ) );
-			} );
+							// Take the worker that will preprocess every item received.
+							const entryWorker = db[ type ].entryWorker;
+							const entries = db[ type ].entries = {
+								byId: [],
+								byText: []
+							};
+
+							data.forEach( dataEntry => {
+								// Let the worker do its job.
+								const entry = entryWorker( dataEntry );
+
+								// Workers can return falsy to ignore an entry.
+								if ( entry ) {
+									entries.byId.push( {
+										key: String( entry.keys.id ).toLowerCase(),
+										data: entry.data
+									} );
+
+									entries.byText.push( {
+										key: String( entry.keys.text ).toLowerCase(),
+										data: entry.data
+									} );
+								}
+							} );
+
+							// The first list should be matched with 1:1 priority, so we sort it alphabetically.
+							entries.byId = entries.byId.sort( ( x, y ) =>
+								x.key.localeCompare( y.key, undefined, { sensitivity: 'base' } ) );
+
+							resolve( entries );
+						} )
+						// Do not break, just let CKEditor know that it didn't work.
+						.catch( reason => reject( reason ) );
+				} );
+			}
+
+			return promise;
 		}
 
 		// Download the raw feed data from the specified url.
