@@ -33,7 +33,7 @@ import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 
 import Mention from '@ckeditor/ckeditor5-mention/src/mention';
-import getMentionFeedsConfig from './rteeditorconfigmentions';
+import RteEditorConfigMentions from './rteeditorconfigmentions';
 
 import Kebab from '../plugins/kebab';
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
@@ -205,14 +205,14 @@ const RteEditorConfig = {
 
 			// Some pages (wiki) don't have mentions in the native GH. In those, let's enable just emoji (for now).
 			if ( !textExpanderElement ) {
-				return {
+				return RteEditorConfigMentions.get( {
 					// Emojis come, in fact, from a single absolute endpoint.
 					emoji: '/autocomplete/emoji'
-				};
+				} );
 			}
 
 			// Call the util to build the configuration.
-			return getMentionFeedsConfig( {
+			return RteEditorConfigMentions.get( {
 				issues: textExpanderElement.getAttribute( 'data-issue-url' ),
 				people: textExpanderElement.getAttribute( 'data-mention-url' ),
 				emoji: textExpanderElement.getAttribute( 'data-emoji-url' )
