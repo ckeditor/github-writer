@@ -35,10 +35,10 @@ export default class GitHubUploadAdapter extends Plugin {
  *
  * @implements {UploadAdapter}
  */
-class Adapter {
+export class Adapter {
 	/**
 	 * Create an upload adapter
-	 * @param {FileLoader} loader The file loader instane active for this upload.
+	 * @param {FileLoader} loader The file loader instance active for this upload.
 	 * @param {Editor} editor The CKEditor instance of this adapter.
 	 */
 	constructor( loader, editor ) {
@@ -77,12 +77,12 @@ class Adapter {
 						{
 							// The necessary fields to be posted to GH.
 							data.append( 'name', file.name );
-							data.append( 'size', file.size );
+							data.append( 'size', String( file.size ) );
 							data.append( 'content_type', file.type );
 
 							// Append all form entries available in the editor configuration (taken from the page).
 							Object.entries( config.form )
-								.forEach( ( [ key, value ] ) => data.append( key, value ) );
+								.forEach( ( [ key, value ] ) => data.append( key, String( value ) ) );
 						}
 
 						// The upload url is also retrieved from configuration.
@@ -114,7 +114,7 @@ class Adapter {
 						{
 							// Append all form entries received from GH in Step 1.
 							Object.entries( response.form )
-								.forEach( ( [ key, value ] ) => data.append( key, value ) );
+								.forEach( ( [ key, value ] ) => data.append( key, String( value ) ) );
 
 							// Finally, the file to be uploaded. This must be the last entry in the form.
 							data.append( 'file', file );
@@ -192,6 +192,7 @@ class Adapter {
 		} );
 
 		// Setup upload progress, if supported.
+		/* istanbul ignore else */
 		if ( xhr.upload ) {
 			xhr.upload.addEventListener( 'progress', evt => {
 				if ( evt.lengthComputable ) {
