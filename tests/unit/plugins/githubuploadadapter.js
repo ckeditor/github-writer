@@ -26,10 +26,6 @@ describe( 'Plugins', () => {
 									repository_id: 'repo-id'
 								}
 							} ) );
-
-						// This editor has no DOM, so this method must be stubbed for all tests.
-						// Otherwise it will throw as it accesses the DOM to do its job.
-						// sinon.stub( editor.editing.view, 'scrollToTheSelection' );
 					} );
 			} );
 

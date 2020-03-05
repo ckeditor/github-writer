@@ -32,6 +32,7 @@
     "@ckeditor/ckeditor5-dev-utils": "^12.0.8",
     "@ckeditor/ckeditor5-editor-decoupled": "^17.0.0",
     "@ckeditor/ckeditor5-engine": "^17.0.0",
+    "@ckeditor/ckeditor5-enter": "^17.0.0",
     "@ckeditor/ckeditor5-essentials": "^17.0.0",
     "@ckeditor/ckeditor5-heading": "^17.0.0",
     "@ckeditor/ckeditor5-horizontal-line": "^17.0.0",

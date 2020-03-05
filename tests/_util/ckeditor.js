@@ -9,11 +9,14 @@ import ShiftEnter from '@ckeditor/ckeditor5-enter/src/shiftenter';
 import BoldEditing from '@ckeditor/ckeditor5-basic-styles/src/bold/boldediting';
 import ItalicEditing from '@ckeditor/ckeditor5-basic-styles/src/italic/italicediting';
 
-export function createTestEditor( initialData, extraPlugins ) {
+export function createTestEditor( initialData, extraPlugins, extraConfig ) {
 	let plugins = [ Paragraph, ShiftEnter, BoldEditing, ItalicEditing ];
 	extraPlugins && ( plugins = plugins.concat( extraPlugins ) );
 
-	return CKEditorGitHubEditor.create( initialData || '', { plugins } )
+	const config = { plugins };
+	extraConfig && Object.assign( config, extraConfig );
+
+	return CKEditorGitHubEditor.create( initialData || '', config )
 		.then( editor => {
 			return {
 				editor,

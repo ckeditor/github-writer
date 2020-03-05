@@ -4,16 +4,16 @@
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import Heading from "@ckeditor/ckeditor5-heading/src/heading";
-import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph";
+import Heading from '@ckeditor/ckeditor5-heading/src/heading';
+import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import SplitButtonView from '@ckeditor/ckeditor5-ui/src/dropdown/button/splitbuttonview';
 import HeadingButtonsUI from '@ckeditor/ckeditor5-heading/src/headingbuttonsui';
 import ParagraphButtonUI from '@ckeditor/ckeditor5-paragraph/src/paragraphbuttonui';
 
 import { addToolbarToDropdown, createDropdown } from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
-import normalizeToolbarConfig from "@ckeditor/ckeditor5-ui/src/toolbar/normalizetoolbarconfig";
+import normalizeToolbarConfig from '@ckeditor/ckeditor5-ui/src/toolbar/normalizetoolbarconfig';
 
-import App from "../app";
+import App from '../app';
 
 import iconHeading1 from '@ckeditor/ckeditor5-heading/theme/icons/heading1.svg';
 import iconHeading2 from '@ckeditor/ckeditor5-heading/theme/icons/heading2.svg';
@@ -78,10 +78,9 @@ export default class HeadingDropdown extends Plugin {
 			{
 				const headingCommand = editor.commands.get( 'heading' );
 				dropdown.bind( 'isEnabled' ).to( headingCommand );
-				dropdown.buttonView.bind( 'isOn' ).to( headingCommand, 'value' );
-				dropdown.buttonView.bind( 'icon' ).to( headingCommand, 'value', ( value ) => value ? icons[ value ] : icons[ defaultHeading ] );
+				dropdown.buttonView.bind( 'isOn' ).to( headingCommand, 'value', value => !!value );
+				dropdown.buttonView.bind( 'icon' ).to( headingCommand, 'value', value => value ? icons[ value ] : icons[ defaultHeading ] );
 			}
-
 
 			// Initializes the 'toolbarView' property of the dropdown.
 			addToolbarToDropdown( dropdown, [] );
@@ -98,7 +97,7 @@ export default class HeadingDropdown extends Plugin {
 			] );
 			dropdown.toolbarView.fillFromConfig( toolbarConfig.items, editor.ui.componentFactory );
 
-			return dropdown
+			return dropdown;
 		} );
 	}
 }
