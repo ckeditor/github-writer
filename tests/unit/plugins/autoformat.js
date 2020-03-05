@@ -19,7 +19,7 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', () => {
-				return createTestEditor( '', [ Paragraph, Autoformat, HorizontalLineEditing, StrikethroughEditing ] )
+				return createTestEditor( '', [ Autoformat, HorizontalLineEditing, StrikethroughEditing ] )
 					.then( editorObjects => {
 						editor = editorObjects.editor;
 						model = editorObjects.model;

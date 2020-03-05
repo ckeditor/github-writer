@@ -5,8 +5,6 @@
 
 import EditorExtras from '../../../src/app/plugins/editorextras';
 
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-
 import { setData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 import { createTestEditor } from '../../_util/ckeditor';
 
@@ -16,7 +14,7 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', () => {
-				return createTestEditor( '', [ Paragraph, EditorExtras ] )
+				return createTestEditor( '', [ EditorExtras ] )
 					.then( editorObjects => {
 						editor = editorObjects.editor;
 						model = editorObjects.model;

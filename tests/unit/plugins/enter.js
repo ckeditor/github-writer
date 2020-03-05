@@ -4,7 +4,6 @@
  */
 
 import Enter from '../../../src/app/plugins/enter';
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 
 import DomEventData from '@ckeditor/ckeditor5-engine/src/view/observer/domeventdata';
 import { keyCodes } from '@ckeditor/ckeditor5-utils/src/keyboard';
@@ -18,7 +17,7 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', () => {
-				return createTestEditor( '', [ Paragraph, Enter ] )
+				return createTestEditor( '', [ Enter ] )
 					.then( editorObjects => {
 						editor = editorObjects.editor;
 						model = editorObjects.model;

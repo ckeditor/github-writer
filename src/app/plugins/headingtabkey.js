@@ -13,8 +13,12 @@ export default class HeadingTabKey extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
-	init() {
+	afterInit() {
 		const editor = this.editor;
+
+		if ( !editor.commands.get( 'heading' ) ) {
+			return;
+		}
 
 		{
 			const command = new ChangeHeadingLevelCommand( editor, -1 );
@@ -65,8 +69,8 @@ export class ChangeHeadingLevelCommand extends Command {
 	 * @inheritDoc
 	 */
 	refresh() {
-		const { next } = this._getCurrentHeadingAndNext();
-		this.isEnabled = !!next;
+		const { heading, next } = this._getCurrentHeadingAndNext();
+		this.isEnabled = !!next && ( next !== heading.name );
 	}
 
 	/**
@@ -76,14 +80,12 @@ export class ChangeHeadingLevelCommand extends Command {
 		const editor = this.editor;
 		const { heading, next } = this._getCurrentHeadingAndNext();
 
-		if ( heading && heading.name !== next ) {
-			editor.model.change( writer => {
-				// Rename the block to the heading name in the list under the next index.
-				writer.rename( heading, next );
-			} );
-		}
+		editor.model.change( writer => {
+			// Rename the block to the heading name in the list under the next index.
+			writer.rename( heading, next );
+		} );
 
-		return next;
+		return !!next;
 	}
 
 	/**
