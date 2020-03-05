@@ -6,11 +6,11 @@
 import { CKEditorGitHubEditor } from '../../src/app/editors/rteeditor';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import ShiftEnter from '@ckeditor/ckeditor5-enter/src/shiftenter';
-import BoldEditing from '@ckeditor/ckeditor5-basic-styles/src/bold/boldediting';
-import ItalicEditing from '@ckeditor/ckeditor5-basic-styles/src/italic/italicediting';
+import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
+import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 
 export function createTestEditor( initialData, extraPlugins, extraConfig ) {
-	let plugins = [ Paragraph, ShiftEnter, BoldEditing, ItalicEditing ];
+	let plugins = [ Paragraph, ShiftEnter, Bold, Italic ];
 	extraPlugins && ( plugins = plugins.concat( extraPlugins ) );
 
 	const config = { plugins };
