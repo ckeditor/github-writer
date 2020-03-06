@@ -42,7 +42,7 @@ export default class SmartCode extends Plugin {
 				const codeBlockCommand = editor.commands.get( 'codeBlock' );
 
 				view.bind( 'isOn' ).toMany( [ codeCommand, codeBlockCommand ], 'value',
-					( codeValue, codeBlockValue ) => codeValue || codeBlockValue );
+					( codeValue, codeBlockValue ) => !!codeValue || codeBlockValue !== false );
 
 				view.bind( 'isEnabled' ).toMany( [ codeCommand, codeBlockCommand ], 'isEnabled',
 					( codeIsEnabled, codeBlockIsEnabled ) => codeIsEnabled || codeBlockIsEnabled );
