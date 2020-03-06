@@ -31,9 +31,6 @@ describe( 'Plugins', () => {
 				editor = new Editor( GitHubPage.appendRoot() );
 
 				return editor.create()
-					.catch( err => {
-						console.error( err );
-					} )
 					.then( editor => ( button = editor.rteEditor.ckeditor.ui.componentFactory.create( 'mode' ) ) );
 			} );
 		}

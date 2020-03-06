@@ -18,14 +18,7 @@ describe( 'Plugins', () => {
 		{
 			beforeEach( 'create test editor', () => {
 				return createTestEditor( '', [ QuoteSelection, HorizontalLineEditing ] )
-					.then( editorObjects => {
-						editor = editorObjects.editor;
-						model = editorObjects.model;
-
-						// This editor has no DOM, so this method must be stubbed for all tests.
-						// Otherwise it will throw as it accesses the DOM to do its job.
-						sinon.stub( editor.editing.view, 'scrollToTheSelection' );
-					} );
+					.then( editorObjects => ( { editor, model } = editorObjects ) );
 			} );
 
 			beforeEach( () => {
