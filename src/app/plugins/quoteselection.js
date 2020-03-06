@@ -4,12 +4,20 @@
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
+
+import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import BlockQuoteEditing from '@ckeditor/ckeditor5-block-quote/src/blockquoteediting';
+
 import { scrollViewportToShowTarget } from '@ckeditor/ckeditor5-utils/src/dom/scroll';
 
 /**
  * Simulates the native "quote selection" feature from GitHub (the "r" key).
  */
 export default class QuoteSelection extends Plugin {
+	static get requires() {
+		return [ Paragraph, BlockQuoteEditing ];
+	}
+
 	/**
 	 * @inheritDoc
 	 */
@@ -60,22 +68,26 @@ export default class QuoteSelection extends Plugin {
 				}
 
 				// Show the editor to the user.
-				{
-					editor.focus();
-
-					// Timeout, so changes are applied and the editable will have its final size (autogrow).
-					setTimeout( () => {
-						// Scroll the browser to show the editor.
-						scrollViewportToShowTarget( {
-							target: editor.githubEditor.dom.root,
-							viewportOffset: 100
-						} );
-
-						// Be sure the caret is also visible.
-						editor.editing.view.scrollToTheSelection();
-					}, 0 );
-				}
+				QuoteSelection.scrollToSelection( editor );
 			} );
 		};
 	}
 }
+
+// The following is hard to test, and break tests so we always stub it.
+/* istanbul ignore next */
+QuoteSelection.scrollToSelection = editor => {
+	editor.focus();
+
+	// Timeout, so changes are applied and the editable will have its final size (autogrow).
+	setTimeout( () => {
+		// Scroll the browser to show the editor.
+		scrollViewportToShowTarget( {
+			target: editor.githubEditor.dom.root,
+			viewportOffset: 100
+		} );
+
+		// Be sure the caret is also visible.
+		editor.editing.view.scrollToTheSelection();
+	}, 0 );
+};
