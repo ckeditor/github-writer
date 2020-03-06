@@ -14,13 +14,6 @@ describe( 'Editors', () => {
 	describe( 'WikiRteEditor', () => {
 		beforeEach( () => {
 			GitHubPage.setPageName( 'repo_wiki' );
-
-			// Mute dev logging.
-			sinon.stub( console, 'log' ).callsFake( ( ...args ) => {
-				if ( !( args[ 1 ] instanceof Editor ) ) {
-					console.log.wrappedMethod.apply( console, args );
-				}
-			} );
 		} );
 
 		it( 'should extend RteEditor', () => {

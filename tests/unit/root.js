@@ -4,35 +4,56 @@
  */
 
 import PageManager from '../../src/app/pagemanager';
+
 import { GitHubPage } from '../_util/githubpage';
 
 before( () => {
 	PageManager.MAX_TIMEOUT = 1;
 } );
 
-beforeEach( () => {
-	GitHubPage.setPageName();
-	GitHubPage.setApp();
-} );
+// Page setup and cleanup.
+{
+	beforeEach( 'setup the page and app', () => {
+		GitHubPage.setPageName();
+		GitHubPage.setApp();
+	} );
 
-afterEach( 'reset the page', () => {
-	GitHubPage.reset();
-} );
+	afterEach( 'cleanup created editors', () => {
+		if ( window.GITHUB_RTE_EDITORS && window.GITHUB_RTE_EDITORS.length ) {
+			const promises = [];
 
-afterEach( () => {
-	sinon.restore();
-} );
+			window.GITHUB_RTE_EDITORS.forEach( editor => promises.push( editor.destroy() ) );
 
-afterEach( 'Cleanup created editors', () => {
-	if ( window.GITHUB_RTE_EDITORS && window.GITHUB_RTE_EDITORS.length ) {
-		const promises = [];
+			window.GITHUB_RTE_EDITORS = [];
 
-		sinon.stub( console, 'log' );	// Silence the dev log.
-		window.GITHUB_RTE_EDITORS.forEach( editor => promises.push( editor.destroy() ) );
+			return Promise.all( promises );
+		}
+	} );
 
-		window.GITHUB_RTE_EDITORS = [];
+	afterEach( 'reset the page', () => {
+		GitHubPage.reset();
+	} );
+}
 
-		return Promise.all( promises )
-			.then( () => console.log.restore() );
+// Stubs cleanup.
+{
+	before( 'mute console right away', () => {
+		muteConsole();
+	} );
+
+	afterEach( 'restore all stubs', () => {
+		sinon.restore();
+
+		// The only stub we want always active us console.log.
+		muteConsole();
+	} );
+
+	// Mute dev logging.
+	function muteConsole() {
+		sinon.stub( console, 'log' ).callsFake( ( ...args ) => {
+			if ( !args[ 1 ] || args[ 1 ].constructor.name !== 'Editor' ) {
+				console.log.wrappedMethod.apply( console, args );
+			}
+		} );
 	}
-} );
+}

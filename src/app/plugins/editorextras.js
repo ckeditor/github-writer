@@ -40,5 +40,15 @@ export default class EditorExtras extends Plugin {
 		editor.focus = () => {
 			editor.editing.view.focus();
 		};
+
+		/**
+		 * A promise that resolves once the "reallyReady" event is fired.
+		 *
+		 * @type {Promise<Editor>} The promise.
+		 */
+		editor.ready = new Promise( resolve => {
+			// TODO: This should be done actually once the create().then chain is done.
+			editor.once( 'reallyReady', () => resolve( editor ) );
+		} );
 	}
 }

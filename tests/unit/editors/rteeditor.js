@@ -26,13 +26,6 @@ describe( 'Editors', () => {
 			// Mute RteEditor code that is out of the scope of the tests in this file.
 			sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ Paragraph ] } );
 			sinon.stub( RteEditor, 'toolbarItemsPostfix' );
-
-			// Mute dev logging.
-			sinon.stub( console, 'log' ).callsFake( ( ...args ) => {
-				if ( !( args[ 1 ] instanceof Editor ) ) {
-					console.log.wrappedMethod.apply( console, args );
-				}
-			} );
 		} );
 
 		describe( 'constructor()', () => {

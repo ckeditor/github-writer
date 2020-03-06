@@ -323,7 +323,9 @@ export default class Editor {
 		// Enable editor focus when clicking the "Write" tab.
 		this.domManipulator.addEventListener( this.dom.tabs.write, 'click', () => {
 			setTimeout( () => {
-				this.rteEditor.focus();
+				if ( this.getMode() === Editor.modes.RTE ) {
+					this.rteEditor.focus();
+				}
 			}, 0 );
 		} );
 

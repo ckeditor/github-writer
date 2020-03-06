@@ -73,5 +73,33 @@ describe( 'Plugins', () => {
 				expect( spy.callCount ).to.equals( 1 );
 			} );
 		} );
+
+		describe( 'editor.ready', () => {
+			it( 'should be a promise', () => {
+				expect( editor.ready ).to.be.an.instanceOf( Promise );
+			} );
+
+			it( 'should resolve on "reallyReady"', () => {
+				const promise = editor.ready;
+
+				editor.fire( 'reallyReady' );
+
+				return promise;
+			} );
+
+			it( 'should resolve after "reallyReady"', () => {
+				editor.fire( 'reallyReady' );
+
+				return editor.ready.then( () => editor.ready );
+			} );
+
+			it( 'should resolve with the editor', () => {
+				editor.fire( 'reallyReady' );
+
+				return editor.ready.then( ret => {
+					expect( ret ).to.equals( editor );
+				} );
+			} );
+		} );
 	} );
 } );

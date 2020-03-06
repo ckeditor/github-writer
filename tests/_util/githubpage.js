@@ -131,6 +131,9 @@ export const GitHubPage = {
 
 		root.querySelector( 'textarea' ).id = 'test-' + ( ++textareaId );
 
+		// Mute the write tab click as it messes up with some tests.
+		sinon.stub( root.querySelector( '.write-tab' ), 'click' );
+
 		domManipulator.append( target, container );
 		return root;
 	},

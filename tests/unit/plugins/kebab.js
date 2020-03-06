@@ -16,30 +16,28 @@ import iconBold from '@ckeditor/ckeditor5-basic-styles/theme/icons/bold.svg';
 import iconItalic from '@ckeditor/ckeditor5-basic-styles/theme/icons/italic.svg';
 
 describe( 'Plugins', () => {
-	beforeEach( () => {
-		// Mute RteEditor code that is out of the scope of the tests in this file.
-		sinon.stub( RteEditor, 'toolbarItemsPostfix' );
-	} );
-
 	describe( 'Kebab', () => {
-		let editor;
+		let editor, dropdown;
 
 		{
+			beforeEach( () => {
+				// Mute RteEditor code that is out of the scope of the tests in this file.
+				sinon.stub( RteEditor, 'toolbarItemsPostfix' );
+			} );
+
 			beforeEach( 'create test editor', () => {
 				return createTestEditor( '', [ Kebab ], { kebabToolbar: [ 'bold', 'italic' ] } )
 					.then( editorObjects => ( { editor } = editorObjects ) );
+			} );
+
+			beforeEach( () => {
+				dropdown = editor.ui.componentFactory.create( 'kebab' );
 			} );
 
 			afterEach( 'cleanup test editor', () => {
 				editor.destroy();
 			} );
 		}
-
-		let dropdown;
-
-		beforeEach( () => {
-			dropdown = editor.ui.componentFactory.create( 'kebab' );
-		} );
 
 		it( 'should register the kebab component', () => {
 			expect( editor.ui.componentFactory.has( 'kebab' ) ).to.be.true;

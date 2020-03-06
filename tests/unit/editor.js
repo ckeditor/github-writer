@@ -25,16 +25,6 @@ describe( 'Editor', () => {
 		// Mute RteEditor code that is out of the scope of the tests in this file.
 		sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ Paragraph ] } );
 		sinon.stub( RteEditor, 'toolbarItemsPostfix' );
-
-		// Mute dev logging.
-		sinon.stub( console, 'log' ).callsFake( ( ...args ) => {
-			if ( !( args[ 1 ] instanceof Editor ) ) {
-				console.log.wrappedMethod.apply( console, args );
-			}
-		} );
-
-		// Mute click on elements as the write tab click messing up with tests
-		sinon.stub( HTMLElement.prototype, 'click' );
 	} );
 
 	describe( 'constructor()', () => {
@@ -152,7 +142,7 @@ describe( 'Editor', () => {
 		it( 'should click the write tab', () => {
 			const editor = new Editor( GitHubPage.appendRoot() );
 
-			// Stubbed in beforeEach.
+			// Stubbed by GitHubPage.appendRoot().
 			const stub = editor.dom.tabs.write.click;
 
 			// First setMode should not call it.
@@ -569,6 +559,20 @@ describe( 'Editor', () => {
 					} );
 			} );
 
+			it( 'should do nothing on write tab click out of rte mode', done => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				sinon.stub( editor.rteEditor, 'focus' ).callsFake( () => expect.fail() );
+
+				editor.create()
+					.then( () => {
+						editor.setMode( Editor.modes.MARKDOWN );
+						editor.dom.tabs.write.dispatchEvent( new Event( 'click' ) );
+
+						setTimeout( () => done(), 1 );
+					} );
+			} );
+
 			it( 'should set focus styles', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );
 
@@ -684,8 +688,7 @@ describe( 'Editor', () => {
 
 					return editor.create()
 						.then( () => {
-							// Stubbed in beforeEach.
-							const stub = editor.dom.buttons.submit.click;
+							const stub = sinon.stub( editor.dom.buttons.submit, 'click' );
 							const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
 
 							expect( stub.callCount ).to.equals( 0 );
@@ -702,8 +705,7 @@ describe( 'Editor', () => {
 
 					return editor.create()
 						.then( () => {
-							// Stubbed in beforeEach.
-							const stub = editor.dom.buttons.submitAlternative.click;
+							const stub = sinon.stub( editor.dom.buttons.submitAlternative, 'click' );
 							const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
 
 							expect( stub.callCount ).to.equals( 0 );
@@ -749,9 +751,8 @@ describe( 'Editor', () => {
 
 						return editor.create()
 							.then( () => {
-								// Stubbed in beforeEach.
-								const stub = editor.dom.buttons.submit.click;
-								const stubAlternative = editor.dom.buttons.submitAlternative.click;
+								const stub = sinon.stub( editor.dom.buttons.submit, 'click' );
+								const stubAlternative = sinon.stub( editor.dom.buttons.submitAlternative, 'click' );
 
 								const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
 

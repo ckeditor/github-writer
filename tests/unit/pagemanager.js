@@ -12,9 +12,9 @@ import { GitHubPage } from '../_util/githubpage';
 describe( 'PageManager', () => {
 	beforeEach( () => {
 		// We don't care about the proper editor creation in the tests here.
-		Editor.prototype.create = function() {
+		sinon.stub( Editor.prototype, 'create' ).callsFake( function() {
 			return Promise.resolve( this );
-		};
+		} );
 
 		// Same for destroy.
 		sinon.stub( Editor.prototype, 'destroy' );
