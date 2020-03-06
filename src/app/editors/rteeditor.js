@@ -193,23 +193,32 @@ RteEditor.toolbarItemsPostfix = ( toolbar, tooltipPosition = 'n' ) => {
 
 	// The list of labels to be replaced. The keys are the default CKEditor labels.
 	const labels = {
-		// Get the original labels used in GH.
-		'Bold': document.querySelector( 'md-bold' ).getAttribute( 'aria-label' ),
-		'Italic': document.querySelector( 'md-italic' ).getAttribute( 'aria-label' ),
-		'Block quote': document.querySelector( 'md-quote' ).getAttribute( 'aria-label' ),
-		'Code': document.querySelector( 'md-code' ).getAttribute( 'aria-label' ),
-		'Link': document.querySelector( 'md-link' ).getAttribute( 'aria-label' ),
-		'Bulleted List': document.querySelector( 'md-unordered-list' ).getAttribute( 'aria-label' ),
-		'Numbered List': document.querySelector( 'md-ordered-list' ).getAttribute( 'aria-label' ),
-		'To-do List': document.querySelector( 'md-task-list' ).getAttribute( 'aria-label' ),
-
-		// With our additions, matching the GH language style (more verbose).
+		// Not available in GH but changed to match the GH language style (more verbose).
 		'Strikethrough': 'Add strikethrough text',
 		'Horizontal line': 'Insert a horizontal line',
 		'Insert image': 'Insert an image',
 		'Insert table': 'Insert a table',
 		'Remove Format': 'Remove text formatting'
 	};
+
+	// Add the original labels used in GH.
+	Object.entries( {
+		'Bold': 'md-bold',
+		'Italic': 'md-italic',
+		'Block quote': 'md-quote',
+		'Code': 'md-code',
+		'Link': 'md-link',
+		'Bulleted List': 'md-unordered-list',
+		'Numbered List': 'md-ordered-list',
+		'To-do List': 'md-task-list'
+	} ).forEach( ( [ originalLabel, query ] ) => {
+		const element = document.querySelector( query );
+		const ghLabel = element && element.getAttribute( 'aria-label' );
+
+		if ( ghLabel ) {
+			labels[ originalLabel ] = ghLabel;
+		}
+	} );
 
 	const items = Array.from( toolbar.items );
 

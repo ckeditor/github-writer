@@ -5,10 +5,10 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
+import QuoteSelection from './quoteselection';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
 import icon from '../icons/suggestion.svg';
-import { scrollViewportToShowTarget } from '@ckeditor/ckeditor5-utils/src/dom/scroll';
 
 /**
  * Replicates the "suggestion" feature available in the original GH editor for comments on commit lines.
@@ -18,7 +18,7 @@ export default class Suggestion extends Plugin {
 	 * @inheritDoc
 	 */
 	static get requires() {
-		return [ CodeBlock ];
+		return [ CodeBlock, QuoteSelection ];
 	}
 
 	/**
@@ -97,21 +97,7 @@ export default class Suggestion extends Plugin {
 					}
 
 					// Show the editor to the user.
-					{
-						editor.focus();
-
-						// Timeout, so changes are applied and the editable will have its final size (autogrow).
-						setTimeout( () => {
-							// Scroll the browser to show the editor.
-							scrollViewportToShowTarget( {
-								target: editor.githubEditor.dom.root,
-								viewportOffset: 100
-							} );
-
-							// Be sure the caret is also visible.
-							editor.editing.view.scrollToTheSelection();
-						}, 0 );
-					}
+					QuoteSelection.scrollToSelection( editor );
 				} );
 			} );
 

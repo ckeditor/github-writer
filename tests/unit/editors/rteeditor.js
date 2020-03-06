@@ -23,9 +23,7 @@ import { createElementFromHtml } from '../../../src/app/util';
 describe( 'Editors', () => {
 	describe( 'RteEditor', () => {
 		beforeEach( () => {
-			// Mute RteEditor code that is out of the scope of the tests in this file.
 			sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ Paragraph ] } );
-			sinon.stub( RteEditor, 'toolbarItemsPostfix' );
 		} );
 
 		describe( 'constructor()', () => {
@@ -199,9 +197,7 @@ describe( 'Editors', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
 
 				sinon.spy( rteEditor, 'injectToolbar' );
-
-				// Stubbed in beforeEach.
-				// sinon.spy( RteEditor, 'toolbarItemsPostfix' );
+				sinon.spy( RteEditor, 'toolbarItemsPostfix' );
 
 				return rteEditor.create()
 					.then( () => {
@@ -341,18 +337,8 @@ describe( 'Editors', () => {
 				GitHubPage.appendElementHtml(
 					'<div>' +
 					'<md-bold aria-label="test Bold"></md-bold>' +
-					'<md-italic aria-label="test Italic"></md-italic>' +
-					'<md-quote aria-label="test Block quote"></md-quote>' +
-					'<md-code aria-label="test Code"></md-code>' +
-					'<md-link aria-label="test Link"></md-link>' +
-					'<md-unordered-list aria-label="test Bulleted List"></md-unordered-list>' +
-					'<md-ordered-list aria-label="test Numbered List"></md-ordered-list>' +
-					'<md-task-list aria-label="test To-do List"></md-task-list>' +
 					'</div>'
 				);
-
-				// Restore the stubbed method.
-				RteEditor.toolbarItemsPostfix.restore();
 			} );
 
 			it( 'should fix simple buttons', () => {

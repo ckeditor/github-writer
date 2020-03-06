@@ -9,9 +9,9 @@ import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
 import { createTestEditor } from '../../_util/ckeditor';
+import { getData, setData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 
 import icon from '@ckeditor/ckeditor5-basic-styles/theme/icons/code.svg';
-import { getData, setData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 
 describe( 'Plugins', () => {
 	describe( 'SmartCode', () => {

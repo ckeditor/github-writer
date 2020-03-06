@@ -22,9 +22,7 @@ import { keyCodes } from '@ckeditor/ckeditor5-utils/src/keyboard';
 
 describe( 'Editor', () => {
 	beforeEach( () => {
-		// Mute RteEditor code that is out of the scope of the tests in this file.
 		sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ Paragraph ] } );
-		sinon.stub( RteEditor, 'toolbarItemsPostfix' );
 	} );
 
 	describe( 'constructor()', () => {

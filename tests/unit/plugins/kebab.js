@@ -20,12 +20,9 @@ describe( 'Plugins', () => {
 		let editor, dropdown;
 
 		{
-			beforeEach( () => {
-				// Mute RteEditor code that is out of the scope of the tests in this file.
-				sinon.stub( RteEditor, 'toolbarItemsPostfix' );
-			} );
-
 			beforeEach( 'create test editor', () => {
+				sinon.spy( RteEditor, 'toolbarItemsPostfix' );
+
 				return createTestEditor( '', [ Kebab ], { kebabToolbar: [ 'bold', 'italic' ] } )
 					.then( editorObjects => ( { editor } = editorObjects ) );
 			} );
