@@ -40,7 +40,7 @@
     "@ckeditor/ckeditor5-link": "^17.0.0",
     "@ckeditor/ckeditor5-list": "^17.0.0",
     "@ckeditor/ckeditor5-markdown-gfm": "ckeditor/ckeditor5-markdown-gfm#github-rte",
-    "@ckeditor/ckeditor5-mention": "^17.0.0",
+    "@ckeditor/ckeditor5-mention": "ckeditor/ckeditor5-mention#github-rte",
     "@ckeditor/ckeditor5-paragraph": "^17.0.0",
     "@ckeditor/ckeditor5-paste-from-office": "^17.0.0",
     "@ckeditor/ckeditor5-remove-format": "^17.0.0",
