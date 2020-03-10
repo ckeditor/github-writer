@@ -130,6 +130,23 @@ describe( 'PageManager', () => {
 			} );
 		} );
 
+		it( 'should click the write tab after creation (code line editor)', done => {
+			const pageManager = new PageManager();
+			pageManager.init();
+
+			const { button } = GitHubPage.appendButton( { type: 'code-line-comment' } );
+
+			const writeTab = document.querySelector( '.write-tab' );
+			const stub = writeTab.click; // Stubbed by GitHubPage.
+
+			button.click();
+
+			setTimeout( () => {
+				expect( stub.called ).to.be.true;
+				done();
+			}, 0 );
+		} );
+
 		it( `should do nothing on action button without edit`, () => {
 			const pageManager = new PageManager();
 			pageManager.init();
