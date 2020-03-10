@@ -113,18 +113,20 @@ describe( 'PageManager', () => {
 	describe( 'init()', () => {
 		[ 'edit', 'pr-inline-comment', 'code-line-comment' ].forEach( type => {
 			it( `should watch buttons (${ type })`, () => {
+				Editor.prototype.create.restore();
+
 				const pageManager = new PageManager();
 				pageManager.init();
 
 				const { button, root } = GitHubPage.appendButton( { type } );
 
-				const stub = sinon.stub( pageManager, 'setupEditor' );
-				expect( stub.called, 'no call before' ).to.be.false;
+				const spy = sinon.spy( pageManager, 'setupEditor' );
+				expect( spy.called, 'no call before' ).to.be.false;
 
 				button.click();
 
-				expect( stub.calledOnce, 'one call after' ).to.be.true;
-				expect( stub.firstCall.calledWith( root ) ).to.be.true;
+				expect( spy.calledOnce, 'one call after' ).to.be.true;
+				expect( spy.firstCall.calledWith( root ) ).to.be.true;
 			} );
 		} );
 
