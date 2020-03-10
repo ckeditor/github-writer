@@ -68,7 +68,7 @@ export default class PageManager {
 			// Code line comments: the "+" button...fires an event when the form for code comments is injected.
 			document.addEventListener( 'inlinecomment:focus', ev => {
 				const root = ev.target.querySelector( 'form' );
-				root && this.setupEditor( root );
+				root && this.setupEditor( root ).then( editor => editor.dom.tabs.write.click() );
 			} );
 		}
 
