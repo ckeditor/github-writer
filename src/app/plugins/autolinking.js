@@ -312,7 +312,11 @@ export class WordMatchStyler {
 		 */
 		function checkTexts( texts, batch ) {
 			// We don't do much here. Still, `checkTexts` is called in more than one part of the code.
-			texts.forEach( textInfo => styleWordsInRange( textInfo, batch ) );
+			texts.forEach( textInfo => {
+				const { text, range } = textInfo;
+				const validRanges = Array.from( editor.model.schema.getValidRanges( [ range ], attribute ) );
+				validRanges.forEach( validRange => styleWordsInRange( { text, range: validRange }, batch ) );
+			} );
 		}
 
 		/**

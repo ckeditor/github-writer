@@ -67,7 +67,8 @@ describe( 'Plugins', () => {
 
 					beforeEach( 'create the test editor', () => {
 						return createTestEditor( defaultData, [ HeadingEditing ] )
-							.then( ret => ( { editor, model, root } = ret ) );
+							.then( ret => ( { editor, model, root } = ret ) )
+							.then( () => editor.model.schema.extend( '$text', { allowAttributes: attribute } ) );
 					} );
 
 					afterEach( 'destroy the test editor', () => {
@@ -683,6 +684,8 @@ describe( 'Plugins', () => {
 				it( 'should watch initial editor data', () => {
 					class StylerPlugin extends Plugin {
 						init() {
+							this.editor.model.schema.extend( '$text', { allowAttributes: attribute } );
+
 							const styler = new WordMatchStyler( attribute );
 							styler.addMatcher( /CD/ );
 							styler.watch( this.editor );
