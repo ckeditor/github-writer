@@ -26,6 +26,11 @@
 		}
 	}
 
+	/* Links */
+	& a:hover {
+		text-decoration: initial;
+	}
+
 	/* Mentions */
 	& .mention {
 		/* We actually unstyle mentions altogether, leaving it to the autolinking feature */

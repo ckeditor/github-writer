@@ -18,6 +18,7 @@ export function createTestEditor( initialData, extraPlugins, extraConfig ) {
 
 	return CKEditorGitHubEditor.create( initialData || '', config )
 		.then( editor => {
+			editor.fire( 'reallyReady' );
 			return {
 				editor,
 				model: editor.model,

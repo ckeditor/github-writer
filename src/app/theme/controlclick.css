@@ -1,0 +1,16 @@
+/*
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+.ck-editor__editable.github-rte-key-ctrl {
+	& a,
+	& autolink[data-enabled="true"] {
+		cursor: pointer;
+	}
+
+	& a:hover,
+	& autolink[data-enabled="true"]:hover {
+		text-decoration: underline;
+	}
+}
