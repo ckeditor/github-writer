@@ -71,7 +71,7 @@ export default class AutoLinking extends Plugin {
 			autolink.addPattern(
 				// eslint-disable-next-line max-len
 				/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
-				'url' );
+				'url', attribs => ( attribs.url = attribs.text ) );
 		}
 
 		/**
@@ -139,7 +139,8 @@ export class AutoLinkStyler {
 						Object.keys( modelValue ).forEach( name => ( attribs[ 'data-' + name ] = modelValue[ name ] ) );
 					}
 
-					return viewWriter.createAttributeElement( 'autolink', attribs );
+					// Using the same priority as link for compatibility with ControlClick.
+					return viewWriter.createAttributeElement( 'autolink', attribs, { priority: 5 } );
 				}
 			} );
 		}

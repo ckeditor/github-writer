@@ -46,6 +46,7 @@ import AutoLinking from '../plugins/autolinking';
 import QuoteSelection from '../plugins/quoteselection';
 import ResetListener from '../plugins/resetlistener';
 import EditorExtras from '../plugins/editorextras';
+import ControlClick from '../plugins/controlclick';
 
 import App from '../app';
 import { getNewIssuePageDom } from '../util';
@@ -73,7 +74,7 @@ const RteEditorConfig = {
 				HorizontalLine, Table, TableToolbar,
 				Kebab, RemoveFormat, ModeSwitcher, Suggestion,
 				PasteFromOffice, PasteFixer,
-				AutoLinking, QuoteSelection, ResetListener, EditorExtras
+				AutoLinking, QuoteSelection, ResetListener, EditorExtras, ControlClick
 			],
 			toolbar: [
 				'headingdropdown', 'bold', 'italic', '|',

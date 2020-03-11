@@ -10,6 +10,7 @@
 /* UI */
 @import "toolbar.css";
 @import "mentions.css";
+@import "controlclick.css";
 
 /* Contents */
 @import "content.css";

@@ -117,7 +117,7 @@ describe( 'Plugins', () => {
 								'data-enabled="true" ' +
 								`data-text="${ test.toLowerCase() }" ` +
 								`data-type="${ type }" ` +
-								( type === 'url' ? '' :
+								( type === 'url' ? `data-url="${ test.toLowerCase() }" ` :
 									`data-url="/test/${ test.toLowerCase() }" ` ) +
 								'spellcheck="false">' +
 								test.toLowerCase() +
@@ -183,7 +183,7 @@ describe( 'Plugins', () => {
 								'data-enabled="true" ' +
 								`data-text="${ test.toLowerCase() }" ` +
 								`data-type="${ type }" ` +
-								( type === 'url' ? '' :
+								( type === 'url' ? `data-url="${ test.toLowerCase() }" ` :
 									`data-url="/test/${ test.toLowerCase() }" ` ) +
 								'spellcheck="false">' +
 								test.toLowerCase() +
