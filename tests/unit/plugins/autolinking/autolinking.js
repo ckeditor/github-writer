@@ -45,7 +45,9 @@ describe( 'Plugins', () => {
 
 			{
 				before( 'create test editor', () => {
-					return createTestEditor( '', [ AutoLinking ] )
+					return createTestEditor( '', [ AutoLinking ], {
+						githubRte: { autoLinking: { person: true, issue: true, sha: true, urlGitHub: true, url: true } }
+					} )
 						.then( ret => ( { editor } = ret ) );
 				} );
 
@@ -139,7 +141,9 @@ describe( 'Plugins', () => {
 
 			{
 				before( 'create test editor', () => {
-					return createTestEditor( '', [ AutoLinking ] )
+					return createTestEditor( '', [ AutoLinking ], {
+						githubRte: { autoLinking: { person: true, issue: true, sha: true, urlGitHub: true, url: true } }
+					} )
 						.then( ret => ( { editor } = ret ) );
 				} );
 
@@ -205,7 +209,9 @@ describe( 'Plugins', () => {
 
 			{
 				before( 'create test editor', () => {
-					return createTestEditor( '', [ AutoLinking ] )
+					return createTestEditor( '', [ AutoLinking ], {
+						githubRte: { autoLinking: { person: true, issue: true, sha: true, urlGitHub: true, url: true } }
+					} )
 						.then( ret => ( { editor } = ret ) );
 				} );
 
@@ -264,7 +270,9 @@ describe( 'Plugins', () => {
 
 			{
 				before( 'create test editor', () => {
-					return createTestEditor( '', [ AutoLinking ] )
+					return createTestEditor( '', [ AutoLinking ], {
+						githubRte: { autoLinking: { person: true, issue: true, sha: true, urlGitHub: true, url: true } }
+					} )
 						.then( ret => ( { editor } = ret ) );
 				} );
 

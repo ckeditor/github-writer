@@ -188,6 +188,36 @@ describe( 'Editors', () => {
 			} );
 		} );
 
+		describe( 'githubRte.autoLinking', () => {
+			it( 'should have all features enabled in comment pages', () => {
+				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
+				const config = RteEditorConfig.get( rteEditor );
+
+				expect( config.githubRte.autoLinking ).to.eql( {
+					person: true,
+					issue: true,
+					sha: true,
+					urlGitHub: true,
+					url: true
+				} );
+			} );
+
+			it( 'should enable just url in wiki page', () => {
+				GitHubPage.setPageName( 'repo_wiki' );
+
+				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
+				const config = RteEditorConfig.get( rteEditor );
+
+				expect( config.githubRte.autoLinking ).to.eql( {
+					person: false,
+					issue: false,
+					sha: false,
+					urlGitHub: false,
+					url: true
+				} );
+			} );
+		} );
+
 		describe( 'githubRte.suggestion.enabled', () => {
 			it( 'should check if suggestion is enabled in the markdown editor', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );

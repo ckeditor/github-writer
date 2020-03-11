@@ -119,6 +119,17 @@ const RteEditorConfig = {
 				upload: getUploadConfig(),
 
 				/**
+				 * Specifies the auto-linking features to be enabled.
+				 */
+				autoLinking: {
+					person: isCommentsPage,
+					issue: isCommentsPage,
+					sha: isCommentsPage,
+					urlGitHub: isCommentsPage,
+					url: true
+				},
+
+				/**
 				 * Configurations for the "suggestion" feature.
 				 */
 				suggestion: {
