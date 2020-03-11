@@ -4,6 +4,7 @@
  */
 
 import { AutoLinkStyler } from '../../../../src/app/plugins/autolinking';
+import CodeBlockEditing from '@ckeditor/ckeditor5-code-block/src/codeblockediting';
 
 import { getData as getViewData } from '@ckeditor/ckeditor5-engine/src/dev-utils/view';
 import { createTestEditor } from '../../../_util/ckeditor';
@@ -14,7 +15,7 @@ describe( 'Plugins', () => {
 			let editor, model, root;
 
 			before( 'create test editor', () => {
-				return createTestEditor()
+				return createTestEditor( '', [ CodeBlockEditing ] )
 					.then( ret => ( { editor, model, root } = ret ) );
 			} );
 
@@ -97,6 +98,23 @@ describe( 'Plugins', () => {
 					'<autolink data-enabled="true" data-text="CDE" data-type="type-3" spellcheck="false">CDE</autolink> ' +
 					'<autolink data-enabled="true" data-text="FG" data-type="type-2" spellcheck="false">FG</autolink>' +
 					'</p>' );
+			} );
+
+			it( 'should not style inside code block', () => {
+				const styler = new AutoLinkStyler( editor );
+				styler.addPattern( /\w{3}/, 'type-3' );
+
+				editor.setData(
+					'AB CDE FG\n' +
+					'\n' +
+					'```\n' +
+					`AB CDE FG\n` +
+					'```\n'
+				);
+
+				expect( getViewData( editor.editing.view, { withoutSelection: true } ) ).to.equal(
+					'<p>AB <autolink data-enabled="true" data-text="CDE" data-type="type-3" spellcheck="false">CDE</autolink> FG</p>' +
+					'<pre data-language="Plain text" spellcheck="false"><code class="language-plaintext">AB CDE FG</code></pre>' );
 			} );
 
 			it( 'should call the callback', () => {
