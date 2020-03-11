@@ -19,7 +19,9 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', done => {
-				createTestEditor( '', [ ControlClick, EditorExtras, LinkEditing, AutoLinking ] )
+				createTestEditor( '', [ ControlClick, EditorExtras, LinkEditing, AutoLinking ], {
+					githubRte: { autoLinking: { url: true } }
+				} )
 					.then( editorObjects => ( { editor } = editorObjects ) )
 					.then( () => editor.ready.then( () => done() ) );
 			} );

@@ -25,6 +25,9 @@ export default class AutoLinking extends Plugin {
 	 * @inheritDoc
 	 */
 	init() {
+		// Get the list of features to be enabled.
+		const config = this.editor.config.get( 'githubRte.autoLinking' );
+
 		// This is the class instance that will be used to retrieve and cache additional information about the GitHub links.
 		// This extra information will be used by GH itself to show the hover cards of the links.
 		const linkDataLoader = new GitHubLinkDataLoader();
@@ -36,7 +39,7 @@ export default class AutoLinking extends Plugin {
 		{
 			// @user-name
 			// @organization/user-name
-			autolink.addPattern(
+			config.person && autolink.addPattern(
 				/@(?:[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+(?:\/[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+)?)/i,
 				'person',
 				githubLinkCallback );
@@ -44,7 +47,7 @@ export default class AutoLinking extends Plugin {
 			// #1
 			// mojombo#1
 			// mojombo/github-flavored-markdown#1
-			autolink.addPattern(
+			config.issue && autolink.addPattern(
 				/(?:[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+(?:\/[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+)?)?#\d+/i,
 				'issue',
 				githubLinkCallback );
@@ -52,23 +55,23 @@ export default class AutoLinking extends Plugin {
 			// 16c999e8c71134401a78d4d46435517b2271d6ac
 			// mojombo@16c999e8c71134401a78d4d46435517b2271d6ac
 			// mojombo/github-flavored-markdown@16c999e8c71134401a78d4d46435517b2271d6ac
-			autolink.addPattern(
+			config.sha && autolink.addPattern(
 				/(?:[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+(?:\/[a-z\d](?:[a-z\d]|-(?=[a-z\d]))+)?@)?[a-f\d]{7,40}/i,
 				'sha',
 				githubLinkCallback );
 
 			// GitHub urls
-			autolink.addPattern(
+			config.urlGitHub && config.issue && autolink.addPattern(
 				/https:\/\/github\.com\/.*\/(?:issues|pull)\/[^\s]+?/i,
 				'issue',
 				githubLinkCallback );
-			autolink.addPattern(
+			config.urlGitHub && config.sha && autolink.addPattern(
 				/https:\/\/github\.com\/.*\/commit\/[^\s]+?/i,
 				'sha',
 				githubLinkCallback );
 
 			// Other urls
-			autolink.addPattern(
+			config.url && autolink.addPattern(
 				// eslint-disable-next-line max-len
 				/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
 				'url', attribs => ( attribs.url = attribs.text ) );
