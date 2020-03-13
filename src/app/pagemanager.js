@@ -134,6 +134,7 @@ export default class PageManager {
 			( root = document.querySelector( 'form#new_issue' ) ) ||
 			( root = document.querySelector( 'form#new_pull_request' ) ) ||
 			( root = document.querySelector( 'form.js-new-comment-form' ) ) ||
+			( root = document.querySelector( 'form.js-release-form' ) ) ||
 			( root = document.querySelector( 'div.pull-request-review-menu > form' ) ) ||
 			( root = document.querySelector( 'form[name="gollum-editor"]' ) );
 

@@ -481,7 +481,7 @@ export default class Editor {
 			this.dom.buttons = {
 				submit: form.querySelector(
 					'input[type=submit].btn-primary, button[type=submit].btn-primary' ),
-				submitAlternative: form.querySelector( '.js-quick-submit-alternative' )
+				submitAlternative: form.querySelector( '.js-quick-submit-alternative, button.js-save-draft' )
 			};
 
 			// Sync the editors when submitting the form (which is always done by "click").
