@@ -4,6 +4,8 @@
  */
 
 import Editor from '../editor';
+import App from '../app';
+
 import { checkDom } from '../util';
 
 /**
@@ -65,6 +67,18 @@ export default class MarkdownEditor {
 	 * @returns {Object} The object which is assigned to {MarkdownEditor#dom} by its constructor.
 	 */
 	getDom( root ) {
+		let toolbar = root.querySelector( 'markdown-toolbar' );
+
+		// The release page doesn't have a toolbar, so we inject an empty one for our code to move on.
+		if ( !toolbar && App.pageManager.page === 'repo_releases' ) {
+			const tabs = root.querySelector( 'nav.tabnav-tabs' );
+
+			if ( tabs ) {
+				toolbar = document.createElement( 'markdown-toolbar' );
+				tabs.after( toolbar );
+			}
+		}
+
 		return {
 			/**
 			 * The outermost element encompassing the structure around the original GitHub markdown editor.

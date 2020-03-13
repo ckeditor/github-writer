@@ -39,6 +39,14 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 	background-color: #fff;
 }
 
+/* Release page specific. */
+form.js-release-form .ck-editor__editable {
+	min-height: 200px;
+}
+form.js-release-form div.github-rte-ckeditor {
+	width: 100%;
+}
+
 /* The CKEditor placeholder. Matches the inspected rules from the GH textarea on Chrome. */
 .ck.ck-editor__editable > .ck-placeholder::before {
 	color: #6a737d;
