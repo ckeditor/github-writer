@@ -72,7 +72,7 @@
     "test-unit": "node ./node_modules/.bin/ckeditor5-dev-tests -sc --files=./tests/unit/**/*.js --coverage-paths=./src/**/*.js",
     "build": "webpack --mode production --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "build-dev": "webpack --mode development --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
-    "lint": "eslint --quiet '**/*.js'"
+    "lint": "eslint --quiet --ignore-path .gitignore '**/*.js'"
   },
   "eslintIgnore": [
     "build/**"
