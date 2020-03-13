@@ -1,9 +1,12 @@
+<!--suppress ALL -->
 <form action="/server" accept-charset="UTF-8" method="post" class="previewable-comment-form">
 	<tab-container class="previewable-comment-form" data-preview-url="/preview">
 		<file-attachment data-upload-repository-id="1234" data-upload-policy-url="/upload/policies/assets">
 		</file-attachment>
 		<div class="js-preview-panel preview-content"></div>
-		<button class="write-tab" type="button">Write</button>
+		<nav class="tabnav-tabs">
+			<button class="write-tab" type="button">Write</button>
+		</nav>
 	</tab-container>
 	<markdown-toolbar></markdown-toolbar>
 	<textarea required></textarea>

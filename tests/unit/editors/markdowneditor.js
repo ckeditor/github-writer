@@ -30,6 +30,25 @@ describe( 'Editors', () => {
 				expect( markdownEditor.dom.panels.preview ).to.be.an.instanceOf( HTMLElement );
 			} );
 
+			it( 'should create a markdown toolbar when in a release page', () => {
+				GitHubPage.setPageName( 'repo_releases' );
+
+				const root = GitHubPage.appendRoot( { type: 'release' } );
+				const editor = new Editor( root );
+				const markdownEditor = new MarkdownEditor( editor );
+
+				expect( markdownEditor.dom.toolbar ).to.be.an.instanceOf( HTMLElement );
+			} );
+
+			it( 'should throw error is there is no tabs', () => {
+				GitHubPage.setPageName( 'repo_releases' );
+
+				const root = GitHubPage.appendRoot( { type: 'release' } );
+				root.querySelector( '.tabnav-tabs' ).classList.remove( 'tabnav-tabs' );
+
+				expect( () => new Editor( root ) ).to.throw( PageIncompatibilityError );
+			} );
+
 			it( 'should throw error on invalid dom', () => {
 				const root = GitHubPage.appendRoot();
 				root.querySelector( 'markdown-toolbar' ).remove();

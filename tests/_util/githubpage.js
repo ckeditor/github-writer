@@ -81,6 +81,11 @@ export const GitHubPage = {
 				root.classList.add( 'js-new-comment-form' );
 				break;
 			}
+			case 'release': {
+				root.classList.add( 'js-release-form' );
+				root.querySelector( 'markdown-toolbar' ).remove();
+				break;
+			}
 			case 'pull-request-review': {
 				container = document.createElement( 'div' );
 				container.classList.add( 'pull-request-review-menu' );

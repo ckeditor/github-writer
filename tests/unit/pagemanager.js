@@ -266,8 +266,12 @@ describe( 'PageManager', () => {
 				.catch( failOnCatch );
 		} );
 
-		[ 'issue', 'pull-request', 'comment', 'pull-request-review', 'wiki' ].forEach( type => {
+		[ 'issue', 'pull-request', 'comment', 'release', 'pull-request-review', 'wiki' ].forEach( type => {
 			it( `should find main editor (${ type })`, () => {
+				if ( type === 'release' ) {
+					GitHubPage.setPageName( 'repo_releases' );
+				}
+
 				const pageManager = new PageManager();
 
 				GitHubPage.appendRoot( { type } );
