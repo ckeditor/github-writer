@@ -28,29 +28,29 @@ describe( 'PageManager', () => {
 		it( 'should detect missing page name', () => {
 			GitHubPage.reset();
 
-			const pageMananger = new PageManager();
+			const pageManager = new PageManager();
 
-			expect( pageMananger.page ).to.equals( 'unknown' );
+			expect( pageManager.page ).to.equals( 'unknown' );
 		} );
 
 		it( 'should detect the page name', () => {
-			const pageMananger = new PageManager();
+			const pageManager = new PageManager();
 
-			expect( pageMananger.page ).to.equals( 'repo_issue' );
+			expect( pageManager.page ).to.equals( 'repo_issue' );
 		} );
 
 		it( 'should detect the page type', () => {
-			const pageMananger = new PageManager();
+			const pageManager = new PageManager();
 
-			expect( pageMananger.type ).to.equals( 'comments' );
+			expect( pageManager.type ).to.equals( 'comments' );
 		} );
 
 		it( 'should detect a wiki page type', () => {
 			GitHubPage.setPageName( 'repo_wiki' );
 
-			const pageMananger = new PageManager();
+			const pageManager = new PageManager();
 
-			expect( pageMananger.type ).to.equals( 'wiki' );
+			expect( pageManager.type ).to.equals( 'wiki' );
 		} );
 	} );
 

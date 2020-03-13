@@ -9,7 +9,7 @@ const { Options: FirefoxOptions } = require( 'selenium-webdriver/firefox' );
 const path = require( 'path' );
 const { repo, credentials } = require( '../../config' ).github;
 
-let util = module.exports = {
+const util = module.exports = {
 	/**
 	 * Bootstraps the Selenium WebDriver that runs the tests.
 	 *
@@ -46,7 +46,7 @@ let util = module.exports = {
 	 * @returns {String} The full url for the provided path.
 	 */
 	getGitHubUrl: path => {
-		return `https://github.com/${repo}/${path}`;
+		return `https://github.com/${ repo }/${ path }`;
 	},
 
 	/**
@@ -55,7 +55,7 @@ let util = module.exports = {
 	 */
 	checkLoggedIn: async () => {
 		// Be sure that we're still properly logged in.
-		await global.driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${credentials.name}"]` ) ), 10000 );
+		await global.driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${ credentials.name }"]` ) ), 10000 );
 	},
 
 	/**
@@ -63,17 +63,17 @@ let util = module.exports = {
 	 * @returns {Promise<*|ThenableWebDriver>} The WebDriver.
 	 */
 	login: async () => {
-		let driver = global.driver || ( global.driver = util.buildDriver() );
+		const driver = global.driver || ( global.driver = util.buildDriver() );
 
 		const url = await driver.getCurrentUrl();
 		const loggedIn = url.match( /^https:\/\/github.com\// ) &&
-			await driver.findElement( By.css( `meta[name="user-login"][content="${credentials.name}"]` ) );
+			await driver.findElement( By.css( `meta[name="user-login"][content="${ credentials.name }"]` ) );
 
 		if ( !loggedIn ) {
 			await driver.get( 'https://github.com/login' );
 			await driver.findElement( By.name( 'login' ) ).sendKeys( credentials.name );
 			await driver.findElement( By.name( 'password' ) ).sendKeys( credentials.password, Key.ENTER );
-			await driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${credentials.name}"]` ) ) );
+			await driver.wait( until.elementLocated( By.css( `meta[name="user-login"][content="${ credentials.name }"]` ) ) );
 		}
 
 		return driver;

@@ -123,7 +123,7 @@ export class AutoLinkStyler {
 				copyOnEnter: false
 			} );
 
-			// Downscast is defined for editing only, because we want the plain-text only in the data output,
+			// Downcast is defined for editing only, because we want the plain-text only in the data output,
 			// which is the whole point of auto-linking, in fact.
 			editor.conversion.for( 'editingDowncast' ).attributeToElement( {
 				model: 'autolink',
@@ -431,7 +431,7 @@ export class WordMatchStyler {
 		 *
 		 * @param writer {Writer} The model writer used to set the attribute (synchronously).
 		 * @param matchText {String} The text matched.
-		 * @param matchRange {Range} The rangen encompassing the text.
+		 * @param matchRange {Range} The range encompassing the text.
 		 * @param matcherCallback {Function} The callback passed to `addMatcher`.
 		 */
 		function styleMatchedWord( writer, matchText, matchRange, matcherCallback ) {

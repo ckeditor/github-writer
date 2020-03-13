@@ -172,8 +172,8 @@ export default class Editor {
 			}
 
 			// Set the appropriate class to the root element according to the mode being set.
-			this.domManipulator.toogleClass( this.dom.root, 'github-rte-mode-rte', mode === Editor.modes.RTE );
-			this.domManipulator.toogleClass( this.dom.root, 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
+			this.domManipulator.toggleClass( this.dom.root, 'github-rte-mode-rte', mode === Editor.modes.RTE );
+			this.domManipulator.toggleClass( this.dom.root, 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
 		}
 
 		/**

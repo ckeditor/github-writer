@@ -182,7 +182,7 @@ describe( 'The "issue" test suite', function() {
 				return root.querySelector( 'div.github-rte-ckeditor' );
 			}, dom.rootElement ) ), 5000 );
 
-			// This is the only reliable way to reset the editor contents. Unfortunally sending `ctrl+a` + `delete` doesn't work.
+			// This is the only reliable way to reset the editor contents. Unfortunately sending `ctrl+a` + `delete` doesn't work.
 			await driver.executeScript( () => {
 				window.postMessage( { type: 'GitHub-RTE-Reset-Editor' } );
 			} );

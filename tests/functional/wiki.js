@@ -100,13 +100,13 @@ describe( 'The "wiki" test suite', function() {
 
 			expect( html ).to.equal(
 				'<p>Typing inside the <strong>RTE editor</strong>.</p>\n' +
-				`<p>Time stamp: ${timestamp}.</p>` );
+				`<p>Time stamp: ${ timestamp }.</p>` );
 		}
 	} );
 
 	// Check if the page DOM matches the expectation of the app.
 	async function checkDom( root ) {
-		const dom = {
+		return {
 			rootElement: root,
 			toolbarContainer: await root.findElement( By.css( '.comment-form-head' ) ),
 			textarea: await root.findElement( By.css( 'textarea' ) ),
@@ -119,6 +119,5 @@ describe( 'The "wiki" test suite', function() {
 				write: await root.findElement( By.css( '.write-tab' ) )
 			}
 		};
-		return dom;
 	}
 } );

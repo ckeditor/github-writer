@@ -200,7 +200,7 @@ describe( 'The "pull request" test suite', function() {
 			const editable = await dom.rootElement.findElement( By.css( 'div.github-rte-ckeditor > .ck-editor__editable' ) );
 			await editable.click();
 
-			// This is the only reliable way to reset the editor contents. Unfortunally sending `ctrl+a` + `delete` doesn't work.
+			// This is the only reliable way to reset the editor contents. Unfortunately sending `ctrl+a` + `delete` doesn't work.
 			await driver.executeScript( () => {
 				window.postMessage( { type: 'GitHub-RTE-Reset-Editor' } );
 			} );

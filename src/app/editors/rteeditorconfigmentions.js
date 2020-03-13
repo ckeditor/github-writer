@@ -178,7 +178,7 @@ const RteEditorConfigMentions = {
 						<g-emoji>😀</g-emoji> grinning
 					</li>
 
-					// TODO: GH offers some non-unicod emojis as well, with the following format. This is not supported for now.
+					// TODO: GH offers some non-unicode emojis as well, with the following format. This is not supported for now.
 					<li role="option" id="emoji-trollface" data-value=":trollface:" data-emoji-name="trollface" data-text="trollface">
 						  <img class="emoji emoji-result" height="20" width="20" align="absmiddle" alt=":trollface:"
 							  src="https://github.githubassets.com/images/icons/emoji/trollface.png">

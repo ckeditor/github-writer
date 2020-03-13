@@ -82,7 +82,7 @@
 			min-width: 0;
 		}
 
-		/* Fixes the toogle button in dropdown lists (#41) */
+		/* Fixes the toggle button in dropdown lists (#41) */
 		& .ck-list {
 			& > .ck-list__item {
 				padding: 0 4px;

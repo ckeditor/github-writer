@@ -122,7 +122,7 @@ export function getNewIssuePageDom() {
 	return new Promise( ( resolve, reject ) => {
 		const location = window.__getLocation();
 
-		// Build the url for the new issue page => /organization/repo/isses/new
+		// Build the url for the new issue page => /organization/repo/issues/new
 		const url = location.pathname.match( /^\/.+?\/.+?\// ) + 'issues/new';
 
 		const xhr = openXmlHttpRequest( url, 'GET' );
@@ -208,7 +208,7 @@ export class DomManipulator {
 	 * @param name {String} The class name.
 	 * @param force {Boolean} `true` to force add the class. `false` to force remove it.
 	 */
-	toogleClass( target, name, force ) {
+	toggleClass( target, name, force ) {
 		target.classList.toggle( name, force );
 
 		this.addRollbackOperation( () => target.classList.remove( name ) );

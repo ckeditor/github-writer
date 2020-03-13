@@ -49,7 +49,7 @@ describe( 'Plugins', () => {
 			expect( button.tooltip ).to.be.true;
 		} );
 
-		it( 'should be a toogleable button', () => {
+		it( 'should be a toggleable button', () => {
 			expect( button.isToggleable ).to.be.true;
 		} );
 

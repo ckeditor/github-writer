@@ -133,16 +133,16 @@ describe( 'Util', () => {
 				expect( document.body.classList.contains( 'data-test' ) ).to.be.false;
 			} );
 
-			it( 'toogleClass', () => {
+			it( 'toggleClass', () => {
 				const domManipulator = new DomManipulator();
 
-				domManipulator.toogleClass( document.body, 'test-class' );
+				domManipulator.toggleClass( document.body, 'test-class' );
 				expect( document.body.classList.contains( 'test-class' ) ).to.be.true;
 
-				domManipulator.toogleClass( document.body, 'test-class' );
+				domManipulator.toggleClass( document.body, 'test-class' );
 				expect( document.body.classList.contains( 'test-class' ) ).to.be.false;
 
-				domManipulator.toogleClass( document.body, 'test-class' );
+				domManipulator.toggleClass( document.body, 'test-class' );
 				expect( document.body.classList.contains( 'test-class' ) ).to.be.true;
 
 				domManipulator.rollback();
