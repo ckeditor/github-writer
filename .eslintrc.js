@@ -8,8 +8,10 @@
 'use strict';
 
 module.exports = {
+	plugins: [ 'no-unsanitized' ],
+
 	// Follow CKEditor 5 rules.
-	extends: 'ckeditor5',
+	extends: [ 'ckeditor5', 'plugin:no-unsanitized/DOM' ],
 
 	rules: {
 		// We allow blocks to be used to organize the logic of longer functions.

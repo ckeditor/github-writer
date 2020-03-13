@@ -89,14 +89,11 @@ const RteEditorConfigMentions = {
 				 * @returns {HTMLElement} The element to be inserted in the selection box list.
 				 */
 				entryRenderer: entry => {
-					const div = document.createElement( 'div' );
-					div.innerHTML = `
-					<button>
-						<small>#${ entry.number }</small> ${ entry.title }
-					</button>
-				`;
-
-					return div.firstElementChild;
+					return createElementFromHtml( `
+						<button>
+							<small>#${ entry.number }</small> ${ entry.title }
+						</button>
+					` );
 				}
 			},
 
@@ -156,14 +153,11 @@ const RteEditorConfigMentions = {
 					};
 				},
 				entryRenderer: entry => {
-					const div = document.createElement( 'div' );
-					div.innerHTML = `
-					<button>
-						${ entry.name } <small>${ entry.description }</small>
-					</button>
-				`;
-
-					return div.firstElementChild;
+					return createElementFromHtml( `
+						<button>
+							${ entry.name } <small>${ entry.description }</small>
+						</button>
+					` );
 				}
 			},
 
@@ -208,15 +202,12 @@ const RteEditorConfigMentions = {
 					};
 				},
 				entryRenderer: entry => {
-					const div = document.createElement( 'div' );
 					// <g-emoji> is a GH element. We're borrowing some of its styles.
-					div.innerHTML = `
-					<button>
-						<g-emoji>${ entry.icon }</g-emoji> ${ entry.name }
-					</button>
-				`;
-
-					return div.firstElementChild;
+					return createElementFromHtml( `
+						<button>
+							<g-emoji>${ entry.icon }</g-emoji> ${ entry.name }
+						</button>
+					` );
 				}
 			}
 		};

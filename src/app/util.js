@@ -22,7 +22,11 @@ window.__getLocation = () => {
  */
 export function createElementFromHtml( html ) {
 	const div = document.createElement( 'div' );
+
+	// Safe because we don't use this function for loaded HTML.
+	// eslint-disable-next-line no-unsanitized/property
 	div.innerHTML = html;
+
 	return div.firstElementChild;
 }
 
@@ -132,6 +136,9 @@ export function getNewIssuePageDom() {
 		xhr.addEventListener( 'load', () => {
 			// Inject the returned html into a template element.
 			const template = document.createElement( 'template' );
+
+			// Safe because we don't actually insert this HTML in the page. We load it in the template and process it safely.
+			// eslint-disable-next-line no-unsanitized/property
 			template.innerHTML = xhr.response;
 
 			// Resolve the promise with the template dom.
