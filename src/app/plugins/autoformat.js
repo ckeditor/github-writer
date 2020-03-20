@@ -50,7 +50,9 @@ export default class AutoFormat extends Plugin {
 
 		// Inline
 		autoFormat.add( 'bold', new InlineAutoFormatter( '**', 'bold' ) );
+		autoFormat.add( 'bold __', new InlineAutoFormatter( '__', 'bold' ) );
 		autoFormat.add( 'italic', new InlineAutoFormatter( '_', 'italic' ) );
+		autoFormat.add( 'italic *', new InlineAutoFormatter( '*', 'italic' ) );
 		autoFormat.add( 'code', new InlineAutoFormatter( '`', 'code' ) );
 		autoFormat.add( 'strikethrough', new InlineAutoFormatter( '~', 'strikethrough' ) );
 
@@ -212,7 +214,13 @@ export class InlineAutoFormatter extends AutoFormatter {
 	constructor( marker, command ) {
 		super( marker, command );
 
-		this.typingRegex = new RegExp( escapeRegex( marker ) + '[\\s.,;:?!]?$' );
+		// Build the regex used to search for an opening match.
+		// E.g.: /^\s`(?!`)[^\s]/:
+		//   > The marker.
+		//     - Preceded by anything which is not the first character of the marker or space.
+		//   + Marker
+		//   + Space or punctuation, if any.
+		this.typingRegex = new RegExp( '(?<!\\s|' + escapeRegex( marker[ 0 ] ) + ')' + escapeRegex( marker ) + '[\\s.,;:?!]?$' );
 	}
 
 	/**
@@ -227,14 +235,16 @@ export class InlineAutoFormatter extends AutoFormatter {
 		// Get the text until the marker.
 		let text = textNode.data.substr( 0, markerOffsetInTheText );
 
-		// Do nothing if the marker has been placed after white-space.
-		if ( /\s$/.test( text ) ) {
-			return;
-		}
-
 		const markerAttribs = Array.from( textNode.getAttributeKeys() );
 
-		const regex = new RegExp( '^\\s' + escapeRegex( this.marker ) + '[^\\s]' );
+		// Build the regex used to search for an opening match.
+		// E.g.: /^\s`(?!`)[^\s]/:
+		//   > Beginning of the string
+		//   + Space
+		//   + Marker
+		//     - Followed by anything which is not the first character of the marker.
+		//   + Anything which is not a space.
+		const regex = new RegExp( '^\\s' + escapeRegex( this.marker ) + '(?!' + escapeRegex( this.marker[ 0 ] ) + ')[^\\s]' );
 
 		while ( textNode && textNode.is( 'text' ) ) {
 			let valid = textNode === position.textNode;
@@ -246,18 +256,16 @@ export class InlineAutoFormatter extends AutoFormatter {
 
 			if ( valid ) {
 				const minimumLength = this.marker.length +
-					1 +	// minimum one character inside
-					1;	// the character before
+					1;	// minimum one character inside
 
-				for ( let i = text.length - minimumLength - 1; i >= 0; i-- ) {
-					let partial = text.substr( i );
+				for ( let i = text.length - minimumLength; i >= 0; i-- ) {
+					let partial = text.substr( i ? i - 1 : 0 ); // Include the character before, if available.
 					if ( i === 0 ) {
 						partial = ' ' + partial;
-						i = -1;
 					}
 
 					if ( regex.test( partial ) ) {
-						const openerOffset = textNode.startOffset + i + 1; // 1 = space before marker
+						const openerOffset = textNode.startOffset + i;
 						const openerPosition = editor.model.createPositionAt( textNode.parent, openerOffset );
 
 						format.call( this, openerPosition, position );

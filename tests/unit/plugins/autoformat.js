@@ -21,7 +21,7 @@ import { setData, getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model
 import { createTestEditor } from '../../_util/ckeditor';
 
 describe( 'Plugins', () => {
-	describe( 'AutoFormat', () => {
+	describe.only( 'AutoFormat', () => {
 		let editor, model;
 
 		{
@@ -56,8 +56,18 @@ describe( 'Plugins', () => {
 					after: '<paragraph><$text bold="true">foobar</$text>[]</paragraph>'
 				},
 				{
+					before: '<paragraph>__foobar_[]</paragraph>',
+					key: '_',
+					after: '<paragraph><$text bold="true">foobar</$text>[]</paragraph>'
+				},
+				{
 					before: '<paragraph>_foobar[]</paragraph>',
 					key: '_',
+					after: '<paragraph><$text italic="true">foobar</$text>[]</paragraph>'
+				},
+				{
+					before: '<paragraph>*foobar[]</paragraph>',
+					key: '*',
 					after: '<paragraph><$text italic="true">foobar</$text>[]</paragraph>'
 				},
 				{
@@ -69,6 +79,16 @@ describe( 'Plugins', () => {
 					before: '<paragraph>~foobar[]</paragraph>',
 					key: '~',
 					after: '<paragraph><$text strikethrough="true">foobar</$text>[]</paragraph>'
+				},
+				{
+					before: '<paragraph>`x[]</paragraph>',
+					key: '`',
+					after: '<paragraph><$text code="true">x</$text>[]</paragraph>'
+				},
+				{
+					before: '<paragraph>foo `x[] bar</paragraph>',
+					key: '`',
+					after: '<paragraph>foo <$text code="true">x</$text>[] bar</paragraph>'
 				}
 			] );
 
