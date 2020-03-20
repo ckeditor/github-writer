@@ -6,7 +6,7 @@
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import Enter from '../plugins/enter';
-import Autoformat from '../plugins/autoformat';
+import AutoFormat from '../plugins/autoformat';
 
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
@@ -65,7 +65,7 @@ const RteEditorConfig = {
 
 		const config = {
 			plugins: [
-				Essentials, Paragraph, Enter, Autoformat, Mention,
+				Essentials, Paragraph, Enter, AutoFormat, Mention,
 				Image, ImageUpload, GitHubUploadAdapter,
 				HeadingDropdown, HeadingTabKey,
 				Bold, Italic, SmartCode, Strikethrough,
