@@ -167,6 +167,16 @@ export function getInitials( text ) {
 }
 
 /**
+ * Escapes regular expression special characters in a string.
+ *
+ * @param string {String}
+ * @returns {String} The escaped string.
+ */
+export function escapeRegex( string ) {
+	return string.replace( /[\\^$.*+?()[\]{}|]/g, '\\$&' );
+}
+
+/**
  * Acts as a container for dom manipulations, make it possible to easily revert them.
  */
 export class DomManipulator {
