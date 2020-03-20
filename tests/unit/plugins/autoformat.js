@@ -21,7 +21,7 @@ import { setData, getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model
 import { createTestEditor } from '../../_util/ckeditor';
 
 describe( 'Plugins', () => {
-	describe.only( 'AutoFormat', () => {
+	describe( 'AutoFormat', () => {
 		let editor, model;
 
 		{
