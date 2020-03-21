@@ -33,7 +33,7 @@ describe( 'Util', () => {
 		it( 'should throw if a first level properties is false', () => {
 			const obj = {
 				a: 1,
-				b: false,
+				b: false
 			};
 
 			expect( () => checkDom( obj ) ).to.throw( PageIncompatibilityError );
@@ -42,7 +42,7 @@ describe( 'Util', () => {
 		it( 'should throw if a first level properties is null', () => {
 			const obj = {
 				a: 1,
-				b: null,
+				b: null
 			};
 
 			expect( () => checkDom( obj ) ).to.throw( PageIncompatibilityError );
@@ -51,7 +51,7 @@ describe( 'Util', () => {
 		it( 'should throw if a first level properties is undefined', () => {
 			const obj = {
 				a: 1,
-				b: undefined,
+				b: undefined
 			};
 
 			expect( () => checkDom( obj ) ).to.throw( PageIncompatibilityError );

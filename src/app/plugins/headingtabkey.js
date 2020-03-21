@@ -24,7 +24,7 @@ export default class HeadingTabKey extends Plugin {
 			const command = new ChangeHeadingLevelCommand( editor, -1 );
 			editor.commands.add( 'decreaseHeading', command );
 
-			editor.keystrokes.set( 'Tab', ( undefined, cancel ) => {
+			editor.keystrokes.set( 'Tab', ( ev, cancel ) => {
 				if ( command.execute() ) {
 					cancel();
 				}
@@ -35,7 +35,7 @@ export default class HeadingTabKey extends Plugin {
 			const command = new ChangeHeadingLevelCommand( editor, 1 );
 			editor.commands.add( 'increaseHeading', command );
 
-			editor.keystrokes.set( 'Shift+Tab', ( undefined, cancel ) => {
+			editor.keystrokes.set( 'Shift+Tab', ( ev, cancel ) => {
 				if ( command.execute() ) {
 					cancel();
 				}

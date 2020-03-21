@@ -783,7 +783,7 @@ export class GitHubLinkDataLoader {
 	load( text ) {
 		const key = text;
 
-		if ( !this._cache.hasOwnProperty( key ) ) {
+		if ( !Object.prototype.hasOwnProperty.call( this._cache, key ) ) {
 			// Get the GitHub preview for this text.
 			this._cache[ key ] = new Promise( resolve => {
 				downloadPreview.call( this )

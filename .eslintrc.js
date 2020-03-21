@@ -17,6 +17,8 @@ module.exports = {
 		// We allow blocks to be used to organize the logic of longer functions.
 		'no-lone-blocks': 'off',
 		'no-inner-declarations': 'off',
+		'mocha/no-sibling-hooks': 'off',
+		'mocha/no-top-level-hooks': 'off',
 		'quotes': [ 'error', 'single', { 'allowTemplateLiterals': true } ]
 	},
 

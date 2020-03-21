@@ -151,7 +151,7 @@ describe( 'Plugins', () => {
 					expect( boundary.offset ).to.equals( 2 );
 				} );
 
-				it( 'should walk forward by default', () => {
+				it( 'should walk forward', () => {
 					const startPosition = model.createPositionFromPath( root, [ 0, 0 ] );
 					const boundary = TextWalker.word( startPosition, 'forward' );
 
@@ -170,14 +170,14 @@ describe( 'Plugins', () => {
 				it( 'should stop on boundary chars when moving forward', () => {
 					setEditorData( '01 34. 78, 12; 56: ¿01? ¡56! 90' );
 
-					test( 3 );
-					test( 7 );
-					test( 11 );
-					test( 15 );
-					test( 20 );
-					test( 25 );
+					testAt( 3 );
+					testAt( 7 );
+					testAt( 11 );
+					testAt( 15 );
+					testAt( 20 );
+					testAt( 25 );
 
-					function test( startOffset ) {
+					function testAt( startOffset ) {
 						const startPosition = model.createPositionFromPath( root, [ 0, startOffset ] );
 						const boundary = TextWalker.word( startPosition );
 
@@ -189,10 +189,10 @@ describe( 'Plugins', () => {
 				it( 'should stop on boundary chars when moving backward', () => {
 					setEditorData( '01 ¿45? ¡90! 34' );
 
-					test( 6 );
-					test( 11 );
+					testAt( 6 );
+					testAt( 11 );
 
-					function test( startOffset ) {
+					function testAt( startOffset ) {
 						const startPosition = model.createPositionFromPath( root, [ 0, startOffset ] );
 						const boundary = TextWalker.word( startPosition, 'backward' );
 

@@ -408,12 +408,12 @@ describe( 'Plugins', () => {
 				{
 					before: '<codeBlock>foo _bar[] baz</codeBlock>',
 					key: '_',
-					after: '<codeBlock>foo _bar_[] baz</codeBlock>',
+					after: '<codeBlock>foo _bar_[] baz</codeBlock>'
 				},
 				{
 					before: '<codeBlock>--[]</codeBlock>',
 					key: '-',
-					after: '<codeBlock>---[]</codeBlock>',
+					after: '<codeBlock>---[]</codeBlock>'
 				}
 			] );
 

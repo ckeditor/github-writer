@@ -100,7 +100,7 @@ describe( 'Editors', () => {
 				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( [
 					{ type: 'user', id: 101, login: 'user_1', name: 'User 1' },
 					{ type: 'user', id: 102, login: 'user_2', name: 'User 2' },
-					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' },
+					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' }
 				] ) );
 
 				return promise.then( results => {
@@ -123,7 +123,7 @@ describe( 'Editors', () => {
 				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( [
 					{ type: 'user', id: 101, login: 'user_1', name: 'User 1' },
 					{ type: 'team', id: 202, name: 'org/team', description: 'Team 2' },
-					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' },
+					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' }
 				] ) );
 
 				return promise.then( results => {
@@ -146,7 +146,7 @@ describe( 'Editors', () => {
 				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( [
 					{ type: 'user', id: 101, login: 'user_1' },
 					{ type: 'team', id: 202, name: 'org/team' },
-					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' },
+					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' }
 				] ) );
 
 				return promise.then( results => {
@@ -170,7 +170,7 @@ describe( 'Editors', () => {
 					{ type: 'user', id: 101, login: 'user_1', name: 'User 1' },
 					{ type: 'test', id: 102, login: 'test', name: 'Testßß' },
 					{ type: 'team', id: 202, name: 'org/team', description: 'Team 2' },
-					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' },
+					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' }
 				] ) );
 
 				return promise.then( results => {
@@ -193,7 +193,7 @@ describe( 'Editors', () => {
 				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( [
 					{ type: 'user', id: 101, name: 'User 1' },
 					{ type: 'team', id: 202, description: 'Team 2' },
-					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' },
+					{ type: 'user', id: 103, login: 'user_3', name: 'User 3' }
 				] ) );
 
 				return promise.then( results => {
