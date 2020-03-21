@@ -167,7 +167,7 @@ export class CKEditorGitHubEditor extends DecoupledEditor {
 		super( initialData, config );
 
 		// TODO: Check if there is a better way to set the data processor without having to override DecoupledEditor.
-		this.data.processor = new GFMDataProcessor();
+		this.data.processor = new GFMDataProcessor( this.data.viewDocument );
 
 		// Adds our very own class to the toolbar.
 		this.ui.view.toolbar.extendTemplate( {
