@@ -29,7 +29,6 @@
     "@ckeditor/ckeditor5-clipboard": "^18.0.0",
     "@ckeditor/ckeditor5-code-block": "ckeditor/ckeditor5-code-block#github-rte",
     "@ckeditor/ckeditor5-core": "^18.0.0",
-    "@ckeditor/ckeditor5-dev-utils": "^12.0.9",
     "@ckeditor/ckeditor5-editor-decoupled": "^18.0.0",
     "@ckeditor/ckeditor5-engine": "^18.0.0",
     "@ckeditor/ckeditor5-enter": "^18.0.0",
@@ -52,6 +51,7 @@
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-dev-tests": "ckeditor/ckeditor5-dev/packages/ckeditor5-dev-tests#github-rte",
+    "@ckeditor/ckeditor5-dev-utils": "^12.0.9",
     "chai": "^4.2.0",
     "chromedriver": "^80.0.1",
     "copy-webpack-plugin": "^5.1.1",
