@@ -30,7 +30,7 @@ describe( 'The "issue" test suite', function() {
 	} );
 
 	it( 'should create a new issue using the RTE editor', async () => {
-		const timestamp = Date.now();
+		const timestamp = ( new Date() ).toISOString();
 		const title = `Testing (${ timestamp })`;
 
 		// Load the page.

@@ -34,7 +34,7 @@ describe( 'The "pull request" test suite', function() {
 	} );
 
 	it( 'should create a new pull request using the RTE editor', async () => {
-		const timestamp = Date.now();
+		const timestamp = ( new Date() ).toISOString();
 
 		// Load the editing page.
 		{

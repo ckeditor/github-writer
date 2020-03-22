@@ -39,8 +39,8 @@ describe( 'The "wiki" test suite', function() {
 	} );
 
 	it( 'should create a new page using the RTE editor', async () => {
-		const timestamp = Date.now();
-		const title = `Testing (${ timestamp })`;
+		const timestamp = ( new Date() ).toISOString();
+		const title = `Testing (${ timestamp.replace( /-/g, ' ' ) })`;
 
 		// Load the page.
 		{
