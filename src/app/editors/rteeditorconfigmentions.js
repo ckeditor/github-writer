@@ -38,6 +38,16 @@ const RteEditorConfigMentions = {
 				cache: {},
 
 				/**
+				 * Gets the list of entries to be passed to entryWorker() from the original data loaded from GitHub.
+				 *
+				 * @param data {Object|String} The raw data.
+				 * @returns {Array} The list of entries.
+				 */
+				getEntriesFromData( data ) {
+					return data.suggestions;
+				},
+
+				/**
 				 * Manipulates every entry from the data received by xhr from GH into a clean,
 				 * preprocessed format used by our code.
 				 *
@@ -102,6 +112,11 @@ const RteEditorConfigMentions = {
 			 */
 			people: {
 				cache: {},
+
+				getEntriesFromData( data ) {
+					return data;
+				},
+
 				entryWorker: entryData => {
 					/*
 						entryData = [
@@ -166,6 +181,13 @@ const RteEditorConfigMentions = {
 			 */
 			emoji: {
 				cache: {},
+
+				getEntriesFromData( data ) {
+					// A HTML ul>li list. Get the list of li elements.
+					const root = createElementFromHtml( data );
+					return Array.from( root.getElementsByTagName( 'li' ) );
+				},
+
 				entryWorker: entryLiElement => {
 					/*
 					<li id="emoji-grinning" data-value=":grinning:" data-emoji-name="grinning" data-text="grinning smile happy">
@@ -320,13 +342,6 @@ const RteEditorConfigMentions = {
 							throw new Error( 'Error when loading mentions from GitHub. No data returned.' );
 						}
 
-						// The returned data is either an array of objects, each being an entry or, in the case of emojis,
-						// a HTML ul>li list. In such a case, the worker implementation expects the li elements.
-						if ( type === 'emoji' ) {
-							const root = createElementFromHtml( data );
-							data = Array.from( root.getElementsByTagName( 'li' ) );
-						}
-
 						// Take the worker that will preprocess every item received.
 						const entryWorker = db[ type ].entryWorker;
 						const entries = {
@@ -334,7 +349,7 @@ const RteEditorConfigMentions = {
 							byText: []
 						};
 
-						data.forEach( dataEntry => {
+						db[ type ].getEntriesFromData( data ).forEach( dataEntry => {
 							// Let the worker do its job.
 							const entry = entryWorker( dataEntry );
 

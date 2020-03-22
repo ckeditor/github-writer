@@ -62,11 +62,13 @@ describe( 'Editors', () => {
 				const promise = config[ 0 ].feed.call( new CKEditorGitHubEditor(), '' );
 				expect( promise ).to.be.an.instanceOf( Promise );
 
-				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( [
-					{ id: 101, number: 1, title: 'Test 1' },
-					{ id: 102, number: 2, title: 'Test 2' },
-					{ id: 103, number: 3, title: 'Test 3' }
-				] ) );
+				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( {
+					suggestions: [
+						{ id: 101, number: 1, title: 'Test 1' },
+						{ id: 102, number: 2, title: 'Test 2' },
+						{ id: 103, number: 3, title: 'Test 3' }
+					]
+				} ) );
 
 				return promise.then( results => {
 					expect( results ).to.eql( [
@@ -330,11 +332,13 @@ describe( 'Editors', () => {
 				const promise = feed( 'Test' );
 				expect( promise ).to.be.an.instanceOf( Promise );
 
-				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( [
-					{ id: 101, number: 1, title: 'Test 1' },
-					{ id: 102, number: 2, title: 'Test 2' },
-					{ id: 103, number: 3, title: 'Test 3' }
-				] ) );
+				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( {
+					suggestions: [
+						{ id: 101, number: 1, title: 'Test 1' },
+						{ id: 102, number: 2, title: 'Test 2' },
+						{ id: 103, number: 3, title: 'Test 3' }
+					]
+				} ) );
 
 				return promise.then( () => {
 					expect( feed( 'Test' ) ).to.equals( promise );
@@ -350,11 +354,13 @@ describe( 'Editors', () => {
 
 				const promise = feed( 'Test' );
 
-				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( [
-					{ id: 101, number: 1, title: 'Test 1' },
-					{ id: 102, number: 2, title: 'Test 2' },
-					{ id: 103, number: 3, title: 'Test 3' }
-				] ) );
+				xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( {
+					suggestions: [
+						{ id: 101, number: 1, title: 'Test 1' },
+						{ id: 102, number: 2, title: 'Test 2' },
+						{ id: 103, number: 3, title: 'Test 3' }
+					]
+				} ) );
 
 				return promise.then( () => {
 					xhr = null;
@@ -436,12 +442,14 @@ describe( 'Editors', () => {
 					const promise = config[ 0 ].feed.call( new CKEditorGitHubEditor(), entry.query );
 					expect( promise ).to.be.an.instanceOf( Promise );
 
-					xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( [
-						{ id: 204, number: 204, title: 'Another 4 Ext' },
-						{ id: 203, number: 203, title: 'Test 3 Ext' },
-						{ id: 102, number: 102, title: 'Test 2' },
-						{ id: 101, number: 101, title: 'Test 1' }
-					] ) );
+					xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( {
+						suggestions: [
+							{ id: 204, number: 204, title: 'Another 4 Ext' },
+							{ id: 203, number: 203, title: 'Test 3 Ext' },
+							{ id: 102, number: 102, title: 'Test 2' },
+							{ id: 101, number: 101, title: 'Test 1' }
+						]
+					} ) );
 
 					return promise.then( results => {
 						// Compare the returned numbers with the expected results.
