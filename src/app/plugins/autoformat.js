@@ -148,7 +148,12 @@ export class AutoFormatManager extends Map {
 					const match = text.match( autoFormatter.typingRegex );
 
 					if ( match && editor.commands.get( autoFormatter.command.name ).isEnabled ) {
-						const position = model.createPositionAt( change.position.parent, textNode.startOffset + match.index );
+						let index = match.index;
+
+						// The first matching group can be used to shift the index of the marker itself.
+						match[ 1 ] && ( index += match[ 1 ].length );
+
+						const position = model.createPositionAt( change.position.parent, textNode.startOffset + index );
 						return autoFormatter.onMarker( editor, position );
 					}
 				} );
@@ -215,12 +220,11 @@ export class InlineAutoFormatter extends AutoFormatter {
 		super( marker, command );
 
 		// Build the regex used to search for an opening match.
-		// E.g.: /^\s`(?!`)[^\s]/:
-		//   > The marker.
-		//     - Preceded by anything which is not the first character of the marker or space.
+		// E.g.: /(^|[^\s|`])`[\s.,;:?!]?$/:
+		//   > (Group) Anything which is not space or the first character of the marker.
 		//   + Marker
 		//   + Space or punctuation, if any.
-		this.typingRegex = new RegExp( '(?<!\\s|' + escapeRegex( marker[ 0 ] ) + ')' + escapeRegex( marker ) + '[\\s.,;:?!]?$' );
+		this.typingRegex = new RegExp( '(^|[^\\s|' + escapeRegex( marker[ 0 ] ) + '])' + escapeRegex( marker ) + '[\\s.,;:?!]?$' );
 	}
 
 	/**
