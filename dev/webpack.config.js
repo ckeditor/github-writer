@@ -16,7 +16,11 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 
 const packageJson = require( '../package.json' );
 
+let isProduction = false;
+
 module.exports = ( env, argv ) => {
+	isProduction = ( argv.mode === 'production' );
+
 	return {
 		entry: './src/github-rte.js',
 
@@ -120,7 +124,7 @@ module.exports = ( env, argv ) => {
 							'build/github-rte.js*'
 						]
 					},
-					( argv.mode === 'production' ) ?
+					( isProduction ) ?
 						{
 							archive: [
 								{ source: 'build/github-rte-chrome', destination: 'build/github-rte-chrome.zip' },
@@ -156,6 +160,10 @@ function transformManifest( content, target ) {
 
 	// Setup the contents.
 	{
+		if ( !isProduction ) {
+			content.name += ' / dev';
+		}
+
 		content.version = packageJson.version;
 
 		if ( target === 'chrome' ) {
