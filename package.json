@@ -63,7 +63,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "mocha": "^7.1.1",
     "postcss-loader": "^3.0.0",
-    "puppeteer": "^2.1.1",
+    "puppeteer": "2.0.0",
     "raw-loader": "^4.0.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "style-loader": "^1.1.3",

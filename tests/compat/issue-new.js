@@ -58,7 +58,7 @@ describe( 'Issue - New', function() {
 		} );
 	} );
 
-	describe.skip( 'Upload', () => {
+	describe( 'Upload', () => {
 		it( '', () => {
 			return new Promise( resolve => {
 				( async () => {
@@ -166,12 +166,12 @@ describe( 'Issue - New', function() {
 						console.log( request.postData() );
 					} );
 
-					// TODO: The following would be the right way for it, but it is not working. This test is not complete.
-					// This promise never resolves.
-					// let fileChooser = page.browserPage.waitForFileChooser();
+					// The following will not work with newer versions of Puppeteer:
+					// https://github.com/puppeteer/puppeteer/issues/5537
+					let fileChooser = page.browserPage.waitForFileChooser();
 					page.browserPage.click( '#fc-issue_body' );
-					// fileChooser = await fileChooser;
-					// fileChooser.accept( [ 'tests/_assets/images/ball.png' ] );
+					fileChooser = await fileChooser;
+					fileChooser.accept( [ 'tests/_assets/images/ball.png' ] );
 				} )();
 			} );
 		} );
