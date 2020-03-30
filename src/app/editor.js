@@ -486,12 +486,12 @@ export default class Editor {
 
 			// Sync the editors when submitting the form (which is always done by "click").
 			{
-				if ( this.dom.buttons.submit !== submit ) {
-					// Reset the submit flag.
-					delete this._isSubmitting;
+				// Reset the submit flag.
+				delete this._isSubmitting;
 
+				if ( this.dom.buttons.submit !== submit ) {
 					submit = this.dom.buttons.submit;
-					this.domManipulator.addEventListener( submit, 'click',
+					submit && this.domManipulator.addEventListener( submit, 'click',
 						() => syncOnSubmit( this ) );
 				}
 
@@ -578,13 +578,15 @@ export default class Editor {
 		function connectSubmitButtonObserver() {
 			const button = this.dom.buttons.submit;
 
-			this._submitButtonObserver = new MutationObserver( () => {
-				// noinspection JSPotentiallyInvalidUsageOfClassThis
-				this._setSubmitStatus();
-			} );
-			this._submitButtonObserver.observe( button, { attributes: true, attributeFilter: [ 'disabled' ] } );
+			if ( button ) {
+				this._submitButtonObserver = new MutationObserver( () => {
+					// noinspection JSPotentiallyInvalidUsageOfClassThis
+					this._setSubmitStatus();
+				} );
+				this._submitButtonObserver.observe( button, { attributes: true, attributeFilter: [ 'disabled' ] } );
 
-			this.domManipulator.addRollbackOperation( () => disconnectSubmitButtonObserver.call( this ) );
+				this.domManipulator.addRollbackOperation( () => disconnectSubmitButtonObserver.call( this ) );
+			}
 		}
 
 		function disconnectSubmitButtonObserver() {

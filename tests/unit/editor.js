@@ -329,6 +329,23 @@ describe( 'Editor', () => {
 				} );
 		} );
 
+		it( 'should not throw if no submit button', () => {
+			const root = GitHubPage.appendRoot();
+			root.querySelector( '.btn-primary' ).remove();
+			const editor = new Editor( root );
+
+			let promise;
+
+			expect( () => ( promise = editor.create() ) ).to.not.throw();
+
+			// noinspection JSUnusedAssignment
+			return promise
+				.then( editor => {
+					expect( editor ).be.an.instanceOf( Editor );
+				} )
+				.catch( () => expect.fail() );
+		} );
+
 		describe( 'session resume', () => {
 			it( 'should setup session resume', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );
