@@ -59,7 +59,7 @@ describe( 'Issue - New', function() {
 	} );
 
 	describe( 'Upload', () => {
-		it( '', () => {
+		it( 'should make the expected posts', () => {
 			return new Promise( resolve => {
 				( async () => {
 					const browserPage = page.browserPage;
