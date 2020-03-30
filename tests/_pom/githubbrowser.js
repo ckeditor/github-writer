@@ -9,7 +9,7 @@ module.exports = class GitHubBrowser {
 	static async getPage() {
 		if ( !this._page ) {
 			const browser = this._browser = await puppeteer.launch( {
-				headless: false
+				headless: true
 			} );
 			this._page = await browser.newPage();
 			await this._page.setBypassCSP( true );
