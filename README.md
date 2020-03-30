@@ -29,7 +29,7 @@ One of the goals of this extension is providing all features which are available
     *   [x] On text
     *   [ ] On images
     *   [x] Auto-link URLs on pasting.
-    *   [ ] Auto-link URLs on typing.
+    *   [x] Auto-link URLs on typing.
 *   Media
     *   [x] Images
         *   [x] Drag-and-drop
@@ -68,9 +68,9 @@ The GitHub RTE should be enabled in all places where the original markdown edito
     *   [x] Code comments
         *   [x] Editing
 *   [x] Wiki pages
-*   [ ] Commits
-    *   [ ] Comment
-    *   [ ] Line comment
+*   [x] Commits
+    *   [x] Comment
+    *   [x] Line comment
 *   [ ] Settings > Saved replies
 
 ### Developer information
