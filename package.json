@@ -47,7 +47,8 @@
     "@ckeditor/ckeditor5-theme-lark": "^18.0.0",
     "@ckeditor/ckeditor5-ui": "^18.0.0",
     "@ckeditor/ckeditor5-upload": "^18.0.0",
-    "@ckeditor/ckeditor5-utils": "^18.0.0"
+    "@ckeditor/ckeditor5-utils": "^18.0.0",
+    "linguist-languages": "^7.9.0"
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-dev-tests": "ckeditor/ckeditor5-dev/packages/ckeditor5-dev-tests#github-rte",

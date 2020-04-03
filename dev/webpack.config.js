@@ -33,6 +33,12 @@ module.exports = ( env, argv ) => {
 			rules: [
 				{
 					test: [
+						/\/src\/app\/lib\/languages.js$/
+					],
+					loader: path.resolve( __dirname, '../dev/static-module-loader.js' )
+				},
+				{
+					test: [
 						/ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
 						/[/\\]+src[/\\]+app[/\\]+icons[/\\]+.+\.svg$/
 					],

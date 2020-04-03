@@ -91,13 +91,18 @@
 	}
 
 	/* Code block */
-	& pre[data-language]:not([data-language="Suggestion"]):after {
-		/* Hide the inline label in code blocks as it's not relevant for now. */
-		display: none;
+	& pre {
+		background-color: hsl(210, 29%, 97%);
+		border: 0;
+		padding: 16px;
+
+		& br {
+			display: initial !important;
+		}
 	}
 
-	& pre br {
-		display: initial !important;
+	&.ck-blurred pre {
+		background-color: hsl(225, 35%, 95%);
 	}
 
 	/* Table */

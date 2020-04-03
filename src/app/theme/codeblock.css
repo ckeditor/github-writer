@@ -1,0 +1,55 @@
+/*
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+/* Code-block language selection button. */
+
+.ck.ck-editor__editable.ck-content {
+	& pre[data-language] {
+		&:after,
+		& .ck-codeblock-language-button {
+			position: absolute;
+			top: 1px;
+			right: 1px;
+			padding: 0 var(--ck-spacing-medium);
+			border: 0;
+			color: hsla(209, 50%, 25%, 1.1);
+			background: none;
+			font-size: 10px;
+			font-family: var(--ck-font-face);
+			line-height: normal;
+			white-space: nowrap;
+			height: 16px;
+
+			& * {
+				line-height: inherit;
+				height: auto;
+			}
+		}
+	}
+
+	& pre[data-language]:not([data-language="Suggestion"]) {
+		&:after {
+			/* Hide the inline label in code blocks as it's not relevant for now. */
+			display: none;
+		}
+
+		& .ck-codeblock-language-button {
+			cursor: pointer;
+
+			&.ck-on,
+			&:active,
+			&:hover {
+				color: #fff;
+				background: #0366d6;
+			}
+
+			& > .ck-dropdown__arrow {
+				width: 0.9em;
+				margin-left: var(--ck-spacing-medium);
+			}
+		}
+	}
+}
+

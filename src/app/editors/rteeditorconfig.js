@@ -48,8 +48,10 @@ import ResetListener from '../plugins/resetlistener';
 import EditorExtras from '../plugins/editorextras';
 import ControlClick from '../plugins/controlclick';
 import SmartCaret from '../plugins/smartcaret';
+import CodeBlockLanguageSelector from '../plugins/codeblocklanguageselector';
 
 import App from '../app';
+import { config as languagesConfig } from '../modules/languages';
 import { getNewIssuePageDom } from '../util';
 
 const RteEditorConfig = {
@@ -75,7 +77,8 @@ const RteEditorConfig = {
 				HorizontalLine, Table, TableToolbar,
 				Kebab, RemoveFormat, ModeSwitcher, Suggestion,
 				PasteFromOffice, PasteFixer,
-				AutoLinking, QuoteSelection, ResetListener, EditorExtras, ControlClick, SmartCaret
+				AutoLinking, QuoteSelection, ResetListener, EditorExtras, ControlClick, SmartCaret,
+				CodeBlockLanguageSelector
 			],
 			toolbar: [
 				'headingdropdown', 'bold', 'italic', '|',
@@ -101,6 +104,9 @@ const RteEditorConfig = {
 			},
 			mention: {
 				feeds: getMentionsConfig()
+			},
+			codeBlock: {
+				languages: languagesConfig.concat( [] )	// copy
 			},
 			githubRte: {
 				/**
