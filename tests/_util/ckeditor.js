@@ -58,3 +58,8 @@ export function getDataPosition( editor, data ) {
 
 	return model.createPositionFromPath( root, [ 0, offset ] );
 }
+
+export const fakeLocale = {
+	t() {
+	}
+};

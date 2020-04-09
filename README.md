@@ -20,7 +20,7 @@ One of the goals of this extension is providing all features which are available
     *   [x] Quote
         *   [ ] Quote in quote (levels)
     *   [x] Code block
-        *   [ ] Language selection
+        *   [x] Language selection
 *   Lists
     *   [x] Bulleted list
     *   [x] Numbered list
