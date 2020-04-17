@@ -51,6 +51,12 @@
 		cursor: pointer;
 		border: 0;
 		border-bottom: 1px solid #eaecef;
+		padding: calc(0.2 * var(--ck-line-height-base) * var(--ck-font-size-base)) calc(0.4 * var(--ck-line-height-base) * var(--ck-font-size-base));
+		line-height: 18px;
+
+		&.github-rte-create-reply {
+			border-bottom: 0;
+		}
 
 		&:hover,
 		&:active,
@@ -77,6 +83,10 @@
 		}
 	}
 
+	& .ck-list > .ck-list__item.ck-list__item.ck-list__item {
+		padding: 0;
+	}
+
 	& .select-menu-footer {
 		border-bottom: 0;
 	}
@@ -86,6 +96,15 @@
 			border-color: #2188ff;
 			outline: none;
 			box-shadow: inset 0 1px 2px rgba(27, 31, 35, .075), 0 0 0 0.2em rgba(3, 102, 214, .3);
+		}
+	}
+
+	&.github-rte-savedreplies {
+		width: 300px;
+		max-width: 300px;
+
+		& .description {
+			display: block;
 		}
 	}
 }

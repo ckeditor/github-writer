@@ -67,7 +67,12 @@
 		}
 
 		& > .ck-dropdown {
-			margin: 0;
+			margin: 0 4px;
+
+			& > .ck-splitbutton > .ck-button,
+			& > .ck-button.ck-dropdown__button {
+				margin: 0 !important;
+			}
 
 			& .ck.ck-toolbar {
 				margin: 0;

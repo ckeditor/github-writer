@@ -49,6 +49,7 @@ import EditorExtras from '../plugins/editorextras';
 import ControlClick from '../plugins/controlclick';
 import SmartCaret from '../plugins/smartcaret';
 import CodeBlockLanguageSelector from '../plugins/codeblocklanguageselector';
+import SavedReplies from '../plugins/savedreplies';
 
 import App from '../app';
 import { config as languagesConfig } from '../modules/languages';
@@ -77,13 +78,14 @@ const RteEditorConfig = {
 				HorizontalLine, Table, TableToolbar,
 				Kebab, RemoveFormat, ModeSwitcher, Suggestion,
 				PasteFromOffice, PasteFixer,
-				AutoLinking, QuoteSelection, ResetListener, EditorExtras, ControlClick, SmartCaret,
+				AutoLinking, QuoteSelection, SavedReplies, ResetListener, EditorExtras, ControlClick, SmartCaret,
 				CodeBlockLanguageSelector
 			],
 			toolbar: [
 				'headingdropdown', 'bold', 'italic', '|',
 				'blockquote', 'smartcode', 'link', '|',
-				'bulletedlist', 'numberedlist', 'todolist', 'kebab'
+				'bulletedlist', 'numberedlist', 'todolist', '|',
+				'savedreplies', 'kebab'
 			],
 			kebabToolbar: [ 'strikethrough', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ],
 			table: {
@@ -144,6 +146,13 @@ const RteEditorConfig = {
 					 * Indicates that the suggestion feature should be enabled in the editor.
 					 */
 					enabled: checkSuggestionEnabled( rteEditor )
+				},
+
+				/**
+				 * Configurations for the "saved reply" feature.
+				 */
+				savedReplies: {
+					url: getSavedRepliesUrl( rteEditor )
 				}
 			}
 		};
@@ -248,6 +257,18 @@ const RteEditorConfig = {
 			const toolbar = rteEditor.githubEditor.markdownEditor.dom.toolbar;
 			const button = toolbar && toolbar.querySelector( 'button.js-suggested-change-toolbar-item' );
 			return !!button;
+		}
+
+		/**
+		 * Gets the Saved Replies url from the dom.
+		 *
+		 * @param rteEditor
+		 * @returns {String} The url.
+		 */
+		function getSavedRepliesUrl( rteEditor ) {
+			const toolbar = rteEditor.githubEditor.markdownEditor.dom.toolbar;
+			const el = toolbar && toolbar.querySelector( '.js-saved-reply-menu[src]' );
+			return el && el.getAttribute( 'src' );
 		}
 	}
 };

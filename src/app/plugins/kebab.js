@@ -26,6 +26,7 @@ export default class Kebab extends Plugin {
 		editor.ui.componentFactory.add( 'kebab', locale => {
 			const dropdown = createDropdown( locale );
 
+			dropdown.class = 'github-rte-kebab-button';
 			dropdown.panelPosition = 'sw';
 
 			dropdown.buttonView.set( {

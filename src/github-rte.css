@@ -85,24 +85,19 @@ form.js-release-form div.github-rte-ckeditor {
 }
 
 /* Hide all rte toolbar items. */
-.github-rte-mode-markdown .ck.ck-toolbar__separator,
-.github-rte-mode-markdown .ck-file-dialog-button,
-.github-rte-mode-markdown .ck.ck-button {
+.github-rte-mode-markdown .ck-toolbar__items > * {
 	display: none !important;
 }
 
 /* Except the Kebab and Markdown buttons. */
-.github-rte-mode-markdown .ck.ck-button.github-rte-kebab-button,
-.github-rte-mode-markdown .ck.ck-button.github-rte-mode-button {
+.github-rte-mode-markdown .ck-toolbar__items > .github-rte-kebab-button,
+.github-rte-mode-markdown .ck-toolbar__items > .github-rte-mode-button {
 	display: block !important;
 }
 
 /* Get the GH toolbar closer to the RTE one (which is always available with the the Kebab button). */
 .github-rte-mode-markdown markdown-toolbar.px-2 {
-	padding-right: 0 !important;
-}
-.github-rte-mode-markdown .ck.github-rte-toolbar {
-	margin-left: -4px;
+	padding-right: 3px !important;
 }
 
 /* Change the text of the "Write" tab. */

@@ -274,4 +274,10 @@ describe( 'Issue - New', function() {
 			} );
 		}
 	} );
+
+	describe( 'Saved Replies', () => {
+		it( 'should have url in the toolbar', async () => {
+			expect( await page.hasElement( root + ' markdown-toolbar .js-saved-reply-menu[src]' ) ).to.be.true;
+		} );
+	} );
 } );

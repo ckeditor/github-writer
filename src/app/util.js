@@ -8,10 +8,22 @@
  * be changed).
  *
  * @return {Location} A document location object.
- * @private
+ * @protected
  */
-window.__getLocation = () => {
+window.__getLocation = function() {
 	return window.location;
+};
+
+/**
+ * For testing purposes, we inject this function in the document, so we're able to stub it
+ * and avoid a read navigation.
+ *
+ * @param href (String) The url to navigate to.
+ * @protected
+ */
+/* istanbul ignore next */
+window.__setLocation = function( href ) {
+	window.location.href = href;
 };
 
 /**

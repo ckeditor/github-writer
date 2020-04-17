@@ -250,5 +250,18 @@ describe( 'Editors', () => {
 				expect( config.toolbar[ 1 ] ).to.equals( '|' );
 			} );
 		} );
+
+		describe( 'githubRte.savedReplies.url', () => {
+			it( 'should take the url from the dom', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const rteEditor = new RteEditor( editor );
+
+				editor.markdownEditor.dom.toolbar.insertAdjacentHTML( 'beforeend',
+					'<details-menu class="js-saved-reply-menu" src="https://test.com/sr">Saved Replies</details-menu>' );
+
+				const config = RteEditorConfig.get( rteEditor );
+				expect( config.githubRte.savedReplies.url ).to.equals( 'https://test.com/sr' );
+			} );
+		} );
 	} );
 } );

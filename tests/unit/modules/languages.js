@@ -3,7 +3,6 @@
  * For licensing, see LICENSE.md.
  */
 
-// const languagesObject = require( '../../../src/app/lib/languages' );
 import languagesObject from '../../../src/app/modules/languages';
 
 describe( 'Modules', () => {
