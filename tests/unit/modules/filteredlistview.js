@@ -35,11 +35,15 @@ describe( 'Modules', () => {
 
 			view.filterInputView.fire( 'input' );
 
-			const list = view.element.querySelector( ':scope.ck-filteredlist > div.select-menu-list' );
-			const items = Array.from( list.querySelectorAll( ':scope > ul > li > button' ) );
-			expect( items.length ).to.equals( results.length );
+			return new Promise( resolve => {
+				setTimeout( () => {
+					const list = view.element.querySelector( ':scope.ck-filteredlist > div.select-menu-list' );
+					const items = Array.from( list.querySelectorAll( ':scope > ul > li > button' ) );
+					expect( items.length ).to.equals( results.length );
 
-			return items;
+					resolve( items );
+				} );
+			} );
 		}
 
 		describe( 'constructor()', () => {
@@ -119,46 +123,45 @@ describe( 'Modules', () => {
 				expect( spy.alwaysCalledWithExactly( 'Test' ) ).to.be.true;
 			} );
 
-			it( 'should focus the first list item on arrow down', done => {
+			it( 'should focus the first list item on arrow down', () => {
 				document.body.appendChild( view.element );
 
-				const items = query( [ { label: 'Item 1' }, { label: 'Item 2' } ] );
+				return query( [ { label: 'Item 1' }, { label: 'Item 2' } ] ).then( items => {
+					const filter = view.filterInputView.element;
+					filter.focus();
+					filter.dispatchEvent( new KeyboardEvent( 'keydown', { keyCode: 40 } ) );
 
-				const filter = view.filterInputView.element;
-				filter.focus();
-				filter.dispatchEvent( new KeyboardEvent( 'keydown', { keyCode: 40 } ) );
-
-				setTimeout( () => {
 					expect( items[ 0 ] ).to.equals( document.activeElement );
 					view.element.remove();
-					done();
 				} );
 			} );
 		} );
 
 		describe( 'list / query', () => {
 			it( 'should list results', () => {
-				const items = query( [ { label: 'Item 1' }, { label: 'Item 2' } ] );
-
-				items.forEach( ( item, index ) => {
-					expect( item.querySelector( ':scope > span.select-menu-item-heading' ).firstChild.wholeText )
-						.to.equals( 'Item ' + ( index + 1 ) );
-					expect( item.querySelector( ':scope > span.select-menu-item-heading > span.description' ) )
-						.to.be.null;
-					expect( item.querySelector( ':scope > code > span' ).textContent )
-						.to.equals( 'ctrl ' + ( index + 1 ) );
+				return query( [ { label: 'Item 1' }, { label: 'Item 2' } ] ).then( items => {
+					items.forEach( ( item, index ) => {
+						expect( item.querySelector( ':scope > span.select-menu-item-heading' ).firstChild.wholeText )
+							.to.equals( 'Item ' + ( index + 1 ) );
+						expect( item.querySelector( ':scope > span.select-menu-item-heading > span.description' ) )
+							.to.be.null;
+						expect( item.querySelector( ':scope > code > span' ).textContent )
+							.to.equals( 'ctrl ' + ( index + 1 ) );
+					} );
 				} );
 			} );
 
 			it( 'should add description', () => {
-				const item = query( [ { label: 'Item 1', description: 'Descr 1' } ] )[ 0 ];
+				return query( [ { label: 'Item 1', description: 'Descr 1' } ] ).then( items => {
+					const item = items[ 0 ];
 
-				expect( item.querySelector( ':scope > span.select-menu-item-heading' )
-					.firstChild.wholeText ).to.equals( 'Item 1 ' );
-				expect( item.querySelector( ':scope > span.select-menu-item-heading > span.description' )
-					.firstChild.wholeText ).to.equals( 'Descr 1' );
-				expect( item.querySelector( ':scope > code > span' ).textContent )
-					.to.equals( 'ctrl 1' );
+					expect( item.querySelector( ':scope > span.select-menu-item-heading' )
+						.firstChild.wholeText ).to.equals( 'Item 1 ' );
+					expect( item.querySelector( ':scope > span.select-menu-item-heading > span.description' )
+						.firstChild.wholeText ).to.equals( 'Descr 1' );
+					expect( item.querySelector( ':scope > code > span' ).textContent )
+						.to.equals( 'ctrl 1' );
+				} );
 			} );
 
 			it( 'should add custom view', () => {
@@ -166,15 +169,17 @@ describe( 'Modules', () => {
 				custom.label = 'Test';
 				custom.class = 'custom-test';
 
-				const item = query( [ { createView: () => custom } ] )[ 0 ];
+				return query( [ { createView: () => custom } ] ).then( items => {
+					const item = items[ 0 ];
 
-				expect( item.querySelector( ':scope > span.select-menu-item-heading' ) ).to.be.null;
-				expect( item.querySelector( ':scope > code' ) ).to.be.null;
+					expect( item.querySelector( ':scope > span.select-menu-item-heading' ) ).to.be.null;
+					expect( item.querySelector( ':scope > code' ) ).to.be.null;
 
-				expect( item.querySelector( ':scope.custom-test > span.ck-button__label' )
-					.firstChild.wholeText ).to.equals( 'Test' );
+					expect( item.querySelector( ':scope.custom-test > span.ck-button__label' )
+						.firstChild.wholeText ).to.equals( 'Test' );
 
-				custom.destroy();
+					custom.destroy();
+				} );
 			} );
 
 			it( 'should set max nine keys', () => {
@@ -183,46 +188,50 @@ describe( 'Modules', () => {
 					results.push( { label: 'Item ' + i } );
 				}
 
-				const items = query( results );
-
-				items.forEach( ( item, index ) => {
-					expect( item.querySelector( ':scope > span.select-menu-item-heading' ).firstChild.wholeText )
-						.to.equals( 'Item ' + ( index + 1 ) );
-					expect( item.querySelector( ':scope > span.select-menu-item-heading > span.description' ) )
-						.to.be.null;
-					if ( index < 9 ) {
-						expect( item.querySelector( ':scope > code > span' ).textContent )
-							.to.equals( 'ctrl ' + ( index + 1 ) );
-					} else {
-						expect( item.querySelector( ':scope > code' ) ).to.be.null;
-					}
+				return query( results ).then( items => {
+					items.forEach( ( item, index ) => {
+						expect( item.querySelector( ':scope > span.select-menu-item-heading' ).firstChild.wholeText )
+							.to.equals( 'Item ' + ( index + 1 ) );
+						expect( item.querySelector( ':scope > span.select-menu-item-heading > span.description' ) )
+							.to.be.null;
+						if ( index < 9 ) {
+							expect( item.querySelector( ':scope > code > span' ).textContent )
+								.to.equals( 'ctrl ' + ( index + 1 ) );
+						} else {
+							expect( item.querySelector( ':scope > code' ) ).to.be.null;
+						}
+					} );
 				} );
 			} );
 
 			it( 'should remove previous items on second call', () => {
-				query( [ { label: 'Item 1' }, { label: 'Item 2' } ] );
-				const item = query( [ { label: 'Item A' } ] )[ 0 ];
+				return query( [ { label: 'Item 1' }, { label: 'Item 2' } ] ).then( () => {
+					return query( [ { label: 'Item A' } ] ).then( items => {
+						const item = items[ 0 ];
 
-				expect( item.querySelector( ':scope > span.select-menu-item-heading' ).firstChild.wholeText )
-					.to.equals( 'Item A' );
-				expect( item.querySelector( ':scope > code > span' ).textContent )
-					.to.equals( 'ctrl 1' );
+						expect( item.querySelector( ':scope > span.select-menu-item-heading' ).firstChild.wholeText )
+							.to.equals( 'Item A' );
+						expect( item.querySelector( ':scope > code > span' ).textContent )
+							.to.equals( 'ctrl 1' );
+					} );
+				} );
 			} );
 
 			it( 'should execute on item click', done => {
 				const data = [ { label: 'Item 1' }, { label: 'Item 2' } ];
-				const items = query( data );
 
-				view.once( 'execute', ( evt, eventData ) => {
-					expect( eventData ).to.equals( data[ 0 ] );
+				query( data ).then( items => {
 					view.once( 'execute', ( evt, eventData ) => {
-						expect( eventData ).to.equals( data[ 1 ] );
-						done();
+						expect( eventData ).to.equals( data[ 0 ] );
+						view.once( 'execute', ( evt, eventData ) => {
+							expect( eventData ).to.equals( data[ 1 ] );
+							done();
+						} );
+						items[ 1 ].click();
 					} );
-					items[ 1 ].click();
-				} );
 
-				items[ 0 ].click();
+					items[ 0 ].click();
+				} );
 			} );
 
 			it( 'should execute on keystroke', done => {
@@ -234,18 +243,19 @@ describe( 'Modules', () => {
 				];
 
 				const data = [ { label: 'Item 1' }, { label: 'Item 2' } ];
-				query( data );
 
-				view.once( 'execute', ( evt, eventData ) => {
-					expect( eventData ).to.equals( data[ 0 ] );
+				query( data ).then( () => {
 					view.once( 'execute', ( evt, eventData ) => {
-						expect( eventData ).to.equals( data[ 1 ] );
-						done();
+						expect( eventData ).to.equals( data[ 0 ] );
+						view.once( 'execute', ( evt, eventData ) => {
+							expect( eventData ).to.equals( data[ 1 ] );
+							done();
+						} );
+						view.element.dispatchEvent( keys[ 1 ] );
 					} );
-					view.element.dispatchEvent( keys[ 1 ] );
-				} );
 
-				view.element.dispatchEvent( keys[ 0 ] );
+					view.element.dispatchEvent( keys[ 0 ] );
+				} );
 			} );
 		} );
 

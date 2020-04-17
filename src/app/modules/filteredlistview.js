@@ -144,8 +144,13 @@ export default class FilteredListView extends View {
 			filterInput.on( 'input', () => executeQuery( filterInput.element.value ) );
 
 			const keystroke = new KeystrokeHandler();
-			// setTimeout to avoid page jump.
-			keystroke.set( 'ArrowDown', () => setTimeout( () => list.focus(), 0 ) );
+			keystroke.set( 'ArrowDown', evt => {
+				list.focus();
+
+				// The following both avoids page jump and make it work in the Saved Replies case.
+				evt.preventDefault();
+				evt.stopPropagation();
+			} );
 			filterInput.on( 'render', () => keystroke.listenTo( filterInput.element ), { priority: 'low' } );
 		}
 
@@ -257,15 +262,16 @@ export default class FilteredListView extends View {
 
 			// Query and update list.
 			{
-				const results = that.query( filter );
-
-				results.forEach( ( data, index ) => {
-					// Automatically provides an access key for the first nine items.
-					if ( index < 9 ) {
-						data.key = 'Ctrl+' + ( index + 1 );
-					}
-					items.add( data );
-				} );
+				Promise.resolve( that.query( filter ) )
+					.then( results => {
+						results.forEach( ( data, index ) => {
+							// Automatically provides an access key for the first nine items.
+							if ( index < 9 ) {
+								data.key = 'Ctrl+' + ( index + 1 );
+							}
+							items.add( data );
+						} );
+					} );
 			}
 
 			/**

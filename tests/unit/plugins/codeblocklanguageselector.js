@@ -570,9 +570,11 @@ describe( 'Plugins', () => {
 				view.filterInputView.element.value = 'js';
 				view.filterInputView.fire( 'input' );
 
-				const list = view.element.querySelector( ':scope.ck-filteredlist > div.select-menu-list' );
-				const item = list.querySelector( ':scope > ul > li > button' );
-				item.click();
+				setTimeout( () => {
+					const list = view.element.querySelector( ':scope.ck-filteredlist > div.select-menu-list' );
+					const item = list.querySelector( ':scope > ul > li > button' );
+					item.click();
+				} );
 			} );
 
 			describe( 'query', () => {
