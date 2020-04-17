@@ -49,7 +49,7 @@ One of the goals of this extension is providing all features which are available
     *   [x] Tables
     *   [x] Quote selection ("r" key)
     *   [x] PR code suggestions
-    *   [ ] Saved replies
+    *   [x] Saved replies
 
 ### Pages enabled
 
