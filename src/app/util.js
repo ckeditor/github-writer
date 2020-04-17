@@ -179,6 +179,25 @@ export function getInitials( text ) {
 }
 
 /**
+ * Escapes HTML by replacing the `&,<,>,",'` characters with their HTML entity counterparts.
+ *
+ * @param html {String} The html to be escaped.
+ * @returns {String} The escaped version of html.
+ */
+export function escapeHtml( html ) {
+	const entities = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		'\'': '&#39;',
+		'`': '&#96;'
+	};
+
+	return html.replace( /[&<>"'`]/g, char => entities[ char ] );
+}
+
+/**
  * Escapes regular expression special characters in a string.
  *
  * @param string {String}

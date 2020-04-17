@@ -8,6 +8,8 @@ import {
 	createElementFromHtml,
 	DomManipulator,
 	getInitials,
+	escapeHtml,
+	escapeRegex,
 	getNewIssuePageDom,
 	injectFunctionExecution,
 	openXmlHttpRequest,
@@ -217,6 +219,20 @@ describe( 'Util', () => {
 		it( 'should return empty for non text', () => {
 			expect( getInitials( 1 ) ).to.equals( '' );
 			expect( getInitials( null ) ).to.equals( '' );
+		} );
+	} );
+
+	describe( 'escapeHtml', () => {
+		it( 'should escape html', () => {
+			expect( escapeHtml( 'Test & < > " \' ` &' ) )
+				.to.equals( 'Test &amp; &lt; &gt; &quot; &#39; &#96; &amp;' );
+		} );
+	} );
+
+	describe( 'escapeRegex', () => {
+		it( 'should escape html', () => {
+			expect( escapeRegex( 'Test \\ ^ $ . * + ? ( ) [ ] { } | $' ) )
+				.to.equals( 'Test \\\\ \\^ \\$ \\. \\* \\+ \\? \\( \\) \\[ \\] \\{ \\} \\| \\$' );
 		} );
 	} );
 
