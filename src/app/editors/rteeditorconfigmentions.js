@@ -190,14 +190,18 @@ const RteEditorConfigMentions = {
 
 				entryWorker: entryLiElement => {
 					/*
-					<li id="emoji-grinning" data-value=":grinning:" data-emoji-name="grinning" data-text="grinning smile happy">
-						<g-emoji>😀</g-emoji> grinning
+					<li role="option" id="emoji-grinning" data-value=":grinning:" data-emoji-name="grinning"
+						data-text="grinning smile happy">
+						<g-emoji alias="grinning"
+							fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f600.png"
+							class="emoji-result" tone="0">😀</g-emoji>
+						grinning
 					</li>
 
 					// TODO: GH offers some non-unicode emojis as well, with the following format. This is not supported for now.
-					<li role="option" id="emoji-trollface" data-value=":trollface:" data-emoji-name="trollface" data-text="trollface">
-						  <img class="emoji emoji-result" height="20" width="20" align="absmiddle" alt=":trollface:"
-							  src="https://github.githubassets.com/images/icons/emoji/trollface.png">
+					<li id="emoji-trollface" data-value=":trollface:" data-emoji-name="trollface" data-text="trollface">
+						<img class="emoji emoji-result" height="20" width="20" align="absmiddle" alt=":trollface:"
+							src="https://github.githubassets.com/images/icons/emoji/trollface.png">
 						trollface
 					</li>
 					*/
@@ -209,7 +213,7 @@ const RteEditorConfigMentions = {
 
 					const name = entryLiElement.getAttribute( 'data-emoji-name' );
 					const text = entryLiElement.getAttribute( 'data-text' );
-					const icon = entryLiElement.querySelector( 'g-emoji' ).textContent;
+					const html = entryLiElement.querySelector( 'g-emoji' ).outerHTML;
 
 					return {
 						keys: {
@@ -218,8 +222,8 @@ const RteEditorConfigMentions = {
 						},
 						data: {
 							id: ':' + name + ':',
-							icon,
-							name
+							name,
+							html
 						}
 					};
 				},
@@ -227,7 +231,7 @@ const RteEditorConfigMentions = {
 					// <g-emoji> is a GH element. We're borrowing some of its styles.
 					return createElementFromHtml( `
 						<button>
-							<g-emoji>${ entry.icon }</g-emoji> ${ entry.name }
+							${ entry.html } ${ entry.name }
 						</button>
 					` );
 				}
