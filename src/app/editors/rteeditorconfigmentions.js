@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import { createElementFromHtml, getInitials, openXmlHttpRequest } from '../util';
+import { createElementFromHtml, escapeHtml, getInitials, openXmlHttpRequest } from '../util';
 
 const RteEditorConfigMentions = {
 	/**
@@ -101,7 +101,7 @@ const RteEditorConfigMentions = {
 				entryRenderer: entry => {
 					return createElementFromHtml( `
 						<button>
-							<small>#${ entry.number }</small> ${ entry.title }
+							<small>#${ entry.number }</small> ${ escapeHtml( entry.title ) }
 						</button>
 					` );
 				}
@@ -170,7 +170,7 @@ const RteEditorConfigMentions = {
 				entryRenderer: entry => {
 					return createElementFromHtml( `
 						<button>
-							${ entry.name } <small>${ entry.description }</small>
+							${ escapeHtml( entry.name ) } <small>${ escapeHtml( entry.description ) }</small>
 						</button>
 					` );
 				}

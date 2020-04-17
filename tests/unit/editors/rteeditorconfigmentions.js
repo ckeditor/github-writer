@@ -88,6 +88,16 @@ describe( 'Editors', () => {
 
 				expect( element ).to.be.an.instanceOf( HTMLButtonElement );
 			} );
+
+			it( 'should escape html in the title', () => {
+				const config = RteEditorConfigMentions.get( {
+					issues: '/test-issues'
+				} );
+
+				const element = config[ 0 ].itemRenderer( { id: '#1', number: 1, title: 'Test <a href="x">html</a>' } );
+
+				expect( element.innerHTML.trim() ).to.equals( '<small>#1</small> Test &lt;a href="x"&gt;html&lt;/a&gt;' );
+			} );
 		} );
 
 		describe( 'people', () => {
@@ -213,6 +223,21 @@ describe( 'Editors', () => {
 				const element = config[ 0 ].itemRenderer( { description: 'User 1', id: '@user_1', name: 'user_1' } );
 
 				expect( element ).to.be.an.instanceOf( HTMLButtonElement );
+			} );
+
+			it( 'should escape html in the id and name', () => {
+				const config = RteEditorConfigMentions.get( {
+					people: '/test-mentions'
+				} );
+
+				const element = config[ 0 ].itemRenderer( {
+					description: 'User <a href="x">description</a>',
+					id: '@user_<a href="x">id</a>',
+					name: 'user_<a href="y">name</a>'
+				} );
+
+				expect( element.innerHTML.trim() )
+					.to.equals( 'user_&lt;a href="y"&gt;name&lt;/a&gt; <small>User &lt;a href="x"&gt;description&lt;/a&gt;</small>' );
 			} );
 		} );
 
