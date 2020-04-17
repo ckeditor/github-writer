@@ -235,9 +235,9 @@ describe( 'Editors', () => {
 
 				return promise.then( results => {
 					expect( results ).to.eql( [
-						{ icon: '😀', id: ':emoji1:', name: 'emoji1' },
-						{ icon: '😱', id: ':emoji2:', name: 'emoji2' },
-						{ icon: '😎', id: ':emoji3:', name: 'emoji3' }
+						{ html: '<g-emoji>😀</g-emoji>', id: ':emoji1:', name: 'emoji1' },
+						{ html: '<g-emoji>😱</g-emoji>', id: ':emoji2:', name: 'emoji2' },
+						{ html: '<g-emoji>😎</g-emoji>', id: ':emoji3:', name: 'emoji3' }
 					] );
 				} );
 			} );
@@ -260,8 +260,8 @@ describe( 'Editors', () => {
 
 				return promise.then( results => {
 					expect( results ).to.eql( [
-						{ icon: '😀', id: ':emoji1:', name: 'emoji1' },
-						{ icon: '😎', id: ':emoji3:', name: 'emoji3' }
+						{ html: '<g-emoji>😀</g-emoji>', id: ':emoji1:', name: 'emoji1' },
+						{ html: '<g-emoji>😎</g-emoji>', id: ':emoji3:', name: 'emoji3' }
 					] );
 				} );
 			} );
