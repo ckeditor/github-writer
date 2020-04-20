@@ -12,6 +12,7 @@ import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import SmartCode from '../plugins/smartcode';
 import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
+import Kbd from '@mlewand/ckeditor5-keyboard-marker/src/Kbd';
 
 import HeadingDropdown from '../plugins/headingdropdown';
 import HeadingTabKey from '../plugins/headingtabkey';
@@ -71,7 +72,7 @@ const RteEditorConfig = {
 				Essentials, Paragraph, Enter, AutoFormat, Mention,
 				Image, ImageUpload, GitHubUploadAdapter,
 				HeadingDropdown, HeadingTabKey,
-				Bold, Italic, SmartCode, Strikethrough,
+				Bold, Italic, SmartCode, Strikethrough, Kbd,
 				BlockQuote,
 				Link,
 				List, TodoList,
@@ -87,7 +88,7 @@ const RteEditorConfig = {
 				'bulletedlist', 'numberedlist', 'todolist', '|',
 				'savedreplies', 'kebab'
 			],
-			kebabToolbar: [ 'strikethrough', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ],
+			kebabToolbar: [ 'strikethrough', 'kbd', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ],
 			table: {
 				contentToolbar: [ 'tableColumn', 'tableRow' ]
 			},

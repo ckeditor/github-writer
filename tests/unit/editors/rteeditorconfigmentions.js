@@ -5,11 +5,10 @@
 
 import RteEditorConfigMentions from '../../../src/app/editors/rteeditorconfigmentions';
 
+import CKEditorGitHubEditor from '../../../src/app/editors/ckeditorgithubeditor';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import CodeEditing from '@ckeditor/ckeditor5-basic-styles/src/code/codeediting';
 import CodeBlockEditing from '@ckeditor/ckeditor5-code-block/src/codeblockediting';
-
-import { CKEditorGitHubEditor } from '../../../src/app/editors/rteeditor';
 
 describe( 'Editors', () => {
 	describe( 'RteEditorConfigMentions', () => {

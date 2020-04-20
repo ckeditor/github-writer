@@ -4,7 +4,8 @@
  */
 
 import Editor from '../../../src/app/editor';
-import RteEditor, { CKEditorGitHubEditor } from '../../../src/app/editors/rteeditor';
+import RteEditor from '../../../src/app/editors/rteeditor';
+import CKEditorGitHubEditor from '../../../src/app/editors/ckeditorgithubeditor';
 
 import RteEditorConfig from '../../../src/app/editors/rteeditorconfig';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
@@ -19,6 +20,7 @@ import DropdownPanelView from '@ckeditor/ckeditor5-ui/src/dropdown/dropdownpanel
 
 import { GitHubPage } from '../../_util/githubpage';
 import { createElementFromHtml } from '../../../src/app/util';
+import env from '@ckeditor/ckeditor5-utils/src/env';
 
 describe( 'Editors', () => {
 	describe( 'RteEditor', () => {
@@ -385,7 +387,57 @@ describe( 'Editors', () => {
 				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'test Bold' );
 			} );
 
-			it( 'should buttons fix unknown buttons', () => {
+			it( 'should properly set cmd', () => {
+				const locale = new Locale();
+				const toolbar = new ToolbarView( locale );
+
+				const button = new ButtonView( locale );
+				button.set( {
+					label: 'Keyboard shortcut',
+					tooltip: true
+				} );
+
+				toolbar.items.add( button );
+
+				// Check if it's rendered just as a future safeguard because we've removing part of the code inside
+				// toolbarItemsPostfix which was dealing with the non-rendered case when writing this test.
+				// Somehow this seems to not be possible anymore to have toolbars with non-rendered items,
+				// but we don't know if this may change in the future.
+				expect( button.isRendered ).to.be.true;
+
+				env.isMac = true;
+				RteEditor.toolbarItemsPostfix( toolbar );
+
+				expect( button.tooltip ).to.be.false;
+				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'Add keyboard shortcut <cmd+alt-k>' );
+			} );
+
+			it( 'should properly set ctrl', () => {
+				const locale = new Locale();
+				const toolbar = new ToolbarView( locale );
+
+				const button = new ButtonView( locale );
+				button.set( {
+					label: 'Keyboard shortcut',
+					tooltip: true
+				} );
+
+				toolbar.items.add( button );
+
+				// Check if it's rendered just as a future safeguard because we've removing part of the code inside
+				// toolbarItemsPostfix which was dealing with the non-rendered case when writing this test.
+				// Somehow this seems to not be possible anymore to have toolbars with non-rendered items,
+				// but we don't know if this may change in the future.
+				expect( button.isRendered ).to.be.true;
+
+				env.isMac = false;
+				RteEditor.toolbarItemsPostfix( toolbar );
+
+				expect( button.tooltip ).to.be.false;
+				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'Add keyboard shortcut <ctrl+alt-k>' );
+			} );
+
+			it( 'should not fix unknown buttons', () => {
 				const locale = new Locale();
 				const toolbar = new ToolbarView( locale );
 

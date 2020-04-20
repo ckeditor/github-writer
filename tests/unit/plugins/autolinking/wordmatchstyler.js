@@ -7,7 +7,7 @@ import { WordMatchStyler } from '../../../../src/app/plugins/autolinking';
 
 import { createTestEditor } from '../../../_util/ckeditor';
 
-import { CKEditorGitHubEditor } from '../../../../src/app/editors/rteeditor';
+import CKEditorGitHubEditor from '../../../../src/app/editors/ckeditorgithubeditor';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import HeadingEditing from '@ckeditor/ckeditor5-heading/src/headingediting';

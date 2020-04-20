@@ -55,6 +55,7 @@ export default class AutoFormat extends Plugin {
 		autoFormat.add( 'italic *', new InlineAutoFormatter( '*', 'italic' ) );
 		autoFormat.add( 'code', new InlineAutoFormatter( '`', 'code' ) );
 		autoFormat.add( 'strikethrough', new InlineAutoFormatter( '~', 'strikethrough' ) );
+		autoFormat.add( 'kbd', new InlineAutoFormatter( '|', 'kbd' ) );
 
 		// Block
 		autoFormat.add( 'blockQuote', new BlockAutoFormatter( '> ', 'blockQuote' ) );

@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import { CKEditorGitHubEditor } from '../../src/app/editors/rteeditor';
+import CKEditorGitHubEditor from '../../src/app/editors/ckeditorgithubeditor';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import ShiftEnter from '@ckeditor/ckeditor5-enter/src/shiftenter';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
