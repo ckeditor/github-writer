@@ -39,8 +39,7 @@ module.exports = ( env, argv ) => {
 				},
 				{
 					test: [
-						/ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-						/[/\\]+src[/\\]+app[/\\]+icons[/\\]+.+\.svg$/
+						/\.svg$/
 					],
 
 					use: [ 'raw-loader' ]

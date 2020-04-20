@@ -4,11 +4,13 @@
  */
 
 import App from '../app';
-import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
-import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
-import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+import CKEditorGitHubEditor from './ckeditorgithubeditor';
 import RteEditorConfig from './rteeditorconfig';
+import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+
 import { createElementFromHtml } from '../util';
+import env from '@ckeditor/ckeditor5-utils/src/env';
+
 // Inject our very own CKEditor theme overrides.
 import '../theme/githubrte.css';
 
@@ -160,25 +162,6 @@ export default class RteEditor {
 }
 
 /**
- * The CKEditor used inside the rte editor.
- */
-export class CKEditorGitHubEditor extends DecoupledEditor {
-	constructor( initialData, config ) {
-		super( initialData, config );
-
-		// TODO: Check if there is a better way to set the data processor without having to override DecoupledEditor.
-		this.data.processor = new GFMDataProcessor( this.data.viewDocument );
-
-		// Adds our very own class to the toolbar.
-		this.ui.view.toolbar.extendTemplate( {
-			attributes: {
-				class: 'github-rte-toolbar'
-			}
-		} );
-	}
-}
-
-/**
  *Fixes the toolbar buttons label so they look exactly like the original GH ones (minor detail).
  *
  * @param {ToolbarView} toolbar The toolbar to be tweaked.
@@ -191,9 +174,12 @@ RteEditor.toolbarItemsPostfix = ( toolbar, tooltipPosition = 'n' ) => {
 		return;
 	}
 
+	const ctrlCmd = env.isMac ? 'cmd' : 'ctrl';
+
 	// The list of labels to be replaced. The keys are the default CKEditor labels.
 	const labels = {
 		// Not available in GH but changed to match the GH language style (more verbose).
+		'Keyboard shortcut': `Add keyboard shortcut <${ ctrlCmd }+alt-k>`,
 		'Strikethrough': 'Add strikethrough text',
 		'Horizontal line': 'Insert a horizontal line',
 		'Insert image': 'Insert an image',
