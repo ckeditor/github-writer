@@ -9,6 +9,7 @@ import RteEditor from '../../../src/app/editors/rteeditor';
 import { GitHubPage } from '../../_util/githubpage';
 import RteEditorConfig from '../../../src/app/editors/rteeditorconfig';
 import RteEditorConfigMentions from '../../../src/app/editors/rteeditorconfigmentions';
+import SavedReplies from '../../../src/app/plugins/savedreplies';
 
 describe( 'Editors', () => {
 	describe( 'RteEditorConfig', () => {
@@ -261,6 +262,27 @@ describe( 'Editors', () => {
 
 				const config = RteEditorConfig.get( rteEditor );
 				expect( config.githubRte.savedReplies.url ).to.equals( 'https://test.com/sr' );
+			} );
+
+			it( 'should have the Saved Replies feature if available', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const rteEditor = new RteEditor( editor );
+
+				editor.markdownEditor.dom.toolbar.insertAdjacentHTML( 'beforeend',
+					'<details-menu class="js-saved-reply-menu" src="https://test.com/sr">Saved Replies</details-menu>' );
+
+				const config = RteEditorConfig.get( rteEditor );
+				expect( config.toolbar ).to.include( 'savedreplies' );
+				expect( config.plugins ).to.include( SavedReplies );
+			} );
+
+			it( 'should remove the Saved Replies feature if not available', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const rteEditor = new RteEditor( editor );
+
+				const config = RteEditorConfig.get( rteEditor );
+				expect( config.toolbar ).to.not.include( 'savedreplies' );
+				expect( config.plugins ).to.not.include( SavedReplies );
 			} );
 		} );
 	} );
