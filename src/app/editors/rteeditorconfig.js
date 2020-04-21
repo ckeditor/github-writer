@@ -163,6 +163,12 @@ const RteEditorConfig = {
 			config.toolbar.unshift( 'suggestion', '|' );
 		}
 
+		// Remove the Saved Replies feature if there is no support for it.
+		if ( !config.githubRte.savedReplies.url ) {
+			config.plugins = config.plugins.filter( item => item !== SavedReplies );
+			config.toolbar = config.toolbar.filter( item => item !== 'savedreplies' );
+		}
+
 		return config;
 
 		// Returns a function that, when called, will return a promise that resolves with the upload configuration object.
