@@ -27,6 +27,20 @@ window.__setLocation = function( href ) {
 };
 
 /**
+ * Indicates that unicode emojis are support. This is compatibility check 1:1 with the one done within <g-emoji>.
+ *
+ * @type {Boolean}
+ */
+export const isEmojiSupported = ( function() {
+	const onWindows7 = /\bWindows NT 6.1\b/.test( navigator.userAgent );
+	const onWindows8 = /\bWindows NT 6.2\b/.test( navigator.userAgent );
+	const onWindows81 = /\bWindows NT 6.3\b/.test( navigator.userAgent );
+	const onFreeBSD = /\bFreeBSD\b/.test( navigator.userAgent );
+	const onLinux = /\bLinux\b/.test( navigator.userAgent );
+	return !( onWindows7 || onWindows8 || onWindows81 || onLinux || onFreeBSD );
+}() );
+
+/**
  * Creates an element out of its outer html string.
  *
  * @param {String} html The outer html of the element.

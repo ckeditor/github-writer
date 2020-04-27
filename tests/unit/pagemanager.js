@@ -114,6 +114,7 @@ describe( 'PageManager', () => {
 		[ 'edit', 'pr-inline-comment', 'code-line-comment' ].forEach( type => {
 			it( `should watch buttons (${ type })`, () => {
 				Editor.prototype.create.restore();
+				Editor.prototype.destroy.restore();
 
 				const pageManager = new PageManager();
 				pageManager.init();

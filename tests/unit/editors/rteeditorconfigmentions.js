@@ -243,61 +243,54 @@ describe( 'Editors', () => {
 		describe( 'emoji', () => {
 			it( 'should return proper results', () => {
 				const config = RteEditorConfigMentions.get( {
-					emoji: '/test-emoji'
+					emoji: [
+						{ name: 'emoji1', url: 'url1', aka: 'the1', unicode: '😀' },
+						{ name: 'emoji2', url: 'url2', aka: 'the2' },
+						{ name: 'emoji3', url: 'url3' }
+					]
 				} );
 
 				const promise = config[ 0 ].feed.call( new CKEditorGitHubEditor(), '' );
 				expect( promise ).to.be.an.instanceOf( Promise );
 
-				xhr.respond( 200, { 'Content-Type': 'text/html' },
-					'<ul>' +
-					'<li data-emoji-name="emoji1" data-text="emoji1 test1"><g-emoji>😀</g-emoji></li>' +
-					'<li data-emoji-name="emoji2" data-text="emoji2 test2"><g-emoji>😱</g-emoji></li>' +
-					'<li data-emoji-name="emoji3" data-text="emoji3 test3"><g-emoji>😎</g-emoji></li>' +
-					'</ul>'
-				);
-
 				return promise.then( results => {
 					expect( results ).to.eql( [
-						{ html: '<g-emoji>😀</g-emoji>', id: ':emoji1:', name: 'emoji1' },
-						{ html: '<g-emoji>😱</g-emoji>', id: ':emoji2:', name: 'emoji2' },
-						{ html: '<g-emoji>😎</g-emoji>', id: ':emoji3:', name: 'emoji3' }
+						{ id: ':emoji1:', name: 'emoji1', unicode: '😀', url: 'url1' },
+						{ id: ':emoji2:', name: 'emoji2', unicode: undefined, url: 'url2' },
+						{ id: ':emoji3:', name: 'emoji3', unicode: undefined, url: 'url3' }
 					] );
 				} );
 			} );
 
-			it( 'should ignore image only entries', () => {
+			it( 'should render an unicode entry', () => {
 				const config = RteEditorConfigMentions.get( {
 					emoji: '/test-emoji'
 				} );
 
-				const promise = config[ 0 ].feed.call( new CKEditorGitHubEditor(), '' );
-				expect( promise ).to.be.an.instanceOf( Promise );
-
-				xhr.respond( 200, { 'Content-Type': 'text/html' },
-					'<ul>' +
-					'<li data-emoji-name="emoji1" data-text="emoji1 test1"><g-emoji>😀</g-emoji></li>' +
-					'<li data-emoji-name="emoji2" data-text="emoji2 test2"><img src="emoji2.png"></li>' +
-					'<li data-emoji-name="emoji3" data-text="emoji3 test3"><g-emoji>😎</g-emoji></li>' +
-					'</ul>'
-				);
-
-				return promise.then( results => {
-					expect( results ).to.eql( [
-						{ html: '<g-emoji>😀</g-emoji>', id: ':emoji1:', name: 'emoji1' },
-						{ html: '<g-emoji>😎</g-emoji>', id: ':emoji3:', name: 'emoji3' }
-					] );
+				const element = config[ 0 ].itemRenderer( {
+					id: ':emoji1:',
+					name: 'emoji1',
+					url: 'url1',
+					unicode: '😀'
 				} );
-			} );
-
-			it( 'should render an entry', () => {
-				const config = RteEditorConfigMentions.get( {
-					emoji: '/test-emoji'
-				} );
-
-				const element = config[ 0 ].itemRenderer( { icon: '😀', id: ':emoji1:', name: 'emoji1' } );
 
 				expect( element ).to.be.an.instanceOf( HTMLButtonElement );
+
+				expect( element.innerHTML.trim() )
+					.to.equals( '<g-emoji alias="emoji1" fallback-src="url1" class="emoji-result" tone="0">😀</g-emoji> emoji1' );
+			} );
+
+			it( 'should render an non-unicode entry', () => {
+				const config = RteEditorConfigMentions.get( {
+					emoji: '/test-emoji'
+				} );
+
+				const element = config[ 0 ].itemRenderer( { id: ':emoji1:', name: 'emoji1', url: 'url1' } );
+
+				expect( element ).to.be.an.instanceOf( HTMLButtonElement );
+
+				expect( element.innerHTML.trim() )
+					.to.match( /<img.* alt=":emoji1:".* src="url1".*> emoji1/ );
 			} );
 		} );
 

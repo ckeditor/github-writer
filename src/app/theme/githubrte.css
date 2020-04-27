@@ -17,12 +17,3 @@
 /* Contents */
 @import "content.css";
 @import "autolink.css";
-
-/* Fix the some of the resets */
-.ck.ck-reset_all {
-	& g-emoji img {
-		width: 1em;
-		height: 1em;
-		font-size: inherit;
-	}
-}

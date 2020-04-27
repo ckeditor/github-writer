@@ -35,6 +35,7 @@ import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 
 import Mention from '@ckeditor/ckeditor5-mention/src/mention';
 import RteEditorConfigMentions from './rteeditorconfigmentions';
+import Emoji from '../plugins/emoji';
 
 import Kebab from '../plugins/kebab';
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
@@ -54,6 +55,7 @@ import SavedReplies from '../plugins/savedreplies';
 
 import App from '../app';
 import { config as languagesConfig } from '../modules/languages';
+import { list as emojiList } from '../data/emojis';
 import { getNewIssuePageDom } from '../util';
 
 const RteEditorConfig = {
@@ -69,7 +71,7 @@ const RteEditorConfig = {
 
 		const config = {
 			plugins: [
-				Essentials, Paragraph, Enter, AutoFormat, Mention,
+				Essentials, Paragraph, Enter, AutoFormat, Mention, Emoji,
 				Image, ImageUpload, GitHubUploadAdapter,
 				HeadingDropdown, HeadingTabKey,
 				Bold, Italic, SmartCode, Strikethrough, Kbd,
@@ -241,8 +243,7 @@ const RteEditorConfig = {
 			// Some pages (wiki) don't have mentions in the native GH. In those, let's enable just emoji (for now).
 			if ( !textExpanderElement ) {
 				return RteEditorConfigMentions.get( {
-					// Emojis come, in fact, from a single absolute endpoint.
-					emoji: '/autocomplete/emoji'
+					emoji: emojiList
 				} );
 			}
 
@@ -250,7 +251,7 @@ const RteEditorConfig = {
 			return RteEditorConfigMentions.get( {
 				issues: textExpanderElement.getAttribute( 'data-issue-url' ),
 				people: textExpanderElement.getAttribute( 'data-mention-url' ),
-				emoji: textExpanderElement.getAttribute( 'data-emoji-url' )
+				emoji: emojiList
 			} );
 		}
 

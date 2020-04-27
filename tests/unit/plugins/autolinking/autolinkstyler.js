@@ -14,9 +14,13 @@ describe( 'Plugins', () => {
 		describe( 'AutoLinkStyler', () => {
 			let editor, model, root;
 
-			before( 'create test editor', () => {
+			beforeEach( 'create test editor', () => {
 				return createTestEditor( '', [ CodeBlockEditing ] )
 					.then( ret => ( { editor, model, root } = ret ) );
+			} );
+
+			afterEach( () => {
+				return editor.destroy();
 			} );
 
 			describe( 'constructor()', () => {
@@ -44,6 +48,9 @@ describe( 'Plugins', () => {
 
 			describe( 'conversion', () => {
 				it( `should convert to editing view`, () => {
+					// eslint-disable-next-line no-new
+					new AutoLinkStyler( editor );
+
 					editor.setData( 'AB CD EF' );
 
 					model.change( writer => {
@@ -57,6 +64,9 @@ describe( 'Plugins', () => {
 				} );
 
 				it( `should not convert to data`, () => {
+					// eslint-disable-next-line no-new
+					new AutoLinkStyler( editor );
+
 					editor.setData( 'AB CD EF' );
 
 					model.change( writer => {
@@ -69,6 +79,9 @@ describe( 'Plugins', () => {
 				} );
 
 				it( `should not convert to model`, () => {
+					// eslint-disable-next-line no-new
+					new AutoLinkStyler( editor );
+
 					editor.setData( 'AB <autolink>CD</autolink> EF' );
 
 					expect( root.getChild( 0 ).getChild( 0 ).data ).to.equals( 'AB CD EF' );

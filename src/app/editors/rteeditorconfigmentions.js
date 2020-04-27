@@ -183,55 +183,51 @@ const RteEditorConfigMentions = {
 				cache: {},
 
 				getEntriesFromData( data ) {
-					// A HTML ul>li list. Get the list of li elements.
-					const root = createElementFromHtml( data );
-					return Array.from( root.getElementsByTagName( 'li' ) );
+					return data;
 				},
 
-				entryWorker: entryLiElement => {
+				entryWorker: entryData => {
 					/*
-					<li role="option" id="emoji-grinning" data-value=":grinning:" data-emoji-name="grinning"
-						data-text="grinning smile happy">
-						<g-emoji alias="grinning"
-							fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f600.png"
-							class="emoji-result" tone="0">😀</g-emoji>
-						grinning
-					</li>
-
-					// TODO: GH offers some non-unicode emojis as well, with the following format. This is not supported for now.
-					<li id="emoji-trollface" data-value=":trollface:" data-emoji-name="trollface" data-text="trollface">
-						<img class="emoji emoji-result" height="20" width="20" align="absmiddle" alt=":trollface:"
-							src="https://github.githubassets.com/images/icons/emoji/trollface.png">
-						trollface
-					</li>
+						entryData = [
+							{
+								name: [String],
+								url: [String],
+								aka: [String], (optional)
+								unicode: [String] (optional)
+							},
+							...
+						]
 					*/
 
-					// Do nothing for non-unicode emojis.
-					if ( !entryLiElement.querySelector( 'g-emoji' ) ) {
-						return;
-					}
-
-					const name = entryLiElement.getAttribute( 'data-emoji-name' );
-					const text = entryLiElement.getAttribute( 'data-text' );
-					const html = entryLiElement.querySelector( 'g-emoji' ).outerHTML;
+					const name = entryData.name;
+					const aka = entryData.aka;
 
 					return {
 						keys: {
 							id: name,
-							text: text + getInitials( text )
+							text: aka ? ( name + ' ' + aka ) : name
 						},
 						data: {
 							id: ':' + name + ':',
 							name,
-							html
+							url: entryData.url,
+							unicode: entryData.unicode
 						}
 					};
 				},
 				entryRenderer: entry => {
-					// <g-emoji> is a GH element. We're borrowing some of its styles.
+					let icon;
+
+					if ( entry.unicode ) {
+						// eslint-disable-next-line max-len
+						icon = `<g-emoji alias="${ entry.name }" fallback-src="${ entry.url }" class="emoji-result" tone="0">${ entry.unicode }</g-emoji>`;
+					} else {
+						// eslint-disable-next-line max-len
+						icon = `<img class="emoji emoji-result" height="20" width="20" align="absmiddle" alt=":${ entry.name }:" src="${ entry.url }">`;
+					}
 					return createElementFromHtml( `
 						<button>
-							${ entry.html } ${ entry.name }
+							${ icon } ${ entry.name }
 						</button>
 					` );
 				}
@@ -340,7 +336,7 @@ const RteEditorConfigMentions = {
 
 			if ( !promise ) {
 				// Download the mentions data from GH.
-				promise = db[ type ].entries = downloadData( urls[ type ], [ 'issues', 'people' ].includes( type ) )
+				promise = db[ type ].entries = downloadData( urls[ type ] )
 					.then( data => {
 						if ( !data ) {
 							throw new Error( 'Error when loading mentions from GitHub. No data returned.' );
@@ -386,14 +382,16 @@ const RteEditorConfigMentions = {
 		// @param {String} url The endpoint from which download data.
 		// @param {Boolean} json Whether the expected response is json.
 		// @returns {Promise<String>} A promise that with the raw response data.
-		function downloadData( url, json ) {
+		function downloadData( url ) {
 			return new Promise( ( resolve, reject ) => {
+				if ( typeof url !== 'string' ) {
+					resolve( url );
+				}
+
 				const xhr = openXmlHttpRequest( url, 'GET' );
 
-				if ( json ) {
-					xhr.responseType = 'json';
-					xhr.setRequestHeader( 'Accept', 'application/json' );
-				}
+				xhr.responseType = 'json';
+				xhr.setRequestHeader( 'Accept', 'application/json' );
 
 				xhr.addEventListener( 'error', () => reject( new Error( `Error loading mentions from $(url).` ) ) );
 				xhr.addEventListener( 'abort', () => reject() );

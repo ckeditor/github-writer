@@ -36,6 +36,7 @@
     "@ckeditor/ckeditor5-heading": "^18.0.0",
     "@ckeditor/ckeditor5-horizontal-line": "^18.0.0",
     "@ckeditor/ckeditor5-image": "^18.0.0",
+    "@ckeditor/ckeditor5-inspector": "^2.0.0",
     "@ckeditor/ckeditor5-link": "^18.0.0",
     "@ckeditor/ckeditor5-list": "^18.0.0",
     "@ckeditor/ckeditor5-markdown-gfm": "ckeditor/ckeditor5-markdown-gfm#github-rte",
@@ -48,6 +49,7 @@
     "@ckeditor/ckeditor5-ui": "^18.0.0",
     "@ckeditor/ckeditor5-upload": "^18.0.0",
     "@ckeditor/ckeditor5-utils": "^18.0.0",
+    "@ckeditor/ckeditor5-widget": "^18.0.0",
     "@mlewand/ckeditor5-keyboard-marker": "mlewand/ckeditor5-keyboard-marker",
     "linguist-languages": "^7.9.0"
   },
@@ -55,7 +57,7 @@
     "@ckeditor/ckeditor5-dev-tests": "ckeditor/ckeditor5-dev/packages/ckeditor5-dev-tests#github-rte",
     "@ckeditor/ckeditor5-dev-utils": "^12.0.9",
     "chai": "^4.2.0",
-    "chromedriver": "^80.0.1",
+    "chromedriver": "^81.0.0",
     "copy-webpack-plugin": "^5.1.1",
     "eslint": "^6.8.0",
     "eslint-config-ckeditor5": "^2.1.0",
@@ -79,6 +81,7 @@
     "test-unit": "node ./node_modules/.bin/ckeditor5-dev-tests -sc --files=./tests/unit/**/*.js --coverage-paths=./src/**/*.js",
     "build": "webpack --mode production --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "build-dev": "webpack --mode development --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
+    "emojis": "node ./dev/updateemojis.js",
     "lint": "eslint --quiet --ignore-path .gitignore '**/*.js'",
     "svg-cleanup": "svgo --config=./dev/svgo.config.json ./src/app/icons/*.svg"
   },
