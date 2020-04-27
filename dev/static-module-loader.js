@@ -8,17 +8,23 @@
 const Module = require( 'module' );
 
 /**
- * A webpack loader that replaces the logic module files with the raw result of them.
- *
- * @returns {string}
+ * A webpack loader that replaces the logic from module files with the raw result of them.
+ * Exports that are Promises are assigned to their resolved value.
  */
 module.exports = function( content ) {
+	const callback = this.async();
+
 	const exports = exec( content, this );
-	const lines = Object.entries( exports ).map( ( [ name, value ] ) => {
-		return `module.exports.${ name } = ${ JSON.stringify( value ) };`;
+
+	const promises = Object.entries( exports ).map( ( [ name, value ] ) => {
+		return Promise.resolve( value ).then( resolvedValue => {
+			return `module.exports.${ name } = ${ JSON.stringify( resolvedValue ) };`;
+		} );
 	} );
 
-	return lines.join( '\n' );
+	Promise.all( promises ).then( lines => {
+		callback( null, lines.join( '\n' ) );
+	} );
 };
 
 const parentModule = module;
