@@ -5,6 +5,7 @@
 
 import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
 import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
+import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
 
 /**
  * The CKEditor used inside the rte editor.
@@ -24,5 +25,9 @@ export default class CKEditorGitHubEditor extends DecoupledEditor {
 				class: 'github-rte-toolbar'
 			}
 		} );
+	}
+
+	inspect() {
+		CKEditorInspector.attach( this );
 	}
 }

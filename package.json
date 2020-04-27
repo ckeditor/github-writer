@@ -36,6 +36,7 @@
     "@ckeditor/ckeditor5-heading": "^18.0.0",
     "@ckeditor/ckeditor5-horizontal-line": "^18.0.0",
     "@ckeditor/ckeditor5-image": "^18.0.0",
+    "@ckeditor/ckeditor5-inspector": "^2.0.0",
     "@ckeditor/ckeditor5-link": "^18.0.0",
     "@ckeditor/ckeditor5-list": "^18.0.0",
     "@ckeditor/ckeditor5-markdown-gfm": "ckeditor/ckeditor5-markdown-gfm#github-rte",
