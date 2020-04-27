@@ -138,4 +138,13 @@
 	& blockquote {
 		font-style: initial;
 	}
+
+	/* Emoji */
+	& g-emoji img {
+		height: 1em;
+		min-height: 20px;
+		width: auto;
+		vertical-align: bottom !important;
+		font-size: inherit;
+	}
 }

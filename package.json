@@ -49,6 +49,7 @@
     "@ckeditor/ckeditor5-ui": "^18.0.0",
     "@ckeditor/ckeditor5-upload": "^18.0.0",
     "@ckeditor/ckeditor5-utils": "^18.0.0",
+    "@ckeditor/ckeditor5-widget": "^18.0.0",
     "@mlewand/ckeditor5-keyboard-marker": "mlewand/ckeditor5-keyboard-marker",
     "linguist-languages": "^7.9.0"
   },

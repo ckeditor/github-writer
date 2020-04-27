@@ -224,7 +224,7 @@ export class WordMatchStyler {
 		const flags = pattern.flags.replace( /g|$/, 'g' );
 
 		// Build the regex used to match words. It includes characters that can be around words, like punctuation.
-		const regex = new RegExp( `([ "'(]|^)(${ pattern.source })(?=(?: |[ "'.,:;)?!]+(?: |$))|$)`, flags );
+		const regex = new RegExp( `([ \u00a0"'(]|^)(${ pattern.source })(?=(?:[ \u00a0]|[ \u00a0"'.,:;)?!]+(?: |$))|$)`, flags );
 
 		// Save it as a matcher definition object.
 		this._matchers.push( { regex, callback } );
@@ -255,50 +255,52 @@ export class WordMatchStyler {
 				const changes = model.document.differ.getChanges();
 
 				// It is very common to receive empty diffs, so we avoid them.
-				if ( changes.length ) {
-					// Create the Text Finder which will accumulate all texts potentially touched by the change.
-					const textFinder = new TextFinder();
-
-					changes.forEach( change => {
-						switch ( change.type ) {
-							case 'attribute': {
-								// Ignore changes related to the styler attribute.
-								if ( change.attributeKey !== attribute ) {
-									// Other attributes may have been assigned to partial parts of words, so want to
-									// check the words at the boundaries of the change to ensure that the styler attribute
-									// is appropriate there.
-									textFinder.findWordAtPosition( change.range.start );
-									textFinder.findWordAtPosition( change.range.end );
-								}
-								break;
-							}
-							case 'insert': {
-								// Create a range that embraces the whole change.
-								let range = writer.createRange(
-									change.position,
-									change.position.getShiftedBy( change.length )
-								);
-
-								// For a text insertion, expand the range to include whole words in the boundaries.
-								if ( change.name === '$text' ) {
-									range = TextExpander.word( range );
-								}
-
-								// Find all texts inside the range.
-								textFinder.findInRange( range );
-								break;
-							}
-							case 'remove': {
-								// On removal, we may have texts collapsing and forming words. We want to check them.
-								textFinder.findWordAtPosition( change.position );
-								break;
-							}
-						}
-					} );
-
-					// Finally, check all texts found.
-					checkTexts( textFinder.texts, writer.batch );
+				if ( !changes.length ) {
+					return;
 				}
+
+				// Create the Text Finder which will accumulate all texts potentially touched by the change.
+				const textFinder = new TextFinder();
+
+				changes.forEach( change => {
+					switch ( change.type ) {
+						case 'attribute': {
+							// Ignore changes related to the styler attribute.
+							if ( change.attributeKey !== attribute ) {
+								// Other attributes may have been assigned to partial parts of words, so want to
+								// check the words at the boundaries of the change to ensure that the styler attribute
+								// is appropriate there.
+								textFinder.findWordAtPosition( change.range.start );
+								textFinder.findWordAtPosition( change.range.end );
+							}
+							break;
+						}
+						case 'insert': {
+							// Create a range that embraces the whole change.
+							let range = writer.createRange(
+								change.position,
+								change.position.getShiftedBy( change.length )
+							);
+
+							// For a text insertion, expand the range to include whole words in the boundaries.
+							if ( change.name === '$text' ) {
+								range = TextExpander.word( range );
+							}
+
+							// Find all texts inside the range.
+							textFinder.findInRange( range );
+							break;
+						}
+						case 'remove': {
+							// On removal, we may have texts collapsing and forming words. We want to check them.
+							textFinder.findWordAtPosition( change.position );
+							break;
+						}
+					}
+				} );
+
+				// Finally, check all texts found.
+				checkTexts( textFinder.texts, writer );
 			} );
 		}
 
@@ -308,14 +310,14 @@ export class WordMatchStyler {
 		 * @param texts {Object[]} The list of texts.
 		 * @param texts.text {String} The text to be checked.
 		 * @param texts.range {Range} The range in the model that contains the text.
-		 * @param batch {Batch} The batch into which insert model changes.
+		 * @param writer {Writer} Writer used to make model changes.
 		 */
-		function checkTexts( texts, batch ) {
+		function checkTexts( texts, writer ) {
 			// We don't do much here. Still, `checkTexts` is called in more than one part of the code.
 			texts.forEach( textInfo => {
 				const { text, range } = textInfo;
 				const validRanges = Array.from( editor.model.schema.getValidRanges( [ range ], attribute ) );
-				validRanges.forEach( validRange => styleWordsInRange( { text, range: validRange }, batch ) );
+				validRanges.forEach( validRange => styleWordsInRange( { text, range: validRange }, writer ) );
 			} );
 		}
 
@@ -325,13 +327,13 @@ export class WordMatchStyler {
 		 *
 		 * @param text {String} The text to be checked.
 		 * @param range {Range} The range in the model that contains the text.
-		 * @param batch {Batch} The batch into which insert model changes.
+		 * @param writer {Writer} Writer used to make model changes.
 		 */
-		function styleWordsInRange( { text, range }, batch ) {
-			model.enqueueChange( batch, writer => {
-				// Remove the attribute from the whole range first.
-				writer.removeAttribute( attribute, range );
+		function styleWordsInRange( { text, range }, writer ) {
+			// Remove the attribute from the whole range first.
+			writer.removeAttribute( attribute, range );
 
+			model.enqueueChange( writer.batch, writer => {
 				const matches = [];
 
 				// Run all matchers over the text, accumulating all matches found in the above array.
@@ -449,6 +451,7 @@ export class WordMatchStyler {
 				const liveMatchRange = LiveRange.fromRange( matchRange );
 				// let changed = false;
 				// liveMatchRange.once( 'change:content', () => ( changed = true ) );
+
 				callbackReturn.then( () => {
 					// To play safe, we don't care about any return value from the promise and
 					// instead, check again the texts touched by the boundaries of the range.
@@ -461,7 +464,9 @@ export class WordMatchStyler {
 
 					liveMatchRange.detach();
 
-					checkTexts( textFinder.texts, writer.batch );
+					model.enqueueChange( writer.batch, writer => {
+						checkTexts( textFinder.texts, writer );
+					} );
 				} );
 			}
 
@@ -482,7 +487,7 @@ export class WordMatchStyler {
 				// This change may have a cascade effect with other matchers, so we check the replacement now.
 				const textFinder = new TextFinder();
 				textFinder.findWordAtPosition( matchRange.start );
-				checkTexts( textFinder.texts, writer.batch );
+				checkTexts( textFinder.texts, writer );
 			}
 		}
 
@@ -620,7 +625,7 @@ export class TextFinder {
 
 				// Concat the text nodes and return the final value as a string.
 				const text = Array.from( textRange.getItems() )
-					.reduce( ( text, textNode ) => ( text += textNode.data ), '' );
+					.reduce( ( text, textNode ) => ( text + textNode.data ), '' );
 
 				this.texts.push( { text, range: textRange } );
 			}

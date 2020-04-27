@@ -35,6 +35,7 @@ import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 
 import Mention from '@ckeditor/ckeditor5-mention/src/mention';
 import RteEditorConfigMentions from './rteeditorconfigmentions';
+import Emoji from '../plugins/emoji';
 
 import Kebab from '../plugins/kebab';
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
@@ -70,7 +71,7 @@ const RteEditorConfig = {
 
 		const config = {
 			plugins: [
-				Essentials, Paragraph, Enter, AutoFormat, Mention,
+				Essentials, Paragraph, Enter, AutoFormat, Mention, Emoji,
 				Image, ImageUpload, GitHubUploadAdapter,
 				HeadingDropdown, HeadingTabKey,
 				Bold, Italic, SmartCode, Strikethrough, Kbd,
