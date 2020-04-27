@@ -45,5 +45,15 @@
 			font-style: normal;
 			line-height: 20px;
 		}
+
+		& g-emoji.emoji-result img {
+			height: 20px;
+			margin-right: 1px;
+		}
+
+		& img.emoji-result {
+			height: 20px;
+			margin-right: 4px;
+		}
 	}
 }

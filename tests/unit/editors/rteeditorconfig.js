@@ -56,10 +56,12 @@ describe( 'Editors', () => {
 				expect( spy.callCount ).to.equals( 1 );
 				expect( spy.args[ 0 ][ 0 ].issues ).to.equals( '/test-issues' );
 				expect( spy.args[ 0 ][ 0 ].people ).to.equals( '/test-mentions' );
-				expect( spy.args[ 0 ][ 0 ].emoji ).to.equals( '/test-emojis' );
+
+				// Emoji is actually ignored and should return an array.
+				expect( spy.args[ 0 ][ 0 ].emoji ).to.be.an( 'array' );
 			} );
 
-			it( 'should retrieve default if no urls in the dom', () => {
+			it( 'should retrieve emojis only if no urls in the dom', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
 
 				const spy = sinon.spy( RteEditorConfigMentions, 'get' );
@@ -69,7 +71,7 @@ describe( 'Editors', () => {
 				expect( spy.callCount ).to.equals( 1 );
 				expect( spy.args[ 0 ][ 0 ].issues ).to.be.undefined;
 				expect( spy.args[ 0 ][ 0 ].people ).to.be.undefined;
-				expect( spy.args[ 0 ][ 0 ].emoji ).to.equals( '/autocomplete/emoji' );
+				expect( spy.args[ 0 ][ 0 ].emoji ).to.be.an( 'array' );
 			} );
 		} );
 

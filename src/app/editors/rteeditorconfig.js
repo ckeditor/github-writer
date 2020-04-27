@@ -54,6 +54,7 @@ import SavedReplies from '../plugins/savedreplies';
 
 import App from '../app';
 import { config as languagesConfig } from '../modules/languages';
+import { list as emojiList } from '../data/emojis';
 import { getNewIssuePageDom } from '../util';
 
 const RteEditorConfig = {
@@ -241,8 +242,7 @@ const RteEditorConfig = {
 			// Some pages (wiki) don't have mentions in the native GH. In those, let's enable just emoji (for now).
 			if ( !textExpanderElement ) {
 				return RteEditorConfigMentions.get( {
-					// Emojis come, in fact, from a single absolute endpoint.
-					emoji: '/autocomplete/emoji'
+					emoji: emojiList
 				} );
 			}
 
@@ -250,7 +250,7 @@ const RteEditorConfig = {
 			return RteEditorConfigMentions.get( {
 				issues: textExpanderElement.getAttribute( 'data-issue-url' ),
 				people: textExpanderElement.getAttribute( 'data-mention-url' ),
-				emoji: textExpanderElement.getAttribute( 'data-emoji-url' )
+				emoji: emojiList
 			} );
 		}
 
