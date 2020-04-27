@@ -204,7 +204,7 @@ describe( 'Issue - New', function() {
 			const url = await page.browserPage.$eval( root + ' textarea',
 				el => el.closest( 'text-expander[data-issue-url]' ).getAttribute( ( 'data-issue-url' ) ) );
 
-			const data = await page.browserPage.evaluate( downloadData, url, true );
+			const data = await page.xhrRequest( url, true );
 
 			expect( data ).to.have.property( 'suggestions' );
 			expect( data.suggestions ).to.be.an( 'array' );
@@ -215,7 +215,7 @@ describe( 'Issue - New', function() {
 			const url = await page.browserPage.$eval( root + ' textarea',
 				el => el.closest( 'text-expander[data-mention-url]' ).getAttribute( ( 'data-mention-url' ) ) );
 
-			const data = await page.browserPage.evaluate( downloadData, url, true );
+			const data = await page.xhrRequest( url, true );
 
 			expect( data ).to.be.an( 'array' );
 
@@ -239,7 +239,7 @@ describe( 'Issue - New', function() {
 			const url = await page.browserPage.$eval( root + ' textarea',
 				el => el.closest( 'text-expander[data-emoji-url]' ).getAttribute( ( 'data-emoji-url' ) ) );
 
-			let data = await page.browserPage.evaluate( downloadData, url, false );
+			let data = await page.xhrRequest( url, false );
 
 			expect( data ).to.be.a( 'string' );
 
@@ -250,29 +250,6 @@ describe( 'Issue - New', function() {
 
 			data.forEach( entry => expect( entry ).to.include.all.keys( [ 'name', 'text' ] ) );
 		} );
-
-		function downloadData( url, json ) {
-			return new Promise( ( resolve, reject ) => {
-				const xhr = new XMLHttpRequest();
-				xhr.open( 'GET', url, true );
-
-				// Some of the requests don't work without this one.
-				xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
-
-				if ( json ) {
-					xhr.responseType = 'json';
-					xhr.setRequestHeader( 'Accept', 'application/json' );
-				}
-
-				xhr.addEventListener( 'error', () => reject( new Error( `Error loading mentions from $(url).` ) ) );
-				xhr.addEventListener( 'abort', () => reject() );
-				xhr.addEventListener( 'load', () => {
-					resolve( xhr.response );
-				} );
-
-				xhr.send();
-			} );
-		}
 	} );
 
 	describe( 'Saved Replies', () => {

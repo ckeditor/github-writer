@@ -33,7 +33,8 @@ module.exports = ( env, argv ) => {
 			rules: [
 				{
 					test: [
-						/\/src\/app\/lib\/languages.js$/
+						/\/src\/app\/modules\/languages.js$/,
+						/\/src\/app\/data\/emojis.js$/
 					],
 					loader: path.resolve( __dirname, '../dev/static-module-loader.js' )
 				},
