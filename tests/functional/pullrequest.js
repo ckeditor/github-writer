@@ -174,10 +174,10 @@ describe( 'The "pull request" test suite', function() {
 
 		// Check if the DOM looks like expected by the app.
 		{
-			// At this point, we have 2 comments in the page (each 2 forms): main issue and comment.
-			// We want the first for of the second one... indexes: ( 0, 1 ), ( *2*, 3 )
+			// At this point, we have 2 comments in the page: main issue and comment.
+			// We want the second one.
 			const root = await driver.findElement( By.js( () => {
-				return document.querySelectorAll( 'form.js-comment-update' )[ 2 ];
+				return document.querySelectorAll( 'form.js-comment-update' )[ 1 ];
 			} ) );
 			dom = await checkDom( root, { includeEdit: true } );
 		}

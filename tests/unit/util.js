@@ -115,6 +115,37 @@ describe( 'Util', () => {
 				expect( callback.calledOnce, 'second call' ).to.be.true;
 			} );
 
+			it( 'addEventListener (selector)', () => {
+				const domManipulator = new DomManipulator();
+				const button1 = createElementFromHtml( '<button class="test-btn">Button 1</button>' );
+				const button2 = createElementFromHtml( '<button class="test-btn"><span>Button 2</span></button>' );
+				const button3 = createElementFromHtml( '<button>Button 3</button>' );
+
+				domManipulator.append( document.body, button1 );
+				domManipulator.append( document.body, button2 );
+				domManipulator.append( document.body, button3 );
+
+				const callback = sinon.spy();
+
+				domManipulator.addEventListener( 'button.test-btn', 'click', callback );
+
+				button1.click();
+				expect( callback.callCount ).to.equals( 1 );
+
+				button2.querySelector( 'span' ).click();
+				expect( callback.callCount ).to.equals( 2 );
+
+				button3.click();
+				expect( callback.callCount ).to.equals( 2 );
+
+				domManipulator.rollback();
+
+				button1.click();
+				button2.querySelector( 'span' ).click();
+				button3.click();
+				expect( callback.callCount ).to.equals( 2 );
+			} );
+
 			it( 'addAttribute', () => {
 				const domManipulator = new DomManipulator();
 
