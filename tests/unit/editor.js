@@ -397,6 +397,12 @@ describe( 'Editor', () => {
 
 					const stub = sinon.stub( sessionStorage, 'setItem' );
 
+					// Some browsers (FF) don't allow sinon on sessionStorage.
+					// As long as Chrome is testing it, it's fine.
+					if ( !sessionStorage.setItem.restore ) {
+						return;
+					}
+
 					return editor.create()
 						.then( () => {
 							editor.fire( 'mode' );
