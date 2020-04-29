@@ -131,7 +131,7 @@ export const GitHubPage = {
 
 		if ( options.submitAlternative ) {
 			root.querySelector( 'button[type="submit"]' ).insertAdjacentHTML( 'afterend',
-				'<button class="js-quick-submit-alternative">Alternative</button>' );
+				'<button type="submit" class="js-quick-submit-alternative" formnovalidate>Alternative</button>' );
 		}
 
 		root.querySelector( 'textarea' ).id = 'test-' + ( ++textareaId );

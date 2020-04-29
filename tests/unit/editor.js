@@ -10,10 +10,11 @@ import MarkdownEditor from '../../src/app/editors/markdowneditor';
 import WikiMarkdownEditor from '../../src/app/editors/wikimarkdowneditor';
 
 import RteEditorConfig from '../../src/app/editors/rteeditorconfig';
+import EditorExtras from '../../src/app/plugins/editorextras';
+import LiveModelData from '../../src/app/plugins/livemodeldata';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import QuoteSelection from '../../src/app/plugins/quoteselection';
 import PendingActions from '@ckeditor/ckeditor5-core/src/pendingactions';
-import EditorExtras from '../../src/app/plugins/editorextras';
 
 import { createElementFromHtml, DomManipulator, PageIncompatibilityError } from '../../src/app/util';
 
@@ -22,7 +23,7 @@ import { keyCodes } from '@ckeditor/ckeditor5-utils/src/keyboard';
 
 describe( 'Editor', () => {
 	beforeEach( () => {
-		sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ Paragraph ] } );
+		sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ EditorExtras, LiveModelData, Paragraph ] } );
 	} );
 
 	describe( 'constructor()', () => {
@@ -347,6 +348,10 @@ describe( 'Editor', () => {
 		} );
 
 		describe( 'session resume', () => {
+			beforeEach( () => {
+				sessionStorage.clear();
+			} );
+
 			it( 'should setup session resume', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );
 
@@ -360,172 +365,77 @@ describe( 'Editor', () => {
 
 			// Session save.
 			{
-				it( 'should save session on window#pagehide', () => {
-					const root = GitHubPage.appendRoot( { text: 'initial data' } );
-					const textareaId = root.querySelector( 'textarea' ).id;
+				it( 'should save session on setData()', () => {
+					const root = GitHubPage.appendRoot();
 					const editor = new Editor( root );
 
 					return editor.create()
 						.then( () => {
+							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.null;
 							editor.rteEditor.setData( 'new data' );
-
-							window.dispatchEvent( new Event( 'pagehide' ) );
-
 							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.a( 'string' );
-
-							return editor.destroy()
-								.then( () => {
-									root.remove();
-
-									const newRoot = GitHubPage.appendRoot( { text: 'initial data' } );
-									newRoot.querySelector( 'textarea' ).id = textareaId;
-									const newEditor = new Editor( newRoot );
-
-									return newEditor.create()
-										.then( () => {
-											expect( newEditor.rteEditor.getData() ).to.equals( 'new data' );
-										} );
-								} );
 						} );
 				} );
 
-				it( 'should do nothing on window#pagehide when submitting the form', () => {
-					const root = GitHubPage.appendRoot( { text: 'initial data' } );
-					const textareaId = root.querySelector( 'textarea' ).id;
+				it( 'should save session on mode change', () => {
+					const root = GitHubPage.appendRoot();
 					const editor = new Editor( root );
 
 					return editor.create()
 						.then( () => {
-							editor.rteEditor.setData( 'new data' );
-
-							editor.dom.buttons.submit.dispatchEvent( new Event( 'click' ) );
-
-							window.dispatchEvent( new Event( 'pagehide' ) );
-
 							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.null;
-
-							return editor.destroy()
-								.then( () => {
-									root.remove();
-
-									const newRoot = GitHubPage.appendRoot( { text: 'initial data' } );
-									newRoot.querySelector( 'textarea' ).id = textareaId;
-									const newEditor = new Editor( newRoot );
-
-									return newEditor.create()
-										.then( () => {
-											expect( newEditor.rteEditor.getData() ).to.equals( 'initial data' );
-										} );
-								} );
+							editor.setMode( Editor.modes.MARKDOWN );
+							expect( JSON.parse( sessionStorage.getItem( editor.sessionKey ) ) ).to.eql( {
+								mode: Editor.modes.MARKDOWN
+							} );
 						} );
 				} );
 
-				it( 'should do nothing on window#pagehide when submitting the form (alternative)', () => {
-					const root = GitHubPage.appendRoot( { text: 'initial data', submitAlternative: true } );
-					const textareaId = root.querySelector( 'textarea' ).id;
+				it( 'should register listener just once', () => {
+					const root = GitHubPage.appendRoot();
 					const editor = new Editor( root );
+
+					const stub = sinon.stub( sessionStorage, 'setItem' );
 
 					return editor.create()
 						.then( () => {
-							editor.rteEditor.setData( 'new data' );
+							editor.fire( 'mode' );
+							editor.fire( 'mode' );
 
-							editor.dom.buttons.submitAlternative.dispatchEvent( new Event( 'click' ) );
+							expect( stub.callCount ).to.equals( 0 );
 
-							window.dispatchEvent( new Event( 'pagehide' ) );
+							editor.rteEditor.setData( 'test' );
 
-							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.null;
-
-							return editor.destroy()
-								.then( () => {
-									root.remove();
-
-									const newRoot = GitHubPage.appendRoot( { text: 'initial data' } );
-									newRoot.querySelector( 'textarea' ).id = textareaId;
-									const newEditor = new Editor( newRoot );
-
-									return newEditor.create()
-										.then( () => {
-											expect( newEditor.rteEditor.getData() ).to.equals( 'initial data' );
-										} );
-								} );
-						} );
-				} );
-
-				it( 'should save session on pjax', () => {
-					const root = GitHubPage.appendRoot( { text: 'initial data' } );
-					const textareaId = root.querySelector( 'textarea' ).id;
-					const editor = new Editor( root );
-
-					return editor.create()
-						.then( () => {
-							editor.rteEditor.setData( 'new data with pjax' );
-
-							document.body.dispatchEvent( new Event( 'pjax:start', { bubbles: true } ) );
-
-							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.a( 'string' );
-
-							return editor.destroy()
-								.then( () => {
-									root.remove();
-
-									const newRoot = GitHubPage.appendRoot( { text: 'initial data' } );
-									newRoot.querySelector( 'textarea' ).id = textareaId;
-									const newEditor = new Editor( newRoot );
-
-									return newEditor.create()
-										.then( () => {
-											expect( newEditor.rteEditor.getData() ).to.equals( 'new data with pjax' );
-										} );
-								} );
-						} );
-				} );
-
-				it( 'should do nothing if pjax doesnt touch this editor', () => {
-					const divRoot = GitHubPage.appendElementHtml( '<div></div>' );
-					const divPjax = GitHubPage.appendElementHtml( '<div></div>' );
-
-					const root = GitHubPage.appendRoot( { text: 'initial data', target: divRoot } );
-					const editor = new Editor( root );
-
-					return editor.create()
-						.then( () => {
-							editor.rteEditor.setData( 'new data with pjax' );
-
-							divPjax.dispatchEvent( new Event( 'pjax:start', { bubbles: true } ) );
-
-							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.null;
+							expect( stub.callCount ).to.equals( 1 );
 						} );
 				} );
 			}
 
 			// Session resume.
 			{
-				it( 'should cleanup session data after using it', () => {
-					const root = GitHubPage.appendRoot( { text: 'initial data' } );
+				it( 'should resume session data', () => {
+					const root = GitHubPage.appendRoot();
 					const textareaId = root.querySelector( 'textarea' ).id;
 					const editor = new Editor( root );
 
 					return editor.create()
 						.then( () => {
 							editor.rteEditor.setData( 'new data' );
-
-							window.dispatchEvent( new Event( 'pagehide' ) );
-
 							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.a( 'string' );
 
 							return editor.destroy()
 								.then( () => {
 									root.remove();
 
-									const newRoot = GitHubPage.appendRoot( { text: 'initial data' } );
+									const newRoot = GitHubPage.appendRoot();
 									newRoot.querySelector( 'textarea' ).id = textareaId;
 									const newEditor = new Editor( newRoot );
 
-									expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.a( 'string' );
+									expect( sessionStorage.getItem( newEditor.sessionKey ) ).to.be.a( 'string' );
 
 									return newEditor.create()
 										.then( () => {
-											expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.null;
+											expect( newEditor.rteEditor.getData() ).to.equals( 'new data' );
 										} );
 								} );
 						} );
@@ -540,8 +450,6 @@ describe( 'Editor', () => {
 						.then( () => {
 							editor.rteEditor.setData( 'new data' );
 							editor.setMode( Editor.modes.MARKDOWN );
-
-							window.dispatchEvent( new Event( 'pagehide' ) );
 
 							return editor.destroy()
 								.then( () => {
@@ -625,15 +533,15 @@ describe( 'Editor', () => {
 
 				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
 
+				const actionTextEl = createElementFromHtml( '<span class="js-form-action-text">Test</span>' );
+				editor.dom.getSubmitAlternativeBtn().append( actionTextEl );
+
 				return editor.create()
 					.then( () => {
-						const actionTextEl = createElementFromHtml( '<span class="js-form-action-text">Test</span>' );
-						editor.dom.buttons.submitAlternative.append( actionTextEl );
-
-						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', true );
+						editor.rteEditor.ckeditor.setData( '' );
 						expect( actionTextEl.textContent ).to.equals( 'Close issue' );
 
-						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', false );
+						editor.rteEditor.ckeditor.setData( 'test' );
 						expect( actionTextEl.textContent ).to.equals( 'Close and comment' );
 					} );
 			} );
@@ -643,15 +551,15 @@ describe( 'Editor', () => {
 
 				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
 
+				const actionTextEl = createElementFromHtml( '<span class="js-form-action-text">Test</span>' );
+				editor.dom.getSubmitAlternativeBtn().append( actionTextEl );
+
 				return editor.create()
 					.then( () => {
-						const actionTextEl = createElementFromHtml( '<span class="js-form-action-text">Test</span>' );
-						editor.dom.buttons.submitAlternative.append( actionTextEl );
-
-						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', true );
+						editor.rteEditor.ckeditor.setData( '' );
 						expect( actionTextEl.textContent ).to.equals( 'Close pull request' );
 
-						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', false );
+						editor.rteEditor.ckeditor.setData( 'test' );
 						expect( actionTextEl.textContent ).to.equals( 'Close and comment' );
 					} );
 			} );
@@ -661,11 +569,11 @@ describe( 'Editor', () => {
 
 				const editor = new Editor( GitHubPage.appendRoot( { submitAlternative: true } ) );
 
+				const actionTextEl = createElementFromHtml( '<span class="js-form-action-text">Test</span>' );
+				editor.dom.getSubmitAlternativeBtn().append( actionTextEl );
+
 				return editor.create()
 					.then( () => {
-						const actionTextEl = createElementFromHtml( '<span class="js-form-action-text">Test</span>' );
-						editor.dom.buttons.submitAlternative.append( actionTextEl );
-
 						editor.rteEditor.ckeditor.fire( 'change:isEmpty', 'isEmpty', true );
 						expect( actionTextEl.textContent ).to.equals( 'Test' );
 
@@ -693,6 +601,62 @@ describe( 'Editor', () => {
 						}, 1 );
 					} );
 			} );
+
+			it( 'should lock the form on data change', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'test' } ) );
+				const textarea = editor.dom.root.querySelector( 'textarea' );
+
+				editor.create()
+					.then( () => {
+						expect( textarea.validity.customError ).to.be.false;
+						editor.rteEditor.setData( 'Changed data' );
+						expect( textarea.validity.customError ).to.be.true;
+					} );
+			} );
+
+			it( 'should unlock the form during submit', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'test' } ) );
+				const textarea = editor.dom.root.querySelector( 'textarea' );
+
+				return editor.create()
+					.then( () => {
+						expect( textarea.validity.customError ).to.be.false;
+						editor.rteEditor.setData( 'Changed data' );
+						expect( textarea.validity.customError ).to.be.true;
+
+						editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
+
+						expect( textarea.validity.customError ).to.be.false;
+					} );
+			} );
+
+			it( 'should remove "formnovalidate" from buttons on form lock', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'test', submitAlternative: true } ) );
+				const button = editor.dom.root.querySelector( '.js-quick-submit-alternative' );
+
+				editor.create()
+					.then( () => {
+						expect( button.hasAttribute( 'formnovalidate' ) ).to.be.true;
+						editor.rteEditor.setData( 'Changed data' );
+						expect( button.hasAttribute( 'formnovalidate' ) ).to.be.false;
+					} );
+			} );
+
+			it( 'should restore "formnovalidate" from buttons on form unlock', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'test', submitAlternative: true } ) );
+				const button = editor.dom.root.querySelector( '.js-quick-submit-alternative' );
+
+				editor.create()
+					.then( () => {
+						expect( button.hasAttribute( 'formnovalidate' ) ).to.be.true;
+						editor.rteEditor.setData( 'Changed data' );
+						expect( button.hasAttribute( 'formnovalidate' ) ).to.be.false;
+
+						editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
+
+						expect( button.hasAttribute( 'formnovalidate' ) ).to.be.true;
+					} );
+			} );
 		} );
 
 		describe( 'keystrokes', () => {
@@ -703,7 +667,7 @@ describe( 'Editor', () => {
 
 					return editor.create()
 						.then( () => {
-							const stub = sinon.stub( editor.dom.buttons.submit, 'click' );
+							const stub = sinon.stub( editor.dom.getSubmitBtn(), 'click' );
 							const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
 
 							expect( stub.callCount ).to.equals( 0 );
@@ -720,7 +684,7 @@ describe( 'Editor', () => {
 
 					return editor.create()
 						.then( () => {
-							const stub = sinon.stub( editor.dom.buttons.submitAlternative, 'click' );
+							const stub = sinon.stub( editor.dom.getSubmitAlternativeBtn(), 'click' );
 							const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
 
 							expect( stub.callCount ).to.equals( 0 );
@@ -766,8 +730,8 @@ describe( 'Editor', () => {
 
 						return editor.create()
 							.then( () => {
-								const stub = sinon.stub( editor.dom.buttons.submit, 'click' );
-								const stubAlternative = sinon.stub( editor.dom.buttons.submitAlternative, 'click' );
+								const stub = sinon.stub( editor.dom.getSubmitBtn(), 'click' );
+								const stubAlternative = sinon.stub( editor.dom.getSubmitAlternativeBtn(), 'click' );
 
 								const viewDocument = editor.rteEditor.ckeditor.editing.view.document;
 
@@ -838,13 +802,13 @@ describe( 'Editor', () => {
 
 				return editor.create()
 					.then( () => {
-						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 
 						editor.rteEditor.setData( 'Test' );
-						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.false;
 
 						editor.rteEditor.setData( '' );
-						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 					} );
 			} );
 
@@ -854,7 +818,7 @@ describe( 'Editor', () => {
 
 				return editor.create()
 					.then( () => {
-						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 					} );
 			} );
 
@@ -864,7 +828,7 @@ describe( 'Editor', () => {
 
 				return editor.create()
 					.then( () => {
-						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.false;
 					} );
 			} );
 
@@ -878,7 +842,7 @@ describe( 'Editor', () => {
 
 				return editor.create()
 					.then( () => {
-						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.false;
 					} );
 			} );
 
@@ -889,13 +853,13 @@ describe( 'Editor', () => {
 					.then( () => {
 						const pendingActions = editor.rteEditor.ckeditor.plugins.get( 'PendingActions' );
 
-						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.false;
 
 						const action = pendingActions.add( 'Testing' );
-						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 
 						pendingActions.remove( action );
-						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.false;
 					} );
 			} );
 
@@ -904,12 +868,12 @@ describe( 'Editor', () => {
 
 				return editor.create()
 					.then( () => {
-						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 
 						editor.setMode( Editor.modes.MARKDOWN );
 
 						editor.rteEditor.setData( 'Test' );
-						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 					} );
 			} );
 
@@ -920,26 +884,26 @@ describe( 'Editor', () => {
 
 				editor.create()
 					.then( () => {
-						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 
 						otherInput.value = 'Testing';
-						expect( editor.dom.buttons.submit.disabled ).to.be.true;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 
-						editor.dom.buttons.submit.disabled = false;
+						editor.dom.getSubmitBtn().disabled = false;
 
 						// Mutation observers are asynchronous, so we should still not see the editor fixup here.
-						expect( editor.dom.buttons.submit.disabled ).to.be.false;
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.false;
 
 						// So we use a timout to give a chance to the observer to be invoked.
 						setTimeout( () => {
-							expect( editor.dom.buttons.submit.disabled ).to.be.true;
+							expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 
 							otherInput.value = '';
-							expect( editor.dom.buttons.submit.disabled ).to.be.true;
+							expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 
-							editor.dom.buttons.submit.disabled = true;
+							editor.dom.getSubmitBtn().disabled = true;
 							setTimeout( () => {
-								expect( editor.dom.buttons.submit.disabled ).to.be.true;
+								expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 								done();
 							}, 0 );
 						}, 0 );
@@ -954,7 +918,7 @@ describe( 'Editor', () => {
 				return editor.create()
 					.then( () => {
 						const spy = sinon.spy( editor, 'syncEditors' );
-						editor.dom.buttons.submit.dispatchEvent( new Event( 'click' ) );
+						editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
 
 						expect( spy.callCount ).to.equals( 1 );
 					} );
@@ -966,7 +930,7 @@ describe( 'Editor', () => {
 				return editor.create()
 					.then( () => {
 						const spy = sinon.spy( editor, 'syncEditors' );
-						editor.dom.buttons.submitAlternative.dispatchEvent( new Event( 'click' ) );
+						editor.dom.getSubmitAlternativeBtn().dispatchEvent( new Event( 'click' ) );
 
 						expect( spy.callCount ).to.equals( 1 );
 					} );
@@ -980,9 +944,83 @@ describe( 'Editor', () => {
 						editor.setMode( Editor.modes.MARKDOWN );
 
 						const spy = sinon.spy( editor, 'syncEditors' );
-						editor.dom.buttons.submit.dispatchEvent( new Event( 'click' ) );
+						editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
 
 						expect( spy.callCount ).to.equals( 0 );
+					} );
+			} );
+
+			it( 'should do nothing on submit.click outside the form', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const button = GitHubPage.appendElementHtml( '<button type="submit">Outside</button>' );
+
+				return editor.create()
+					.then( () => {
+						const syncSpy = sinon.spy( editor, 'syncEditors' );
+						const consoleSpy = sinon.spy( console, 'error' );
+
+						button.dispatchEvent( new Event( 'click' ) );
+
+						expect( syncSpy.callCount ).to.equals( 0 );
+						expect( consoleSpy.callCount ).to.equals( 0 );
+					} );
+			} );
+
+			it( 'should console.log sync errors', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						const error = new Error( 'test' );
+						sinon.stub( editor, 'syncEditors' ).throws( error );
+
+						const spy = sinon.stub( console, 'error' );
+
+						expect( () => {
+							editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
+						} ).to.not.throw();
+
+						expect( spy.callCount ).to.equals( 1 );
+						expect( spy.calledWithExactly( error ) ).to.be.true;
+					} );
+			} );
+
+			it( 'should show error message on sync error', () => {
+				const root = GitHubPage.appendRoot();
+				const editor = new Editor( root );
+				const errorContainer = root.querySelector( '.js-comment-form-error' );
+				sinon.stub( console, 'error' );
+
+				expect( errorContainer.hidden ).to.be.true;
+
+				return editor.create()
+					.then( () => {
+						sinon.stub( editor, 'syncEditors' ).throws();
+
+						expect( () => {
+							editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
+						} ).to.not.throw();
+
+						expect( errorContainer.hidden ).to.be.false;
+					} );
+			} );
+
+			it( 'should not fail on missing error container', () => {
+				const root = GitHubPage.appendRoot();
+				const editor = new Editor( root );
+				root.querySelector( '.js-comment-form-error' ).remove();
+
+				return editor.create()
+					.then( () => {
+						sinon.stub( editor, 'syncEditors' ).throws();
+
+						const stub = sinon.stub( console, 'error' );
+
+						expect( () => {
+							editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
+						} ).to.not.throw();
+
+						expect( stub.callCount ).to.equals( 1 );
 					} );
 			} );
 		} );
@@ -1017,34 +1055,6 @@ describe( 'Editor', () => {
 							expect( result ).to.be.false;
 							expect( spy.callCount ).to.equals( 0 );
 						} );
-				} );
-		} );
-
-		it( 'should sync if rte', () => {
-			const editor = new Editor( GitHubPage.appendRoot() );
-
-			return editor.create()
-				.then( () => {
-					const stub = sinon.stub( editor, 'syncEditors' );
-
-					editor.destroy();
-
-					expect( stub.callCount ).to.equals( 1 );
-				} );
-		} );
-
-		it( 'should not sync if markdown', () => {
-			const editor = new Editor( GitHubPage.appendRoot() );
-
-			return editor.create()
-				.then( () => {
-					editor.setMode( Editor.modes.MARKDOWN );
-
-					const stub = sinon.stub( editor, 'syncEditors' );
-
-					editor.destroy();
-
-					expect( stub.callCount ).to.equals( 0 );
 				} );
 		} );
 

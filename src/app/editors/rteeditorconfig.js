@@ -52,6 +52,7 @@ import ControlClick from '../plugins/controlclick';
 import SmartCaret from '../plugins/smartcaret';
 import CodeBlockLanguageSelector from '../plugins/codeblocklanguageselector';
 import SavedReplies from '../plugins/savedreplies';
+import LiveModelData from '../plugins/livemodeldata';
 
 import App from '../app';
 import { config as languagesConfig } from '../modules/languages';
@@ -82,7 +83,8 @@ const RteEditorConfig = {
 				Kebab, RemoveFormat, ModeSwitcher, Suggestion,
 				PasteFromOffice, PasteFixer,
 				AutoLinking, QuoteSelection, SavedReplies, ResetListener, EditorExtras, ControlClick, SmartCaret,
-				CodeBlockLanguageSelector
+				CodeBlockLanguageSelector,
+				LiveModelData
 			],
 			toolbar: [
 				'headingdropdown', 'bold', 'italic', '|',

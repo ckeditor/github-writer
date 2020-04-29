@@ -74,6 +74,28 @@ export default class Editor {
 					 * The "Write" tab.
 					 */
 					write: markdownEditorRootElement.querySelector( '.write-tab' )
+				},
+
+				/**
+				 * Gets the primary submit button element.
+				 *
+				 * This element shouldn't be cached because GH replaces it some situation, for example when data is saved.
+				 *
+				 * @returns {HTMLButtonElement}
+				 */
+				getSubmitBtn() {
+					return markdownEditorRootElement.querySelector( 'input[type=submit].btn-primary, button[type=submit].btn-primary' );
+				},
+
+				/**
+				 * Gets the alternative submit button element, if available.
+				 *
+				 * This element shouldn't be cached because GH replaces it some situation, for example when data is saved.
+				 *
+				 * @returns {HTMLButtonElement}
+				 */
+				getSubmitAlternativeBtn() {
+					return markdownEditorRootElement.querySelector( '.js-quick-submit-alternative, button.js-save-draft' );
 				}
 			};
 
@@ -190,20 +212,18 @@ export default class Editor {
 	 * @returns {Promise<Editor>} A promise that resolves once the rte editor instance used by this editor is created and ready.
 	 */
 	create() {
-		let initialMode, initialData;
+		let sessionData, initialMode, initialData;
 
 		// Retrieve the initial mode and data.
 		{
 			// Try to get it from session storage.
-			let sessionData = sessionStorage.getItem( this.sessionKey );
+			sessionData = sessionStorage.getItem( this.sessionKey );
 
 			if ( sessionData ) {
-				sessionStorage.removeItem( this.sessionKey );
-
 				sessionData = JSON.parse( sessionData );
 
 				initialMode = sessionData.mode;
-				initialData = sessionData.data || '';	// Available with RTE only.
+				initialData = '';
 			} else {
 				// Otherwise, the initial data is a copy of the markdown editor data.
 				initialData = this.markdownEditor.getData();
@@ -213,10 +233,17 @@ export default class Editor {
 		return this.rteEditor.create( initialData )
 			.then( () => {
 				this._setInitialMode( initialMode );
+				this._setupForm();
+
+				// Load the editor with session data, if available.
+				// This must be done after _setupForm() so the form gets locked.
+				if ( sessionData && sessionData.mode === Editor.modes.RTE ) {
+					this.rteEditor.ckeditor.model.data = sessionData.data;
+				}
+
 				this._setupSessionResume();
 				this._setupFocus();
 				this._setupEmptyCheck();
-				this._setupForm();
 				this._setupKeystrokes();
 				this._setupPendingActions();
 
@@ -233,10 +260,6 @@ export default class Editor {
 		let promise = Promise.resolve( false );
 
 		if ( this.getMode() !== Editor.modes.DESTROYED ) {
-			if ( this.getMode() === Editor.modes.RTE ) {
-				this.syncEditors();
-			}
-
 			this.setMode( Editor.modes.DESTROYED );
 
 			if ( this.rteEditor ) {
@@ -263,6 +286,9 @@ export default class Editor {
 	syncEditors() {
 		if ( this.getMode() === Editor.modes.RTE ) {
 			this.markdownEditor.setData( this.rteEditor.getData() );
+
+			// Once data reached the GH textarea, we don't need the session information anymore.
+			sessionStorage.removeItem( this.sessionKey );
 		} else {
 			this.rteEditor.setData( this.markdownEditor.getData() );
 		}
@@ -289,29 +315,43 @@ export default class Editor {
 	 */
 	_setupSessionResume() {
 		const saveSession = () => {
-			// Do nothing if we're submitting the form. (#79)
-			if ( this._isSubmitting ) {
+			const mode = this.getMode();
+
+			if ( mode !== Editor.modes.RTE && mode !== Editor.modes.MARKDOWN ) {
 				return;
 			}
 
-			const sessionData = {
-				mode: this.getMode()
-			};
+			const sessionData = { mode };
 
 			if ( this.getMode() === Editor.modes.RTE ) {
-				sessionData.data = this.rteEditor.getData();
+				sessionData.data = this.rteEditor.ckeditor.model.data;
 			}
 
 			sessionStorage.setItem( this.sessionKey, JSON.stringify( sessionData ) );
 		};
 
-		// The following are the two events that catch a navigation from this page (or unloading part of it).
-		this.domManipulator.addEventListener( window, 'pagehide', saveSession );
-		this.domManipulator.addEventListener( document, 'pjax:start', ( { target } ) => {
-			if ( target.contains( this.dom.root ) ) {
+		let isListening;
+
+		/**
+		 * Setups a listener that updates the session data for every change made in the editor.
+		 */
+		const setupListener = () => {
+			if ( this.getMode() === Editor.modes.RTE ) {
+				if ( !isListening ) {
+					this.rteEditor.ckeditor.model.on( 'data', saveSession );
+					isListening = true;
+				}
+			} else {
+				this.rteEditor.ckeditor.model.off( 'data', saveSession );
+				isListening = false;
+
 				saveSession();
 			}
-		} );
+		};
+
+		this.on( 'mode', setupListener );
+
+		setupListener();
 	}
 
 	/**
@@ -326,7 +366,7 @@ export default class Editor {
 				if ( this.getMode() === Editor.modes.RTE ) {
 					this.rteEditor.focus();
 				}
-			}, 0 );
+			} );
 		} );
 
 		// Enable the GitHub focus styles when the editor focus/blur.
@@ -347,33 +387,37 @@ export default class Editor {
 	 * @private
 	 */
 	_setupEmptyCheck() {
+		const ckeditor = this.rteEditor.ckeditor;
+
 		// Enable/disable the submit buttons based on the editor emptiness.
-		this.rteEditor.ckeditor.on( 'change:isEmpty', ( eventInfo, name, isEmpty ) => {
+		ckeditor.on( 'change:isEmpty', () => {
 			this._setSubmitStatus();
-
-			// In Issues and Pull Requests, the alternative submit buttons changes label when the editor is empty.
-			{
-				const page = App.pageManager.page;
-				const submitAlternative = this.dom.buttons.submitAlternative;
-
-				// This is the target element inside the button that holds the label.
-				const labelElement = submitAlternative && submitAlternative.querySelector( '.js-form-action-text' );
-
-				if ( labelElement && ( page === 'repo_issues' || page === 'repo_pulls' ) ) {
-					// The when-non-empty label is saved by GH in an attribute (we add also a generic fallback, just in case).
-					let label = submitAlternative.getAttribute( 'data-comment-text' ) || 'Close and comment';
-
-					if ( isEmpty ) {
-						// The when-empty label is kinda tricky, but the following should do the magic.
-						label = label.replace( /and .+$/, page === 'repo_issues' ?
-							'issue' :
-							'pull request' );
-					}
-
-					labelElement.textContent = label;
-				}
-			}
+			fixLabels( this );
 		} );
+
+		fixLabels( this );
+
+		function fixLabels( editor ) {
+			const page = App.pageManager.page;
+			const submitAlternative = editor.dom.getSubmitAlternativeBtn();
+
+			// This is the target element inside the button that holds the label.
+			const labelElement = submitAlternative && submitAlternative.querySelector( '.js-form-action-text' );
+
+			if ( labelElement && ( page === 'repo_issues' || page === 'repo_pulls' ) ) {
+				// The when-non-empty label is saved by GH in an attribute (we add also a generic fallback, just in case).
+				let label = submitAlternative.getAttribute( 'data-comment-text' ) || 'Close and comment';
+
+				if ( ckeditor.isEmpty ) {
+					// The when-empty label is kinda tricky, but the following should do the magic.
+					label = label.replace( /and .+$/, page === 'repo_issues' ?
+						'issue' :
+						'pull request' );
+				}
+
+				labelElement.textContent = label;
+			}
+		}
 	}
 
 	/**
@@ -382,16 +426,130 @@ export default class Editor {
 	 * @private
 	 */
 	_setupForm() {
-		const form = this.markdownEditor.dom.textarea.form;
+		const ckeditor = this.rteEditor.ckeditor;
+		const textarea = this.markdownEditor.dom.textarea;
+		const form = textarea.form;
 
 		// Reset the rte editor on form reset (e.g. after a new comment is added).
-		this.domManipulator.addEventListener( form, 'reset', () => {
-			// We actually want it 'after-reset', so form elements are clean, thus setTimeout.
-			setTimeout( () => {
-				this.rteEditor.setData( this.markdownEditor.dom.textarea.defaultValue );
-				this._setInitialMode();
-			}, 0 );
-		} );
+		{
+			this.domManipulator.addEventListener( form, 'reset', () => {
+				// We actually want it 'after-reset', so form elements are clean, thus setTimeout.
+				setTimeout( () => {
+					this.rteEditor.setData( this.markdownEditor.dom.textarea.defaultValue );
+					this._setInitialMode();
+
+					// The above setData() locked the form and saved session data. Undo it.
+					unlockForm( this );
+					sessionStorage.removeItem( this.sessionKey );
+				} );
+			} );
+		}
+
+		// Setup listeners for submit buttons.
+		{
+			this.domManipulator.addEventListener( 'button[type="submit"]', 'click', ( ev, button ) => {
+				if ( button.closest( 'form' ) === form ) {
+					// We want to play safe here an not allow the form to be posted if there is any error in the synchronization.
+					try {
+						syncOnSubmit( this );
+					} catch ( e ) {
+						// Log the error in the console anyway, for debugging.
+						console.error( e );
+
+						// Show an error message to the user.
+						showError();
+
+						// Block the form post.
+						ev.preventDefault();
+						ev.stopImmediatePropagation();
+					}
+				}
+			} );
+		}
+
+		listenToData();
+
+		/**
+		 * Triggers the form locking as soon as a change is made to the editor data.
+		 */
+		function listenToData() {
+			ckeditor.model.once( 'data', () => lockForm() );
+		}
+
+		/**
+		 * Locks the form so GH will not be able to post it even if we're not able to intercept the form post.
+		 */
+		function lockForm() {
+			// Save the "require" value so it can be restored on unlock().
+			/* Just in case */ /* istanbul ignore else */
+			if ( !textarea.hasAttribute( 'data-github-rte-was-required' ) ) {
+				textarea.setAttribute( 'data-github-rte-was-required', textarea.required );
+			}
+			// This will ensure that the textarea will be checked by GH on post.
+			textarea.required = true;
+
+			// This will make the GH checks fail and the form post to stop.
+			textarea.setCustomValidity( 'Something went wrong. This textarea was not sync`ed with GitHub RTE.' );
+
+			// Force all submit buttons to validate.
+			form.querySelectorAll( 'button[type="submit"][formnovalidate]' ).forEach( button => {
+				// Mark for restore when unlock().
+				button.setAttribute( 'data-github-rte-was-formnovalidate', 'true' );
+				button.removeAttribute( 'formnovalidate' );
+			} );
+		}
+
+		/**
+		 * Unlocks the form, reverting the work done by lock().
+		 */
+		function unlockForm() {
+			if ( textarea.hasAttribute( 'data-github-rte-was-required' ) ) {
+				textarea.required = textarea.getAttribute( 'data-github-rte-was-required' );
+				textarea.removeAttribute( 'data-github-rte-was-required' );
+			}
+			textarea.setCustomValidity( '' );
+
+			// Restore the "formnovalidate" attribute on submit buttons.
+			form.querySelectorAll( 'button[type="submit"]' ).forEach( button => {
+				if ( button.hasAttribute( 'data-github-rte-was-formnovalidate' ) ) {
+					button.setAttribute( 'formnovalidate', '' );
+					button.removeAttribute( 'data-github-rte-was-formnovalidate' );
+				}
+			} );
+
+			// Start listening to data changes again.
+			listenToData();
+		}
+
+		/**
+		 * Sync's the editors and saves the submit time.
+		 * @param editor {Editor} The editor to be sync'ed.
+		 */
+		function syncOnSubmit( editor ) {
+			if ( editor.getMode() === Editor.modes.RTE ) {
+				editor.syncEditors();
+			}
+
+			// Since the textarea is sync`ed, the form is good to go.
+			unlockForm( editor );
+		}
+
+		/**
+		 * Shows the GH native error if we were not able to sync the markdown textarea on form post.
+		 *
+		 * @returns {boolean}
+		 */
+		function showError() {
+			const error = form.querySelector( '.js-comment-form-error' );
+
+			if ( error ) {
+				// The following is exactly what GH does to display the error.
+				error.textContent = 'There was an error saving the form. Reload the page and try again.';
+				error.hidden = false;
+				error.style.display = 'block';
+				error.classList.remove( 'd-none' );
+			}
+		}
 	}
 
 	/**
@@ -426,8 +584,8 @@ export default class Editor {
 						// As the above strategy is not working, we do exactly the same as the GH code is doing.
 						{
 							const button = data.shiftKey ?
-								this.dom.buttons.submitAlternative :
-								this.dom.buttons.submit;
+								this.dom.getSubmitAlternativeBtn() :
+								this.dom.getSubmitBtn();
 
 							button && button.click();
 						}
@@ -470,54 +628,8 @@ export default class Editor {
 
 		this.setMode( initialMode, { noSynch: true, noCheck: true } );
 
-		// Retrieve and setup the submit buttons.
-		{
-			const form = this.markdownEditor.dom.textarea.form;
-
-			// Take the currently stored buttons.
-			let submit = this.dom.buttons && this.dom.buttons.submit;
-			let submitAlternative = this.dom.buttons && this.dom.buttons.submitAlternative;
-
-			this.dom.buttons = {
-				submit: form.querySelector(
-					'input[type=submit].btn-primary, button[type=submit].btn-primary' ),
-				submitAlternative: form.querySelector( '.js-quick-submit-alternative, button.js-save-draft' )
-			};
-
-			// Sync the editors when submitting the form (which is always done by "click").
-			{
-				// Reset the submit flag.
-				delete this._isSubmitting;
-
-				if ( this.dom.buttons.submit !== submit ) {
-					submit = this.dom.buttons.submit;
-					submit && this.domManipulator.addEventListener( submit, 'click',
-						() => syncOnSubmit( this ) );
-				}
-
-				if ( this.dom.buttons.submitAlternative !== submitAlternative ) {
-					submitAlternative = this.dom.buttons.submitAlternative;
-					submitAlternative && this.domManipulator.addEventListener( submitAlternative, 'click',
-						() => syncOnSubmit( this ) );
-				}
-			}
-		}
-
 		// The submit status must always be updated when setting the initial mode.
 		this._setSubmitStatus();
-
-		/**
-		 * Sync's the editors and saves the submit time.
-		 * @param editor {Editor} The editor to be sync'ed.
-		 */
-		function syncOnSubmit( editor ) {
-			// Flag the submit.
-			editor._isSubmitting = true;
-
-			if ( editor.getMode() === Editor.modes.RTE ) {
-				editor.syncEditors();
-			}
-		}
 	}
 
 	/**
@@ -546,7 +658,7 @@ export default class Editor {
 			// Otherwise, we check the validity of the required form elements.
 
 			const textarea = this.markdownEditor.dom.textarea;
-			const form = this.markdownEditor.dom.textarea.form;
+			const form = textarea.form;
 
 			form.querySelectorAll( '[required]' ).forEach( element => {
 				if ( element === textarea ) {
@@ -576,7 +688,7 @@ export default class Editor {
 		connectSubmitButtonObserver.call( this );
 
 		function connectSubmitButtonObserver() {
-			const button = this.dom.buttons.submit;
+			const button = this.dom.getSubmitBtn();
 
 			if ( button ) {
 				this._submitButtonObserver = new MutationObserver( () => {

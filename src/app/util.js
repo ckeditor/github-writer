@@ -303,16 +303,35 @@ export class DomManipulator {
 	/**
 	 * Setup an event listener to the given target.
 	 *
-	 * @param target {EventTarget} The target.
+	 * @param target {EventTarget|String} The event target or a target css selector string.
 	 * @param event {String} The event name.
-	 * @param callback {Function} The listener to be executed when the event fires.
+	 * @param callback {Function} Callback to execute when the event fires. It receives the ( event, target ) parameters.
 	 * @param [options] {Object} An options object specifies characteristics about the event listener.
 	 *        See the dom documentation for EventTarget.addEventListener for options.
 	 */
-	addEventListener( target, event, callback, options ) {
-		target.addEventListener( event, callback, options );
+	addEventListener( target, event, callback, options = {} ) {
+		if ( typeof target === 'string' ) {
+			const selector = target;
+			const listener = ev => {
+				const wantedTarget = ev.target.closest( selector );
 
-		this.addRollbackOperation( () => target.removeEventListener( event, callback, options ) );
+				if ( wantedTarget ) {
+					callback.call( wantedTarget, ev, wantedTarget );
+				}
+			};
+
+			Object.assign( options, { passive: true, capture: true } );
+
+			document.addEventListener( event, listener, options );
+			this.addRollbackOperation( () => document.removeEventListener( event, listener, options ) );
+		} else {
+			const listener = ev => {
+				callback.call( target, ev, target );
+			};
+
+			target.addEventListener( event, listener, options );
+			this.addRollbackOperation( () => target.removeEventListener( event, listener, options ) );
+		}
 	}
 
 	/**
