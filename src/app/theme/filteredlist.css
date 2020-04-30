@@ -54,7 +54,7 @@
 		padding: calc(0.2 * var(--ck-line-height-base) * var(--ck-font-size-base)) calc(0.4 * var(--ck-line-height-base) * var(--ck-font-size-base));
 		line-height: 18px;
 
-		&.github-rte-create-reply {
+		&.github-writer-create-reply {
 			border-bottom: 0;
 		}
 
@@ -99,7 +99,7 @@
 		}
 	}
 
-	&.github-rte-savedreplies {
+	&.github-writer-savedreplies {
 		width: 300px;
 		max-width: 300px;
 

@@ -24,7 +24,7 @@ describe( 'Plugins', () => {
 
 		it( 'should set the editor empty', done => {
 			expect( editor.getData() ).to.equals( 'Test' );
-			window.postMessage( { type: 'GitHub-RTE-Reset-Editor' } );
+			window.postMessage( { type: 'GitHub-Writer-Reset-Editor' } );
 
 			setTimeout( () => {
 				expect( editor.getData() ).to.equals( '' );
@@ -34,7 +34,7 @@ describe( 'Plugins', () => {
 
 		it( 'should do nothing on other messages', done => {
 			expect( editor.getData() ).to.equals( 'Test' );
-			window.postMessage( { type: 'GitHub-RTE-Test' } );
+			window.postMessage( { type: 'GitHub-Writer-Test' } );
 
 			setTimeout( () => {
 				expect( editor.getData() ).to.equals( 'Test' );

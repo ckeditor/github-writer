@@ -26,7 +26,7 @@ export default class AutoLinking extends Plugin {
 	 */
 	init() {
 		// Get the list of features to be enabled.
-		const config = this.editor.config.get( 'githubRte.autoLinking' );
+		const config = this.editor.config.get( 'githubWriter.autoLinking' );
 
 		// This is the class instance that will be used to retrieve and cache additional information about the GitHub links.
 		// This extra information will be used by GH itself to show the hover cards of the links.
@@ -767,7 +767,7 @@ export class GitHubLinkDataLoader {
 					token: tokenElement.value
 				};
 			} else {
-				console.error( 'GitHub RTE error: could not retrieve the preview url.' );
+				console.error( 'GitHub Writer error: could not retrieve the preview url.' );
 			}
 		}
 

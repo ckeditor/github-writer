@@ -43,7 +43,7 @@ describe( 'Plugins', () => {
 		} );
 
 		it( 'should have the right classes', () => {
-			expect( button.class ).to.equals( 'github-rte-mode-button' );
+			expect( button.class ).to.equals( 'github-writer-mode-button' );
 		} );
 
 		it( 'should have tooltip', () => {

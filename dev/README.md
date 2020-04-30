@@ -1,8 +1,8 @@
-## GitHub RTE - Developer Documentation
+## GitHub Writer - Developer Documentation
 
 ### Getting the source code
 
-The GitHub RTE is source code is available on GitHub: [https://github.com/fredck/github-rte-dev](https://github.com/fredck/github-rte-dev).
+The GitHub Writer source code is available on GitHub: https://github.com/ckeditor/github-writer
 
 To get the source code:
 
@@ -10,8 +10,8 @@ To get the source code:
 2.  Clone the repository:
 
 ```plaintext
-git clone git@github.com:fredck/github-rte-dev.git
-cd github-rte-dev
+git clone https://github.com/ckeditor/github-writer.git
+cd github-writer
 yarn
 ```
 
@@ -44,9 +44,9 @@ Having successfully built from source, do the following to load the extension in
 
 1.  In Chrome, click **Window** > **Extensions**. Or navigate to [chrome://extensions/](chrome://extensions/).
 2.  Enable **Developer mode**, at the top right of the page.
-3.  Click the **Load unpacked** button and select the `build/github-rte-chrome` directory from the build directory.
+3.  Click the **Load unpacked** button and select the `build/github-writer-chrome` directory from the build directory.
 
-It's all set. Now visit [https://github.com/](https://github.com/) and start using the GitHub RTE editor inside issues, pull request and wiki pages.
+It's all set. Now visit [https://github.com/](https://github.com/) and start using GitHub Writer inside issues, pull request and wiki pages.
 
 ### Changing the source code
 

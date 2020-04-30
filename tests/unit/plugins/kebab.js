@@ -46,7 +46,7 @@ describe( 'Plugins', () => {
 		} );
 
 		it( 'should have the right classes', () => {
-			expect( dropdown.buttonView.class ).to.equals( 'github-rte-kebab-button tooltipped tooltipped-n' );
+			expect( dropdown.buttonView.class ).to.equals( 'github-writer-kebab-button tooltipped tooltipped-n' );
 		} );
 
 		it( 'should have the right attributes', () => {

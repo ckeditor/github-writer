@@ -2,8 +2,7 @@
 // For licensing, see LICENSE.md.
 
 {
-  "name": "GitHub Rich-Text Editor (RTE)",
-  "short_name": "GitHub RTE",
+  "name": "GitHub Writer",
   "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor.",
   "version": "{package.json -> version}",
   "author": "CKSource (cksource.com)",
@@ -26,29 +25,29 @@
 		"https://github.com/*/wiki/*/_edit"
 	  ],
 	  "js": [
-		"github-rte.js"
+		"github-writer.js"
 	  ],
 	  "css": [
-		"github-rte.css"
+		"github-writer.css"
 	  ],
 	  "run_at": "document_end"
 	}
   ],
   "icons": {
-	"16": "icons/github-rte-16.png",
-	"32": "icons/github-rte-32.png",
-	"48": "icons/github-rte-48.png",
-	"96": "icons/github-rte-96.png",
-	"128": "icons/github-rte-128.png"
+	"16": "icons/github-writer-16.png",
+	"32": "icons/github-writer-32.png",
+	"48": "icons/github-writer-48.png",
+	"96": "icons/github-writer-96.png",
+	"128": "icons/github-writer-128.png"
   },
   "browser_action": {
 	"default_popup": "popup/popup.html",
-	"default_title": "GitHub RTE"
+	"default_title": "GitHub Writer"
   },
   // The following will be removed for Chrome during build.
   "browser_specific_settings": {
 	"gecko": {
-	  "id": "github-rte@cksource.com"
+	  "id": "github-writer@cksource.com"
 	}
   },
   "manifest_version": 2

@@ -349,7 +349,7 @@ describe( 'PageManager', () => {
 
 			return pageManager.setupEditor( root )
 				.then( editor => {
-					expect( root.getAttribute( 'data-github-rte-id' ) ).to.equals( editor.id.toString() );
+					expect( root.getAttribute( 'data-github-writer-id' ) ).to.equals( editor.id.toString() );
 				} )
 				.catch( failOnCatch );
 		} );
@@ -380,8 +380,8 @@ describe( 'PageManager', () => {
 					root.remove();
 					const rootCopy = GitHubPage.appendElementHtml( rootHtml );
 
-					expect( rootCopy.getAttribute( 'data-github-rte-id' ) )
-						.to.equals( root.getAttribute( 'data-github-rte-id' ) );
+					expect( rootCopy.getAttribute( 'data-github-writer-id' ) )
+						.to.equals( root.getAttribute( 'data-github-writer-id' ) );
 
 					sinon.stub( Editor, 'cleanup' );
 
@@ -505,10 +505,10 @@ describe( 'PageManager', () => {
 			const container = GitHubPage.appendElementHtml( '<div></div>' );
 
 			GitHubPage.domManipulator.addEventListener( window, 'message', event => {
-				expect( event.data.type ).to.equals( 'GitHub-RTE-Quote-Selection' );
+				expect( event.data.type ).to.equals( 'GitHub-Writer-Quote-Selection' );
 				expect( event.data.text ).to.equals( 'test' );
 				expect( event.data.timestamp ).to.be.a( 'number' ).greaterThan( 0 );
-				expect( container.getAttribute( 'data-github-rte-quote-selection-timestamp' ) )
+				expect( container.getAttribute( 'data-github-writer-quote-selection-timestamp' ) )
 					.to.equals( event.data.timestamp.toString() );
 				done();
 			} );

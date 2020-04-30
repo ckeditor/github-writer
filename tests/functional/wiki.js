@@ -62,13 +62,13 @@ describe( 'The "wiki" test suite', function() {
 		// Type inside the editor and submit the form.
 		{
 			// Wait for the RTE editor to be created.
-			await driver.wait( until.elementLocated( By.css( '#gollum-editor div.github-rte-ckeditor' ) ), 10000 );
+			await driver.wait( until.elementLocated( By.css( '#gollum-editor div.github-writer-ckeditor' ) ), 10000 );
 
 			// Retrieve the root element, containing the whole GH editing form. Using the same selector we use in the app.
 			const rootElement = driver.findElement( By.css( '#gollum-editor' ) );
 
 			// Get the RTE editor editable.
-			const editable = rootElement.findElement( By.css( 'div.github-rte-ckeditor > .ck-editor__editable' ) );
+			const editable = rootElement.findElement( By.css( 'div.github-writer-ckeditor > .ck-editor__editable' ) );
 
 			// Type inside of it.
 			await editable.sendKeys(

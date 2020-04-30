@@ -20,7 +20,7 @@ describe( 'Plugins', () => {
 		{
 			beforeEach( 'create test editor', done => {
 				createTestEditor( '', [ ControlClick, EditorExtras, LinkEditing, AutoLinking ], {
-					githubRte: { autoLinking: { url: true } }
+					githubWriter: { autoLinking: { url: true } }
 				} )
 					.then( editorObjects => ( { editor } = editorObjects ) )
 					.then( () => editor.ready.then( () => done() ) );
@@ -37,24 +37,24 @@ describe( 'Plugins', () => {
 
 		it( 'should add class to editable on ctrl', () => {
 			const editable = editor.ui.getEditableElement();
-			expect( editable.classList.contains( 'github-rte-key-ctrl' ) ).to.be.false;
+			expect( editable.classList.contains( 'github-writer-key-ctrl' ) ).to.be.false;
 
 			document.dispatchEvent( new KeyboardEvent( 'keydown', { key: 'Control' } ) );
-			expect( editable.classList.contains( 'github-rte-key-ctrl' ) ).to.be.true;
+			expect( editable.classList.contains( 'github-writer-key-ctrl' ) ).to.be.true;
 
 			document.dispatchEvent( new KeyboardEvent( 'keyup', { key: 'Control' } ) );
-			expect( editable.classList.contains( 'github-rte-key-ctrl' ) ).to.be.false;
+			expect( editable.classList.contains( 'github-writer-key-ctrl' ) ).to.be.false;
 		} );
 
 		it( 'should add class to editable on meta', () => {
 			const editable = editor.ui.getEditableElement();
-			expect( editable.classList.contains( 'github-rte-key-ctrl' ) ).to.be.false;
+			expect( editable.classList.contains( 'github-writer-key-ctrl' ) ).to.be.false;
 
 			document.dispatchEvent( new KeyboardEvent( 'keydown', { key: 'Meta' } ) );
-			expect( editable.classList.contains( 'github-rte-key-ctrl' ) ).to.be.true;
+			expect( editable.classList.contains( 'github-writer-key-ctrl' ) ).to.be.true;
 
 			document.dispatchEvent( new KeyboardEvent( 'keyup', { key: 'Meta' } ) );
-			expect( editable.classList.contains( 'github-rte-key-ctrl' ) ).to.be.false;
+			expect( editable.classList.contains( 'github-writer-key-ctrl' ) ).to.be.false;
 		} );
 
 		it( 'should add attribute to links', () => {

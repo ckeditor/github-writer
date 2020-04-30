@@ -84,13 +84,13 @@ describe( 'Editor', () => {
 
 			const editor = new Editor( GitHubPage.appendRoot( { type: 'wiki' } ) );
 
-			expect( editor.dom.root.classList.contains( 'github-rte-type-wiki' ) ).to.be.true;
+			expect( editor.dom.root.classList.contains( 'github-writer-type-wiki' ) ).to.be.true;
 		} );
 
 		it( 'should root to not have wiki class when not in wiki', () => {
 			const editor = new Editor( GitHubPage.appendRoot( { type: 'wiki' } ) );
 
-			expect( editor.dom.root.classList.contains( 'github-rte-type-wiki' ) ).to.be.false;
+			expect( editor.dom.root.classList.contains( 'github-writer-type-wiki' ) ).to.be.false;
 		} );
 	} );
 
@@ -163,12 +163,12 @@ describe( 'Editor', () => {
 			const editor = new Editor( GitHubPage.appendRoot() );
 
 			editor.setMode( Editor.modes.MARKDOWN );
-			expect( editor.dom.root.classList.contains( 'github-rte-mode-rte' ), 'rte' ).to.be.false;
-			expect( editor.dom.root.classList.contains( 'github-rte-mode-markdown' ), 'markdown' ).to.be.true;
+			expect( editor.dom.root.classList.contains( 'github-writer-mode-rte' ), 'rte' ).to.be.false;
+			expect( editor.dom.root.classList.contains( 'github-writer-mode-markdown' ), 'markdown' ).to.be.true;
 
 			editor.setMode( Editor.modes.RTE );
-			expect( editor.dom.root.classList.contains( 'github-rte-mode-rte' ), 'rte' ).to.be.true;
-			expect( editor.dom.root.classList.contains( 'github-rte-mode-markdown' ), 'markdown' ).to.be.false;
+			expect( editor.dom.root.classList.contains( 'github-writer-mode-rte' ), 'rte' ).to.be.true;
+			expect( editor.dom.root.classList.contains( 'github-writer-mode-markdown' ), 'markdown' ).to.be.false;
 		} );
 
 		it( 'should noSynch and noCheck when setting to destroyed', () => {
@@ -507,7 +507,7 @@ describe( 'Editor', () => {
 
 				return editor.create()
 					.then( () => {
-						const target = editor.dom.root.querySelector( '.github-rte-ckeditor' );
+						const target = editor.dom.root.querySelector( '.github-writer-ckeditor' );
 
 						editor.rteEditor.ckeditor.ui.focusTracker.fire( 'change:isFocused', 'isFocused', true );
 						expect( target.classList.contains( 'focused' ) ).to.be.true;
@@ -1103,12 +1103,12 @@ describe( 'Editor', () => {
 					editor.destroy();
 					root.remove();
 
-					expect( rootClone.classList.contains( 'github-rte-mode-rte' ) ).be.true;
+					expect( rootClone.classList.contains( 'github-writer-mode-rte' ) ).be.true;
 
 					Editor.cleanup( rootClone );
 
-					expect( rootClone.classList.contains( 'github-rte-mode-rte' ) ).be.false;
-					expect( rootClone.classList.contains( 'github-rte-mode-markdown' ) ).be.false;
+					expect( rootClone.classList.contains( 'github-writer-mode-rte' ) ).be.false;
+					expect( rootClone.classList.contains( 'github-writer-mode-markdown' ) ).be.false;
 				} );
 		} );
 
@@ -1124,12 +1124,12 @@ describe( 'Editor', () => {
 					editor.destroy();
 					root.remove();
 
-					expect( rootClone.classList.contains( 'github-rte-mode-markdown' ) ).be.true;
+					expect( rootClone.classList.contains( 'github-writer-mode-markdown' ) ).be.true;
 
 					Editor.cleanup( rootClone );
 
-					expect( rootClone.classList.contains( 'github-rte-mode-rte' ) ).be.false;
-					expect( rootClone.classList.contains( 'github-rte-mode-markdown' ) ).be.false;
+					expect( rootClone.classList.contains( 'github-writer-mode-rte' ) ).be.false;
+					expect( rootClone.classList.contains( 'github-writer-mode-markdown' ) ).be.false;
 				} );
 		} );
 

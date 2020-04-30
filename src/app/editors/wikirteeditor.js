@@ -24,8 +24,8 @@ export default class WikiRteEditor extends RteEditor {
 		// Mimic the minimum set of classes that are necessary for the editor, and its contents,
 		// to look like GitHub originals.
 		return `
-			<div class="github-rte-panel-rte">
-				<div class="github-rte-ckeditor upload-enabled form-control markdown-body"></div>
+			<div class="github-writer-panel-rte">
+				<div class="github-writer-ckeditor upload-enabled form-control markdown-body"></div>
 			</div>
 		`;
 	}

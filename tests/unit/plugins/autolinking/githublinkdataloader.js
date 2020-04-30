@@ -68,7 +68,7 @@ describe( 'Plugins', () => {
 					console.error.restore();
 
 					expect( stub.calledOnce ).to.be.true;
-					expect( stub.args[ 0 ][ 0 ] ).to.equals( 'GitHub RTE error: could not retrieve the preview url.' );
+					expect( stub.args[ 0 ][ 0 ] ).to.equals( 'GitHub Writer error: could not retrieve the preview url.' );
 				} );
 			} );
 

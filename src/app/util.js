@@ -89,7 +89,8 @@ export class PageIncompatibilityError extends Error {
 	 * @param elementKey {String} The object key (usually meant to point to an element), which caused the error.
 	 */
 	constructor( elementKey ) {
-		super( `GitHub RTE error: ("${ elementKey }") not found. This page doesn't seem to be compatible with this application anymore. ` +
+		super( `GitHub Writer error: ("${ elementKey }") not found. ` +
+			`This page doesn't seem to be compatible with this application anymore. ` +
 			`Upgrade to the latest version of the browser extension.` );
 	}
 }
@@ -109,7 +110,7 @@ export function injectFunctionExecution( fn ) {
 	// Remove comments they can break the execution (the browser may inline it as as a single line).
 	fnBody = fnBody.replace( /\/\/.*$/mg, '' );
 
-	const id = 'GitHub-RTE-' + Date.now();
+	const id = 'GitHub-Writer-' + Date.now();
 	const script = document.createElement( 'script' );
 	script.id = id;
 	script.innerText =

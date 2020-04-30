@@ -27,7 +27,7 @@ describe( 'Editors', () => {
 		} );
 
 		it( 'should set a toolbar class', () => {
-			expect( editor.ui.view.toolbar.element.classList.contains( 'github-rte-toolbar' ) ).to.be.true;
+			expect( editor.ui.view.toolbar.element.classList.contains( 'github-writer-toolbar' ) ).to.be.true;
 		} );
 
 		it( 'should open the CKEditor inspector on inspect()', () => {

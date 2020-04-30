@@ -16,7 +16,7 @@ import App from './app/app';
 import { PageIncompatibilityError } from './app/util';
 
 if ( process.env.NODE_ENV !== 'production' ) {
-	console.time( 'GitHub RTE loaded and ready' );
+	console.time( 'GitHub Writer loaded and ready' );
 }
 
 // We don't want things to break.
@@ -24,7 +24,7 @@ try {
 	App.run()
 		.then( () => {
 			if ( process.env.NODE_ENV !== 'production' ) {
-				console.timeEnd( 'GitHub RTE loaded and ready' );
+				console.timeEnd( 'GitHub Writer loaded and ready' );
 				console.log( App.pageManager );
 			}
 		} )
@@ -38,12 +38,12 @@ try {
 		.finally( () => {
 			// Add this class to body so we turn off invasive initialization styles.
 			setTimeout( () => {
-				document.body.classList.add( 'github-rte-loaded' );
+				document.body.classList.add( 'github-writer-loaded' );
 			}, 0 );
 		} );
 } catch ( error ) {
 	// It is very important to add this class, so we disable any bootstrapping CSS that we included on load.
-	document.body.classList.add( 'github-rte-loaded' );
+	document.body.classList.add( 'github-writer-loaded' );
 
 	// In production, do no "break-break", just "kinda break".
 	if ( process.env.NODE_ENV === 'production' ) {

@@ -1,6 +1,6 @@
-## GitHub RTE - Running Tests
+## GitHub Writer - Running Tests
 
-The source code contains a suite of automated **functional tests** that can be run to verify a local GitHub RTE build.
+The source code contains a suite of automated **functional tests** that can be run to verify a local GitHub Writer build.
 
 ### First step, build the extension
 
@@ -49,7 +49,7 @@ Now lay back and enjoy watching the test runner doing its job.
 
 Note that tests are run under a dedicated browser profile, not using the operating system one. So it's safe to assume that your everyday use browser is not at risk, neither your personal information.
 
-Additionally, because of the above, the browser session used for testing has no extensions installed. The only extension loaded, as expected, is your local build of GitHub RTE, which is reloaded from scratch for every test run.
+Additionally, because of the above, the browser session used for testing has no extensions installed. The only extension loaded, as expected, is your local build of GitHub Writer, which is reloaded from scratch for every test run.
 
 ### Additional developer information
 

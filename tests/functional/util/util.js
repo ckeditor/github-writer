@@ -18,14 +18,14 @@ const util = module.exports = {
 	buildDriver: () => {
 		// During development, we point Chrome to the directory containing the extension files.
 		const chromeOptions = new ChromeOptions();
-		chromeOptions.addArguments( 'load-extension=' + path.resolve( __dirname, '../../../build/github-rte-chrome' ) );
+		chromeOptions.addArguments( 'load-extension=' + path.resolve( __dirname, '../../../build/github-writer-chrome' ) );
 
 		// Theoretically it's possible to run tests in a headless Chrome. Tests fail with this, though.
 		// chromeOptions.headless();
 
 		// Firefox instead, must be pointed to a .xpi file.
 		const firefoxOption = new FirefoxOptions();
-		firefoxOption.addExtensions( path.resolve( __dirname, '../../../build/github-rte-firefox.xpi' ) );
+		firefoxOption.addExtensions( path.resolve( __dirname, '../../../build/github-writer-firefox.xpi' ) );
 
 		return new Builder()
 			// For now, the following must be switched to change the running browser.

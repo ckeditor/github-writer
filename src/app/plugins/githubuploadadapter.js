@@ -61,7 +61,7 @@ export class Adapter {
 		//
 		// If the page will not have this information (wiki), a fallback solution is in place, making
 		// a xhr to issues/new and retrieving the configuration from there. All inside upload().
-		return this.editor.config.get( 'githubRte' ).upload()
+		return this.editor.config.get( 'githubWriter' ).upload()
 			// The upload configuration is passed along.
 			.then( config => {
 				// Now we wait for the file to get loaded in the CKEditor API.
