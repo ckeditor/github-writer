@@ -75,7 +75,7 @@ describe( 'Editors', () => {
 			} );
 		} );
 
-		describe( 'githubRte.upload', () => {
+		describe( 'githubWriter.upload', () => {
 			it( 'should retrieve urls from the dom', () => {
 				const uploadElement = GitHubPage.appendElementHtml(
 					'<div' +
@@ -87,9 +87,9 @@ describe( 'Editors', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot( { target: uploadElement } ) ) );
 
 				const config = RteEditorConfig.get( rteEditor );
-				expect( config.githubRte.upload ).to.be.a( 'function' );
+				expect( config.githubWriter.upload ).to.be.a( 'function' );
 
-				const promise = config.githubRte.upload();
+				const promise = config.githubWriter.upload();
 				expect( promise ).to.be.an.instanceOf( Promise );
 
 				return promise.then( uploadConfig => {
@@ -111,9 +111,9 @@ describe( 'Editors', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot( { target: uploadElement } ) ) );
 
 				const config = RteEditorConfig.get( rteEditor );
-				expect( config.githubRte.upload ).to.be.a( 'function' );
+				expect( config.githubWriter.upload ).to.be.a( 'function' );
 
-				const promise = config.githubRte.upload();
+				const promise = config.githubWriter.upload();
 				expect( promise ).to.be.an.instanceOf( Promise );
 
 				return promise.then( uploadConfig => {
@@ -140,9 +140,9 @@ describe( 'Editors', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot( { type: 'wiki' } ) ) );
 
 				const config = RteEditorConfig.get( rteEditor );
-				expect( config.githubRte.upload ).to.be.a( 'function' );
+				expect( config.githubWriter.upload ).to.be.a( 'function' );
 
-				const promise = config.githubRte.upload();
+				const promise = config.githubWriter.upload();
 				expect( promise ).to.be.an.instanceOf( Promise );
 
 				expect( xhr.url ).to.equals( 'https://test.com/org/repo/issues/new' );
@@ -182,21 +182,21 @@ describe( 'Editors', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot( { target: uploadElement } ) ) );
 
 				const config = RteEditorConfig.get( rteEditor );
-				expect( config.githubRte.upload ).to.be.a( 'function' );
+				expect( config.githubWriter.upload ).to.be.a( 'function' );
 
-				const promise = config.githubRte.upload();
+				const promise = config.githubWriter.upload();
 				expect( promise ).to.be.an.instanceOf( Promise );
 
-				expect( config.githubRte.upload() ).to.be.equals( promise );
+				expect( config.githubWriter.upload() ).to.be.equals( promise );
 			} );
 		} );
 
-		describe( 'githubRte.autoLinking', () => {
+		describe( 'githubWriter.autoLinking', () => {
 			it( 'should have all features enabled in comment pages', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
 				const config = RteEditorConfig.get( rteEditor );
 
-				expect( config.githubRte.autoLinking ).to.eql( {
+				expect( config.githubWriter.autoLinking ).to.eql( {
 					person: true,
 					issue: true,
 					sha: true,
@@ -211,7 +211,7 @@ describe( 'Editors', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
 				const config = RteEditorConfig.get( rteEditor );
 
-				expect( config.githubRte.autoLinking ).to.eql( {
+				expect( config.githubWriter.autoLinking ).to.eql( {
 					person: false,
 					issue: false,
 					sha: false,
@@ -221,7 +221,7 @@ describe( 'Editors', () => {
 			} );
 		} );
 
-		describe( 'githubRte.suggestion.enabled', () => {
+		describe( 'githubWriter.suggestion.enabled', () => {
 			it( 'should check if suggestion is enabled in the markdown editor', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );
 				const rteEditor = new RteEditor( editor );
@@ -230,7 +230,7 @@ describe( 'Editors', () => {
 					'<button class="js-suggested-change-toolbar-item">Suggestion</button>' );
 
 				const config = RteEditorConfig.get( rteEditor );
-				expect( config.githubRte.suggestion.enabled ).to.be.true;
+				expect( config.githubWriter.suggestion.enabled ).to.be.true;
 			} );
 
 			it( 'should check if suggestion is not enabled in the markdown editor', () => {
@@ -238,7 +238,7 @@ describe( 'Editors', () => {
 				const rteEditor = new RteEditor( editor );
 
 				const config = RteEditorConfig.get( rteEditor );
-				expect( config.githubRte.suggestion.enabled ).to.be.false;
+				expect( config.githubWriter.suggestion.enabled ).to.be.false;
 			} );
 
 			it( 'should add a button to the toolbar if enabled', () => {
@@ -254,7 +254,7 @@ describe( 'Editors', () => {
 			} );
 		} );
 
-		describe( 'githubRte.savedReplies.url', () => {
+		describe( 'githubWriter.savedReplies.url', () => {
 			it( 'should take the url from the dom', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );
 				const rteEditor = new RteEditor( editor );
@@ -263,7 +263,7 @@ describe( 'Editors', () => {
 					'<details-menu class="js-saved-reply-menu" src="https://test.com/sr">Saved Replies</details-menu>' );
 
 				const config = RteEditorConfig.get( rteEditor );
-				expect( config.githubRte.savedReplies.url ).to.equals( 'https://test.com/sr' );
+				expect( config.githubWriter.savedReplies.url ).to.equals( 'https://test.com/sr' );
 			} );
 
 			it( 'should have the Saved Replies feature if available', () => {

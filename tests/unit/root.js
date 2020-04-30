@@ -19,12 +19,12 @@ before( () => {
 	} );
 
 	afterEach( 'cleanup created editors', () => {
-		if ( window.GITHUB_RTE_EDITORS && window.GITHUB_RTE_EDITORS.length ) {
+		if ( window.GITHUB_WRITER_EDITORS && window.GITHUB_WRITER_EDITORS.length ) {
 			const promises = [];
 
-			window.GITHUB_RTE_EDITORS.forEach( editor => promises.push( editor.destroy() ) );
+			window.GITHUB_WRITER_EDITORS.forEach( editor => promises.push( editor.destroy() ) );
 
-			window.GITHUB_RTE_EDITORS = [];
+			window.GITHUB_WRITER_EDITORS = [];
 
 			return Promise.all( promises );
 		}

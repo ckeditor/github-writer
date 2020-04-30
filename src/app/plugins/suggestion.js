@@ -44,7 +44,7 @@ export default class Suggestion extends Plugin {
 		const editor = this.editor;
 
 		// The configuration that says that suggestion is enabled.
-		const isEnabled = editor.config.get( 'githubRte.suggestion.enabled' );
+		const isEnabled = editor.config.get( 'githubWriter.suggestion.enabled' );
 
 		// Add the UI factory for the toolbar button.
 		editor.ui.componentFactory.add( 'suggestion', locale => {

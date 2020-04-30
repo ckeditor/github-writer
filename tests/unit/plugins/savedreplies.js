@@ -17,7 +17,7 @@ describe( 'Plugins', () => {
 			let editor;
 
 			beforeEach( () => {
-				return createTestEditor( '', [ SavedReplies ], { githubRte: { savedReplies: { url } } } )
+				return createTestEditor( '', [ SavedReplies ], { githubWriter: { savedReplies: { url } } } )
 					.then( editorObjects => ( { editor } = editorObjects ) );
 			} );
 
@@ -45,7 +45,7 @@ describe( 'Plugins', () => {
 				} );
 
 				it( 'should have a class', () => {
-					expect( component.class ).to.equals( 'github-rte-saved-replies-button' );
+					expect( component.class ).to.equals( 'github-writer-saved-replies-button' );
 				} );
 
 				it( 'should open to sw', () => {
@@ -205,7 +205,7 @@ describe( 'Plugins', () => {
 					const stub = sinon.stub( window, '__setLocation' );
 
 					const list = view.element.querySelector( ':scope.ck-filteredlist > div.select-menu-list' );
-					const item = list.querySelector( ':scope > ul > li > button.github-rte-create-reply' );
+					const item = list.querySelector( ':scope > ul > li > button.github-writer-create-reply' );
 					item.click();
 
 					expect( stub.callCount ).to.equals( 1 );

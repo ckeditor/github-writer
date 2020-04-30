@@ -18,7 +18,7 @@ describe( 'Plugins', () => {
 					.then( editorObjects => {
 						editor = editorObjects.editor;
 
-						editor.config.set( 'githubRte.upload', () =>
+						editor.config.set( 'githubWriter.upload', () =>
 							Promise.resolve( {
 								url: 'upload-url',
 								form: {

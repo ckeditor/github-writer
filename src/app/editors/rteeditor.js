@@ -12,7 +12,7 @@ import { createElementFromHtml } from '../util';
 import env from '@ckeditor/ckeditor5-utils/src/env';
 
 // Inject our very own CKEditor theme overrides.
-import '../theme/githubrte.css';
+import '../theme/githubwriter.css';
 
 /**
  * The rte editor, with CKEditor 5 under the hood.
@@ -85,7 +85,7 @@ export default class RteEditor {
 					const tree = createElementFromHtml( this.getEditableParentTree() );
 
 					// Inject the editor in the above tree.
-					tree.querySelector( '.github-rte-ckeditor' ).append( editor.ui.getEditableElement() );
+					tree.querySelector( '.github-writer-ckeditor' ).append( editor.ui.getEditableElement() );
 
 					const markdownEditor = this.githubEditor.markdownEditor;
 
@@ -145,7 +145,7 @@ export default class RteEditor {
 
 	/**
 	 * Gets the html of the parent tree where the CKEditor editable must be placed in. The editable will be
-	 * injected inside the element with class `.github-rte-ckeditor`.
+	 * injected inside the element with class `.github-writer-ckeditor`.
 	 *
 	 * @returns {String} The parent tree html.
 	 */
@@ -153,8 +153,8 @@ export default class RteEditor {
 		// Mimic the minimum set of classes that are necessary for the editor, and its contents,
 		// to look like GitHub originals.
 		return `
-			<div class="github-rte-panel-rte write-content mx-0 mt-2 mb-2 mx-md-2">
-				<div class="github-rte-ckeditor upload-enabled form-control input-contrast
+			<div class="github-writer-panel-rte write-content mx-0 mt-2 mb-2 mx-md-2">
+				<div class="github-writer-ckeditor upload-enabled form-control input-contrast
 					comment-form-textarea comment-body markdown-body"></div>
 			</div>
 		`;
@@ -233,9 +233,9 @@ RteEditor.toolbarItemsPostfix = ( toolbar, tooltipPosition = 'n' ) => {
 };
 
 RteEditor.cleanup = rootElement => {
-	let element = rootElement.querySelector( '.github-rte-panel-rte' );
+	let element = rootElement.querySelector( '.github-writer-panel-rte' );
 	element && element.remove();
 
-	element = rootElement.querySelector( '.github-rte-toolbar' );
+	element = rootElement.querySelector( '.github-writer-toolbar' );
 	element && element.remove();
 };

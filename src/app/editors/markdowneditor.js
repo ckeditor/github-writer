@@ -48,8 +48,8 @@ export default class MarkdownEditor {
 		this.isEdit = this.dom.panelsContainer.nodeName === 'DIV';
 
 		// Inject our classes in the dom. These will help controlling the editor through CSS.
-		githubEditor.domManipulator.addClass( this.dom.panels.markdown, 'github-rte-panel-markdown' );
-		githubEditor.domManipulator.addClass( this.dom.panels.preview, 'github-rte-panel-preview' );
+		githubEditor.domManipulator.addClass( this.dom.panels.markdown, 'github-writer-panel-markdown' );
+		githubEditor.domManipulator.addClass( this.dom.panels.preview, 'github-writer-panel-preview' );
 
 		// Perform some mode change tweaks.
 		githubEditor.on( 'mode', () => {

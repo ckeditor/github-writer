@@ -47,11 +47,11 @@ describe( 'Editors', () => {
 				expect( tree ).to.be.an.instanceOf( HTMLElement );
 			} );
 
-			it( 'should have an element with class github-rte-ckeditor', () => {
+			it( 'should have an element with class github-writer-ckeditor', () => {
 				const rteEditor = new WikiRteEditor( new Editor( GitHubPage.appendRoot() ) );
 
 				const tree = createElementFromHtml( rteEditor.getEditableParentTree() );
-				expect( tree.querySelector( '.github-rte-ckeditor' ) ).to.be.an.instanceOf( HTMLElement );
+				expect( tree.querySelector( '.github-writer-ckeditor' ) ).to.be.an.instanceOf( HTMLElement );
 			} );
 		} );
 	} );

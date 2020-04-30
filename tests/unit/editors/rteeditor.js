@@ -174,7 +174,7 @@ describe( 'Editors', () => {
 				return rteEditor.create()
 					.then( () => {
 						const editorTree = editor.markdownEditor.dom.panels.preview.nextSibling;
-						expect( editorTree.classList.contains( 'github-rte-panel-rte' ) ).to.be.true;
+						expect( editorTree.classList.contains( 'github-writer-panel-rte' ) ).to.be.true;
 
 						return rteEditor.destroy(); // After test cleanup.
 					} );
@@ -189,7 +189,7 @@ describe( 'Editors', () => {
 				return rteEditor.create()
 					.then( () => {
 						const editorTree = editor.markdownEditor.dom.panelsContainer.nextSibling;
-						expect( editorTree.classList.contains( 'github-rte-panel-rte' ) ).to.be.true;
+						expect( editorTree.classList.contains( 'github-writer-panel-rte' ) ).to.be.true;
 
 						return rteEditor.destroy(); // After test cleanup.
 					} );
@@ -326,11 +326,11 @@ describe( 'Editors', () => {
 				expect( tree ).to.be.an.instanceOf( HTMLElement );
 			} );
 
-			it( 'should have an element with class github-rte-ckeditor', () => {
+			it( 'should have an element with class github-writer-ckeditor', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
 
 				const tree = createElementFromHtml( rteEditor.getEditableParentTree() );
-				expect( tree.querySelector( '.github-rte-ckeditor' ) ).to.be.an.instanceOf( HTMLElement );
+				expect( tree.querySelector( '.github-writer-ckeditor' ) ).to.be.an.instanceOf( HTMLElement );
 			} );
 		} );
 
@@ -507,13 +507,13 @@ describe( 'Editors', () => {
 						editor.destroy();
 						root.remove();
 
-						expect( rootClone.querySelector( '.github-rte-panel-rte' ) ).be.an.instanceOf( HTMLElement );
-						expect( rootClone.querySelector( '.github-rte-toolbar' ) ).be.an.instanceOf( HTMLElement );
+						expect( rootClone.querySelector( '.github-writer-panel-rte' ) ).be.an.instanceOf( HTMLElement );
+						expect( rootClone.querySelector( '.github-writer-toolbar' ) ).be.an.instanceOf( HTMLElement );
 
 						Editor.cleanup( rootClone );
 
-						expect( rootClone.querySelector( '.github-rte-panel-rte' ) ).be.not.exist;
-						expect( rootClone.querySelector( '.github-rte-toolbar' ) ).be.not.exist;
+						expect( rootClone.querySelector( '.github-writer-panel-rte' ) ).be.not.exist;
+						expect( rootClone.querySelector( '.github-writer-toolbar' ) ).be.not.exist;
 					} );
 			} );
 		} );

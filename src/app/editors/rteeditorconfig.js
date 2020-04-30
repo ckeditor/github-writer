@@ -115,7 +115,7 @@ const RteEditorConfig = {
 			codeBlock: {
 				languages: languagesConfig.concat( [] )	// copy
 			},
-			githubRte: {
+			githubWriter: {
 				/**
 				 * A function that, when called, returns a promise that resolves with the upload configuration object,
 				 * used by the upload adapter with the following properties:
@@ -163,12 +163,12 @@ const RteEditorConfig = {
 		};
 
 		// Add the suggestion button to the toolbar only if the suggestion is enabled.
-		if ( config.githubRte.suggestion.enabled ) {
+		if ( config.githubWriter.suggestion.enabled ) {
 			config.toolbar.unshift( 'suggestion', '|' );
 		}
 
 		// Remove the Saved Replies feature if there is no support for it.
-		if ( !config.githubRte.savedReplies.url ) {
+		if ( !config.githubWriter.savedReplies.url ) {
 			config.plugins = config.plugins.filter( item => item !== SavedReplies );
 			config.toolbar = config.toolbar.filter( item => item !== 'savedreplies' );
 		}

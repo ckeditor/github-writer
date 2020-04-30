@@ -24,8 +24,8 @@ export default class ControlClick extends Plugin {
 		const editor = this.editor;
 
 		// Setup proper CSS styling when the ctrl/cmd key is pressed (controlclick.css).
-		editor.keyStyler.add( 'Control', 'github-rte-key-ctrl' );
-		editor.keyStyler.add( 'Meta', 'github-rte-key-ctrl' );
+		editor.keyStyler.add( 'Control', 'github-writer-key-ctrl' );
+		editor.keyStyler.add( 'Meta', 'github-writer-key-ctrl' );
 
 		// On downcast, add the 'data-control-click' attribute to elements that should open on click.
 		editor.conversion.for( 'editingDowncast' ).add( dispatcher => {

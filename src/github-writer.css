@@ -11,19 +11,19 @@
 Here we hide some of the original GH elements that could be flashing on page load,
 right before being replaced with the rte editor.
 */
-body:not(.github-rte-loaded) markdown-toolbar md-mention,
-body:not(.github-rte-loaded) markdown-toolbar md-ref,
-body:not(.github-rte-loaded) markdown-toolbar details,
-body:not(.github-rte-loaded) .preview-tab,
-body:not(.github-rte-loaded) .tabnav-extra,
-body:not(.github-rte-loaded) .drag-and-drop,
-body:not(.github-rte-loaded) #gollum-editor-function-bar,
-body:not(.github-rte-loaded) #gollum-editor-help,
-body:not(.github-rte-loaded) #gollum-editor-body {
+body:not(.github-writer-loaded) markdown-toolbar md-mention,
+body:not(.github-writer-loaded) markdown-toolbar md-ref,
+body:not(.github-writer-loaded) markdown-toolbar details,
+body:not(.github-writer-loaded) .preview-tab,
+body:not(.github-writer-loaded) .tabnav-extra,
+body:not(.github-writer-loaded) .drag-and-drop,
+body:not(.github-writer-loaded) #gollum-editor-function-bar,
+body:not(.github-writer-loaded) #gollum-editor-help,
+body:not(.github-writer-loaded) #gollum-editor-body {
 	display: none !important;
 }
 
-div.github-rte-ckeditor .ck-editor__editable {
+div.github-writer-ckeditor .ck-editor__editable {
 	min-height: inherit;
 
 	/* TODO: We're hardcoding a fixed height here.
@@ -31,11 +31,11 @@ div.github-rte-ckeditor .ck-editor__editable {
 	max-height: 350px;
 }
 
-div.github-rte-ckeditor .ck-editor__editable.ck-blurred {
+div.github-writer-ckeditor .ck-editor__editable.ck-blurred {
 	background-color: #fafbfc;
 }
 
-div.github-rte-ckeditor .ck-editor__editable.ck-focused {
+div.github-writer-ckeditor .ck-editor__editable.ck-focused {
 	background-color: #fff;
 }
 
@@ -43,7 +43,7 @@ div.github-rte-ckeditor .ck-editor__editable.ck-focused {
 form.js-release-form .ck-editor__editable {
 	min-height: 200px;
 }
-form.js-release-form div.github-rte-ckeditor {
+form.js-release-form div.github-writer-ckeditor {
 	width: 100%;
 }
 
@@ -57,55 +57,55 @@ form.js-release-form div.github-rte-ckeditor {
 /* RTE mode */
 
 /* Hide the "Preview" tab. */
-.github-rte-mode-rte .preview-tab {
+.github-writer-mode-rte .preview-tab {
 	display: none;
 }
 
 /* Hide the markdown textarea outer box. */
-.github-rte-mode-rte .github-rte-panel-markdown,
-.github-rte-mode-rte .github-rte-panel-preview {
+.github-writer-mode-rte .github-writer-panel-markdown,
+.github-writer-mode-rte .github-writer-panel-preview {
 	display: none !important;
 }
 
 /* Hide all markdown toolbar. */
-.github-rte-mode-rte markdown-toolbar {
+.github-writer-mode-rte markdown-toolbar {
 	display: none !important;
 }
 
 /* Remove the markdown message when in RTE. */
-.github-rte-mode-rte .tabnav-extra {
+.github-writer-mode-rte .tabnav-extra {
 	display: none;
 }
 
 /* Markdown mode */
 
-/* Hide the rte textarea outer box. */
-.github-rte-mode-markdown .github-rte-panel-rte {
+/* Hide the rte outer box. */
+.github-writer-mode-markdown .github-writer-panel-rte {
 	display: none !important;
 }
 
 /* Hide all rte toolbar items. */
-.github-rte-mode-markdown .ck-toolbar__items > * {
+.github-writer-mode-markdown .ck-toolbar__items > * {
 	display: none !important;
 }
 
 /* Except the Kebab and Markdown buttons. */
-.github-rte-mode-markdown .ck-toolbar__items > .github-rte-kebab-button,
-.github-rte-mode-markdown .ck-toolbar__items > .github-rte-mode-button {
+.github-writer-mode-markdown .ck-toolbar__items > .github-writer-kebab-button,
+.github-writer-mode-markdown .ck-toolbar__items > .github-writer-mode-button {
 	display: block !important;
 }
 
 /* Get the GH toolbar closer to the RTE one (which is always available with the the Kebab button). */
-.github-rte-mode-markdown markdown-toolbar.px-2 {
+.github-writer-mode-markdown markdown-toolbar.px-2 {
 	padding-right: 3px !important;
 }
 
 /* Change the text of the "Write" tab. */
-.github-rte-mode-markdown .write-tab {
+.github-writer-mode-markdown .write-tab {
 	font-size: 0;
 	line-height: 0;
 }
-.github-rte-mode-markdown .write-tab::after {
+.github-writer-mode-markdown .write-tab::after {
 	content: "Markdown";
 	font-size: 14px;
 	line-height: 20px;
@@ -115,12 +115,12 @@ form.js-release-form div.github-rte-ckeditor {
 
 /* The following rules are mainly overriding defaults coming from CKEditor and GitHub. */
 
-div.github-rte-ckeditor .ck-editor__editable.ck-focused {
+div.github-writer-ckeditor .ck-editor__editable.ck-focused {
 	border: none !important;
 	box-shadow: none !important;
 }
 
-div.github-rte-ckeditor .ck-editor__editable {
+div.github-writer-ckeditor .ck-editor__editable {
 	border: none !important;
 	padding: 0 8px;
 	resize: vertical;
@@ -128,13 +128,13 @@ div.github-rte-ckeditor .ck-editor__editable {
 	/*	min-height: 100px; */
 }
 
-div.github-rte-ckeditor {
+div.github-writer-ckeditor {
 	height: auto !important;
 }
 
 /* The following rules needed to be copied because they're applied to the textarea directly, while the editable is a div.
    Most of the CSS here are copies from teh markdown textarea CSS, sniffed with the inspector. */
-div.github-rte-ckeditor {
+div.github-writer-ckeditor {
 	display: block;
 	width: 100%;
 	max-width: 100%;
@@ -144,17 +144,17 @@ div.github-rte-ckeditor {
 }
 
 /* Fix the bottom border of the PR review editor. */
-div.github-rte-ckeditor.comment-body {
+div.github-writer-ckeditor.comment-body {
 	border-bottom: 1px solid #d1d5da !important;
 }
 
-div.github-rte-ckeditor:focus-within,
-div.github-rte-ckeditor.comment-body:focus-within {
+div.github-writer-ckeditor:focus-within,
+div.github-writer-ckeditor.comment-body:focus-within {
 	border-color: #2188ff !important;
 }
 
 /* Do not show the arrow in the Kebab button. */
-.github-rte-kebab-button .ck-dropdown__arrow {
+.github-writer-kebab-button .ck-dropdown__arrow {
 	display: none;
 }
 
@@ -180,38 +180,38 @@ nav.tabnav-tabs {
 ********************************/
 
 /* Fix the toolbar position. */
-.github-rte-type-wiki .comment-form-head {
+.github-writer-type-wiki .comment-form-head {
 	display: flex;
 }
-.github-rte-type-wiki .comment-form-head > :first-child {
+.github-writer-type-wiki .comment-form-head > :first-child {
 	flex: auto;
 }
 
-.github-rte-type-wiki.github-rte-mode-rte .comment-form-head {
+.github-writer-type-wiki.github-writer-mode-rte .comment-form-head {
 	/* Sticky toolbar. */
 	position: sticky !important;
 	top: 0;
 	z-index: 1;  /* The editable may somehow show above the toolbar, so we raise its plane. */
 }
 
-.github-rte-type-wiki .form-actions {
+.github-writer-type-wiki .form-actions {
 	position: sticky !important;
 	bottom: 10px;
 	z-index: 1;
 }
 
 /* Hide the markdown toolbar. */
-.github-rte-type-wiki.github-rte-mode-rte #gollum-editor-function-bar {
+.github-writer-type-wiki.github-writer-mode-rte #gollum-editor-function-bar {
 	display: none;
 }
 
 /* Remove the editor margin, as we don't have the frame around in in wiki. */
-.github-rte-type-wiki .github-rte-panel-rte {
+.github-writer-type-wiki .github-writer-panel-rte {
 	margin: 0 !important;
 }
 
 /* Make the editor bigger. Maybe GH calculates the best size, but we're going fixed. */
-.github-rte-type-wiki .github-rte-ckeditor > .ck-editor__editable {
+.github-writer-type-wiki .github-writer-ckeditor > .ck-editor__editable {
 	max-height: initial !important;
 
 	/* Grow forever... pared with sticky toolbar. */
@@ -221,6 +221,6 @@ nav.tabnav-tabs {
 }
 
 /* Although the blur effect is nice, we're removing it here so the editor stays aligned with other fields. */
-.github-rte-type-wiki .ck-editor__editable.ck-blurred {
+.github-writer-type-wiki .ck-editor__editable.ck-blurred {
 	background-color: white !important;
 }

@@ -11,7 +11,7 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import icon from '../icons/markdown.svg';
 
 /**
- * Introduces the 'mode' ui button, which can be used to switch between rte/markdown in the GitHub RTE.
+ * Introduces the 'mode' ui button, which can be used to switch between rte/markdown in GitHub Writer.
  */
 export default class ModeSwitcher extends Plugin {
 	static get requires() {
@@ -30,7 +30,7 @@ export default class ModeSwitcher extends Plugin {
 			view.set( {
 				label: 'Edit markdown (nostalgia)',
 				icon,
-				class: 'github-rte-mode-button',
+				class: 'github-writer-mode-button',
 				tooltip: true,
 				isToggleable: true
 			} );

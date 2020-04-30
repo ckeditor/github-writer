@@ -4,7 +4,7 @@ Replace the plain-text markdown input textareas from GitHub.com pages with a WYS
 
 ### Features
 
-One of the goals of this extension is providing all features which are available in the GitHub plain-text editor, including all markdown features. The following is the list of GitHub features, with the ones checked already available in the GitHub RTE:
+One of the goals of this extension is providing all features which are available in the GitHub plain-text editor, including all markdown features. The following is the list of GitHub features, with the ones checked already available in the GitHub Writer:
 
 *   Inline formatting
     *   [x] Bold
@@ -53,7 +53,7 @@ One of the goals of this extension is providing all features which are available
 
 ### Pages enabled
 
-The GitHub RTE should be enabled in all places where the original markdown editor is available. The following is the current status of the implementation:
+GitHub Writer should be enabled in all places where the original markdown editor is available. The following is the current status of the implementation:
 
 *   [x] Issues
     *   [x] New

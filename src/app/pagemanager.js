@@ -175,7 +175,7 @@ export default class PageManager {
 		try {
 			// Check if we're in a dirty dom.
 			{
-				const existingId = rootElement.getAttribute( 'data-github-rte-id' );
+				const existingId = rootElement.getAttribute( 'data-github-writer-id' );
 				if ( existingId ) {
 					// This is most likely a clone from a previous existing editor, landing into a pjax snapshot.
 					// Clean it up so a new editor can be started on it.
@@ -192,7 +192,7 @@ export default class PageManager {
 			return Promise.reject( error );
 		}
 
-		editor.domManipulator.addAttribute( rootElement, 'data-github-rte-id', editor.id );
+		editor.domManipulator.addAttribute( rootElement, 'data-github-writer-id', editor.id );
 
 		editorCreatePromise = editor.create();
 
@@ -207,7 +207,7 @@ export default class PageManager {
 
 	destroyEditors( container ) {
 		const promises = [];
-		container.querySelectorAll( '[data-github-rte-id]' ).forEach( rootElement => {
+		container.querySelectorAll( '[data-github-writer-id]' ).forEach( rootElement => {
 			const editorPromise = editors.get( rootElement );
 			if ( editorPromise ) {
 				promises.push( editorPromise.then( editor => editor.destroy() ) );
@@ -242,11 +242,11 @@ export default class PageManager {
 			document.addEventListener( 'quote-selection', ev => {
 				// Marks the comment thread container with a timestamp so we can retrieve it later.
 				const timestamp = Date.now();
-				ev.target.setAttribute( 'data-github-rte-quote-selection-timestamp', timestamp );
+				ev.target.setAttribute( 'data-github-writer-quote-selection-timestamp', timestamp );
 
 				// Broadcast the event data that we need in the plugin.
 				window.postMessage( {
-					type: 'GitHub-RTE-Quote-Selection',
+					type: 'GitHub-Writer-Quote-Selection',
 					timestamp,
 					text: ev.detail.selectionText
 				}, '*' );
@@ -265,9 +265,9 @@ export default class PageManager {
 
 		// Listen to the broadcasted message.
 		window.addEventListener( 'message', event => {
-			if ( event.data.type === 'GitHub-RTE-Quote-Selection' && event.data.text ) {
+			if ( event.data.type === 'GitHub-Writer-Quote-Selection' && event.data.text ) {
 				// Get the GH target container it holds an editor root element.
-				const target = document.querySelector( `[data-github-rte-quote-selection-timestamp="${ event.data.timestamp }"]` );
+				const target = document.querySelector( `[data-github-writer-quote-selection-timestamp="${ event.data.timestamp }"]` );
 
 				// The target should contain its own main editor inside a form, which has a few possible class names.
 				const rootSelectors = [

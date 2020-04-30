@@ -1,12 +1,12 @@
 {
-  "name": "github-rte",
+  "name": "github-writer",
   "version": "0.22.0",
   "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor.",
   "private": true,
-  "main": "src/github-rte.js",
+  "main": "src/github-writer.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fredck/github-rte.git"
+    "url": "https://github.com/ckeditor/github-writer.git"
   },
   "keywords": [
     "GitHub",
@@ -14,14 +14,15 @@
     "Rich-Text Editor",
     "CKEditor",
     "Browser Extension",
-    "Chrome Extension"
+    "Chrome Extension",
+    "Firefox Extension"
   ],
   "author": "CKSource (cksource.com)",
-  "license": "SEE LICENSE IN LICENSE.md",
+  "license": "SEE LICENSE.md",
   "bugs": {
-    "url": "https://github.com/fredck/github-rte/issues"
+    "url": "https://github.com/ckeditor/github-writer/issues"
   },
-  "homepage": "https://github.com/fredck/github-rte",
+  "homepage": "https://github.com/ckeditor/github-writer",
   "dependencies": {
     "@ckeditor/ckeditor5-autoformat": "^18.0.0",
     "@ckeditor/ckeditor5-basic-styles": "^18.0.0",

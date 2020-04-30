@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-.ck-editor__editable.github-rte-key-ctrl {
+.ck-editor__editable.github-writer-key-ctrl {
 	& a,
 	& autolink[data-enabled="true"] {
 		cursor: pointer;

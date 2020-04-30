@@ -18,13 +18,13 @@ export default class SavedReplies extends Plugin {
 	 */
 	init() {
 		const editor = this.editor;
-		const url = editor.config.get( 'githubRte.savedReplies.url' );
+		const url = editor.config.get( 'githubWriter.savedReplies.url' );
 
 		// Register the 'savedreplies' component, a dropdown.
 		editor.ui.componentFactory.add( 'savedReplies', locale => {
 			const dropdown = createDropdown( locale );
 
-			dropdown.class = 'github-rte-saved-replies-button';
+			dropdown.class = 'github-writer-saved-replies-button';
 			dropdown.panelPosition = 'sw';
 
 			dropdown.buttonView.set( {
@@ -88,7 +88,7 @@ export class RepliesListView extends FilteredListView {
 
 		this.extendTemplate( {
 			attributes: {
-				class: 'github-rte-savedreplies'
+				class: 'github-writer-savedreplies'
 			}
 		} );
 
@@ -108,7 +108,7 @@ export class RepliesListView extends FilteredListView {
 			button.label = 'Create a new saved reply…';
 			button.withText = true;
 			button.tabindex = 0;
-			button.class = 'github-rte-create-reply select-menu-item  select-menu-action';
+			button.class = 'github-writer-create-reply select-menu-item  select-menu-action';
 			button.on( 'execute', () => ( window.__setLocation( '/settings/replies?return_to=1' ) ) );
 			return button;
 		}

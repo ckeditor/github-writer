@@ -54,13 +54,13 @@ describe( 'The "issue" test suite', function() {
 		// Type inside the editor and submit the form.
 		{
 			// Wait for the RTE editor to be created.
-			await driver.wait( until.elementLocated( By.css( 'form#new_issue div.github-rte-ckeditor' ) ), 10000 );
+			await driver.wait( until.elementLocated( By.css( 'form#new_issue div.github-writer-ckeditor' ) ), 10000 );
 
 			// Retrieve the root element, containing the whole GH editing form. Using the same selector we use in the app.
 			const rootElement = driver.findElement( By.css( 'form#new_issue' ) );
 
 			// Get the RTE editor editable.
-			const editable = rootElement.findElement( By.css( 'div.github-rte-ckeditor > .ck-editor__editable' ) );
+			const editable = rootElement.findElement( By.css( 'div.github-writer-ckeditor > .ck-editor__editable' ) );
 
 			// Type inside of it.
 			await editable.sendKeys(
@@ -108,13 +108,13 @@ describe( 'The "issue" test suite', function() {
 		// Type inside the editor and submit the form.
 		{
 			// Wait for the RTE editor to be created.
-			await driver.wait( until.elementLocated( By.css( 'form.js-new-comment-form div.github-rte-ckeditor' ) ), 5000 );
+			await driver.wait( until.elementLocated( By.css( 'form.js-new-comment-form div.github-writer-ckeditor' ) ), 5000 );
 
 			// Retrieve the root element, containing the whole GH editing form. Using the same selector we use in the app.
 			const rootElement = driver.findElement( By.css( 'form.js-new-comment-form' ) );
 
 			// Get the RTE editor editable.
-			const editable = rootElement.findElement( By.css( 'div.github-rte-ckeditor > .ck-editor__editable' ) );
+			const editable = rootElement.findElement( By.css( 'div.github-writer-ckeditor > .ck-editor__editable' ) );
 
 			// Type inside of it.
 			await editable.sendKeys(
@@ -179,7 +179,7 @@ describe( 'The "issue" test suite', function() {
 		{
 			// Wait for the RTE editor to be created.
 			await driver.wait( until.elementLocated( By.js( root => {
-				return root.querySelector( 'div.github-rte-ckeditor' );
+				return root.querySelector( 'div.github-writer-ckeditor' );
 			}, dom.rootElement ) ), 5000 );
 
 			// This is the only reliable way to reset the editor contents. Unfortunately sending `ctrl+a` + `delete` doesn't work.
@@ -188,7 +188,7 @@ describe( 'The "issue" test suite', function() {
 			} );
 
 			// Get the RTE editor editable.
-			const editable = await dom.rootElement.findElement( By.css( 'div.github-rte-ckeditor > .ck-editor__editable' ) );
+			const editable = await dom.rootElement.findElement( By.css( 'div.github-writer-ckeditor > .ck-editor__editable' ) );
 
 			// Type inside of it.
 			await editable.sendKeys(

@@ -74,8 +74,8 @@ describe( 'Editors', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );
 				const markdownEditor = new MarkdownEditor( editor );
 
-				expect( markdownEditor.dom.panels.markdown.classList.contains( 'github-rte-panel-markdown' ) ).to.be.true;
-				expect( markdownEditor.dom.panels.preview.classList.contains( 'github-rte-panel-preview' ) ).to.be.true;
+				expect( markdownEditor.dom.panels.markdown.classList.contains( 'github-writer-panel-markdown' ) ).to.be.true;
+				expect( markdownEditor.dom.panels.preview.classList.contains( 'github-writer-panel-preview' ) ).to.be.true;
 			} );
 
 			it( 'should fire textarea.change when switching to the markdown mode', done => {

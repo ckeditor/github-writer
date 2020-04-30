@@ -22,7 +22,7 @@ export default class CKEditorGitHubEditor extends DecoupledEditor {
 		// Adds our very own class to the toolbar.
 		this.ui.view.toolbar.extendTemplate( {
 			attributes: {
-				class: 'github-rte-toolbar'
+				class: 'github-writer-toolbar'
 			}
 		} );
 	}

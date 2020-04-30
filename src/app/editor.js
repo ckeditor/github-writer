@@ -30,14 +30,14 @@ function getEditorClasses() {
 }
 
 /**
- * A GitHub RTE editor, which is a complex editor containing two switchable editing modes: RTE and Markdown.
+ * A GitHub Writer editor, which is a complex editor containing two switchable editing modes: RTE and Markdown.
  * It is created around a standard GitHub markdown editor, enhancing it.
  *
  * @mixes EmitterMixin
  */
 export default class Editor {
 	/**
-	 * Creates a GitHub RTE editor.
+	 * Creates a GitHub Writer editor.
 	 *
 	 * @param {HTMLElement} markdownEditorRootElement The outermost element that contains the complete dom of a single
 	 * GitHub markdown editor.
@@ -50,9 +50,9 @@ export default class Editor {
 		// This will expose the list of editors in the extension console in the dev build.
 		/* istanbul ignore next */
 		if ( process.env.NODE_ENV !== 'production' ) {
-			( window.GITHUB_RTE_EDITORS = window.GITHUB_RTE_EDITORS || [] ).push( this );
+			( window.GITHUB_WRITER_EDITORS = window.GITHUB_WRITER_EDITORS || [] ).push( this );
 			this.domManipulator.addRollbackOperation(
-				() => window.GITHUB_RTE_EDITORS.splice( window.GITHUB_RTE_EDITORS.indexOf( this ), 1 ) );
+				() => window.GITHUB_WRITER_EDITORS.splice( window.GITHUB_WRITER_EDITORS.indexOf( this ), 1 ) );
 		}
 
 		{
@@ -122,11 +122,11 @@ export default class Editor {
 
 			// Mark the root when in a Wiki page, to enable a whole world of dedicated CSS for it.
 			if ( this.markdownEditor instanceof WikiMarkdownEditor ) {
-				this.domManipulator.addClass( markdownEditorRootElement, 'github-rte-type-wiki' );
+				this.domManipulator.addClass( markdownEditorRootElement, 'github-writer-type-wiki' );
 			}
 		}
 
-		this.sessionKey = 'github-rte-session:' + window.location.pathname + '?' + this.markdownEditor.dom.textarea.id;
+		this.sessionKey = 'github-writer-session:' + window.location.pathname + '?' + this.markdownEditor.dom.textarea.id;
 	}
 
 	/**
@@ -140,9 +140,9 @@ export default class Editor {
 		}
 
 		// Take the mode from the dom directly.
-		if ( this.dom.root.classList.contains( 'github-rte-mode-rte' ) ) {
+		if ( this.dom.root.classList.contains( 'github-writer-mode-rte' ) ) {
 			return Editor.modes.RTE;
-		} else if ( this.dom.root.classList.contains( 'github-rte-mode-markdown' ) ) {
+		} else if ( this.dom.root.classList.contains( 'github-writer-mode-markdown' ) ) {
 			return Editor.modes.MARKDOWN;
 		}
 		return Editor.modes.UNKNOWN;
@@ -194,8 +194,8 @@ export default class Editor {
 			}
 
 			// Set the appropriate class to the root element according to the mode being set.
-			this.domManipulator.toggleClass( this.dom.root, 'github-rte-mode-rte', mode === Editor.modes.RTE );
-			this.domManipulator.toggleClass( this.dom.root, 'github-rte-mode-markdown', mode === Editor.modes.MARKDOWN );
+			this.domManipulator.toggleClass( this.dom.root, 'github-writer-mode-rte', mode === Editor.modes.RTE );
+			this.domManipulator.toggleClass( this.dom.root, 'github-writer-mode-markdown', mode === Editor.modes.MARKDOWN );
 		}
 
 		/**
@@ -372,7 +372,7 @@ export default class Editor {
 		// Enable the GitHub focus styles when the editor focus/blur.
 		{
 			// Take the element that GH would styles on focus.
-			const focusBox = this.dom.root.querySelector( '.github-rte-ckeditor' );
+			const focusBox = this.dom.root.querySelector( '.github-writer-ckeditor' );
 
 			// Watch for editor focus changes.
 			this.rteEditor.ckeditor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
@@ -482,19 +482,19 @@ export default class Editor {
 		function lockForm() {
 			// Save the "require" value so it can be restored on unlock().
 			/* Just in case */ /* istanbul ignore else */
-			if ( !textarea.hasAttribute( 'data-github-rte-was-required' ) ) {
-				textarea.setAttribute( 'data-github-rte-was-required', textarea.required );
+			if ( !textarea.hasAttribute( 'data-github-writer-was-required' ) ) {
+				textarea.setAttribute( 'data-github-writer-was-required', textarea.required );
 			}
 			// This will ensure that the textarea will be checked by GH on post.
 			textarea.required = true;
 
 			// This will make the GH checks fail and the form post to stop.
-			textarea.setCustomValidity( 'Something went wrong. This textarea was not sync`ed with GitHub RTE.' );
+			textarea.setCustomValidity( 'Something went wrong. This textarea was not sync`ed with GitHub Writer.' );
 
 			// Force all submit buttons to validate.
 			form.querySelectorAll( 'button[type="submit"][formnovalidate]' ).forEach( button => {
 				// Mark for restore when unlock().
-				button.setAttribute( 'data-github-rte-was-formnovalidate', 'true' );
+				button.setAttribute( 'data-github-writer-was-formnovalidate', 'true' );
 				button.removeAttribute( 'formnovalidate' );
 			} );
 		}
@@ -503,17 +503,17 @@ export default class Editor {
 		 * Unlocks the form, reverting the work done by lock().
 		 */
 		function unlockForm() {
-			if ( textarea.hasAttribute( 'data-github-rte-was-required' ) ) {
-				textarea.required = textarea.getAttribute( 'data-github-rte-was-required' );
-				textarea.removeAttribute( 'data-github-rte-was-required' );
+			if ( textarea.hasAttribute( 'data-github-writer-was-required' ) ) {
+				textarea.required = textarea.getAttribute( 'data-github-writer-was-required' );
+				textarea.removeAttribute( 'data-github-writer-was-required' );
 			}
 			textarea.setCustomValidity( '' );
 
 			// Restore the "formnovalidate" attribute on submit buttons.
 			form.querySelectorAll( 'button[type="submit"]' ).forEach( button => {
-				if ( button.hasAttribute( 'data-github-rte-was-formnovalidate' ) ) {
+				if ( button.hasAttribute( 'data-github-writer-was-formnovalidate' ) ) {
 					button.setAttribute( 'formnovalidate', '' );
-					button.removeAttribute( 'data-github-rte-was-formnovalidate' );
+					button.removeAttribute( 'data-github-writer-was-formnovalidate' );
 				}
 			} );
 
@@ -730,8 +730,8 @@ export default class Editor {
 	}
 
 	static cleanup( rootElement ) {
-		rootElement.classList.remove( 'github-rte-mode-rte' );
-		rootElement.classList.remove( 'github-rte-mode-markdown' );
+		rootElement.classList.remove( 'github-writer-mode-rte' );
+		rootElement.classList.remove( 'github-writer-mode-markdown' );
 		RteEditor.cleanup( rootElement );
 	}
 }

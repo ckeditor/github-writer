@@ -22,11 +22,11 @@ module.exports = ( env, argv ) => {
 	isProduction = ( argv.mode === 'production' );
 
 	return {
-		entry: './src/github-rte.js',
+		entry: './src/github-writer.js',
 
 		output: {
 			path: path.resolve( __dirname, '../build' ),
-			filename: 'github-rte.js'
+			filename: 'github-writer.js'
 		},
 
 		module: {
@@ -86,12 +86,12 @@ module.exports = ( env, argv ) => {
 			new CopyPlugin( [
 				{
 					from: 'src/extension/manifest.json',
-					to: 'github-rte-chrome',
+					to: 'github-writer-chrome',
 					transform: content => transformManifest( content, 'chrome' )
 				},
 				{
 					from: 'src/extension/manifest.json',
-					to: 'github-rte-firefox',
+					to: 'github-writer-firefox',
 					transform: content => transformManifest( content, 'firefox' )
 				}
 			] ),
@@ -103,38 +103,38 @@ module.exports = ( env, argv ) => {
 					},
 					{
 						copy: [
-							{ source: 'src/extension', destination: 'build/github-rte-chrome' },
-							{ source: 'src/github-rte.css', destination: 'build/github-rte-chrome' },
+							{ source: 'src/extension', destination: 'build/github-writer-chrome' },
+							{ source: 'src/github-writer.css', destination: 'build/github-writer-chrome' },
 
-							{ source: 'src/extension', destination: 'build/github-rte-firefox' },
-							{ source: 'src/github-rte.css', destination: 'build/github-rte-firefox' }
+							{ source: 'src/extension', destination: 'build/github-writer-firefox' },
+							{ source: 'src/github-writer.css', destination: 'build/github-writer-firefox' }
 						]
 					},
 					{
 						// Delete the manifest templates. They'll be recreated by the CopyPlugin.
 						delete: [
-							'build/github-rte-chrome/manifest.json',
-							'build/github-rte-firefox/manifest.json'
+							'build/github-writer-chrome/manifest.json',
+							'build/github-writer-firefox/manifest.json'
 						]
 					}
 				],
 				onEnd: [
 					{
 						copy: [
-							{ source: 'build/github-rte.js*', destination: 'build/github-rte-chrome' },
-							{ source: 'build/github-rte.js*', destination: 'build/github-rte-firefox' }
+							{ source: 'build/github-writer.js*', destination: 'build/github-writer-chrome' },
+							{ source: 'build/github-writer.js*', destination: 'build/github-writer-firefox' }
 						]
 					},
 					{
 						delete: [
-							'build/github-rte.js*'
+							'build/github-writer.js*'
 						]
 					},
 					( isProduction ) ?
 						{
 							archive: [
-								{ source: 'build/github-rte-chrome', destination: 'build/github-rte-chrome.zip' },
-								{ source: 'build/github-rte-firefox', destination: 'build/github-rte-firefox.xpi' }
+								{ source: 'build/github-writer-chrome', destination: 'build/github-writer-chrome.zip' },
+								{ source: 'build/github-writer-firefox', destination: 'build/github-writer-firefox.xpi' }
 							]
 						} : {}
 				]
