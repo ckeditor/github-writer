@@ -6,6 +6,7 @@
 import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled/src/decouplededitor';
 import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
 import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
+import AttributeElement from '@ckeditor/ckeditor5-engine/src/view/attributeelement';
 
 /**
  * The CKEditor used inside the rte editor.
@@ -24,6 +25,20 @@ export default class CKEditorGitHubEditor extends DecoupledEditor {
 			attributes: {
 				class: 'github-writer-toolbar'
 			}
+		} );
+
+		// Fix the priority of the code element so it'll not contain other inline styles.
+		// This is basically a copy of the original code in codeediting.js.
+		// TODO: Move this to the Markdown plugin, as this is a requirement there.
+		this.conversion.attributeToElement( {
+			model: 'code',
+			view: { name: 'code', priority: AttributeElement.DEFAULT_PRIORITY + 1 },
+			upcastAlso: {
+				styles: {
+					'word-wrap': 'break-word'
+				}
+			},
+			converterPriority: 'high'
 		} );
 	}
 
