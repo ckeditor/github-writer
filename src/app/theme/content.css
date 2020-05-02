@@ -140,11 +140,15 @@
 	}
 
 	/* Emoji */
-	& g-emoji img {
-		height: 1em;
-		min-height: 20px;
-		width: auto;
-		vertical-align: bottom !important;
-		font-size: inherit;
+	& g-emoji {
+		display: inline-block;
+
+		& img {
+			height: 1em;
+			min-height: 20px;
+			width: auto;
+			vertical-align: bottom !important;
+			font-size: inherit;
+		}
 	}
 }
