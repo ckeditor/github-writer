@@ -200,18 +200,12 @@ describe( 'The "pull request" test suite', function() {
 			const editable = await dom.rootElement.findElement( By.css( 'div.github-writer-ckeditor > .ck-editor__editable' ) );
 			await editable.click();
 
-			// This is the only reliable way to reset the editor contents. Unfortunately sending `ctrl+a` + `delete` doesn't work.
-			await driver.executeScript( () => {
-				window.postMessage( { type: 'GitHub-Writer-Reset-Editor' } );
-			} );
-
 			// Type inside of it.
 			await editable.sendKeys(
-				// Select all. (Not working)
-				// editable.clear() also not working.
-				// Key.CONTROL, 'a', Key.CONTROL,
-				// // Delete.
-				// Key.BACK_SPACE,
+				// Select all.
+				Key.CONTROL, 'a', Key.CONTROL,
+				// Delete.
+				Key.BACK_SPACE,
 				// Type.
 				'Editing comment using the ', Key.CONTROL, 'b', Key.CONTROL, 'RTE editor', Key.CONTROL, 'b', Key.CONTROL, '.',
 				Key.ENTER,

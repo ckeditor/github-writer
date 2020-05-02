@@ -61,6 +61,8 @@ describe( 'Plugins', () => {
 					editor.editing.view.document.fire( 'paste', {
 						dataTransfer: dataTransferMock,
 						preventDefault() {
+						},
+						stopPropagation() {
 						}
 					} );
 
@@ -81,6 +83,8 @@ describe( 'Plugins', () => {
 			editor.editing.view.document.fire( 'paste', {
 				dataTransfer: dataTransferMock,
 				preventDefault() {
+				},
+				stopPropagation() {
 				}
 			} );
 
@@ -98,6 +102,8 @@ describe( 'Plugins', () => {
 			editor.editing.view.document.fire( 'paste', {
 				dataTransfer: dataTransferMock,
 				preventDefault() {
+				},
+				stopPropagation() {
 				}
 			} );
 

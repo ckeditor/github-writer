@@ -174,6 +174,8 @@ function pasteHtml( editor, html ) {
 			}
 		},
 		preventDefault: () => {
+		},
+		stopPropagation: () => {
 		}
 	} );
 }
