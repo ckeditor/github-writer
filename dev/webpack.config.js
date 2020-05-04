@@ -166,11 +166,14 @@ function transformManifest( content, target ) {
 
 	// Setup the contents.
 	{
+		content.name = packageJson.productName;
+		content.version = packageJson.version;
+		content.description = packageJson.description;
+		content.author = packageJson.author;
+
 		if ( !isProduction ) {
 			content.name += ' / dev';
 		}
-
-		content.version = packageJson.version;
 
 		if ( target === 'chrome' ) {
 			delete content.browser_specific_settings;
