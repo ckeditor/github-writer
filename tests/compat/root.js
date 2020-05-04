@@ -5,4 +5,7 @@
 
 const GitHubBrowser = require( '../_pom/githubbrowser' );
 
+GitHubBrowser.headless = true;
+GitHubBrowser.extension = false;
+
 after( 'should close the browser', () => GitHubBrowser.close() );

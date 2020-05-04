@@ -105,6 +105,8 @@ export default class RteEditor {
 				editor.githubEditor = this.githubEditor;
 				this.ckeditor = editor;
 
+				this.githubEditor.dom.root.setAttribute( 'data-ckeditor-id', editor.id );
+
 				// If somehow the data has been set before the creation, this is the time to load it.
 				if ( this._pendingData ) {
 					editor.setData( this._pendingData );

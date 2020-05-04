@@ -3,11 +3,6 @@
  * For licensing, see LICENSE.md.
  */
 
-// This is the "root suite" hooks, which run before and after all tests.
-//
-// By requiring this file at the top of test files, it makes it possible to run the files individually
-// and still have these hooks executed.
+const GitHubBrowser = require( '../_pom/githubbrowser' );
 
-const { quit } = require( './util/util' );
-
-after( 'should close the browser', () => quit() );
+after( 'should close the browser', () => GitHubBrowser.close() );

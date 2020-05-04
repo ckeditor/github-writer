@@ -46,7 +46,7 @@ import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefrom
 import PasteFixer from '../plugins/pastefixer';
 import AutoLinking from '../plugins/autolinking';
 import QuoteSelection from '../plugins/quoteselection';
-import ResetListener from '../plugins/resetlistener';
+import Messenger from '../plugins/messenger';
 import EditorExtras from '../plugins/editorextras';
 import ControlClick from '../plugins/controlclick';
 import SmartCaret from '../plugins/smartcaret';
@@ -82,7 +82,7 @@ const RteEditorConfig = {
 				HorizontalLine, Table, TableToolbar,
 				Kebab, RemoveFormat, ModeSwitcher, Suggestion,
 				PasteFromOffice, PasteFixer,
-				AutoLinking, QuoteSelection, SavedReplies, ResetListener, EditorExtras, ControlClick, SmartCaret,
+				AutoLinking, QuoteSelection, SavedReplies, Messenger, EditorExtras, ControlClick, SmartCaret,
 				CodeBlockLanguageSelector,
 				LiveModelData
 			],
