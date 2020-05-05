@@ -1,7 +1,7 @@
 {
   "name": "github-writer",
   "productName": "GitHub Writer",
-  "version": "1.0.0",
+  "version": "0.24.0",
   "description": "A WYSIWYG rich-text editor for GitHub issues, comments and pull requests. Powered by CKEditor.",
   "private": true,
   "main": "src/github-writer.js",
