@@ -1,19 +1,19 @@
 ## **GitHub Writer - Architecture**
 
-GitHub Writer is a browser extension. It is initially targeting Chrome, but it can potentially be ported to other browsers, Firefox being probably the next in the line.
+GitHub Writer is a browser extension for Chrome and Firefox.
 
 ### Browser extensions
 
 Creating browser extensions revealed to be a pretty simple task. In fact, a single `manifest.json` file is enough for having an extension in place. More details can be found at the [Chrome Developer Guide for extensions](https://developer.chrome.com/extensions/devguide).
 
-Among the many possible things one can do with extensions, it is possible to inject "content scripts" inside selected pages. In this way one can include JavaScript and CSS that are part of such pages. In our case, we inject these files:
+Among the many possible things one can do with extensions, it is possible to inject "content scripts" inside selected pages. In this way one can include arbitrary JavaScript and CSS, which become part of such pages. In our case, we inject these files:
 
 *   `github-writer.js` (`src/github-writer.js`): The entry point for the application script, responsible for bootstrapping it execution. It's injected at the end of the page. It includes the whole application logic, including the CKEditor runtime code and theme.
 *   `github-writer.css` (`src/github-writer.css`): The CSS that customizes GitHub pages and participate in the editor control logic.
 
 #### Selective execution
 
-The extension manifest file can be used to precisely specify in which pages the extension should be active (and the content scripts injected). We try to reduce it to the very minimum, to minimize the risk of the application running unnecessarily. [Check out the source code to see our restriction list](https://github.com/ckeditor/github-writer/blob/16899a4990f02c1a191b95ec2703b212681fa162/src/extension/manifest.json#L19-L26).
+The extension manifest file can be used to precisely specify in which pages the extension should be active (and the content scripts injected). We try to reduce it to the very minimum, to minimize the risk of the application running unnecessarily. [Check out the source code to see our restriction list](https://github.com/ckeditor/github-writer/blob/master/src/extension/manifest.json).
 
 ### The source code
 
@@ -24,13 +24,15 @@ The source code of GitHub Writer is available on GitHub. The following are detai
     *   **github-writer.css**: the whole CSS of the application. This doesn't include the CKEditor theme.
     *   **/app**: the application code.
         *   **app.js**: the application entry point.
+        *   **/data**: static data.
         *   **/icons**: icons used in the application (mainly buttons).
+        *   **/modules**: a library of generic modules.
         *   **/plugins**: CKEditor 5 plugins.
         *   **/theme**: customizations to the CKEditor 5 theme and editable contents.
-        *   other files and directories are part of the application API.
-    *   **/extension**: the extension manifest and its resources (icons).
-*   **/dev**: development resources. The build script and Webpack configuration.
-*   **/tests**: the tests and their configuration.
+        *   other files and directories that are part of the application API.
+    *   **/extension**: the extension manifest and its resources.
+*   **/dev**: development resources.
+*   **/tests**: tests and their configuration.
 
 ### The API
 
@@ -40,11 +42,8 @@ The entry point script of the extension (`github-writer.js`) simply calls `App.r
     *   `FileManager`: searches for GitHub default markdown editors and creates instances of `Editor` to replace/control them.
         *   `Editor`: takes control over the markdown editor, wrapping it into a `MarkdownEditor`. Pairs it with a `RteEditor`, which uses CKEditor 5. `Editor` also controls the user view of either the rte or the markdown editor and their data synchronization.
             *   `MarkdownEditor`: controls the original markdown editor.
-            *   `RteEditor`: the injected RTE.
-*   `github-writer.css`: the styles defined in this file play an important
- role on the efficiency of the above API in performing its job. For example, when controlling the visibility of either the rte or the markdown editor.
-
-That's basically it. The above API summarizes the whole logic of the application.
+            *   `RteEditor`: the injected rte.
+*   `github-writer.css`: the styles defined in this file play an important role on the efficiency of the above API in performing its job. For example, when controlling the visibility of either the rte or the markdown editor.
 
 ### Additional developer information
 

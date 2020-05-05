@@ -2,10 +2,10 @@
 // For licensing, see LICENSE.md.
 
 {
-  "name": "GitHub Writer",
-  "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor.",
+  "name": "{package.json -> productName}",
+  "description": "{package.json -> description}",
   "version": "{package.json -> version}",
-  "author": "CKSource (cksource.com)",
+  "author": "{package.json -> author}",
   "permissions": [
 	// The following are domains used by GitHub to upload files. We need to have permissions on them,
 	// so we avoid cross-origin issues when mimicking the upload within the GitHubUploadAdapter class.

@@ -1,77 +1,76 @@
 ## GitHub WYSIWYG Rich-Text Editor
 
-Replace the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by [CKEditor](https://ckeditor.com/).
+GitHub Writer is a WYSIWYG rich-text editor for GitHub. The extension is available when creating or commenting on issues, reviews, pull requests, and wikis. 
+
+It provides all the features available in the GitHub plain-text editor, including Markdown input. For features like tables, it offers a much easier experience in comparison to plain-text Markdown and allows users to be more productive. 
+
+It is powered by [CKEditor 5](https://ckeditor.com/ckeditor-5/), a modern Javascript rich-text editor.
 
 ### Features
 
-One of the goals of this extension is providing all features which are available in the GitHub plain-text editor, including all markdown features. The following is the list of GitHub features, with the ones checked already available in the GitHub Writer:
+One of the goals of this extension is to provide all the typical features available in the GitHub plain-text editor, including Markdown support. The following is the list of GitHub features, with the ones checked already available in GitHub Writer:
 
 *   Inline formatting
-    *   [x] Bold
-    *   [x] Italic
-    *   [x] Strikethrough
-    *   [x] Inline code
+    *   Bold
+    *   Italic
+    *   Strikethrough
+    *   Inline code
 *   Structure
-    *   [x] Paragraphs (Enter)
-    *   [x] Soft line-break (Shift+Enter)
-    *   [x] Headings
-    *   [x] Horizontal line separator
+    *   Paragraphs (Enter)
+    *   Soft line-break (Shift+Enter)
+    *   Headings
+    *   Horizontal line separator
 *   Blocks
-    *   [x] Quote
-        *   [ ] Quote in quote (levels)
-    *   [x] Code block
-        *   [x] Language selection
+    *   Quotation
+    *   Code block
+        *   Language selection
 *   Lists
-    *   [x] Bulleted list
-    *   [x] Numbered list
-    *   [x] Task/Todo list
+    *   Bulleted list
+    *   Numbered list
+    *   Task/To-do list
 *   Links
-    *   [x] On text
-    *   [ ] On images
-    *   [x] Auto-link URLs on pasting.
-    *   [x] Auto-link URLs on typing.
+    *   On text
+    *   Auto-link URLs on pasting.
+    *   Auto-link URLs on typing.
 *   Media
-    *   [x] Images
-        *   [x] Drag-and-drop
-        *   [x] Paste
-        *   [x] Open file dialog
-    *   [ ] Files
-        *   [ ] Drag-and-drop
-        *   [ ] Open file dialog
+    *   Image upload (including Wiki)
+        *   Drag-and-drop
+        *   Paste
+        *   Open file dialog
 *   Auto-complete
-    *   [x] People (list when typing "@")
-    *   [x] Issues/PRs (list when typing "#")
+    *   People (list when typing "@")
+    *   Issues and PRs (list when typing "#")
 *   Other
-    *   [x] Emoji
-        *   [x] OS, Unicode characters
-        *   [x] Auto-complete (list when typing ":")
-    *   [x] Escape markdown in text
-    *   [x] Tables
-    *   [x] Quote selection ("r" key)
-    *   [x] PR code suggestions
-    *   [x] Saved replies
+    *   Emoji
+        *   OS, Unicode characters
+        *   Auto-complete (list when typing ":")
+    *   Escape Markdown in text
+    *   Tables
+    *   Quote selection (<kbd>r</kbd> key)
+    *   PR code suggestions
+    *   Saved replies
 
 ### Pages enabled
 
-GitHub Writer should be enabled in all places where the original markdown editor is available. The following is the current status of the implementation:
+GitHub Writer should be enabled in all places where the original Markdown editor is available. The following are currently implemented:
 
-*   [x] Issues
-    *   [x] New
-    *   [x] Editing
-    *   [x] Comment
-        *   [x] Editing
-*   [x] Pull requests
-    *   [x] Create
-    *   [x] Comment
-        *   [x] Editing
-    *   [x] Review
-    *   [x] Code comments
-        *   [x] Editing
-*   [x] Wiki pages
-*   [x] Commits
-    *   [x] Comment
-    *   [x] Line comment
-*   [ ] Settings > Saved replies
+*   Issues
+    *   New
+    *   Editing
+    *   Comment
+        *   Editing
+*   Pull requests
+    *   Create
+    *   Comment
+        *   Editing
+    *   Review
+    *   Code comments
+        *   Editing
+*   Wiki pages
+*   Releases
+*   Commits
+    *   Comment
+    *   Line comment
 
 ### Developer information
 
@@ -83,5 +82,7 @@ The source code contains additional readme files with technical details about th
 
 ---
 
-Copyright (c) 2003-2019, [CKSource](https://cksource.com/) Frederico Knabben. All rights reserved.
-GitHub is a trademark of GitHub, Inc.
+Copyright (c) 2003-2020, [CKSource](https://cksource.com/) Frederico Knabben. All rights reserved.
+
+GitHub is a trademark of [GitHub](https://github.com/), Inc.
+

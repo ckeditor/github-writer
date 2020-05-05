@@ -19,9 +19,9 @@ The above will not only clone the repository but also execute `yarn` so all code
 
 ### Building from source
 
-The source code must be built so it can be used in the browser as an extension:
+The source code must be built, so it can be used in the browser as an extension:
 
-1.  Be sure that code dependencies have been downloaded (`yarn`). Run it as many times as you wish - no harm.
+1.  Be sure code dependencies have been downloaded (`yarn`). Run it as many times as you wish - no harm.
 2.  Execute the build script:
 
 ```plaintext
@@ -42,11 +42,20 @@ You'll find the build files in the newly created `build/` directory. Note that t
 
 Having successfully built from source, do the following to load the extension in the browser:
 
-1.  In Chrome, click **Window** > **Extensions**. Or navigate to [chrome://extensions/](chrome://extensions/).
-2.  Enable **Developer mode**, at the top right of the page.
-3.  Click the **Load unpacked** button and select the `build/github-writer-chrome` directory from the build directory.
+* In Chrome:
+  1.  In the menu, select **Window** > **Extensions**. Or navigate to [chrome://extensions/](chrome://extensions/).
+  2.  Enable **Developer mode**, at the top right of the page.
+  3.  Click the **Load unpacked** button.
+  4.  Select the `build/github-writer-chrome` directory from the build directory.
+
+* In Firefox:
+  1. Navigate to [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox).
+  2. Click **Load Temporary Add-on...**.
+  3. Select the `build/github-writer-firefox/manifest.json` file from the build directory.
 
 It's all set. Now visit [https://github.com/](https://github.com/) and start using GitHub Writer inside issues, pull request and wiki pages.
+
+Note that Chrome will keep the extension enabled, while Firefox will remove it once the browser is closed, and the above steps must be done again.
 
 ### Changing the source code
 
@@ -54,10 +63,14 @@ To test changes to the source code, the following steps must always be done:
 
 1.  Re-build by executing `yarn run build-dev`.
 2.  Refresh the extension in the browser:
-    1.  In Chrome, click **Window** > **Extensions**. Or navigate to [chrome://extensions/](chrome://extensions/).
-    2.  Click the reload button (⟳).
+    * In Chrome:
+      1.  In the menu, select **Window** > **Extensions**. Or navigate to [chrome://extensions/](chrome://extensions/).
+      2.  Click the reload button (⟳).
+    * In Firefox:
+      1. Navigate to [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox).
+      2. Click **Reload**.
 
-Now just reload GitHub pages and the updated extension will be executed.
+Now just reload pages on GitHub and the updated extension will be executed.
 
 ### Additional developer information
 
