@@ -78,9 +78,9 @@
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha ./tests/functional/*.js --timeout 15000",
+    "test": "node ./node_modules/.bin/ckeditor5-dev-tests -sc --files=./tests/unit/**/*.js --coverage-paths=./src/**/*.js",
+    "test-functional": "./node_modules/.bin/mocha ./tests/functional/*.js --timeout 15000",
     "test-compat": "./node_modules/.bin/mocha ./tests/compat/*.js --timeout 15000",
-    "test-unit": "node ./node_modules/.bin/ckeditor5-dev-tests -sc --files=./tests/unit/**/*.js --coverage-paths=./src/**/*.js",
     "build": "webpack --mode production --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "build-dev": "webpack --mode development --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "emojis": "node ./dev/updateemojis.js",
