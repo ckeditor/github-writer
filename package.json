@@ -2,7 +2,7 @@
   "name": "github-writer",
   "productName": "GitHub Writer",
   "version": "1.0.0",
-  "description": "Replaces the plain-text markdown input textareas from GitHub.com pages with a WYSIWYG rich-text editor, powered by CKEditor.",
+  "description": "A WYSIWYG rich-text editor for GitHub issues, comments and pull requests. Powered by CKEditor.",
   "private": true,
   "main": "src/github-writer.js",
   "repository": {
@@ -12,14 +12,20 @@
   "keywords": [
     "GitHub",
     "WYSIWYG",
+    "Editor",
     "Rich-Text Editor",
+    "Text Editor",
     "CKEditor",
+    "Markdown",
+    "Chrome",
+    "Firefox",
+    "Extension",
     "Browser Extension",
     "Chrome Extension",
     "Firefox Extension"
   ],
   "author": "CKSource (https://cksource.com)",
-  "license": "SEE LICENSE.md",
+  "license": "GPL-2.0+",
   "bugs": {
     "url": "https://github.com/ckeditor/github-writer/issues"
   },
