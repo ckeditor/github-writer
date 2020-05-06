@@ -10,7 +10,7 @@ The GitHub Writer source code contains three sets of tests that fulfil different
 
 ### Unit tests
 
-GitHub Writer comes with an extensive suit of unit tests. It's our goal to keep 100% code coverage with quality and "real" tests.
+GitHub Writer comes with an extensive suite of unit tests. It's our goal to keep 100% code coverage with quality and "real" tests.
 
 We use [CKEditor 5 Tests](https://www.npmjs.com/package/@ckeditor/ckeditor5-dev-tests) as our test framework. It brings several goodies with it, like Karma, Mocha, Chai, Sinon, Istanbul, webpack, among other tools.
 
