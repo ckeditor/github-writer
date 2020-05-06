@@ -58,7 +58,7 @@
     "@ckeditor/ckeditor5-upload": "^19.0.0",
     "@ckeditor/ckeditor5-utils": "^19.0.0",
     "@ckeditor/ckeditor5-widget": "^19.0.0",
-    "@mlewand/ckeditor5-keyboard-marker": "fredck/ckeditor5-keyboard-marker",
+    "@mlewand/ckeditor5-keyboard-marker": "https://github.com/fredck/ckeditor5-keyboard-marker.git",
     "linguist-languages": "^7.9.0"
   },
   "devDependencies": {
