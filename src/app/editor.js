@@ -292,6 +292,8 @@ export default class Editor {
 		} else {
 			this.rteEditor.setData( this.markdownEditor.getData() );
 		}
+
+		this.fire( 'sync' );
 	}
 
 	/**
@@ -467,6 +469,15 @@ export default class Editor {
 			} );
 		}
 
+		// Unlock the form whenever the textarea gets sync'ed.
+		{
+			this.on( 'sync', () => {
+				if ( this.getMode() === Editor.modes.RTE ) {
+					unlockForm( this );
+				}
+			} );
+		}
+
 		listenToData();
 
 		/**
@@ -504,9 +515,10 @@ export default class Editor {
 		 */
 		function unlockForm() {
 			if ( textarea.hasAttribute( 'data-github-writer-was-required' ) ) {
-				textarea.required = textarea.getAttribute( 'data-github-writer-was-required' );
+				textarea.required = ( textarea.getAttribute( 'data-github-writer-was-required' ) === 'true' );
 				textarea.removeAttribute( 'data-github-writer-was-required' );
 			}
+
 			textarea.setCustomValidity( '' );
 
 			// Restore the "formnovalidate" attribute on submit buttons.
@@ -529,9 +541,6 @@ export default class Editor {
 			if ( editor.getMode() === Editor.modes.RTE ) {
 				editor.syncEditors();
 			}
-
-			// Since the textarea is sync`ed, the form is good to go.
-			unlockForm( editor );
 		}
 
 		/**
@@ -660,15 +669,16 @@ export default class Editor {
 			const textarea = this.markdownEditor.dom.textarea;
 			const form = textarea.form;
 
-			form.querySelectorAll( '[required]' ).forEach( element => {
+			disabled = Array.from( form.querySelectorAll( '[required]' ) ).some( element => {
+				// Instead of checking the markdown textarea, we check the RTE editor.
 				if ( element === textarea ) {
-					// Instead of checking the markdown textarea, we check the RTE editor.
-					disabled = disabled || ckeditor.isEmpty;
+					// We may have changed the "required" attribute of the textarea. We want the original value.
+					const required = textarea.getAttribute( 'data-github-writer-was-required' ) !== 'false';
+
+					return required && ckeditor.isEmpty;
 				} else if ( !isWiki ) {
 					// For other elements, we just use DOM checks.
-					if ( !element.checkValidity() ) {
-						disabled = true;
-					}
+					return !element.checkValidity();
 				}
 			} );
 		}
@@ -688,16 +698,22 @@ export default class Editor {
 		connectSubmitButtonObserver.call( this );
 
 		function connectSubmitButtonObserver() {
-			const button = this.dom.getSubmitBtn();
+			this._submitButtonObserver = new MutationObserver( () => {
+				// noinspection JSPotentiallyInvalidUsageOfClassThis
+				this._setSubmitStatus();
+			} );
 
-			if ( button ) {
-				this._submitButtonObserver = new MutationObserver( () => {
-					// noinspection JSPotentiallyInvalidUsageOfClassThis
-					this._setSubmitStatus();
-				} );
-				this._submitButtonObserver.observe( button, { attributes: true, attributeFilter: [ 'disabled' ] } );
+			// GH messes up with submit buttons as its will, so instead of observe a specific button, we observe
+			// anything in the form that had the "disabled" attributed changed (usually submit buttons).
+			this._submitButtonObserver.observe( this.dom.root, {
+				attributes: true,
+				attributeFilter: [ 'disabled' ],
+				subtree: true
+			} );
 
+			if ( !this.domManipulator._hasSubmitBtnObRollback ) {
 				this.domManipulator.addRollbackOperation( () => disconnectSubmitButtonObserver.call( this ) );
+				this.domManipulator._hasSubmitBtnObRollback = true;
 			}
 		}
 

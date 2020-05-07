@@ -620,6 +620,22 @@ describe( 'Editor', () => {
 					} );
 			} );
 
+			it( 'should unlock the form on sync', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'test' } ) );
+				const textarea = editor.dom.root.querySelector( 'textarea' );
+
+				return editor.create()
+					.then( () => {
+						expect( textarea.validity.customError ).to.be.false;
+						editor.rteEditor.setData( 'Changed data' );
+						expect( textarea.validity.customError ).to.be.true;
+
+						editor.syncEditors();
+
+						expect( textarea.validity.customError ).to.be.false;
+					} );
+			} );
+
 			it( 'should unlock the form during submit', () => {
 				const editor = new Editor( GitHubPage.appendRoot( { text: 'test' } ) );
 				const textarea = editor.dom.root.querySelector( 'textarea' );
@@ -636,11 +652,55 @@ describe( 'Editor', () => {
 					} );
 			} );
 
+			it( 'should lock/unlock the form when switching modes', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'test' } ) );
+				const textarea = editor.dom.root.querySelector( 'textarea' );
+
+				return editor.create()
+					.then( () => {
+						editor.rteEditor.setData( 'Changed data' );
+						expect( textarea.validity.customError ).to.be.true;
+
+						editor.setMode( Editor.modes.MARKDOWN );
+						expect( textarea.validity.customError ).to.be.false;
+
+						editor.setMode( Editor.modes.RTE );
+						expect( textarea.validity.customError ).to.be.true;
+					} );
+			} );
+
+			it( 'should clean the textarea on form unlock', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const textarea = editor.dom.root.querySelector( 'textarea' );
+				textarea.required = false;
+
+				return editor.create()
+					.then( () => {
+						editor.rteEditor.setData( 'Changed data' );
+						expect( textarea.validity.customError ).to.be.true;
+						expect( textarea.required ).to.be.true;
+
+						editor.syncEditors();
+
+						expect( textarea.validity.customError ).to.be.false;
+						expect( textarea.required ).to.be.false;
+
+						editor.rteEditor.setData( 'Changed data again' );
+						expect( textarea.validity.customError ).to.be.true;
+						expect( textarea.required ).to.be.true;
+
+						editor.syncEditors();
+
+						expect( textarea.validity.customError ).to.be.false;
+						expect( textarea.required ).to.be.false;
+					} );
+			} );
+
 			it( 'should remove "formnovalidate" from buttons on form lock', () => {
 				const editor = new Editor( GitHubPage.appendRoot( { text: 'test', submitAlternative: true } ) );
 				const button = editor.dom.root.querySelector( '.js-quick-submit-alternative' );
 
-				editor.create()
+				return editor.create()
 					.then( () => {
 						expect( button.hasAttribute( 'formnovalidate' ) ).to.be.true;
 						editor.rteEditor.setData( 'Changed data' );
@@ -652,7 +712,7 @@ describe( 'Editor', () => {
 				const editor = new Editor( GitHubPage.appendRoot( { text: 'test', submitAlternative: true } ) );
 				const button = editor.dom.root.querySelector( '.js-quick-submit-alternative' );
 
-				editor.create()
+				return editor.create()
 					.then( () => {
 						expect( button.hasAttribute( 'formnovalidate' ) ).to.be.true;
 						editor.rteEditor.setData( 'Changed data' );
@@ -820,10 +880,18 @@ describe( 'Editor', () => {
 
 			it( 'should check other required elements (empty)', () => {
 				const editor = new Editor( GitHubPage.appendRoot( { text: 'Test' } ) );
-				editor.dom.root.insertAdjacentHTML( 'afterbegin', '<input value="" required>' );
+				const other = createElementFromHtml( '<input class="test-el" value="" required>' );
+				editor.dom.root.insertAdjacentElement( 'afterbegin', other );
 
 				return editor.create()
 					.then( () => {
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
+
+						other.value = 'Something';
+						editor.rteEditor.ckeditor.fire( 'change:isEmpty' );
+						expect( editor.dom.getSubmitBtn().disabled ).to.be.false;
+
+						editor.rteEditor.setData( '' );
 						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
 					} );
 			} );
@@ -884,35 +952,33 @@ describe( 'Editor', () => {
 			} );
 
 			it( 'should observe external changes to submit.disabled', done => {
+				// The root textarea has "required".
 				const editor = new Editor( GitHubPage.appendRoot() );
 				const otherInput = createElementFromHtml( '<input class="test-el" value="" required>' );
 				editor.dom.root.insertAdjacentElement( 'afterbegin', otherInput );
 
 				editor.create()
 					.then( () => {
-						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
+						expect( editor.dom.getSubmitBtn().disabled, 'disabled start' ).to.be.true;
 
 						otherInput.value = 'Testing';
-						expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
-
 						editor.dom.getSubmitBtn().disabled = false;
 
 						// Mutation observers are asynchronous, so we should still not see the editor fixup here.
-						expect( editor.dom.getSubmitBtn().disabled ).to.be.false;
+						expect( editor.dom.getSubmitBtn().disabled, 'disabled after mutation' ).to.be.false;
 
 						// So we use a timout to give a chance to the observer to be invoked.
 						setTimeout( () => {
-							expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
+							expect( editor.dom.getSubmitBtn().disabled, 'not disabled after mutation' ).to.be.true;
 
 							otherInput.value = '';
-							expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
-
 							editor.dom.getSubmitBtn().disabled = true;
+
 							setTimeout( () => {
-								expect( editor.dom.getSubmitBtn().disabled ).to.be.true;
+								expect( editor.dom.getSubmitBtn().disabled, 'stay disabled' ).to.be.true;
 								done();
-							}, 0 );
-						}, 0 );
+							} );
+						} );
 					} );
 			} );
 		} );
