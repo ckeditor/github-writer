@@ -4,7 +4,7 @@ GitHub Writer is a WYSIWYG rich-text editor for GitHub. The extension is availab
 
 It provides all the features available in the GitHub plain-text editor, including Markdown input. For features like tables, it offers a much easier experience in comparison to plain-text Markdown and allows users to be more productive. 
 
-It is powered by [CKEditor 5](https://ckeditor.com/ckeditor-5/), a modern Javascript rich-text editor.
+It is powered by [CKEditor 5](https://ckeditor.com/ckeditor-5/), a modern JavaScript rich-text editor.
 
 ### Features
 
