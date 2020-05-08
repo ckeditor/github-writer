@@ -6,6 +6,13 @@ It provides all the features available in the GitHub plain-text editor, includin
 
 It is powered by [CKEditor 5](https://ckeditor.com/ckeditor-5/), a modern JavaScript rich-text editor.
 
+### Installation
+
+The extension can be found at the following directories for an easy one click installation:
+
+*   [GitHub Writer at Chrome Web Store](https://chrome.google.com/webstore/detail/github-writer/diilnnhpcdjhhkjcbdljaonhmhapadap)
+*   [GitHub Writer at Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/github-writer/)
+
 ### Features
 
 One of the goals of this extension is to provide all the typical features available in the GitHub plain-text editor, including Markdown support. The following is the list of GitHub features, with the ones checked already available in GitHub Writer:
