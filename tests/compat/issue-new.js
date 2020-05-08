@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-const NewIssuePage = require( '../_pom/newissuepage' );
+const NewIssuePage = require( '../_pom/pages/newissuepage' );
 
 const { expect } = require( 'chai' );
 const htmlToJson = require( 'html-to-json' );
