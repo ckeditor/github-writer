@@ -8,7 +8,6 @@ import RteEditor from '../../../src/app/editors/rteeditor';
 import WikiRteEditor from '../../../src/app/editors/wikirteeditor';
 
 import { GitHubPage } from '../../_util/githubpage';
-import { createElementFromHtml } from '../../../src/app/util';
 
 describe( 'Editors', () => {
 	describe( 'WikiRteEditor', () => {
@@ -37,20 +36,18 @@ describe( 'Editors', () => {
 		} );
 
 		describe( 'getEditableParentTree()', () => {
-			it( 'should return a string that converts into an element', () => {
+			it( 'should return an element with class github-writer-panel-rte', () => {
 				const rteEditor = new WikiRteEditor( new Editor( GitHubPage.appendRoot() ) );
 
-				const treeHtml = rteEditor.getEditableParentTree();
-				expect( treeHtml ).to.be.a( 'string' );
-
-				const tree = createElementFromHtml( treeHtml );
+				const tree = rteEditor.getEditableParentTree();
 				expect( tree ).to.be.an.instanceOf( HTMLElement );
+				expect( tree.classList.contains( 'github-writer-panel-rte' ) ).to.be.true;
 			} );
 
 			it( 'should have an element with class github-writer-ckeditor', () => {
 				const rteEditor = new WikiRteEditor( new Editor( GitHubPage.appendRoot() ) );
 
-				const tree = createElementFromHtml( rteEditor.getEditableParentTree() );
+				const tree = rteEditor.getEditableParentTree();
 				expect( tree.querySelector( '.github-writer-ckeditor' ) ).to.be.an.instanceOf( HTMLElement );
 			} );
 		} );

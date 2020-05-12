@@ -55,6 +55,7 @@ export default class Editor {
 				() => window.GITHUB_WRITER_EDITORS.splice( window.GITHUB_WRITER_EDITORS.indexOf( this ), 1 ) );
 		}
 
+		// Setup dom.
 		{
 			/**
 			 * The GitHub dom elements that are required for this class to operate.
@@ -69,6 +70,17 @@ export default class Editor {
 				 * The outermost element encompassing the structure around the original GitHub markdown editor.
 				 */
 				root: markdownEditorRootElement,
+
+				/**
+				 * The container for the editor panels body (Write and Preview)
+				 *
+				 * This is <tab-container> on New Issue and Add Comment and <div> on Edit Comment.
+				 *
+				 * @type {HTMLElement}
+				 * @memberOf MarkdownEditor#dom
+				 */
+				panelsContainer: markdownEditorRootElement.querySelector( '.previewable-comment-form' ),
+
 				tabs: {
 					/**
 					 * The "Write" tab.
@@ -104,6 +116,7 @@ export default class Editor {
 			this.domManipulator.addRollbackOperation( () => delete this.dom );
 		}
 
+		// Create the inner editors.
 		{
 			// Take the proper classes to be used to create the editors.
 			const { MarkdownEditor, RteEditor } = getEditorClasses();
@@ -126,7 +139,78 @@ export default class Editor {
 			}
 		}
 
+		// Create the session key, used to save session data.
 		this.sessionKey = 'github-writer-session:' + window.location.pathname + '?' + this.markdownEditor.dom.textarea.id;
+
+		// Setup size (and resize).
+		{
+			let container = this.dom.panelsContainer;
+			container = this.markdownEditor.isEdit ? container : container.parentElement;
+
+			if ( !( this.markdownEditor instanceof WikiMarkdownEditor ) ) {
+				container.classList.add( 'github-writer-size-container' );
+
+				setupSize( this );
+			}
+
+			function setupSize( editor ) {
+				// Set minimum height = current height.
+				const min = container.offsetHeight;
+				container.style.minHeight = min + 'px';
+
+				// GH Stickies.
+				const stickyHeader = document.querySelector( '.gh-header-sticky.js-sticky' );
+				const stickyNotification = document.querySelector( '.js-notification-shelf.js-sticky' );
+				const stickyPrToolbar = document.querySelector( '.pr-toolbar.js-sticky' );
+				const stickyFileHeader = document.querySelector( '.js-file-header.sticky-file-header' );
+
+				const setMaxHeight = () => {
+					// Take the viewport height.
+					let max = document.documentElement.clientHeight;
+
+					// Minus GH stickies.
+					{
+						if ( stickyHeader ) {
+							const height = stickyHeader.offsetHeight;
+							height > 1 && ( max -= height );
+						}
+						if ( stickyNotification ) {
+							max -= stickyNotification.offsetHeight;
+						}
+						if ( stickyFileHeader ) {
+							max -= stickyFileHeader.offsetHeight;
+						}
+						if ( stickyPrToolbar ) {
+							max -= stickyPrToolbar.offsetHeight;
+						}
+					}
+
+					// Minus margin
+					max -= 60;
+
+					// Max must be at least min.
+					max = Math.max( min, max );
+
+					container.style.maxHeight = max + 'px';
+				};
+
+				setMaxHeight();
+
+				// Observe the GH stickies show/hide.
+				if ( stickyHeader || stickyNotification || stickyFileHeader ) {
+					const observer = new ResizeObserver( setMaxHeight );
+					editor.domManipulator.addRollbackOperation( () => observer.disconnect() );
+
+					stickyHeader && observer.observe( stickyHeader );
+					stickyNotification && observer.observe( stickyNotification );
+				}
+
+				// Observe window resize.
+				editor.domManipulator.addEventListener( window, 'resize', () => {
+					setMaxHeight();
+				} );
+			}
+		}
 	}
 
 	/**
@@ -374,11 +458,11 @@ export default class Editor {
 		// Enable the GitHub focus styles when the editor focus/blur.
 		{
 			// Take the element that GH would styles on focus.
-			const focusBox = this.dom.root.querySelector( '.github-writer-ckeditor' );
+			const focusBox = this.dom.root.querySelector( '.github-writer-panel-rte' );
 
 			// Watch for editor focus changes.
 			this.rteEditor.ckeditor.ui.focusTracker.on( 'change:isFocused', ( evt, name, value ) => {
-				focusBox.classList.toggle( 'focused', !!value );
+				focusBox.classList.toggle( 'focus', !!value );
 			} );
 		}
 	}

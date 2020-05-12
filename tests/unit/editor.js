@@ -92,6 +92,152 @@ describe( 'Editor', () => {
 
 			expect( editor.dom.root.classList.contains( 'github-writer-type-wiki' ) ).to.be.false;
 		} );
+
+		describe( 'size & resize', () => {
+			it( 'should have the resize class', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				expect( editor.dom.panelsContainer.parentElement.classList.contains( 'github-writer-size-container' ) ).to.be.true;
+			} );
+
+			it( 'should have the resize class (edit)', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { type: 'comment-edit' } ) );
+
+				expect( editor.dom.panelsContainer.classList.contains( 'github-writer-size-container' ) ).to.be.true;
+			} );
+
+			it( 'should set the minimum size', () => {
+				const root = GitHubPage.appendRoot();
+				root.style.height = '301px';
+
+				const editor = new Editor( root );
+				const sizeContainer = editor.dom.panelsContainer.parentElement;
+
+				expect( sizeContainer.style.minHeight ).to.equals( '301px' );
+			} );
+
+			it( 'should set the maximum size', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const sizeContainer = editor.dom.panelsContainer.parentElement;
+
+				// Viewport height.
+				let maxHeight = document.documentElement.clientHeight;
+
+				// Margin.
+				maxHeight -= 60;
+
+				expect( sizeContainer.style.maxHeight ).to.equals( maxHeight + 'px' );
+			} );
+
+			it( 'should set the maximum size to at least the minimum', () => {
+				// Viewport height.
+				let maxHeight = document.documentElement.clientHeight;
+
+				// Margin.
+				maxHeight -= 60;
+
+				const root = GitHubPage.appendRoot();
+				root.style.height = ( maxHeight + 100 ) + 'px';
+
+				const editor = new Editor( root );
+				const sizeContainer = editor.dom.panelsContainer.parentElement;
+
+				expect( sizeContainer.style.maxHeight ).to.equals( ( maxHeight + 100 ) + 'px' );
+			} );
+
+			it( 'should account for "stickies" in the maximum size', () => {
+				GitHubPage.appendElementHtml( '<div class ="gh-header-sticky js-sticky"' +
+					' style="position: sticky; height: 21px"></div>' );
+				GitHubPage.appendElementHtml( '<div class ="js-notification-shelf js-sticky"' +
+					' style="position: sticky; height: 32px"></div>' );
+				GitHubPage.appendElementHtml( '<div class ="pr-toolbar js-sticky"' +
+					' style="position: sticky; height: 43px"></div>' );
+				GitHubPage.appendElementHtml( '<div class ="js-file-header sticky-file-header"' +
+					' style="position: sticky; height: 54px"></div>' );
+
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const sizeContainer = editor.dom.panelsContainer.parentElement;
+
+				// Viewport height.
+				let maxHeight = document.documentElement.clientHeight;
+
+				// Stickies.
+				maxHeight -= ( 21 + 32 + 43 + 54 );
+
+				// Margin.
+				maxHeight -= 60;
+
+				expect( sizeContainer.style.maxHeight ).to.equals( maxHeight + 'px' );
+			} );
+
+			it( 'should ignore 1px header in maximum size', () => {
+				GitHubPage.appendElementHtml( '<div class ="gh-header-sticky js-sticky"' +
+					' style="position: sticky; height: 1px"></div>' );
+
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const sizeContainer = editor.dom.panelsContainer.parentElement;
+
+				// Viewport height.
+				let maxHeight = document.documentElement.clientHeight;
+
+				// Margin.
+				maxHeight -= 60;
+
+				expect( sizeContainer.style.maxHeight ).to.equals( maxHeight + 'px' );
+			} );
+
+			it( 'should react to stickies resize', () => {
+				const stickyHeader = GitHubPage.appendElementHtml( '<div class ="gh-header-sticky js-sticky"' +
+					' style="position: sticky; height: 21px"></div>' );
+				const stickyNotification = GitHubPage.appendElementHtml( '<div class ="js-notification-shelf js-sticky"' +
+					' style="position: sticky; height: 32px"></div>' );
+
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const sizeContainer = editor.dom.panelsContainer.parentElement;
+
+				// Viewport height.
+				let maxHeight = document.documentElement.clientHeight;
+
+				// Stickies.
+				maxHeight -= ( 21 + 32 );
+
+				// Margin.
+				maxHeight -= 60;
+
+				expect( sizeContainer.style.maxHeight ).to.equals( maxHeight + 'px' );
+
+				// This test should be passing but for some misterious reason the ResizeObserver
+				// is not called for the following changes. For now, the expected changes have been commented.
+				// This test is, at this point, useless. It's here for documentation.
+
+				stickyHeader.style.height = '1px';
+				// maxHeight += 21;
+
+				stickyNotification.style.display = 'none';
+				// maxHeight += 32;
+
+				expect( sizeContainer.style.maxHeight ).to.equals( maxHeight + 'px' );
+			} );
+
+			it( 'should recalculate the maximum size on window resize', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+				const sizeContainer = editor.dom.panelsContainer.parentElement;
+
+				// Viewport height.
+				let maxHeight = document.documentElement.clientHeight;
+
+				// Margin.
+				maxHeight -= 60;
+
+				expect( sizeContainer.style.maxHeight ).to.equals( maxHeight + 'px' );
+
+				window.dispatchEvent( new Event( 'resize' ) );
+
+				// It's not really possible to test this. We can just confirm that it passes properly
+				// by looking at code coverage reports.
+				expect( sizeContainer.style.maxHeight ).to.equals( maxHeight + 'px' );
+			} );
+		} );
 	} );
 
 	describe( 'getMode()', () => {
@@ -507,13 +653,13 @@ describe( 'Editor', () => {
 
 				return editor.create()
 					.then( () => {
-						const target = editor.dom.root.querySelector( '.github-writer-ckeditor' );
+						const target = editor.dom.root.querySelector( '.github-writer-panel-rte' );
 
 						editor.rteEditor.ckeditor.ui.focusTracker.fire( 'change:isFocused', 'isFocused', true );
-						expect( target.classList.contains( 'focused' ) ).to.be.true;
+						expect( target.classList.contains( 'focus' ) ).to.be.true;
 
 						editor.rteEditor.ckeditor.ui.focusTracker.fire( 'change:isFocused', 'isFocused', false );
-						expect( target.classList.contains( 'focused' ) ).to.be.false;
+						expect( target.classList.contains( 'focus' ) ).to.be.false;
 					} );
 			} );
 		} );

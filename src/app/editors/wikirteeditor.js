@@ -23,10 +23,19 @@ export default class WikiRteEditor extends RteEditor {
 	getEditableParentTree() {
 		// Mimic the minimum set of classes that are necessary for the editor, and its contents,
 		// to look like GitHub originals.
-		return `
-			<div class="github-writer-panel-rte">
-				<div class="github-writer-ckeditor upload-enabled form-control markdown-body"></div>
-			</div>
-		`;
+
+		const container = document.createElement( 'div' );
+		container.classList.add(
+			'github-writer-panel-rte',
+			'form-control', 'mt-3'
+		);
+
+		const inner = container.appendChild( document.createElement( 'div' ) );
+		inner.classList.add(
+			'github-writer-ckeditor',
+			'upload-enabled', 'markdown-body'
+		);
+
+		return container;
 	}
 }
