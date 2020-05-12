@@ -8,7 +8,6 @@ import CKEditorGitHubEditor from './ckeditorgithubeditor';
 import RteEditorConfig from './rteeditorconfig';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
-import { createElementFromHtml } from '../util';
 import env from '@ckeditor/ckeditor5-utils/src/env';
 
 // Inject our very own CKEditor theme overrides.
@@ -82,7 +81,7 @@ export default class RteEditor {
 				// Inject the editable in the DOM within the appropriate DOM structure around it.
 				{
 					// Here we mimic part of the GH dom, especially because of the classes.
-					const tree = createElementFromHtml( this.getEditableParentTree() );
+					const tree = this.getEditableParentTree();
 
 					// Inject the editor in the above tree.
 					tree.querySelector( '.github-writer-ckeditor' ).append( editor.ui.getEditableElement() );
@@ -154,12 +153,21 @@ export default class RteEditor {
 	getEditableParentTree() {
 		// Mimic the minimum set of classes that are necessary for the editor, and its contents,
 		// to look like GitHub originals.
-		return `
-			<div class="github-writer-panel-rte write-content mx-0 mt-2 mb-2 mx-md-2">
-				<div class="github-writer-ckeditor upload-enabled form-control input-contrast
-					comment-form-textarea comment-body markdown-body"></div>
-			</div>
-		`;
+
+		const container = document.createElement( 'div' );
+		container.classList.add(
+			'github-writer-panel-rte',
+			'form-control', 'write-content', 'upload-enabled', 'input-contrast', 'markdown-body',
+			'mx-0', 'mb-2', 'mx-md-2'
+		);
+
+		const inner = container.appendChild( document.createElement( 'div' ) );
+		inner.classList.add(
+			'github-writer-ckeditor',
+			'comment-form-textarea', 'comment-body'
+		);
+
+		return container;
 	}
 }
 
