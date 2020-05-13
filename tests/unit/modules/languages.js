@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import languagesObject from '../../../src/app/modules/languages';
+import languagesObject from '../../../src/app/data/languages';
 
 describe( 'Modules', () => {
 	describe( 'Languages', () => {

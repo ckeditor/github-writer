@@ -13,7 +13,7 @@ import BalloonPanelView from '@ckeditor/ckeditor5-ui/src/panel/balloon/balloonpa
 import FilteredListView from '../modules/filteredlistview';
 import KeystrokeHandler from '@ckeditor/ckeditor5-utils/src/keystrokehandler';
 
-import { languages, aliases, searchSource, languagesCount } from '../modules/languages';
+import { languages, aliases, searchSource, languagesCount } from '../data/languages';
 import mix from '@ckeditor/ckeditor5-utils/src/mix';
 import clickOutsideHandler from '@ckeditor/ckeditor5-ui/src/bindings/clickoutsidehandler';
 import { escapeRegex } from '../util';

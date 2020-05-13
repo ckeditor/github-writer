@@ -55,7 +55,7 @@ import SavedReplies from '../plugins/savedreplies';
 import LiveModelData from '../plugins/livemodeldata';
 
 import App from '../app';
-import { config as languagesConfig } from '../modules/languages';
+import { config as languagesConfig } from '../data/languages';
 import { list as emojiList } from '../data/emojis';
 import { getNewIssuePageDom } from '../util';
 
