@@ -66,11 +66,16 @@ describe( 'Plugins', () => {
 
 		it( 'should execute getModelData', () => {
 			return sendMessage( 'getModelData' ).then( data => {
+				data.returnValue = JSON.parse( data.returnValue );
+
 				expect( data ).to.eql( {
 					requestId: 'gw-tests-' + messageCount,
-					returnValue: '<root><element name="paragraph">' +
-						'<text>Test </text><text attribs="{&quot;bold&quot;:true}">editor</text>' +
-						'</element></root>',
+					returnValue: {
+						_: [ {
+							e: 'paragraph',
+							_: [ { t: 'Test ' }, { t: 'editor', a: { 'bold': true } } ]
+						} ]
+					},
 					status: 'ok',
 					type: 'CKEditor-Messenger-Response'
 				} );
@@ -78,7 +83,7 @@ describe( 'Plugins', () => {
 		} );
 
 		it( 'should return unknown command', () => {
-			return sendMessage( 'testUnkownCmd' ).then( data => {
+			return sendMessage( 'testUnknownCmd' ).then( data => {
 				expect( data ).to.eql( {
 					requestId: 'gw-tests-' + messageCount,
 					returnValue: undefined,
