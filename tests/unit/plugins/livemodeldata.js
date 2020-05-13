@@ -57,64 +57,64 @@ describe( 'Plugins', () => {
 			[
 				[
 					'<paragraph>Test</paragraph>',
-					'<root><element name="paragraph"><text>Test</text></element></root>'
+					{ _: [ { e: 'paragraph', _: [ { t: 'Test' } ] } ] }
 				],
 				[
 					'<paragraph>Line 1</paragraph>' +
 					'<paragraph>Line 2</paragraph>',
 
-					'<root>' +
-					'<element name="paragraph"><text>Line 1</text></element>' +
-					'<element name="paragraph"><text>Line 2</text></element>' +
-					'</root>'
+					{
+						_: [ { e: 'paragraph', _: [ { t: 'Line 1' } ] },
+							{ e: 'paragraph', _: [ { t: 'Line 2' } ] } ]
+					}
 				],
 				[
 					'<paragraph>Test <softBreak></softBreak>code</paragraph>',
 
-					'<root><element name="paragraph">' +
-					'<text>Test </text>' +
-					'<element name="softBreak"></element>' +
-					'<text>code</text>' +
-					'</element></root>'
+					{ _: [ { e: 'paragraph', _: [ { t: 'Test ' }, { e: 'softBreak' }, { t: 'code' } ] } ] }
 				],
 				[
 					'<paragraph>Test <$text bold="true">bold</$text> text</paragraph>',
 
-					'<root><element name="paragraph">' +
-					'<text>Test </text>' +
-					'<text attribs="{&quot;bold&quot;:true}">bold</text>' +
-					'<text> text</text>' +
-					'</element></root>'
+					{
+						_: [ {
+							e: 'paragraph',
+							_: [ { t: 'Test ' }, { t: 'bold', a: { 'bold': true } }, { t: ' text' } ]
+						} ]
+					}
 				],
 				[
 					'<heading1>Test code</heading1>',
-					'<root><element name="heading1"><text>Test code</text></element></root>'
+					{ _: [ { e: 'heading1', _: [ { t: 'Test code' } ] } ] }
 				],
 				[
 					'<codeBlock language="javascript">Test</codeBlock>',
 
-					'<root>' +
-					'<element name="codeBlock" attribs="{&quot;language&quot;:&quot;javascript&quot;}">' +
-					'<text>Test</text>' +
-					'</element>' +
-					'</root>'
+					{ _: [ { e: 'codeBlock', a: { 'language': 'javascript' }, _: [ { t: 'Test' } ] } ] }
 				],
 				[
 					'<blockQuote><heading1>Heading</heading1><paragraph>Test</paragraph></blockQuote>',
 
-					'<root><element name="blockQuote">' +
-					'<element name="heading1"><text>Heading</text></element>' +
-					'<element name="paragraph"><text>Test</text></element>' +
-					'</element></root>'
+					{
+						_: [
+							{
+								e: 'blockQuote',
+								_: [
+									{ e: 'heading1', _: [ { t: 'Heading' } ] },
+									{ e: 'paragraph', _: [ { t: 'Test' } ] }
+								]
+							}
+						]
+					}
 				]
 			].forEach( ( [ input, output ], index ) => {
 				it( `should output changes (${ index })`, () => {
 					setData( model, input );
-					expect( model.data ).to.equal( output );
+					expect( JSON.parse( model.data ) ).to.eql( output );
 				} );
 
 				it( `should input data (${ index })`, () => {
-					model.data = output;
+					model.data = JSON.stringify( output );
 					expect( getData( model, { withoutSelection: true } ) ).to.equals( input );
 				} );
 			} );
@@ -128,7 +128,8 @@ describe( 'Plugins', () => {
 						writer.insertText( 'foo', root.getChild( 0 ), 0 );
 					} );
 
-					expect( model.data ).to.equal( '<root><element name="paragraph"><text>foo:test:</text></element></root>' );
+					expect( JSON.parse( model.data ) ).to.eql(
+						{ _: [ { e: 'paragraph', _: [ { t: 'foo:test:' } ] } ] } );
 				} );
 
 				it( `should reflect text insertion (end)`, () => {
@@ -137,7 +138,8 @@ describe( 'Plugins', () => {
 						writer.insertText( 'foo', root.getChild( 0 ), 'end' );
 					} );
 
-					expect( model.data ).to.equal( '<root><element name="paragraph"><text>:test:foo</text></element></root>' );
+					expect( JSON.parse( model.data ) ).to.eql(
+						{ _: [ { e: 'paragraph', _: [ { t: ':test:foo' } ] } ] } );
 				} );
 
 				it( `should reflect text insertion (middle)`, () => {
@@ -146,7 +148,22 @@ describe( 'Plugins', () => {
 						writer.insertText( 'foo', root.getChild( 0 ), 3 );
 					} );
 
-					expect( model.data ).to.equal( '<root><element name="paragraph"><text>:tefoost:</text></element></root>' );
+					expect( JSON.parse( model.data ) ).to.eql(
+						{ _: [ { e: 'paragraph', _: [ { t: ':tefoost:' } ] } ] } );
+				} );
+
+				it( `should reflect text insertion (when empty)`, () => {
+					setData( model, '<paragraph></paragraph>' );
+
+					expect( JSON.parse( model.data ) ).to.eql(
+						{ _: [ { e: 'paragraph' } ] } );
+
+					model.change( writer => {
+						writer.insertText( 'foo', root.getChild( 0 ), 0 );
+					} );
+
+					expect( JSON.parse( model.data ) ).to.eql(
+						{ _: [ { e: 'paragraph', _: [ { t: 'foo' } ] } ] } );
 				} );
 			} );
 
@@ -157,8 +174,8 @@ describe( 'Plugins', () => {
 						writer.insertElement( 'softBreak', root.getChild( 0 ), 0 );
 					} );
 
-					expect( model.data ).to.equal(
-						'<root><element name="paragraph"><element name="softBreak"></element><text>:test:</text></element></root>' );
+					expect( JSON.parse( model.data ) ).to.eql(
+						{ _: [ { e: 'paragraph', _: [ { e: 'softBreak' }, { t: ':test:' } ] } ] } );
 				} );
 
 				it( `should reflect element insertion (end)`, () => {
@@ -167,8 +184,8 @@ describe( 'Plugins', () => {
 						writer.insertElement( 'softBreak', root.getChild( 0 ), 'end' );
 					} );
 
-					expect( model.data ).to.equal(
-						'<root><element name="paragraph"><text>:test:</text><element name="softBreak"></element></element></root>' );
+					expect( JSON.parse( model.data ) ).to.eql(
+						{ _: [ { e: 'paragraph', _: [ { t: ':test:' }, { e: 'softBreak' } ] } ] } );
 				} );
 
 				it( `should reflect element insertion (middle)`, () => {
@@ -177,9 +194,13 @@ describe( 'Plugins', () => {
 						writer.insertElement( 'softBreak', root.getChild( 0 ), 3 );
 					} );
 
-					expect( model.data ).to.equal(
-						'<root><element name="paragraph"><text>:te</text>' +
-						'<element name="softBreak"></element><text>st:</text></element></root>' );
+					expect( JSON.parse( model.data ) ).to.eql(
+						{
+							_: [ {
+								e: 'paragraph',
+								_: [ { t: ':te' }, { e: 'softBreak' }, { t: 'st:' } ]
+							} ]
+						} );
 				} );
 			} );
 
@@ -196,7 +217,8 @@ describe( 'Plugins', () => {
 							writer.remove( range );
 						} );
 
-						expect( model.data ).to.equal( '<root><element name="paragraph"><text>3456</text></element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{ _: [ { e: 'paragraph', _: [ { t: '3456' } ] } ] } );
 					} );
 
 					it( `should reflect text removal (end)`, () => {
@@ -209,7 +231,8 @@ describe( 'Plugins', () => {
 							writer.remove( range );
 						} );
 
-						expect( model.data ).to.equal( '<root><element name="paragraph"><text>1234</text></element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{ _: [ { e: 'paragraph', _: [ { t: '1234' } ] } ] } );
 					} );
 
 					it( `should reflect text removal (middle)`, () => {
@@ -222,7 +245,22 @@ describe( 'Plugins', () => {
 							writer.remove( range );
 						} );
 
-						expect( model.data ).to.equal( '<root><element name="paragraph"><text>1256</text></element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{ _: [ { e: 'paragraph', _: [ { t: '1256' } ] } ] } );
+					} );
+
+					it( `should reflect text removal (all)`, () => {
+						setData( model, '<paragraph>123456</paragraph>' );
+						model.change( writer => {
+							const range = writer.createRange(
+								writer.createPositionAt( root.getChild( 0 ), 0 ),
+								writer.createPositionAt( root.getChild( 0 ), 'end' )
+							);
+							writer.remove( range );
+						} );
+
+						expect( JSON.parse( model.data ) ).to.eql(
+							{ _: [ { e: 'paragraph' } ] } );
 					} );
 				}
 
@@ -234,7 +272,8 @@ describe( 'Plugins', () => {
 							writer.remove( root.getChild( 0 ).getChild( 0 ) );
 						} );
 
-						expect( model.data ).to.equal( '<root><element name="paragraph"><text>123456</text></element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{ _: [ { e: 'paragraph', _: [ { t: '123456' } ] } ] } );
 					} );
 
 					it( `should reflect element removal (end)`, () => {
@@ -243,7 +282,8 @@ describe( 'Plugins', () => {
 							writer.remove( root.getChild( 0 ).getChild( 1 ) );
 						} );
 
-						expect( model.data ).to.equal( '<root><element name="paragraph"><text>123456</text></element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{ _: [ { e: 'paragraph', _: [ { t: '123456' } ] } ] } );
 					} );
 
 					it( `should reflect element removal (middle)`, () => {
@@ -252,7 +292,18 @@ describe( 'Plugins', () => {
 							writer.remove( root.getChild( 0 ).getChild( 1 ) );
 						} );
 
-						expect( model.data ).to.equal( '<root><element name="paragraph"><text>123456</text></element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{ _: [ { e: 'paragraph', _: [ { t: '123456' } ] } ] } );
+					} );
+
+					it( `should reflect element removal (all)`, () => {
+						setData( model, '<paragraph><softBreak></softBreak></paragraph>' );
+						model.change( writer => {
+							writer.remove( root.getChild( 0 ).getChild( 0 ) );
+						} );
+
+						expect( JSON.parse( model.data ) ).to.eql(
+							{ _: [ { e: 'paragraph' } ] } );
 					} );
 				}
 			} );
@@ -271,10 +322,13 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'bold', true, range );
 						} );
 
-						expect( model.data ).to.equal(
-							'<root><element name="paragraph">' +
-							'<text attribs="{&quot;bold&quot;:true}">some</text><text> test text</text>' +
-							'</element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{
+								_: [ {
+									e: 'paragraph',
+									_: [ { t: 'some', a: { 'bold': true } }, { t: ' test text' } ]
+								} ]
+							} );
 					} );
 
 					it( `should reflect text attribute insertion (end)`, () => {
@@ -288,10 +342,13 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'bold', true, range );
 						} );
 
-						expect( model.data ).to.equal(
-							'<root><element name="paragraph">' +
-							'<text>some test </text><text attribs="{&quot;bold&quot;:true}">text</text>' +
-							'</element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{
+								_: [ {
+									e: 'paragraph',
+									_: [ { t: 'some test ' }, { t: 'text', a: { 'bold': true } } ]
+								} ]
+							} );
 					} );
 
 					it( `should reflect text attribute insertion (middle)`, () => {
@@ -305,10 +362,13 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'bold', true, range );
 						} );
 
-						expect( model.data ).to.equal(
-							'<root><element name="paragraph">' +
-							'<text>some </text><text attribs="{&quot;bold&quot;:true}">test</text><text> text</text>' +
-							'</element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{
+								_: [ {
+									e: 'paragraph',
+									_: [ { t: 'some ' }, { t: 'test', a: { 'bold': true } }, { t: ' text' } ]
+								} ]
+							} );
 					} );
 
 					it( `should reflect text attribute insertion (mixed siblings)`, () => {
@@ -322,15 +382,19 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'bold', true, range );
 						} );
 
-						expect( model.data ).to.equal(
-							'<root><element name="paragraph">' +
-							'<text>so</text>' +
-							'<text attribs="{&quot;bold&quot;:true}">me </text>' +
-							'<text attribs="{&quot;italic&quot;:true,&quot;bold&quot;:true}">test</text>' +
-							'<element name="softBreak" attribs="{&quot;bold&quot;:true}"></element>' +
-							'<text attribs="{&quot;bold&quot;:true}">te</text>' +
-							'<text>xt</text>' +
-							'</element></root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{
+								_: [ {
+									e: 'paragraph',
+									_: [
+										{ t: 'so' },
+										{ t: 'me ', a: { 'bold': true } },
+										{ t: 'test', a: { 'bold': true, 'italic': true } },
+										{ e: 'softBreak', a: { 'bold': true } },
+										{ t: 'te', a: { 'bold': true } },
+										{ t: 'xt' } ]
+								} ]
+							} );
 					} );
 				}
 
@@ -342,13 +406,13 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'language', 'javascript', root.getChild( 1 ) );
 						} );
 
-						expect( model.data ).to.equal(
-							'<root>' +
-							'<element name="paragraph"><text>test</text></element>' +
-							'<element name="codeBlock" attribs="{&quot;language&quot;:&quot;javascript&quot;}">' +
-							'<text>code</text>' +
-							'</element>' +
-							'</root>' );
+						expect( JSON.parse( model.data ) ).to.eql(
+							{
+								_: [
+									{ e: 'paragraph', _: [ { t: 'test' } ] },
+									{ e: 'codeBlock', a: { 'language': 'javascript' }, _: [ { t: 'code' } ] }
+								]
+							} );
 					} );
 				}
 			} );
@@ -362,12 +426,13 @@ describe( 'Plugins', () => {
 						writer.merge( writer.createPositionAt( root, 1 ) );
 					} );
 
-					expect( model.data ).to.equal(
-						'<root><element name="paragraph">' +
-						'<text>test </text>' +
-						'<text attribs="{&quot;bold&quot;:true}">123456</text>' +
-						'<text> text</text>' +
-						'</element></root>' );
+					expect( JSON.parse( model.data ) ).to.eql(
+						{
+							_: [ {
+								e: 'paragraph',
+								_: [ { t: 'test ' }, { t: '123456', a: { 'bold': true } }, { t: ' text' } ]
+							} ]
+						} );
 				} );
 			} );
 
@@ -380,11 +445,13 @@ describe( 'Plugins', () => {
 						writer.rename( root.getChild( 0 ), 'heading3' );
 					} );
 
-					expect( model.data ).to.equal(
-						'<root>' +
-						'<element name="heading3"><text>test </text><text attribs="{&quot;bold&quot;:true}">123</text></element>' +
-						'<element name="paragraph"><text attribs="{&quot;bold&quot;:true}">456</text><text> text</text></element>' +
-						'</root>' );
+					expect( JSON.parse( model.data ) ).to.eql(
+						{
+							_: [
+								{ e: 'heading3', _: [ { t: 'test ' }, { t: '123', a: { 'bold': true } } ] },
+								{ e: 'paragraph', _: [ { t: '456', a: { 'bold': true } }, { t: ' text' } ] }
+							]
+						} );
 				} );
 			} );
 
@@ -395,9 +462,13 @@ describe( 'Plugins', () => {
 						writer.split( writer.createPositionAt( root.getChild( 0 ), 3 ) );
 					} );
 
-					expect( model.data ).to.equal(
-						'<root><element name="paragraph"><text>123</text></element>' +
-						'<element name="paragraph"><text>456</text></element></root>' );
+					expect( JSON.parse( model.data ) ).to.eql(
+						{
+							_: [
+								{ e: 'paragraph', _: [ { t: '123' } ] },
+								{ e: 'paragraph', _: [ { t: '456' } ] }
+							]
+						} );
 				} );
 			} );
 		} );

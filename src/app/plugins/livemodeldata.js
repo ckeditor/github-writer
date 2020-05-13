@@ -3,10 +3,18 @@
  * For licensing, see LICENSE.md.
  */
 
+/* global process */
+
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 
+// A dictionary of words to help keeping the output size smaller.
+const $element = 'e';
+const $text = 't';
+const $attribs = 'a';
+const $children = '_';
+
 /**
- * Enables `editor.model.data`, a "live" property that can be used to get and set a XML representation
+ * Enables `editor.model.data`, a "live" property that can be used to get and set a JSON representation
  * of the main root in the model document.
  *
  * The focus of this plugin is performance, providing a very fast way to dump the editor data
@@ -20,17 +28,23 @@ export default class LiveModelData extends Plugin {
 		const liveDocumentData = new LiveDocumentData( editor.model.document );
 
 		/**
-		 * The model raw data as a XML string.
+		 * The model raw data as a JSON string.
 		 *
-		 * It can be set to data in the same format as the one it outputs, having the following elements:
-		 *  <root>            : document root, wrapping the whole data
-		 *  <element          : element
-		 *      name="..."    : element name
-		 *      attribs="..." : element attributes stringified (optional)
-		 *  ></element>
-		 *  <text             : text node
-		 *      attribs="..." : text node attributes stringified (optional)
-		 *  >...</text>       : text node data
+		 * It can be set to data in the same format as the one it outputs, having the following structure:
+		 *   {                  -> document root, wrapping the whole data
+		 *     "_": [           -> root children
+		 *       {              -> if element
+		 *         "e": "...",  -> element name
+		 *         "a": {},     -> element attributes (optional)
+		 *         "_": [ ... ] -> element children (optional)
+		 *       },
+		 *       {              -> if text
+		 *         "t": "...",  -> text data
+		 *         "a": {},     -> text attributes (optional)
+		 *       },
+		 *       ...
+		 *     ]
+		 *  }
 		 *
 		 * @memberOf Model
 		 * @member {String} #data
@@ -60,10 +74,18 @@ class LiveDocumentData {
 	constructor( document ) {
 		this.root = document.getRoot();
 
-		// This is the "database" that holds the ouput text version for all nodes in the document model.
+		// This is the "database" that holds the output text version for all nodes in the document model.
 		const tree = this.tree = new Tree();
 
 		document.on( 'change:data', () => {
+			/* istanbul ignore next */
+			if ( process.env.NODE_ENV !== 'production' ) {
+				// Just set the following global (in the extension console) to see the performance log.
+				if ( window.LOG_LIVE_MODEL_DATA ) {
+					console.time( 'LiveModelData - process changes' );
+				}
+			}
+
 			const changes = document.differ.getChanges();
 
 			for ( const change of changes ) {
@@ -127,6 +149,18 @@ class LiveDocumentData {
 			// Reset the cache for the next get() call.
 			this._cache = null;
 
+			/* istanbul ignore next */
+			if ( process.env.NODE_ENV !== 'production' ) {
+				if ( window.LOG_LIVE_MODEL_DATA ) {
+					console.timeEnd( 'LiveModelData - process changes' );
+
+					console.time( 'LiveModelData - get data' );
+					const data = tree.getData();
+					console.timeEnd( 'LiveModelData - get data' );
+					console.log( 'LiveModelData - data length: ' + data.length );
+				}
+			}
+
 			/**
 			 * Fired when the `data` property value "potentially" changed.
 			 *
@@ -138,11 +172,11 @@ class LiveDocumentData {
 	}
 
 	/**
-	 * Gets the XML representation of the document main root data.
+	 * Gets the JSON representation of the document main root data.
 	 *
 	 * The data is cached on first call until the next document change.
 	 *
-	 * return {String}
+	 * return {String} A JSON string.
 	 */
 	get() {
 		if ( typeof this._cache === 'string' ) {
@@ -154,7 +188,7 @@ class LiveDocumentData {
 	/**
 	 * Sets the data of the main document root.
 	 *
-	 * @param data {String} The XML representation of the data.
+	 * @param data {String} The JSON representation of the data.
 	 */
 	set( data ) {
 		const root = this.root;
@@ -172,9 +206,9 @@ class LiveDocumentData {
 	}
 
 	/**
-	 * Parses a XML string representing document data into a DocumentFragment.
+	 * Parses a JSON string representing document data into a DocumentFragment.
 	 *
-	 * @param data {String} The XML data to be parsed.
+	 * @param data {String} The JSON string to be parsed.
 	 * @param writer {module:engine/model/writer~Writer} The model writer used to create the document fragment.
 	 *
 	 * @returns {module:engine/model/documentfragment~DocumentFragment} A document fragment filled with the data.
@@ -182,52 +216,38 @@ class LiveDocumentData {
 	parse( data, writer ) {
 		const fragment = writer.createDocumentFragment();
 
-		const parser = new DOMParser();
-		const xmlDocument = parser.parseFromString( data, 'application/xml' );
+		const root = JSON.parse( data );
 
-		// firstElementChild == <root> : add all its children to the fragment.
-		addChildren( xmlDocument.firstElementChild, fragment );
+		addChildren( root, fragment );
 
 		return fragment;
 
-		function addChildren( xmlNode, modelTarget ) {
-			let child = xmlNode.firstElementChild;
+		function addChildren( dataNode, modelTarget ) {
+			const children = dataNode[ $children ];
+			if ( children ) {
+				let index = 0;
+				let child;
+				while ( ( child = children[ index ] ) ) {
+					if ( $text in child ) {
+						writer.appendText( child[ $text ], child[ $attribs ], modelTarget );
+					} else {
+						const element = writer.createElement( child[ $element ], child[ $attribs ] );
 
-			while ( child ) {
-				// Take the attributes.
-				let attribs = child.getAttribute( 'attribs' );
-				attribs = attribs && JSON.parse( attribs );
+						// Go recursively.
+						addChildren( child, element );
 
-				if ( child.nodeName === 'text' ) {
-					writer.appendText( child.textContent, attribs, modelTarget );
-				} else {
-					const name = child.getAttribute( 'name' );
-					const element = writer.createElement( name, attribs );
+						writer.append( element, modelTarget );
+					}
 
-					// Go recursively.
-					addChildren( child, element );
-
-					writer.append( element, modelTarget );
+					index++;
 				}
-
-				child = child.nextElementSibling;
 			}
 		}
 	}
 }
 
 /**
- * Holds a deep array representation of nodes and their XML text representation.
- *
- * Every node is represented by an array with at least two items in this format:
- * 	[
- * 		'<root|element|text [name="..."] [attribs="..."]>',
- * 		[...child nodes,]
- * 		'</root|element|text>
- * 	]
- *
- * The above allows for a super-fast generation of a single XML string representing a whole
- * document by executing `array.join( '' )`.
+ * Holds a deep object representation of model nodes.
  */
 class Tree {
 	/**
@@ -239,16 +259,16 @@ class Tree {
 		 *
 		 * @type {String[]}
 		 */
-		this.root = [ '<root>', '</root>' ];
+		this.root = {};
 	}
 
 	/**
-	 * Retrieves the whole tree as a single concatenated string.
+	 * Retrieves the whole tree as a string.
 	 *
-	 * @returns {String} The tree as a XML string.
+	 * @returns {String} The tree as a JSON string.
 	 */
 	getData() {
-		return this.root.flat( Infinity ).join( '' );
+		return JSON.stringify( this.root );
 	}
 
 	/**
@@ -259,7 +279,9 @@ class Tree {
 	 * @param modelNode {Element|Text} The model node to be inserted.
 	 */
 	insert( modelNode ) {
-		this.getNode( modelNode.parent ).splice( modelNode.index + 1, 0, this.getDefinition( modelNode ) );
+		const parent = this.getNode( modelNode.parent );
+		const children = parent[ $children ] || ( parent[ $children ] = [] );
+		children.splice( modelNode.index, 0, this.getDefinition( modelNode ) );
 	}
 
 	/**
@@ -287,7 +309,12 @@ class Tree {
 			index = modelPosition.textNode.index + 1;
 		}
 
-		this.getNode( modelPosition.parent ).splice( index + 1, 1 );
+		const parent = this.getNode( modelPosition.parent );
+		parent[ $children ].splice( index, 1 );
+
+		if ( !parent[ $children ].length ) {
+			delete parent[ $children ];
+		}
 
 		// As demonstrated in the above comment, text need to be refreshed as they where merged.
 		if ( inTextNode ) {
@@ -296,13 +323,12 @@ class Tree {
 	}
 
 	/**
-	 * Refreshes the "opening tag" part of the node entry. This is useful when changes
-	 * to attributes need to be retrieved.
+	 * Refreshes a node. This is useful when changes to attributes happen.
 	 *
 	 * @param modelNode {Element|Text} The node to be refreshed.
 	 */
 	refreshNode( modelNode ) {
-		this.getNode( modelNode )[ 0 ] = this.getDefinitionStart( modelNode );
+		this.updateDefinition( this.getNode( modelNode ), modelNode );
 	}
 
 	/**
@@ -312,82 +338,72 @@ class Tree {
 	 */
 	refreshTexts( modelNode ) {
 		const node = this.getNode( modelNode );
+		const children = node[ $children ] || [];
 
 		// Remove all text nodes.
-		for ( let i = node.length - 2; i > 0; i-- ) {
-			if ( node[ i ].type === 'text' ) {
-				node.splice( i, 1 );
+		for ( let i = children.length - 1; i >= 0; i-- ) {
+			if ( $text in children[ i ] ) {
+				children.splice( i, 1 );
 			}
 		}
 
 		// Insert all text nodes back again.
 		Array.from( modelNode.getChildren() ).forEach( child => {
 			if ( child.is( 'text' ) ) {
-				node.splice( child.index + 1, 0, this.getDefinition( child ) );
+				children.splice( child.index, 0, this.getDefinition( child ) );
 			}
 		} );
+
+		if ( children.length ) {
+			node[ $children ] = children;
+		} else {
+			delete node[ $children ];
+		}
 	}
 
 	/**
-	 * Builds the "opening XML tag" for a given node.
+	 * Fills up a node definition, not including children nodes.
 	 *
+	 * @param definition {Object}
 	 * @param modelNode {Element|Text} The node to be processed.
-	 * @returns {string} The opening tag.
 	 */
-	getDefinitionStart( modelNode ) {
-		let type;
-		const attribs = [];
-
+	updateDefinition( definition, modelNode ) {
 		if ( modelNode.data ) {
-			type = 'text';
+			definition[ $text ] = modelNode.data;
 		} else {
-			type = `element`;
-			attribs.push( ' name="', escapeAttrib( modelNode.name ), '"' );
+			definition[ $element ] = modelNode.name;
 		}
 
-		// Node attributes.
+		// Attributes.
 		{
 			const nodeAttribs = Array.from( modelNode.getAttributes() );
 
 			if ( nodeAttribs.length ) {
-				const attribsObj = nodeAttribs.reduce( ( obj, [ name, value ] ) => {
+				definition[ $attribs ] = nodeAttribs.reduce( ( obj, [ name, value ] ) => {
 					obj[ name ] = value;
 					return obj;
 				}, {} );
-
-				attribs.push( ' attribs="', escapeAttrib( JSON.stringify( attribsObj ) ), '"' );
 			}
 		}
-
-		return `<${ type }${ attribs.join( '' ) }>`;
 	}
 
 	/**
 	 * Gets the complete node definition, including its children tree.
 	 *
 	 * @param modelNode {Element|Text} The node to be processed.
-	 * @returns {String[]} The array containing the node parts (opening tag, ...children, closing tag).
+	 * @returns {Object} The node definition.
 	 */
 	getDefinition( modelNode ) {
-		let type, children;
+		const definition = {};
 
-		if ( modelNode.data ) {
-			type = 'text';
-			children = [ escapeText( modelNode.data ) ];
-		} else {
-			type = `element`;
-			children = modelNode.childCount ?
-				Array.from( modelNode.getChildren() ).map( child => this.getDefinition( child ) ) :
-				[];
+		this.updateDefinition( definition, modelNode );
+
+		if ( $element in definition ) {
+			if ( modelNode.childCount ) {
+				definition[ $children ] = Array.from( modelNode.getChildren() )
+					.map( child => this.getDefinition( child ) );
+			}
 		}
-
-		const definition = [
-			this.getDefinitionStart( modelNode ),
-			...children,
-			`</${ type }>`
-		];
-
-		definition.type = type;
 
 		return definition;
 	}
@@ -404,8 +420,7 @@ class Tree {
 		const path = [];
 
 		while ( modelNode.parent ) {
-			// The index is added by 1 to account for the "opening tag" of every node in the tree.
-			path.unshift( modelNode.index + 1 );
+			path.unshift( modelNode.index );
 			modelNode = modelNode.parent;
 		}
 
@@ -423,34 +438,9 @@ class Tree {
 
 		let node = this.root;
 		while ( path.length ) {
-			node = node[ path.shift() ];
+			node = node[ $children ][ path.shift() ];
 		}
 
 		return node;
 	}
-}
-
-/**
- * Escapes XML text.
- *
- * @param value {String} Text to be escaped.
- * @returns {String} Escaped text.
- */
-function escapeText( value ) {
-	return value
-		.replace( /&/g, '&amp;' )
-		.replace( /</g, '&lt;' );
-}
-
-/**
- * Escapes XML attribute values.
- *
- * @param value {String} Attribute value.
- * @returns {String} Escaped value.
- */
-function escapeAttrib( value ) {
-	return value
-		.replace( /&/g, '&amp;' )
-		.replace( /</g, '&lt;' )
-		.replace( /"/g, '&quot;' );
 }
