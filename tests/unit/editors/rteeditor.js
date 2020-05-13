@@ -9,6 +9,7 @@ import CKEditorGitHubEditor from '../../../src/app/editors/ckeditorgithubeditor'
 
 import RteEditorConfig from '../../../src/app/editors/rteeditorconfig';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import Emoji from '../../../src/app/plugins/emoji';
 import EditorExtras from '../../../src/app/plugins/editorextras';
 
 import Locale from '@ckeditor/ckeditor5-utils/src/locale';
@@ -20,11 +21,12 @@ import DropdownPanelView from '@ckeditor/ckeditor5-ui/src/dropdown/dropdownpanel
 
 import { GitHubPage } from '../../_util/githubpage';
 import env from '@ckeditor/ckeditor5-utils/src/env';
+import { getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 
 describe( 'Editors', () => {
 	describe( 'RteEditor', () => {
 		beforeEach( () => {
-			sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ Paragraph ] } );
+			sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ Paragraph, Emoji ] } );
 		} );
 
 		describe( 'constructor()', () => {
@@ -64,6 +66,22 @@ describe( 'Editors', () => {
 				expect( rteEditor.ckeditor ).to.be.undefined;
 				rteEditor.setData( 'test' );
 				expect( rteEditor.getData() ).to.equals( 'test' );
+			} );
+
+			it( 'should not have nbsp before emojis', () => {
+				const text = 'Test :tada: and :octocat:';
+				const editor = new Editor( GitHubPage.appendRoot( { text } ) );
+
+				return editor.create()
+					.then( () => {
+						// Be sure that we have emojis.
+						expect( getData( editor.rteEditor.ckeditor.model, { withoutSelection: true } ) ).to.equals(
+							'<paragraph>Test <emoji name="tada"></emoji> and <emoji name="octocat"></emoji></paragraph>' );
+
+						expect( editor.rteEditor.getData() ).to.equals( text );
+
+						return editor.destroy(); // After test cleanup.
+					} );
 			} );
 		} );
 
