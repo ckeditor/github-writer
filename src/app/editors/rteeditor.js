@@ -40,7 +40,7 @@ export default class RteEditor {
 		if ( this.ckeditor ) {
 			return this.ckeditor.getData()
 				// Replace nbsp around emojis. (#181)
-				.replace( /(?:(?<! )\u00A0(?=:[^ ]))|(?:(?<=[^ ]:)\u00A0(?! ))/g, ' ' );
+				.replace( /(?:([^ ])\u00A0(?=:[^ ]))|(?:([^ ]:)\u00A0(?! ))/g, '$1$2 ' );
 		}
 		return this._pendingData || '';
 	}
