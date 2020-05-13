@@ -430,12 +430,13 @@ export default class Editor {
 			} else {
 				this.rteEditor.ckeditor.model.off( 'data', saveSession );
 				isListening = false;
-
-				saveSession();
 			}
 		};
 
-		this.on( 'mode', setupListener );
+		this.on( 'mode', () => {
+			setupListener();
+			saveSession();
+		} );
 
 		setupListener();
 	}

@@ -530,10 +530,15 @@ describe( 'Editor', () => {
 					return editor.create()
 						.then( () => {
 							expect( sessionStorage.getItem( editor.sessionKey ) ).to.be.null;
+
 							editor.setMode( Editor.modes.MARKDOWN );
 							expect( JSON.parse( sessionStorage.getItem( editor.sessionKey ) ) ).to.eql( {
 								mode: Editor.modes.MARKDOWN
 							} );
+
+							editor.setMode( Editor.modes.RTE );
+							expect( JSON.parse( sessionStorage.getItem( editor.sessionKey ) ).mode ).to.equals(
+								Editor.modes.RTE );
 						} );
 				} );
 
@@ -541,24 +546,14 @@ describe( 'Editor', () => {
 					const root = GitHubPage.appendRoot();
 					const editor = new Editor( root );
 
-					const stub = sinon.stub( sessionStorage, 'setItem' );
-
-					// Some browsers (FF) don't allow sinon on sessionStorage.
-					// As long as Chrome is testing it, it's fine.
-					if ( !sessionStorage.setItem.restore ) {
-						return;
-					}
-
 					return editor.create()
 						.then( () => {
+							const spy = sinon.spy( editor.rteEditor.ckeditor.model, 'on' );
+
 							editor.fire( 'mode' );
 							editor.fire( 'mode' );
 
-							expect( stub.callCount ).to.equals( 0 );
-
-							editor.rteEditor.setData( 'test' );
-
-							expect( stub.callCount ).to.equals( 1 );
+							expect( spy.withArgs( 'data' ).callCount ).to.equals( 0 );
 						} );
 				} );
 			}
