@@ -160,7 +160,7 @@ export default class Emoji extends Plugin {
 				viewToModelPositionOutsideModelElement( editor.model, viewElement => viewElement.name === 'g-emoji' )
 			);
 
-			// The {emoji-text} => {emoji} convertion is a two step process:
+			// The {emoji-text} => {emoji} conversion is a two step process:
 			//		1. Use a post-fixer to catch all changes. Search for {emoji-text} changes
 			//		   and put them in a list to be processed by "2".
 			//		2. Wait for the view#render event and process the changes.
