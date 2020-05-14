@@ -47,6 +47,8 @@ export const isEmojiSupported = ( function() {
  * @returns {HTMLElement} The element created.
  */
 export function createElementFromHtml( html ) {
+	// TODO: Replace this logic with DOMParser.
+
 	const div = document.createElement( 'div' );
 
 	// Safe because we don't use this function for loaded HTML.

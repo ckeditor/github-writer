@@ -7,11 +7,9 @@ import ControlClick from '../../../src/app/plugins/controlclick';
 import KeyStyler from '../../../src/app/plugins/keystyler';
 import EditorExtras from '../../../src/app/plugins/editorextras';
 import LinkEditing from '@ckeditor/ckeditor5-link/src/linkediting';
-import AutoLinking from '../../../src/app/plugins/autolinking';
+import AutoLinkUrl from '../../../src/app/plugins/autolinkurl';
 
 import { createTestEditor } from '../../_util/ckeditor';
-import { getData as getViewData } from '@ckeditor/ckeditor5-engine/src/dev-utils/view';
-import { setData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 
 describe( 'Plugins', () => {
 	describe( 'ControlClick', () => {
@@ -19,7 +17,7 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', done => {
-				createTestEditor( '', [ ControlClick, EditorExtras, LinkEditing, AutoLinking ], {
+				createTestEditor( '', [ ControlClick, EditorExtras, LinkEditing, AutoLinkUrl ], {
 					githubWriter: { autoLinking: { url: true } }
 				} )
 					.then( editorObjects => ( { editor } = editorObjects ) )
@@ -55,35 +53,6 @@ describe( 'Plugins', () => {
 
 			document.dispatchEvent( new KeyboardEvent( 'keyup', { key: 'Meta' } ) );
 			expect( editable.classList.contains( 'github-writer-key-ctrl' ) ).to.be.false;
-		} );
-
-		it( 'should add attribute to links', () => {
-			setData( editor.model,
-				'<paragraph>Test <$text linkHref="https://test.com">li[]nk</$text></paragraph>' );
-
-			expect( getViewData( editor.editing.view ) ).to.equals(
-				'<p>' +
-				'Test <a class="ck-link_selected" data-control-click="href" href="https://test.com">li{}nk</a>' +
-				'</p>' );
-		} );
-
-		it( 'should add attribute to autolink', () => {
-			setData( editor.model,
-				'<paragraph>Test https://tes[]t.com</paragraph>' );
-
-			expect( getViewData( editor.editing.view ) ).to.equals(
-				'<p>' +
-				'Test ' +
-				'<autolink' +
-				' data-control-click="data-url"' +
-				' data-enabled="true"' +
-				' data-text="https://test.com"' +
-				' data-type="url"' +
-				' data-url="https://test.com"' +
-				' spellcheck="false">' +
-				'https://tes{}t.com' +
-				'</autolink>' +
-				'</p>' );
 		} );
 
 		it( 'should open link on ctrl+click', () => {

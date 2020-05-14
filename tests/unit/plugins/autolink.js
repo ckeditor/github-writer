@@ -3,14 +3,19 @@
  * For licensing, see LICENSE.md.
  */
 
-import AutoLinking from '../../../../src/app/plugins/autolinking';
+/**
+ * These tests cover the AutoLinkUrl and AutoLinkGitHub plugins.
+ */
+
+import AutoLinkGitHub from '../../../src/app/plugins/autolinkgithub';
+import AutoLinkUrl from '../../../src/app/plugins/autolinkurl';
 
 import { getData as getViewData } from '@ckeditor/ckeditor5-engine/src/dev-utils/view';
-import { createTestEditor } from '../../../_util/ckeditor';
-import { createElementFromHtml } from '../../../../src/app/util';
+import { createTestEditor } from '../../_util/ckeditor';
+import { createElementFromHtml } from '../../../src/app/util';
 
 describe( 'Plugins', () => {
-	describe( 'AutoLinking', () => {
+	describe( 'AutoLink (GitHub + Url)', () => {
 		let xhr;
 
 		{
@@ -45,8 +50,16 @@ describe( 'Plugins', () => {
 
 			{
 				before( 'create test editor', () => {
-					return createTestEditor( '', [ AutoLinking ], {
-						githubWriter: { autoLinking: { person: true, issue: true, sha: true, urlGitHub: true, url: true } }
+					return createTestEditor( '', [ AutoLinkGitHub, AutoLinkUrl ], {
+						githubWriter: {
+							autoLinking: {
+								person: true,
+								issue: true,
+								sha: true,
+								urlGitHub: true,
+								url: true
+							}
+						}
 					} )
 						.then( ret => ( { editor } = ret ) );
 				} );
@@ -116,8 +129,6 @@ describe( 'Plugins', () => {
 								'<p>' +
 								'Test ' +
 								'<autolink ' +
-								'data-enabled="true" ' +
-								`data-text="${ test.toLowerCase() }" ` +
 								`data-type="${ type }" ` +
 								( type === 'url' ? `data-url="${ test.toLowerCase() }" ` :
 									`data-url="/test/${ test.toLowerCase() }" ` ) +
@@ -141,8 +152,16 @@ describe( 'Plugins', () => {
 
 			{
 				before( 'create test editor', () => {
-					return createTestEditor( '', [ AutoLinking ], {
-						githubWriter: { autoLinking: { person: true, issue: true, sha: true, urlGitHub: true, url: true } }
+					return createTestEditor( '', [ AutoLinkGitHub, AutoLinkUrl ], {
+						githubWriter: {
+							autoLinking: {
+								person: true,
+								issue: true,
+								sha: true,
+								urlGitHub: true,
+								url: true
+							}
+						}
 					} )
 						.then( ret => ( { editor } = ret ) );
 				} );
@@ -154,18 +173,18 @@ describe( 'Plugins', () => {
 
 			const validTests = {
 				person: [
-					'@user'
+					'@userx'
 				],
 				issue: [
-					'#1',
-					'https://github.com/org/repo/issues/1'
+					'#10',
+					'https://github.com/org/repo/issues/10'
 				],
 				sha: [
-					'16c999e',
-					'https://github.com/org/repo/commit/abcde123'
+					'16c999ea',
+					'https://github.com/org/repo/commit/abcde123a'
 				],
 				url: [
-					'https://test.com'
+					'https://testx.com'
 				]
 			};
 
@@ -184,8 +203,6 @@ describe( 'Plugins', () => {
 								'<p>' +
 								'Test ' +
 								'<autolink ' +
-								'data-enabled="true" ' +
-								`data-text="${ test.toLowerCase() }" ` +
 								`data-type="${ type }" ` +
 								( type === 'url' ? `data-url="${ test.toLowerCase() }" ` :
 									`data-url="/test/${ test.toLowerCase() }" ` ) +
@@ -209,8 +226,16 @@ describe( 'Plugins', () => {
 
 			{
 				before( 'create test editor', () => {
-					return createTestEditor( '', [ AutoLinking ], {
-						githubWriter: { autoLinking: { person: true, issue: true, sha: true, urlGitHub: true, url: true } }
+					return createTestEditor( '', [ AutoLinkGitHub ], {
+						githubWriter: {
+							autoLinking: {
+								person: true,
+								issue: true,
+								sha: true,
+								urlGitHub: true,
+								url: true
+							}
+						}
 					} )
 						.then( ret => ( { editor } = ret ) );
 				} );
@@ -222,20 +247,20 @@ describe( 'Plugins', () => {
 
 			const validTests = {
 				person: [
-					'@user',
-					'@UsEr',
-					'@Org-Name/User-Name' ],
+					'@userz',
+					'@UsErz',
+					'@Org-Name/User-Namez' ],
 				issue: [
-					'#1',
-					'org-name/repo-name#1234',
-					'https://github.com/org/repo/issues/1' ],
+					'#100',
+					'org-name/repo-name#123400',
+					'https://github.com/org/repo/issues/1000' ],
 				sha: [
-					'16c999e8c71134401a',
-					'16c999e',
-					'https://github.com/org/repo/commit/abcde123' ]
+					'16c999e8c71134401bb',
+					'16c999bb',
+					'https://github.com/org/repo/commit/abcde123bbb' ]
 			};
 
-			for ( const [ type, tests ] of Object.entries( validTests ) ) {
+			for ( const [ , tests ] of Object.entries( validTests ) ) {
 				tests.forEach( test => {
 					it( `should refuse auto-link (${ test })`, done => {
 						editor.setData( `Test ${ test } should refuse to auto-link.` );
@@ -246,17 +271,69 @@ describe( 'Plugins', () => {
 						setTimeout( () => {
 							expect( getViewData( editor.editing.view, { withoutSelection: true } ) ).to.equal(
 								'<p>' +
-								'Test ' +
-								'<autolink ' +
-								'data-enabled="false" ' +
-								`data-text="${ test }" ` +
-								`data-type="${ type }">` +
-								test +
-								'</autolink>' +
-								' should refuse to auto-link.' +
+								`Test ${ test } should refuse to auto-link.` +
 								'</p>' );
 
 							expect( editor.getData() ).to.equals( `Test ${ test } should refuse to auto-link.` );
+
+							done();
+						}, 0 );
+					} );
+				} );
+			}
+		} );
+
+		describe( 'fallback to ur on refused GH url auto-links', () => {
+			let editor;
+
+			{
+				before( 'create test editor', () => {
+					return createTestEditor( '', [ AutoLinkGitHub, AutoLinkUrl ], {
+						githubWriter: {
+							autoLinking: {
+								person: true,
+								issue: true,
+								sha: true,
+								urlGitHub: true,
+								url: true
+							}
+						}
+					} )
+						.then( ret => ( { editor } = ret ) );
+				} );
+
+				after( 'cleanup test editor', () => {
+					editor.destroy();
+				} );
+			}
+
+			const validTests = {
+				issue: [ 'https://github.com/org/repo/issues/10000' ],
+				sha: [ 'https://github.com/org/repo/commit/abcde123bbbb' ]
+			};
+
+			for ( const [ , tests ] of Object.entries( validTests ) ) {
+				tests.forEach( test => {
+					it( `should fallback to url when refuse GH url auto-link (${ test })`, done => {
+						editor.setData( `Test ${ test } should auto-link.` );
+
+						xhr.respond( 200, { 'Content-Type': 'text/html' },
+							`<p>${ test }</p>` );
+
+						setTimeout( () => {
+							expect( getViewData( editor.editing.view, { withoutSelection: true } ) ).to.equal(
+								'<p>' +
+								'Test ' +
+								'<autolink ' +
+								`data-type="url" ` +
+								`data-url="${ test.toLowerCase() }" ` +
+								'spellcheck="false">' +
+								test.toLowerCase() +
+								'</autolink>' +
+								' should auto-link.' +
+								'</p>' );
+
+							expect( editor.getData() ).to.equals( `Test ${ test } should auto-link.` );
 
 							done();
 						}, 0 );
@@ -270,8 +347,16 @@ describe( 'Plugins', () => {
 
 			{
 				before( 'create test editor', () => {
-					return createTestEditor( '', [ AutoLinking ], {
-						githubWriter: { autoLinking: { person: true, issue: true, sha: true, urlGitHub: true, url: true } }
+					return createTestEditor( '', [ AutoLinkGitHub, AutoLinkUrl ], {
+						githubWriter: {
+							autoLinking: {
+								person: true,
+								issue: true,
+								sha: true,
+								urlGitHub: true,
+								url: true
+							}
+						}
 					} )
 						.then( ret => ( { editor } = ret ) );
 				} );
