@@ -66,8 +66,6 @@ describe( 'Plugins', () => {
 
 		it( 'should execute getModelData', () => {
 			return sendMessage( 'getModelData' ).then( data => {
-				data.returnValue = JSON.parse( data.returnValue );
-
 				expect( data ).to.eql( {
 					requestId: 'gw-tests-' + messageCount,
 					returnValue: {

@@ -27,32 +27,6 @@ describe( 'Plugins', () => {
 			} );
 		}
 
-		it( `should take from cache on second call`, () => {
-			// The only way to confirm the validity of this test is doing it.only() and check code coverage reports.
-
-			// This should enter on both branches of the `if` block inside get().
-			expect( model.data ).to.equals( model.data );
-
-			editor.setData( 'test' );
-
-			// This should not enter into the cache branch.
-			expect( model.data ).to.be.a( 'string' );
-		} );
-
-		it( `should escape characters`, () => {
-			setData( model, '<codeBlock language="test">code</codeBlock>' );
-
-			model.change( writer => {
-				writer.setAttribute( 'language', 'test-&-and-"quote"-and-<tag>', root.getChild( 0 ) );
-				writer.appendText( ' & and <test>', root.getChild( 0 ) );
-			} );
-
-			model.data = String( model.data );
-
-			expect( root.getChild( 0 ).getAttribute( 'language' ) ).to.equals( 'test-&-and-"quote"-and-<tag>' );
-			expect( root.getChild( 0 ).getChild( 0 ).data ).to.equals( 'code & and <test>' );
-		} );
-
 		describe( 'input vs output', () => {
 			[
 				[
@@ -110,11 +84,11 @@ describe( 'Plugins', () => {
 			].forEach( ( [ input, output ], index ) => {
 				it( `should output changes (${ index })`, () => {
 					setData( model, input );
-					expect( JSON.parse( model.data ) ).to.eql( output );
+					expect( model.data ).to.eql( output );
 				} );
 
 				it( `should input data (${ index })`, () => {
-					model.data = JSON.stringify( output );
+					model.data = output;
 					expect( getData( model, { withoutSelection: true } ) ).to.equals( input );
 				} );
 			} );
@@ -128,7 +102,7 @@ describe( 'Plugins', () => {
 						writer.insertText( 'foo', root.getChild( 0 ), 0 );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{ _: [ { e: 'paragraph', _: [ { t: 'foo:test:' } ] } ] } );
 				} );
 
@@ -138,7 +112,7 @@ describe( 'Plugins', () => {
 						writer.insertText( 'foo', root.getChild( 0 ), 'end' );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{ _: [ { e: 'paragraph', _: [ { t: ':test:foo' } ] } ] } );
 				} );
 
@@ -148,21 +122,21 @@ describe( 'Plugins', () => {
 						writer.insertText( 'foo', root.getChild( 0 ), 3 );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{ _: [ { e: 'paragraph', _: [ { t: ':tefoost:' } ] } ] } );
 				} );
 
 				it( `should reflect text insertion (when empty)`, () => {
 					setData( model, '<paragraph></paragraph>' );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{ _: [ { e: 'paragraph' } ] } );
 
 					model.change( writer => {
 						writer.insertText( 'foo', root.getChild( 0 ), 0 );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{ _: [ { e: 'paragraph', _: [ { t: 'foo' } ] } ] } );
 				} );
 			} );
@@ -174,7 +148,7 @@ describe( 'Plugins', () => {
 						writer.insertElement( 'softBreak', root.getChild( 0 ), 0 );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{ _: [ { e: 'paragraph', _: [ { e: 'softBreak' }, { t: ':test:' } ] } ] } );
 				} );
 
@@ -184,7 +158,7 @@ describe( 'Plugins', () => {
 						writer.insertElement( 'softBreak', root.getChild( 0 ), 'end' );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{ _: [ { e: 'paragraph', _: [ { t: ':test:' }, { e: 'softBreak' } ] } ] } );
 				} );
 
@@ -194,7 +168,7 @@ describe( 'Plugins', () => {
 						writer.insertElement( 'softBreak', root.getChild( 0 ), 3 );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{
 							_: [ {
 								e: 'paragraph',
@@ -217,7 +191,7 @@ describe( 'Plugins', () => {
 							writer.remove( range );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{ _: [ { e: 'paragraph', _: [ { t: '3456' } ] } ] } );
 					} );
 
@@ -231,7 +205,7 @@ describe( 'Plugins', () => {
 							writer.remove( range );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{ _: [ { e: 'paragraph', _: [ { t: '1234' } ] } ] } );
 					} );
 
@@ -245,7 +219,7 @@ describe( 'Plugins', () => {
 							writer.remove( range );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{ _: [ { e: 'paragraph', _: [ { t: '1256' } ] } ] } );
 					} );
 
@@ -259,7 +233,7 @@ describe( 'Plugins', () => {
 							writer.remove( range );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{ _: [ { e: 'paragraph' } ] } );
 					} );
 				}
@@ -272,7 +246,7 @@ describe( 'Plugins', () => {
 							writer.remove( root.getChild( 0 ).getChild( 0 ) );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{ _: [ { e: 'paragraph', _: [ { t: '123456' } ] } ] } );
 					} );
 
@@ -282,7 +256,7 @@ describe( 'Plugins', () => {
 							writer.remove( root.getChild( 0 ).getChild( 1 ) );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{ _: [ { e: 'paragraph', _: [ { t: '123456' } ] } ] } );
 					} );
 
@@ -292,7 +266,7 @@ describe( 'Plugins', () => {
 							writer.remove( root.getChild( 0 ).getChild( 1 ) );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{ _: [ { e: 'paragraph', _: [ { t: '123456' } ] } ] } );
 					} );
 
@@ -302,7 +276,7 @@ describe( 'Plugins', () => {
 							writer.remove( root.getChild( 0 ).getChild( 0 ) );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{ _: [ { e: 'paragraph' } ] } );
 					} );
 				}
@@ -322,7 +296,7 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'bold', true, range );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{
 								_: [ {
 									e: 'paragraph',
@@ -342,7 +316,7 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'bold', true, range );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{
 								_: [ {
 									e: 'paragraph',
@@ -362,7 +336,7 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'bold', true, range );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{
 								_: [ {
 									e: 'paragraph',
@@ -382,7 +356,7 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'bold', true, range );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{
 								_: [ {
 									e: 'paragraph',
@@ -406,7 +380,7 @@ describe( 'Plugins', () => {
 							writer.setAttribute( 'language', 'javascript', root.getChild( 1 ) );
 						} );
 
-						expect( JSON.parse( model.data ) ).to.eql(
+						expect( model.data ).to.eql(
 							{
 								_: [
 									{ e: 'paragraph', _: [ { t: 'test' } ] },
@@ -426,7 +400,7 @@ describe( 'Plugins', () => {
 						writer.merge( writer.createPositionAt( root, 1 ) );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{
 							_: [ {
 								e: 'paragraph',
@@ -445,7 +419,7 @@ describe( 'Plugins', () => {
 						writer.rename( root.getChild( 0 ), 'heading3' );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{
 							_: [
 								{ e: 'heading3', _: [ { t: 'test ' }, { t: '123', a: { 'bold': true } } ] },
@@ -462,7 +436,7 @@ describe( 'Plugins', () => {
 						writer.split( writer.createPositionAt( root.getChild( 0 ), 3 ) );
 					} );
 
-					expect( JSON.parse( model.data ) ).to.eql(
+					expect( model.data ).to.eql(
 						{
 							_: [
 								{ e: 'paragraph', _: [ { t: '123' } ] },

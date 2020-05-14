@@ -14,7 +14,7 @@ const $attribs = 'a';
 const $children = '_';
 
 /**
- * Enables `editor.model.data`, a "live" property that can be used to get and set a JSON representation
+ * Enables `editor.model.data`, a "live" property that can be used to get and set simple native object representation
  * of the main root in the model document.
  *
  * The focus of this plugin is performance, providing a very fast way to dump the editor data
@@ -28,19 +28,23 @@ export default class LiveModelData extends Plugin {
 		const liveDocumentData = new LiveDocumentData( editor.model.document );
 
 		/**
-		 * The model raw data as a JSON string.
+		 * The model raw data as simple object.
 		 *
-		 * It can be set to data in the same format as the one it outputs, having the following structure:
-		 *   {                  -> document root, wrapping the whole data
-		 *     "_": [           -> root children
-		 *       {              -> if element
-		 *         "e": "...",  -> element name
-		 *         "a": {},     -> element attributes (optional)
-		 *         "_": [ ... ] -> element children (optional)
+		 * Attention: the object returned by this property must not be manipulated directly or it can
+		 * immediately break the editor. If manipulation is necessary, be sure to do so in a deep clone of it.
+		 *
+		 * This property can be set to data in the same format as the one it outputs,
+		 * having it the following structure:
+		 *   {                -> document root, wrapping the whole data
+		 *     _: [           -> root children
+		 *       {            -> if element
+		 *         e: "...",  -> element name
+		 *         a: {},     -> element attributes (optional)
+		 *         _: [ ... ] -> element children (optional)
 		 *       },
-		 *       {              -> if text
-		 *         "t": "...",  -> text data
-		 *         "a": {},     -> text attributes (optional)
+		 *       {            -> if text
+		 *         t: "...",  -> text data
+		 *         a: {},     -> text attributes (optional)
 		 *       },
 		 *       ...
 		 *     ]
@@ -146,18 +150,10 @@ class LiveDocumentData {
 				}
 			}
 
-			// Reset the cache for the next get() call.
-			this._cache = null;
-
 			/* istanbul ignore next */
 			if ( process.env.NODE_ENV !== 'production' ) {
 				if ( window.LOG_LIVE_MODEL_DATA ) {
 					console.timeEnd( 'LiveModelData - process changes' );
-
-					console.time( 'LiveModelData - get data' );
-					const data = tree.getData();
-					console.timeEnd( 'LiveModelData - get data' );
-					console.log( 'LiveModelData - data length: ' + data.length );
 				}
 			}
 
@@ -172,23 +168,20 @@ class LiveDocumentData {
 	}
 
 	/**
-	 * Gets the JSON representation of the document main root data.
+	 * Gets the live object that holds the representation of the document main root data.
 	 *
-	 * The data is cached on first call until the next document change.
+	 * This object must not be changed directly. It's main purpose is storage.
 	 *
-	 * return {String} A JSON string.
+	 * return {Object} A live object.
 	 */
 	get() {
-		if ( typeof this._cache === 'string' ) {
-			return this._cache;
-		}
-		return ( this._cache = this.tree.getData() );
+		return this.tree.root;
 	}
 
 	/**
-	 * Sets the data of the main document root.
+	 * Sets the data of the main document root with data produced by get().
 	 *
-	 * @param data {String} The JSON representation of the data.
+	 * @param data {Object} And object containing the model data representation.
 	 */
 	set( data ) {
 		const root = this.root;
@@ -197,49 +190,39 @@ class LiveDocumentData {
 		model.change( writer => {
 			// Replace the document contents.
 			writer.remove( writer.createRangeIn( root ) );
-			writer.insert( this.parse( data, writer ), root );
+			writer.insert( createFragment( data, writer ), root );
 
 			// Clean up previous document selection.
 			writer.setSelection( null );
 			writer.removeSelectionAttribute( model.document.selection.getAttributeKeys() );
 		} );
-	}
 
-	/**
-	 * Parses a JSON string representing document data into a DocumentFragment.
-	 *
-	 * @param data {String} The JSON string to be parsed.
-	 * @param writer {module:engine/model/writer~Writer} The model writer used to create the document fragment.
-	 *
-	 * @returns {module:engine/model/documentfragment~DocumentFragment} A document fragment filled with the data.
-	 */
-	parse( data, writer ) {
-		const fragment = writer.createDocumentFragment();
+		function createFragment( data, writer ) {
+			const fragment = writer.createDocumentFragment();
 
-		const root = JSON.parse( data );
+			addChildren( data, fragment );
 
-		addChildren( root, fragment );
+			return fragment;
 
-		return fragment;
+			function addChildren( dataNode, modelTarget ) {
+				const children = dataNode[ $children ];
+				if ( children ) {
+					let index = 0;
+					let child;
+					while ( ( child = children[ index ] ) ) {
+						if ( $text in child ) {
+							writer.appendText( child[ $text ], child[ $attribs ], modelTarget );
+						} else {
+							const element = writer.createElement( child[ $element ], child[ $attribs ] );
 
-		function addChildren( dataNode, modelTarget ) {
-			const children = dataNode[ $children ];
-			if ( children ) {
-				let index = 0;
-				let child;
-				while ( ( child = children[ index ] ) ) {
-					if ( $text in child ) {
-						writer.appendText( child[ $text ], child[ $attribs ], modelTarget );
-					} else {
-						const element = writer.createElement( child[ $element ], child[ $attribs ] );
+							// Go recursively.
+							addChildren( child, element );
 
-						// Go recursively.
-						addChildren( child, element );
+							writer.append( element, modelTarget );
+						}
 
-						writer.append( element, modelTarget );
+						index++;
 					}
-
-					index++;
 				}
 			}
 		}
@@ -260,15 +243,6 @@ class Tree {
 		 * @type {String[]}
 		 */
 		this.root = {};
-	}
-
-	/**
-	 * Retrieves the whole tree as a string.
-	 *
-	 * @returns {String} The tree as a JSON string.
-	 */
-	getData() {
-		return JSON.stringify( this.root );
 	}
 
 	/**
