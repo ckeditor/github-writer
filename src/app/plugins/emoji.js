@@ -4,7 +4,7 @@
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import { WordMatchStyler } from './autolinking';
+import WordFinder from './wordfinder';
 
 import { viewToModelPositionOutsideModelElement } from '@ckeditor/ckeditor5-widget/src/utils';
 import { emojis } from '../data/emojis';
@@ -16,8 +16,8 @@ import priorities from '@ckeditor/ckeditor5-utils/src/priorities';
 
 	In editing:
 		1. Watch for typing, loading or pasting of text that matches the emoji typing format (e.g. `:smiley:`).
-		2. Mark the matched text with the {emoji-text} attribute.
-		3. Replace marked text {emoji-text} with the {emoji} element.
+		2. Mark the matched text using the WordFinder plugins.
+		3. Replace marked text with the {emoji} element.
 
 	In data downcast:
 		1. Replace {emoji} elements with a plain inline element, e.g. <span>:smiley:</span>.
@@ -32,32 +32,29 @@ import priorities from '@ckeditor/ckeditor5-utils/src/priorities';
  * as an emoji during editing but it'll be output without change as plain text.
  */
 export default class Emoji extends Plugin {
+	static get requires() {
+		return [ WordFinder ];
+	}
+
 	/**
 	 * @inheritDoc
 	 */
 	init() {
 		const editor = this.editor;
 
-		// Create the watcher that will match emoji text (like ":smiley:").
-		{
-			const styler = new WordMatchStyler( 'emoji-text' );
-			styler.addMatcher( /:\S+:/, ( { text } ) => {
-				// Checks if an emoji exists for the match.
-				const name = text.replace( /:/g, '' );
+		// Register a word finder for emojis.
+		this.editor.wordFinder.add( {
+			type: 'emoji',
+			pattern: /:\S+:/,
+			callback: match => {
+				// Checks if an emoji exists.
+				const name = match.text.replace( /:/g, '' );
 				return !!emojis[ name ];
-			} );
-			styler.watch( editor );
-		}
+			}
+		} );
 
 		// Schema and conversion.
 		{
-			// The text version of emojis (:smiley:) will be marked with this attribute.
-			editor.model.schema.extend( '$text', { allowAttributes: 'emoji-text' } );
-			editor.model.schema.setAttributeProperties( 'emoji-text', {
-				isFormatting: false,
-				copyOnEnter: false
-			} );
-
 			// The above marked text will be transformed to the following inline element.
 			editor.model.schema.register( 'emoji', {
 				allowWhere: '$text',
@@ -160,8 +157,8 @@ export default class Emoji extends Plugin {
 				viewToModelPositionOutsideModelElement( editor.model, viewElement => viewElement.name === 'g-emoji' )
 			);
 
-			// The {emoji-text} => {emoji} conversion is a two step process:
-			//		1. Use a post-fixer to catch all changes. Search for {emoji-text} changes
+			// The {word="emoji:..."} => {emoji} conversion is a two step process:
+			//		1. Use a post-fixer to catch all changes. Search for {word="emoji:..."} changes
 			//		   and put them in a list to be processed by "2".
 			//		2. Wait for the view#render event and process the changes.
 			{
@@ -171,13 +168,15 @@ export default class Emoji extends Plugin {
 					const changes = editor.model.document.differ.getChanges();
 
 					changes.forEach( change => {
-						if ( change.type === 'attribute' && change.attributeKey === 'emoji-text' && change.attributeNewValue ) {
+						if ( change.type === 'attribute' && change.attributeKey === 'word' &&
+							change.attributeNewValue && change.attributeNewValue.startsWith( 'emoji:' ) ) {
 							const node = change.range.start.nodeAfter;
 							pendingEmojis.push( [ node, postFixWriter.batch ] );
 						}
 					} );
 				} );
 
+				// TODO: this listener is called too often. We just need it if there are pendingEmojis.
 				// Wait for the very last moment (render) to make changes, to avoid conflict
 				// with other plugins that are manipulating the same part of the dom.
 				editor.editing.view.on( 'render', () => {
@@ -188,10 +187,10 @@ export default class Emoji extends Plugin {
 							// Check for parent, just for safety, but we don't have a clear case for it.
 							/* istanbul ignore else */
 							if ( text && text.parent ) {
-								const att = text.getAttribute( 'emoji-text' );
+								const value = text.getAttribute( 'word' );
 
-								if ( att && att.enabled ) {
-									const name = att.text.replace( /:/g, '' );
+								if ( value ) {
+									const [ , name ] = value.match( /^emoji::(.+):$/ );
 									const emoji = createEmojiElement( name, writer );
 									writer.insert( emoji, text, 'before' );
 									writer.remove( text );

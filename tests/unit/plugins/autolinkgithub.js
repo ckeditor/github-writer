@@ -3,11 +3,11 @@
  * For licensing, see LICENSE.md.
  */
 
-import { GitHubLinkDataLoader } from '../../../../src/app/plugins/autolinking';
-import { GitHubPage } from '../../../_util/githubpage';
+import { GitHubLinkDataLoader } from '../../../src/app/plugins/autolinkgithub';
+import { GitHubPage } from '../../_util/githubpage';
 
 describe( 'Plugins', () => {
-	describe( 'AutoLinking', () => {
+	describe( 'AutoLinkGitHub', () => {
 		describe( 'GitHubLinkDataLoader', () => {
 			const previewUrl = 'https://preview/test';
 			const previewToken = 'the-token';
@@ -113,11 +113,13 @@ describe( 'Plugins', () => {
 
 					const promise = loader.load( 'test' )
 						.then( urlInfo => {
-							expect( urlInfo ).to.deep.equals( {
-								url: 'https://test.com/test',
+							expect( urlInfo ).to.deep.eql( {
 								text: 'response-text',
-								'hovercard-type': 'test-type',
-								'hovercard-url': '/test/hovercard'
+								data: {
+									url: 'https://test.com/test',
+									'hovercard-type': 'test-type',
+									'hovercard-url': '/test/hovercard'
+								}
 							} );
 						} );
 
@@ -145,11 +147,13 @@ describe( 'Plugins', () => {
 
 					const promise = loader.load( 'test' )
 						.then( urlInfo => {
-							expect( urlInfo ).to.deep.equals( {
-								url: 'https://test.com/test',
+							expect( urlInfo ).to.deep.eql( {
 								text: 'test',
-								'hovercard-type': 'test-type',
-								'hovercard-url': '/test/hovercard'
+								data: {
+									url: 'https://test.com/test',
+									'hovercard-type': 'test-type',
+									'hovercard-url': '/test/hovercard'
+								}
 							} );
 						} );
 
@@ -165,55 +169,6 @@ describe( 'Plugins', () => {
 						'response with space' +
 						'</a></p>' );
 
-					return promise;
-				} );
-
-				it( 'should take from cache on second call', () => {
-					const loader = new GitHubLinkDataLoader();
-
-					let xhr;
-
-					sinonXhr.onCreate = createdXhr => ( xhr = createdXhr );
-
-					const promise = loader.load( 'test' )
-						.then( urlInfo => {
-							expect( loader.load( 'test' ) ).to.equals( urlInfo );
-						} );
-
-					xhr.respond( 200, { 'Content-Type': 'text/html' },
-						'<p><a ' +
-						'data-hovercard-type="test-type" ' +
-						'data-hovercard-url="/test/hovercard" ' +
-						'href="https://test.com/test">' +
-						'test' +
-						'</a></p>' );
-
-					expect( promise ).to.be.an.instanceOf( Promise );
-					return promise;
-				} );
-
-				it( 'should take cache changed text', () => {
-					const loader = new GitHubLinkDataLoader();
-
-					let xhr;
-
-					sinonXhr.onCreate = createdXhr => ( xhr = createdXhr );
-
-					const promise = loader.load( 'test' )
-						.then( urlInfo => {
-							expect( loader.load( 'test' ) ).to.equals( urlInfo );
-							expect( loader.load( 'change-test' ) ).to.equals( urlInfo );
-						} );
-
-					xhr.respond( 200, { 'Content-Type': 'text/html' },
-						'<p><a ' +
-						'data-hovercard-type="test-type" ' +
-						'data-hovercard-url="/test/hovercard" ' +
-						'href="https://test.com/test">' +
-						'change-test' +
-						'</a></p>' );
-
-					expect( promise ).to.be.an.instanceOf( Promise );
 					return promise;
 				} );
 

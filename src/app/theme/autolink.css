@@ -4,28 +4,26 @@
  */
 
 .ck-content autolink {
-	&[data-enabled="true"] {
+	&:not([data-type="sha"]),
+	&[data-type="sha"]:not([data-status-pending]) {
 		color: #0366d6;
-
-		&[data-type="person"] {
-			color: #24292e;
-			font-weight: 600;
-			white-space: nowrap;
-		}
-
-		&[data-type="sha"] {
-			padding: .2em .4em;
-			margin: 0;
-			font-size: 85%;
-			background-color: rgba(27, 31, 35, .05);
-			border-radius: 3px;
-			font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-			font-weight: 400;
-		}
 	}
 
-	&[data-enabled="false"] {
-		color: inherit;
-		text-decoration: dashed red;
+	&[data-type="person"] {
+		color: #24292e;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
+	/* Commit hash styling. We don't want styling while the status is pending
+	 to avoid it "blinking" when typing long numbers/words. (#175) */
+	&[data-type="sha"]:not([data-status-pending]) {
+		padding: .2em .4em;
+		margin: 0;
+		font-size: 85%;
+		background-color: rgba(27, 31, 35, .05);
+		border-radius: 3px;
+		font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+		font-weight: 400;
 	}
 }

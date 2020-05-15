@@ -98,7 +98,7 @@ describe( 'Plugins', () => {
 				editor.setData( data );
 
 				expect( getData( model ) ).to.equal(
-					'<paragraph>[]<$text emoji-text="{"text":":testtest:","enabled":false}">:testtest:</$text></paragraph>' );
+					'<paragraph>[]:testtest:</paragraph>' );
 				expect( getViewData( editor.editing.view ) ).to.equals(
 					'<p>{}:testtest:</p>' );
 				expect( editor.getData().replace( /\u00a0/g, ' ' ) ).to.equals( data );
@@ -159,6 +159,27 @@ describe( 'Plugins', () => {
 				expect( getViewData( editor.editing.view ) ).to.equals(
 					'<p><g-emoji alias="smiley" contenteditable="false">😃</g-emoji>[]</p>' );
 				expect( editor.getData().replace( /\u00a0/g, ' ' ) ).to.equals( ':smiley:' );
+			} );
+		} );
+
+		describe( 'post-fixer', () => {
+			it( 'should do nothing if another post-fixer removed the attribute', () => {
+				editor.model.document.registerPostFixer( writer => {
+					const changes = editor.model.document.differ.getChanges();
+
+					changes.forEach( change => {
+						if ( change.type === 'attribute' && change.attributeKey === 'word' &&
+							change.attributeNewValue ) {
+							const node = change.range.start.nodeAfter;
+							writer.removeAttribute( 'word', node );
+						}
+					} );
+				} );
+
+				const data = ':smiley:';
+				editor.setData( data );
+
+				expect( getData( model ) ).to.equal( '<paragraph>[]:smiley:</paragraph>' );
 			} );
 		} );
 	} );

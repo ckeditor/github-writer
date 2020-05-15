@@ -4,13 +4,9 @@
  */
 
 .ck-editor__editable.github-writer-key-ctrl {
-	& a,
-	& autolink[data-enabled="true"] {
+	& a[href],
+	& autolink[data-url] {
 		cursor: pointer;
-	}
-
-	& a:hover,
-	& autolink[data-enabled="true"]:hover {
 		text-decoration: underline;
 	}
 }

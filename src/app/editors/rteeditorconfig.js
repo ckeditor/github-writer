@@ -44,7 +44,8 @@ import Suggestion from '../plugins/suggestion';
 
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
 import PasteFixer from '../plugins/pastefixer';
-import AutoLinking from '../plugins/autolinking';
+import AutoLinkUrl from '../plugins/autolinkurl';
+import AutoLinkGitHub from '../plugins/autolinkgithub';
 import QuoteSelection from '../plugins/quoteselection';
 import Messenger from '../plugins/messenger';
 import EditorExtras from '../plugins/editorextras';
@@ -82,7 +83,8 @@ const RteEditorConfig = {
 				HorizontalLine, Table, TableToolbar,
 				Kebab, RemoveFormat, ModeSwitcher, Suggestion,
 				PasteFromOffice, PasteFixer,
-				AutoLinking, QuoteSelection, SavedReplies, Messenger, EditorExtras, ControlClick, SmartCaret,
+				AutoLinkUrl, AutoLinkGitHub,
+				QuoteSelection, SavedReplies, Messenger, EditorExtras, ControlClick, SmartCaret,
 				CodeBlockLanguageSelector,
 				LiveModelData
 			],
