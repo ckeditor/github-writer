@@ -554,16 +554,24 @@ export default class Editor {
 			} );
 		}
 
-		// Unlock the form whenever the textarea gets sync'ed.
+		// Events tha lock/unlock the form.
 		{
 			this.on( 'sync', () => {
+				unlockForm();
+			} );
+
+			this.on( 'mode', () => {
 				if ( this.getMode() === Editor.modes.RTE ) {
-					unlockForm( this );
+					lockForm();
+				} else {
+					unlockForm();
 				}
 			} );
 		}
 
 		listenToData();
+
+		const that = this;
 
 		/**
 		 * Triggers the form locking as soon as a change is made to the editor data.
@@ -576,6 +584,11 @@ export default class Editor {
 		 * Locks the form so GH will not be able to post it even if we're not able to intercept the form post.
 		 */
 		function lockForm() {
+			// Safety check, just in case anything unexpected triggers the form locking.
+			if ( that.getMode() !== Editor.modes.RTE ) {
+				return;
+			}
+
 			// Save the "require" value so it can be restored on unlock().
 			/* Just in case */ /* istanbul ignore else */
 			if ( !textarea.hasAttribute( 'data-github-writer-was-required' ) ) {
