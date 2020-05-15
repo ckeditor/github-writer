@@ -864,6 +864,23 @@ describe( 'Editor', () => {
 						expect( button.hasAttribute( 'formnovalidate' ) ).to.be.true;
 					} );
 			} );
+
+			it( 'should unlock the form if user aborts mode switch', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'Test <x>' } ) );
+				const textarea = editor.dom.root.querySelector( 'textarea' );
+
+				return editor.create().then( () => {
+					expect( editor.getMode() ).to.equals( Editor.modes.MARKDOWN );
+
+					sinon.stub( window, 'confirm' ).returns( false );
+
+					editor.setMode( Editor.modes.RTE );
+
+					expect( window.confirm.callCount, 'callCount' ).to.equals( 1 );
+					expect( editor.getMode() ).to.equals( Editor.modes.MARKDOWN );
+					expect( textarea.validity.customError ).to.be.false;
+				} );
+			} );
 		} );
 
 		describe( 'keystrokes', () => {
