@@ -377,7 +377,7 @@ describe( 'Util', () => {
 
 		it( 'should return a DOM', () => {
 			const promise = getNewIssuePageDom().then( dom => {
-				expect( dom ).to.be.an.instanceOf( DocumentFragment );
+				expect( dom ).to.be.an.instanceOf( Document );
 				expect( dom.querySelector( 'p' ) ).to.be.an.instanceOf( HTMLElement );
 				expect( dom.querySelector( 'p' ).innerHTML ).to.equals( 'Test' );
 			} );

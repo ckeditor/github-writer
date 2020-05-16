@@ -158,15 +158,11 @@ export function getNewIssuePageDom() {
 		xhr.addEventListener( 'error', () => reject( new Error( `Error loading $(url).` ) ) );
 		xhr.addEventListener( 'abort', () => reject() );
 		xhr.addEventListener( 'load', () => {
-			// Inject the returned html into a template element.
-			const template = document.createElement( 'template' );
+			const parser = new DOMParser();
+			const doc = parser.parseFromString( xhr.response, 'text/html' );
 
-			// Safe because we don't actually insert this HTML in the page. We load it in the template and process it safely.
-			// eslint-disable-next-line no-unsanitized/property
-			template.innerHTML = xhr.response;
-
-			// Resolve the promise with the template dom.
-			resolve( template.content );
+			// Resolve the dom document.
+			resolve( doc );
 		} );
 
 		xhr.send();
