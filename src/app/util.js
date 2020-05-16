@@ -47,15 +47,10 @@ export const isEmojiSupported = ( function() {
  * @returns {HTMLElement} The element created.
  */
 export function createElementFromHtml( html ) {
-	// TODO: Replace this logic with DOMParser.
+	const parser = new DOMParser();
+	const doc = parser.parseFromString( html, 'text/html' );
 
-	const div = document.createElement( 'div' );
-
-	// Safe because we don't use this function for loaded HTML.
-	// eslint-disable-next-line no-unsanitized/property
-	div.innerHTML = html;
-
-	return div.firstElementChild;
+	return doc.body.firstElementChild;
 }
 
 /**
