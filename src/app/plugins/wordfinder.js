@@ -178,6 +178,13 @@ class WordFinderManager {
 				// Get the word type and its status from the attribute value.
 				const [ , type, status ] = modelAttributeValue.match( /^([^:]+?)(?:\[(.+)])?:(.+)$/ );
 
+				// Get the element name and eventually attribute changes from the registered converter.
+				const converter = converters[ type ];
+
+				if ( !converter ) {
+					return;
+				}
+
 				// This will hold all element attributes.
 				const attribs = {
 					// Disable spell-checking into matched words (we don't have a case where it should be enabled).
@@ -194,8 +201,6 @@ class WordFinderManager {
 				Object.entries( matchInfo.data ).forEach( ( [ key, value ] ) =>
 					( attribs[ 'data-' + key ] = value ) );
 
-				// Get the element name and eventually attribute changes from the registered converter.
-				const converter = converters[ type ];
 				const elementName = converter( attribs );
 
 				// Using the same priority as link for compatibility with ControlClick.

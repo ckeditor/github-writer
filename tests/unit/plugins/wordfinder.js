@@ -192,6 +192,27 @@ describe( 'Plugins', () => {
 
 				expect( getView() ).to.equals( '<p>AB <test custom="true">CD</test> EF GH</p>' );
 			} );
+
+			it( 'converter should do nothing if no converter is set', () => {
+				editor.wordFinder.add( { type: 'a', pattern: /CD/ } );
+
+				editor.setData( 'AB CD EF GH' );
+
+				expect( getView() ).to.equals( '<p>AB CD EF GH</p>' );
+			} );
+
+			it( 'converter should accept mixed finders', () => {
+				editor.wordFinder.add( { type: 'a', pattern: /CD/ } );
+				editor.wordFinder.add( {
+					type: 'b', pattern: /EF/, conversion: {
+						'editingDowncast': () => 'b'
+					}
+				} );
+
+				editor.setData( 'AB CD EF GH' );
+
+				expect( getView() ).to.equals( '<p>AB CD <b data-type="b" spellcheck="false">EF</b> GH</p>' );
+			} );
 		} );
 
 		describe( 'watch()', () => {
