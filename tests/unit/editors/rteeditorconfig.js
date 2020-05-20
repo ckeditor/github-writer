@@ -7,15 +7,15 @@ import Editor from '../../../src/app/editor';
 import RteEditor from '../../../src/app/editors/rteeditor';
 
 import { GitHubPage } from '../../_util/githubpage';
-import RteEditorConfig from '../../../src/app/editors/rteeditorconfig';
-import RteEditorConfigMentions from '../../../src/app/editors/rteeditorconfigmentions';
+import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
+import CKEditorConfigMentions from '../../../src/app/editor/ckeditorconfigmentions';
 import SavedReplies from '../../../src/app/plugins/savedreplies';
 
 describe( 'Editors', () => {
-	describe( 'RteEditorConfig', () => {
+	describe( 'CKEditorConfig', () => {
 		it( 'should return a configuration object', () => {
 			const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
-			const config = RteEditorConfig.get( rteEditor );
+			const config = CKEditorConfig.get( rteEditor );
 
 			expect( config ).to.be.an( 'object' );
 			expect( config.plugins ).to.be.an( 'array' );
@@ -24,7 +24,7 @@ describe( 'Editors', () => {
 
 		it( 'should set the placeholder text', () => {
 			const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
-			const config = RteEditorConfig.get( rteEditor );
+			const config = CKEditorConfig.get( rteEditor );
 
 			expect( config.placeholder ).to.be.a( 'string' ).not.empty;
 		} );
@@ -33,7 +33,7 @@ describe( 'Editors', () => {
 			GitHubPage.setPageName( 'repo_wiki' );
 
 			const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
-			const config = RteEditorConfig.get( rteEditor );
+			const config = CKEditorConfig.get( rteEditor );
 
 			expect( config.placeholder ).to.be.null;
 		} );
@@ -49,9 +49,9 @@ describe( 'Editors', () => {
 
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot( { target: textExpander } ) ) );
 
-				const spy = sinon.spy( RteEditorConfigMentions, 'get' );
+				const spy = sinon.spy( CKEditorConfigMentions, 'get' );
 
-				RteEditorConfig.get( rteEditor );
+				CKEditorConfig.get( rteEditor );
 
 				expect( spy.callCount ).to.equals( 1 );
 				expect( spy.args[ 0 ][ 0 ].issues ).to.equals( '/test-issues' );
@@ -64,9 +64,9 @@ describe( 'Editors', () => {
 			it( 'should retrieve emojis only if no urls in the dom', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
 
-				const spy = sinon.spy( RteEditorConfigMentions, 'get' );
+				const spy = sinon.spy( CKEditorConfigMentions, 'get' );
 
-				RteEditorConfig.get( rteEditor );
+				CKEditorConfig.get( rteEditor );
 
 				expect( spy.callCount ).to.equals( 1 );
 				expect( spy.args[ 0 ][ 0 ].issues ).to.be.undefined;
@@ -86,7 +86,7 @@ describe( 'Editors', () => {
 
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot( { target: uploadElement } ) ) );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.githubWriter.upload ).to.be.a( 'function' );
 
 				const promise = config.githubWriter.upload();
@@ -110,7 +110,7 @@ describe( 'Editors', () => {
 
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot( { target: uploadElement } ) ) );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.githubWriter.upload ).to.be.a( 'function' );
 
 				const promise = config.githubWriter.upload();
@@ -139,7 +139,7 @@ describe( 'Editors', () => {
 
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot( { type: 'wiki' } ) ) );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.githubWriter.upload ).to.be.a( 'function' );
 
 				const promise = config.githubWriter.upload();
@@ -181,7 +181,7 @@ describe( 'Editors', () => {
 
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot( { target: uploadElement } ) ) );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.githubWriter.upload ).to.be.a( 'function' );
 
 				const promise = config.githubWriter.upload();
@@ -194,7 +194,7 @@ describe( 'Editors', () => {
 		describe( 'githubWriter.autoLinking', () => {
 			it( 'should have all features enabled in comment pages', () => {
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 
 				expect( config.githubWriter.autoLinking ).to.eql( {
 					person: true,
@@ -209,7 +209,7 @@ describe( 'Editors', () => {
 				GitHubPage.setPageName( 'repo_wiki' );
 
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 
 				expect( config.githubWriter.autoLinking ).to.eql( {
 					person: false,
@@ -229,7 +229,7 @@ describe( 'Editors', () => {
 				editor.markdownEditor.dom.toolbar.insertAdjacentHTML( 'beforeend',
 					'<button class="js-suggested-change-toolbar-item">Suggestion</button>' );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.githubWriter.suggestion.enabled ).to.be.true;
 			} );
 
@@ -237,7 +237,7 @@ describe( 'Editors', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );
 				const rteEditor = new RteEditor( editor );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.githubWriter.suggestion.enabled ).to.be.false;
 			} );
 
@@ -248,7 +248,7 @@ describe( 'Editors', () => {
 				editor.markdownEditor.dom.toolbar.insertAdjacentHTML( 'beforeend',
 					'<button class="js-suggested-change-toolbar-item">Suggestion</button>' );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.toolbar[ 0 ] ).to.equals( 'suggestion' );
 				expect( config.toolbar[ 1 ] ).to.equals( '|' );
 			} );
@@ -262,7 +262,7 @@ describe( 'Editors', () => {
 				editor.markdownEditor.dom.toolbar.insertAdjacentHTML( 'beforeend',
 					'<details-menu class="js-saved-reply-menu" src="https://test.com/sr">Saved Replies</details-menu>' );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.githubWriter.savedReplies.url ).to.equals( 'https://test.com/sr' );
 			} );
 
@@ -273,7 +273,7 @@ describe( 'Editors', () => {
 				editor.markdownEditor.dom.toolbar.insertAdjacentHTML( 'beforeend',
 					'<details-menu class="js-saved-reply-menu" src="https://test.com/sr">Saved Replies</details-menu>' );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.toolbar ).to.include( 'savedreplies' );
 				expect( config.plugins ).to.include( SavedReplies );
 			} );
@@ -282,7 +282,7 @@ describe( 'Editors', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );
 				const rteEditor = new RteEditor( editor );
 
-				const config = RteEditorConfig.get( rteEditor );
+				const config = CKEditorConfig.get( rteEditor );
 				expect( config.toolbar ).to.not.include( 'savedreplies' );
 				expect( config.plugins ).to.not.include( SavedReplies );
 			} );

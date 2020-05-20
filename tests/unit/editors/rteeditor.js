@@ -5,9 +5,9 @@
 
 import Editor from '../../../src/app/editor';
 import RteEditor from '../../../src/app/editors/rteeditor';
-import CKEditorGitHubEditor from '../../../src/app/editors/ckeditorgithubeditor';
+import CKEditorGitHubEditor from '../../../src/app/editor/ckeditorgithubeditor';
 
-import RteEditorConfig from '../../../src/app/editors/rteeditorconfig';
+import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import Emoji from '../../../src/app/plugins/emoji';
 import EditorExtras from '../../../src/app/plugins/editorextras';
@@ -26,7 +26,7 @@ import { getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 describe( 'Editors', () => {
 	describe( 'RteEditor', () => {
 		beforeEach( () => {
-			sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ Paragraph, Emoji ] } );
+			sinon.stub( CKEditorConfig, 'get' ).returns( { plugins: [ Paragraph, Emoji ] } );
 		} );
 
 		describe( 'constructor()', () => {
@@ -119,7 +119,7 @@ describe( 'Editors', () => {
 		describe( 'focus()', () => {
 			it( 'should set focus into ckeditor', () => {
 				// Stubbed in beforeEach.
-				RteEditorConfig.get.returns( { plugins: [ Paragraph, EditorExtras ] } );
+				CKEditorConfig.get.returns( { plugins: [ Paragraph, EditorExtras ] } );
 
 				const rteEditor = new RteEditor( new Editor( GitHubPage.appendRoot() ) );
 

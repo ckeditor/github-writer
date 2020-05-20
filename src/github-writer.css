@@ -43,6 +43,11 @@ form.js-release-form div.github-writer-ckeditor {
 	width: 100%;
 }
 
+/* Milestone page specific. */
+form.github-writer-type-milestone .ck-editor__editable {
+	min-height: 200px;
+}
+
 /* The CKEditor placeholder. Matches the inspected rules from the GH textarea on Chrome. */
 .ck.ck-editor__editable > .ck-placeholder::before {
 	color: #6a737d;
@@ -169,33 +174,33 @@ nav.tabnav-tabs {
 ********************************/
 
 /* Fix the toolbar position. */
-.github-writer-type-wiki .comment-form-head {
+.github-writer-wikieditor .comment-form-head {
 	display: flex;
 }
-.github-writer-type-wiki .comment-form-head > :first-child {
+.github-writer-wikieditor .comment-form-head > :first-child {
 	flex: auto;
 }
 
-.github-writer-type-wiki.github-writer-mode-rte .comment-form-head {
+.github-writer-wikieditor.github-writer-mode-rte .comment-form-head {
 	/* Sticky toolbar. */
 	position: sticky !important;
 	top: 0;
 	z-index: 1;  /* The editable may somehow show above the toolbar, so we raise its plane. */
 }
 
-.github-writer-type-wiki .form-actions {
+.github-writer-wikieditor .form-actions {
 	position: sticky !important;
 	bottom: 10px;
 	z-index: 1;
 }
 
 /* Hide the markdown toolbar. */
-.github-writer-type-wiki.github-writer-mode-rte #gollum-editor-function-bar {
+.github-writer-wikieditor.github-writer-mode-rte #gollum-editor-function-bar {
 	display: none;
 }
 
 /* Make the editor bigger. Maybe GH calculates the best size, but we're going fixed. */
-.github-writer-type-wiki .github-writer-ckeditor > .ck-editor__editable {
+.github-writer-wikieditor .github-writer-ckeditor > .ck-editor__editable {
 	max-height: initial !important;
 
 	/* Grow forever... pared with sticky toolbar. */
@@ -204,8 +209,23 @@ nav.tabnav-tabs {
 }
 
 /* Although the blur effect is nice, we're removing it here so the editor stays aligned with other fields. */
-.github-writer-type-wiki .ck-editor__editable.ck-blurred {
+.github-writer-wikieditor .ck-editor__editable.ck-blurred {
 	background-color: white !important;
+}
+
+/**********************************
+	Milestone page specific stuff
+***********************************/
+
+/* Fix the toolbar position. */
+.github-writer-type-milestone .github-writer-toolbar-container {
+	position: absolute;
+	bottom: 100%;
+	right: 0;
+}
+
+.github-writer-type-milestone .ck.ck-toolbar {
+	margin-right: 0;
 }
 
 /***************************************
@@ -213,8 +233,7 @@ nav.tabnav-tabs {
 ****************************************/
 
 /* Change the outer container to a vertical flex. */
-form:not(.github-writer-type-wiki) .github-writer-size-container,
-form:not(.github-writer-type-wiki).github-writer-size-container {
+.github-writer-size-container {
 	display: flex;
 	flex-direction: column;
 }
@@ -228,9 +247,9 @@ form:not(.github-writer-type-wiki).github-writer-size-container {
 }
 
 /* Flex the editor container tree to use the whole space available in the above flex. */
-form:not(.github-writer-type-wiki) .github-writer-panel-rte,
-form:not(.github-writer-type-wiki) div.github-writer-panel-rte.write-content,
-form:not(.github-writer-type-wiki) .github-writer-ckeditor {
+.github-writer-size-container .github-writer-panel-rte,
+.github-writer-size-container div.github-writer-panel-rte.write-content,
+.github-writer-size-container .github-writer-ckeditor {
 	display: flex;
 	overflow: auto !important;
 	flex-grow: 1;
@@ -239,12 +258,12 @@ form:not(.github-writer-type-wiki) .github-writer-ckeditor {
 }
 
 /* display:flex disables margin merge, so we fix the buttons distance in new comments. */
-form:not(.github-writer-type-wiki) .github-writer-size-container div.tabnav.mb-2 {
+.github-writer-size-container div.tabnav.mb-2 {
 	margin-top: 0 !important;
 }
 
 /* display:flex disables margin merge, so we fix the buttons distance in new comments. */
-form:not(.github-writer-type-wiki) .github-writer-size-container div.form-actions.my-md-2,
+.github-writer-size-container div.form-actions.my-md-2,
 form.new-pr-form .timeline-comment > div.d-flex.flex-justify-end.m-2 {
 	margin-top: 0 !important;
 }

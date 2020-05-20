@@ -3,15 +3,15 @@
  * For licensing, see LICENSE.md.
  */
 
-import RteEditorConfigMentions from '../../../src/app/editors/rteeditorconfigmentions';
+import CKEditorConfigMentions from '../../../src/app/editor/ckeditorconfigmentions';
 
-import CKEditorGitHubEditor from '../../../src/app/editors/ckeditorgithubeditor';
+import CKEditorGitHubEditor from '../../../src/app/editor/ckeditorgithubeditor';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import CodeEditing from '@ckeditor/ckeditor5-basic-styles/src/code/codeediting';
 import CodeBlockEditing from '@ckeditor/ckeditor5-code-block/src/codeblockediting';
 
 describe( 'Editors', () => {
-	describe( 'RteEditorConfigMentions', () => {
+	describe( 'CKEditorConfigMentions', () => {
 		let xhr;
 
 		beforeEach( () => {
@@ -21,7 +21,7 @@ describe( 'Editors', () => {
 		} );
 
 		it( 'should return feeds configuration', () => {
-			const config = RteEditorConfigMentions.get( {
+			const config = CKEditorConfigMentions.get( {
 				issues: '/test-issues',
 				people: '/test-mentions',
 				emoji: '/test-emojis'
@@ -42,7 +42,7 @@ describe( 'Editors', () => {
 			{ marker: ':', urls: { emoji: '/test-emojis' } }
 		].forEach( entry => {
 			it( `should return single feeds configuration (${ entry.marker })`, () => {
-				const config = RteEditorConfigMentions.get( entry.urls );
+				const config = CKEditorConfigMentions.get( entry.urls );
 
 				expect( config ).to.be.an( 'array' ).length( 1 );
 
@@ -54,7 +54,7 @@ describe( 'Editors', () => {
 
 		describe( 'issues', () => {
 			it( 'should return proper results', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -79,7 +79,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should render an entry', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -89,7 +89,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should escape html in the title', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -101,7 +101,7 @@ describe( 'Editors', () => {
 
 		describe( 'people', () => {
 			it( 'should return proper results', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					people: '/test-mentions'
 				} );
 
@@ -124,7 +124,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should return proper results with team included', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					people: '/test-mentions'
 				} );
 
@@ -147,7 +147,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should default on missing data', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					people: '/test-mentions'
 				} );
 
@@ -170,7 +170,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should ignore missing name', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					people: '/test-mentions'
 				} );
 
@@ -194,7 +194,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should ignore unknown types', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					people: '/test-mentions'
 				} );
 
@@ -215,7 +215,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should render an entry', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					people: '/test-mentions'
 				} );
 
@@ -225,7 +225,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should escape html in the id and name', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					people: '/test-mentions'
 				} );
 
@@ -242,7 +242,7 @@ describe( 'Editors', () => {
 
 		describe( 'emoji', () => {
 			it( 'should return proper results', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					emoji: [
 						{ name: 'emoji1', url: 'url1', aka: 'the1', unicode: '😀' },
 						{ name: 'emoji2', url: 'url2', aka: 'the2' },
@@ -263,7 +263,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should render an unicode entry', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					emoji: '/test-emoji'
 				} );
 
@@ -281,7 +281,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should render an non-unicode entry', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					emoji: '/test-emoji'
 				} );
 
@@ -296,7 +296,7 @@ describe( 'Editors', () => {
 
 		describe( 'find()', () => {
 			it( 'should do nothing when inside inline code', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -318,7 +318,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should do nothing when inside block code', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -340,7 +340,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should return the same results (===) on second call', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -363,7 +363,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should not download again on second call and different query', () => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -390,7 +390,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should reject if no data received', done => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -407,7 +407,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should reject on xhr error', done => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -424,7 +424,7 @@ describe( 'Editors', () => {
 			} );
 
 			it( 'should reject on xhr abort', done => {
-				const config = RteEditorConfigMentions.get( {
+				const config = CKEditorConfigMentions.get( {
 					issues: '/test-issues'
 				} );
 
@@ -452,7 +452,7 @@ describe( 'Editors', () => {
 				{ query: 'esta', results: [] }
 			].forEach( entry => {
 				it( `should return proper results for a query (${ entry.query })`, () => {
-					const config = RteEditorConfigMentions.get( {
+					const config = CKEditorConfigMentions.get( {
 						issues: '/test-issues'
 					} );
 

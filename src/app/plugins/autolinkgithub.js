@@ -5,7 +5,7 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import WordFinder from './wordfinder';
-import { createElementFromHtml, openXmlHttpRequest } from '../util';
+import { createElementFromHtml, openXmlHttpRequest } from '../modules/util';
 
 /**
  * Enables auto-linking and formatting on GitHub specific auto-linkable text present

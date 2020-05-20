@@ -7,7 +7,7 @@ import WordFinder from '../../../src/app/plugins/wordfinder';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import HeadingEditing from '@ckeditor/ckeditor5-heading/src/headingediting';
-import CKEditorGitHubEditor from '../../../src/app/editors/ckeditorgithubeditor';
+import CKEditorGitHubEditor from '../../../src/app/editor/ckeditorgithubeditor';
 
 import priorities from '@ckeditor/ckeditor5-utils/src/priorities';
 import { createTestEditor } from '../../_util/ckeditor';

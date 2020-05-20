@@ -73,11 +73,13 @@ GitHub Writer should be enabled in all places where the original Markdown editor
     *   Review
     *   Code comments
         *   Editing
-*   Wiki pages
-*   Releases
 *   Commits
     *   Comment
     *   Line comment
+*   Wiki pages
+*   Releases
+*   Milestones
+*   Settings > Saved Replies
 
 ### Developer information
 

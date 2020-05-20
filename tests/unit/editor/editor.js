@@ -9,21 +9,21 @@ import WikiRteEditor from '../../src/app/editors/wikirteeditor';
 import MarkdownEditor from '../../src/app/editors/markdowneditor';
 import WikiMarkdownEditor from '../../src/app/editors/wikimarkdowneditor';
 
-import RteEditorConfig from '../../src/app/editors/rteeditorconfig';
-import EditorExtras from '../../src/app/plugins/editorextras';
-import LiveModelData from '../../src/app/plugins/livemodeldata';
+import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
+import EditorExtras from '../../../src/app/plugins/editorextras';
+import LiveModelData from '../../../src/app/plugins/livemodeldata';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import QuoteSelection from '../../src/app/plugins/quoteselection';
+import QuoteSelection from '../../../src/app/plugins/quoteselection';
 import PendingActions from '@ckeditor/ckeditor5-core/src/pendingactions';
 
-import { createElementFromHtml, DomManipulator, PageIncompatibilityError } from '../../src/app/util';
+import { createElementFromHtml, DomManipulator, PageIncompatibilityError } from '../../../src/app/modules/util';
 
-import { GitHubPage } from '../_util/githubpage';
+import { GitHubPage } from '../../_util/githubpage';
 import { keyCodes } from '@ckeditor/ckeditor5-utils/src/keyboard';
 
 describe( 'Editor', () => {
 	beforeEach( () => {
-		sinon.stub( RteEditorConfig, 'get' ).returns( { plugins: [ EditorExtras, LiveModelData, Paragraph ] } );
+		sinon.stub( CKEditorConfig, 'get' ).returns( { plugins: [ EditorExtras, LiveModelData, Paragraph ] } );
 	} );
 
 	describe( 'constructor()', () => {
@@ -996,7 +996,7 @@ describe( 'Editor', () => {
 		describe( 'pending actions', () => {
 			it( 'should call _setSubmitStatus on change', () => {
 				// Stubbed in beforeEach.
-				RteEditorConfig.get.returns( { plugins: [ Paragraph, QuoteSelection, PendingActions ] } );
+				CKEditorConfig.get.returns( { plugins: [ Paragraph, QuoteSelection, PendingActions ] } );
 
 				const editor = new Editor( GitHubPage.appendRoot() );
 
@@ -1018,7 +1018,7 @@ describe( 'Editor', () => {
 		describe( 'submit buttons status', () => {
 			beforeEach( () => {
 				// Stubbed in beforeEach.
-				RteEditorConfig.get.returns( { plugins: [ Paragraph, EditorExtras, PendingActions ] } );
+				CKEditorConfig.get.returns( { plugins: [ Paragraph, EditorExtras, PendingActions ] } );
 			} );
 
 			it( 'should react to the editor emptiness', () => {
@@ -1379,7 +1379,7 @@ describe( 'Editor', () => {
 	describe( 'quoteSelection()', () => {
 		beforeEach( () => {
 			// Stubbed in beforeEach.
-			RteEditorConfig.get.returns( { plugins: [ Paragraph, QuoteSelection ] } );
+			CKEditorConfig.get.returns( { plugins: [ Paragraph, QuoteSelection ] } );
 		} );
 
 		it( 'should call quoteSelection in CKEditor', () => {

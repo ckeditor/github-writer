@@ -4,7 +4,7 @@
  */
 
 import App from '../../src/app/app';
-import PageManager from '../../src/app/pagemanager';
+import Page from '../../src/app/page';
 
 import { GitHubPage } from '../_util/githubpage';
 
@@ -14,12 +14,12 @@ describe( 'App', () => {
 			GitHubPage.reset();
 		} );
 
-		it( 'should expose the PageManager and initialize it', () => {
-			const stub = sinon.stub( PageManager.prototype, 'init' );
+		it( 'should expose the Page and initialize it', () => {
+			const stub = sinon.stub( Page.prototype, 'init' );
 
 			App.run();
 
-			expect( App ).to.have.property( 'pageManager' ).instanceOf( PageManager );
+			expect( App ).to.have.property( 'pageManager' ).instanceOf( Page );
 			expect( stub.calledOnce ).to.be.true;
 		} );
 

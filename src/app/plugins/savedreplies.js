@@ -9,7 +9,7 @@ import FilteredListView from '../modules/filteredlistview';
 import { createDropdown } from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
 import icon from '../icons/savedreplies.svg';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import { openXmlHttpRequest } from '../util';
+import { openXmlHttpRequest } from '../modules/util';
 import ListFilter from '../modules/listfilter';
 
 export default class SavedReplies extends Plugin {

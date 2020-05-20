@@ -3,9 +3,9 @@
  * For licensing, see LICENSE.md.
  */
 
-import { createElementFromHtml, escapeHtml, getInitials, openXmlHttpRequest } from '../util';
+import { createElementFromHtml, escapeHtml, getInitials, openXmlHttpRequest } from '../modules/util';
 
-const RteEditorConfigMentions = {
+const CKEditorConfigMentions = {
 	/**
 	 * Builds the CKEditor configuration for mentions as well as their implementation.
 	 *
@@ -405,4 +405,4 @@ const RteEditorConfigMentions = {
 	}
 };
 
-export default RteEditorConfigMentions;
+export default CKEditorConfigMentions;

@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import CKEditorGitHubEditor from '../../../src/app/editors/ckeditorgithubeditor';
+import CKEditorGitHubEditor from '../../../src/app/editor/ckeditorgithubeditor';
 import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
 import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
 import BoldEditing from '@ckeditor/ckeditor5-basic-styles/src/bold/boldediting';

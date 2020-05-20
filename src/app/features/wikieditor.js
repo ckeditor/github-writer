@@ -3,24 +3,29 @@
  * For licensing, see LICENSE.md.
  */
 
-import RteEditor from './rteeditor';
+import Editor from '../editor/editor';
 
-/**
- * The rte editor, with CKEditor 5 under the hood, used in the wiki pages.
- */
-export default class WikiRteEditor extends RteEditor {
-	/**
-	 * @inheritDoc
-	 */
-	injectToolbar( toolbarElement ) {
-		// Inject the rte toolbar at the end of the toolbar container.
-		this.githubEditor.domManipulator.append( this.githubEditor.markdownEditor.dom.toolbarContainer, toolbarElement );
+export default class WikiEditor extends Editor {
+	getDom( root ) {
+		const dom = super.getDom( root );
+
+		dom.toolbarContainer = root.querySelector( '.comment-form-head' );
+		dom.panels.markdown = root.querySelector( '.previewable-comment-form > .write-content' );
+
+		return dom;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	getEditableParentTree() {
+	getSizeContainer() {
+		// Disable auto-resize as we have "grow forever" enabled in wikis.
+		return null;
+	}
+
+	injectToolbar( toolbarElement ) {
+		// Inject the rte toolbar at the end of the toolbar container.
+		this.domManipulator.append( this.dom.toolbarContainer, toolbarElement );
+	}
+
+	createEditableContainer( editable ) {
 		// Mimic the minimum set of classes that are necessary for the editor, and its contents,
 		// to look like GitHub originals.
 
@@ -36,6 +41,12 @@ export default class WikiRteEditor extends RteEditor {
 			'upload-enabled', 'markdown-body'
 		);
 
+		inner.append( editable );
+
 		return container;
+	}
+
+	static run() {
+		return this.createEditor( 'form[name="gollum-editor"]' );
 	}
 }

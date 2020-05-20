@@ -8,7 +8,7 @@ import WordFinder from './wordfinder';
 
 import { viewToModelPositionOutsideModelElement } from '@ckeditor/ckeditor5-widget/src/utils';
 import { emojis } from '../data/emojis';
-import { isEmojiSupported } from '../util';
+import { isEmojiSupported } from '../modules/util';
 import priorities from '@ckeditor/ckeditor5-utils/src/priorities';
 
 /*

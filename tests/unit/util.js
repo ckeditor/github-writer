@@ -14,7 +14,7 @@ import {
 	injectFunctionExecution,
 	openXmlHttpRequest,
 	PageIncompatibilityError
-} from '../../src/app/util';
+} from '../../src/app/modules/util';
 
 describe( 'Util', () => {
 	describe( 'checkDom', () => {

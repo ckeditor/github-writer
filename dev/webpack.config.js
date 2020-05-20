@@ -73,6 +73,11 @@ module.exports = ( env, argv ) => {
 		},
 
 		plugins: [
+			// Disable code splitting for dynamic imports.
+			new webpack.optimize.LimitChunkCountPlugin( {
+				maxChunks: 1
+			} ),
+
 			// Use GH svg icons to match their UI.
 			getIconReplacement( 'bold' ),
 			getIconReplacement( 'italic' ),

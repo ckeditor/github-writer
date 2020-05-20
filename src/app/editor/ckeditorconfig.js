@@ -3,91 +3,25 @@
  * For licensing, see LICENSE.md.
  */
 
-import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import Enter from '../plugins/enter';
-import AutoFormat from '../plugins/autoformat';
-
-import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
-import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import SmartCode from '../plugins/smartcode';
-import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
-import Kbd from '@mlewand/ckeditor5-keyboard-marker/src/Kbd';
-
-import HeadingDropdown from '../plugins/headingdropdown';
-import HeadingTabKey from '../plugins/headingtabkey';
-
-import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
-
-import List from '@ckeditor/ckeditor5-list/src/list';
-import TodoList from '@ckeditor/ckeditor5-list/src/todolist';
-
-import Link from '@ckeditor/ckeditor5-link/src/link';
-
-import Image from '@ckeditor/ckeditor5-image/src/image';
-import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
-import GitHubUploadAdapter from '../plugins/githubuploadadapter';
-
-import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
-
-import Table from '@ckeditor/ckeditor5-table/src/table';
-import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
-
-import Mention from '@ckeditor/ckeditor5-mention/src/mention';
-import RteEditorConfigMentions from './rteeditorconfigmentions';
-import Emoji from '../plugins/emoji';
-
-import Kebab from '../plugins/kebab';
-import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat';
-import ModeSwitcher from '../plugins/modeswitcher';
-import Suggestion from '../plugins/suggestion';
-
-import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
-import PasteFixer from '../plugins/pastefixer';
-import AutoLinkUrl from '../plugins/autolinkurl';
-import AutoLinkGitHub from '../plugins/autolinkgithub';
-import QuoteSelection from '../plugins/quoteselection';
-import Messenger from '../plugins/messenger';
-import EditorExtras from '../plugins/editorextras';
-import ControlClick from '../plugins/controlclick';
-import SmartCaret from '../plugins/smartcaret';
-import CodeBlockLanguageSelector from '../plugins/codeblocklanguageselector';
-import SavedReplies from '../plugins/savedreplies';
-import LiveModelData from '../plugins/livemodeldata';
-
 import App from '../app';
+
 import { config as languagesConfig } from '../data/languages';
 import { list as emojiList } from '../data/emojis';
-import { getNewIssuePageDom } from '../util';
+import CKEditorConfigMentions from './ckeditorconfigmentions';
 
-const RteEditorConfig = {
+import { getNewIssuePageDom } from '../modules/util';
+
+const CKEditorConfig = {
 	/**
 	 * Gets the configuration for the CKEditor instances to be created by the rte editor.
 	 *
-	 * @param {RteEditor} rteEditor The rte editor asking for the configurations.
+	 * @param {Editor} githubEditor The rte editor asking for the configurations.
 	 * @returns {Object} A configuration object ready to be loaded in a CKEditor instance creation.
 	 */
-	get: rteEditor => {
-		// There are some special differences among "comments" and "no-comments" (wiki) pages.
-		const isCommentsPage = App.pageManager.type === 'comments';
-
+	get: githubEditor => {
 		const config = {
-			plugins: [
-				Essentials, Paragraph, Enter, AutoFormat, Mention, Emoji,
-				Image, ImageUpload, GitHubUploadAdapter,
-				HeadingDropdown, HeadingTabKey,
-				Bold, Italic, SmartCode, Strikethrough, Kbd,
-				BlockQuote,
-				Link,
-				List, TodoList,
-				HorizontalLine, Table, TableToolbar,
-				Kebab, RemoveFormat, ModeSwitcher, Suggestion,
-				PasteFromOffice, PasteFixer,
-				AutoLinkUrl, AutoLinkGitHub,
-				QuoteSelection, SavedReplies, Messenger, EditorExtras, ControlClick, SmartCaret,
-				CodeBlockLanguageSelector,
-				LiveModelData
-			],
+			// Plugins configuration is defined in CKEditorGitHubEditor.builtinPlugins.
+			// plugins: [],
 			toolbar: [
 				'headingdropdown', 'bold', 'italic', '|',
 				'blockquote', 'smartcode', 'link', '|',
@@ -98,7 +32,7 @@ const RteEditorConfig = {
 			table: {
 				contentToolbar: [ 'tableColumn', 'tableRow' ]
 			},
-			placeholder: isCommentsPage ? 'Leave a comment' : null,
+			placeholder: githubEditor.placeholder,
 			heading: {
 				// TODO: Check the class names here.
 				options: [
@@ -138,10 +72,10 @@ const RteEditorConfig = {
 				 * Specifies the auto-linking features to be enabled.
 				 */
 				autoLinking: {
-					person: isCommentsPage,
-					issue: isCommentsPage,
-					sha: isCommentsPage,
-					urlGitHub: isCommentsPage,
+					person: true,
+					issue: true,
+					sha: true,
+					urlGitHub: true,
 					url: true
 				},
 
@@ -152,14 +86,14 @@ const RteEditorConfig = {
 					/**
 					 * Indicates that the suggestion feature should be enabled in the editor.
 					 */
-					enabled: checkSuggestionEnabled( rteEditor )
+					enabled: checkSuggestionEnabled( githubEditor )
 				},
 
 				/**
 				 * Configurations for the "saved reply" feature.
 				 */
 				savedReplies: {
-					url: getSavedRepliesUrl( rteEditor )
+					url: getSavedRepliesUrl( githubEditor )
 				}
 			}
 		};
@@ -171,7 +105,6 @@ const RteEditorConfig = {
 
 		// Remove the Saved Replies feature if there is no support for it.
 		if ( !config.githubWriter.savedReplies.url ) {
-			config.plugins = config.plugins.filter( item => item !== SavedReplies );
 			config.toolbar = config.toolbar.filter( item => item !== 'savedreplies' );
 		}
 
@@ -184,10 +117,10 @@ const RteEditorConfig = {
 		// configurations but on the first time the configuration is required (on the first attempt to upload a file).
 		function getUploadConfig() {
 			// Try to get the element holding the upload related data.
-			const uploadDataElement = rteEditor.githubEditor.markdownEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
+			const uploadDataElement = githubEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
 
 			// This element is most likely not present in wiki pages, so we need a different strategy for it.
-			if ( !uploadDataElement && App.pageManager.type === 'wiki' ) {
+			if ( !uploadDataElement && App.page.type === 'wiki' ) {
 				return getConfigFunction( () => {
 					// Make a xhr request to retrieve the dom of the "New Issue" page.
 					return getNewIssuePageDom()
@@ -242,17 +175,17 @@ const RteEditorConfig = {
 		 */
 		function getMentionsConfig() {
 			// Get the GH DOM element that holds the urls from which retrieve mentions, if available.
-			const textExpanderElement = rteEditor.githubEditor.markdownEditor.dom.textarea.closest( 'text-expander' );
+			const textExpanderElement = githubEditor.dom.textarea.closest( 'text-expander' );
 
 			// Some pages (wiki) don't have mentions in the native GH. In those, let's enable just emoji (for now).
 			if ( !textExpanderElement ) {
-				return RteEditorConfigMentions.get( {
+				return CKEditorConfigMentions.get( {
 					emoji: emojiList
 				} );
 			}
 
 			// Call the util to build the configuration.
-			return RteEditorConfigMentions.get( {
+			return CKEditorConfigMentions.get( {
 				issues: textExpanderElement.getAttribute( 'data-issue-url' ),
 				people: textExpanderElement.getAttribute( 'data-mention-url' ),
 				emoji: emojiList
@@ -261,12 +194,12 @@ const RteEditorConfig = {
 
 		/**
 		 * Checks if this editor should have the suggestion button.
-		 * @param rteEditor
+		 * @param githubEditor
 		 * @returns {boolean}
 		 */
-		function checkSuggestionEnabled( rteEditor ) {
+		function checkSuggestionEnabled( githubEditor ) {
 			// It should be enabled if the suggestion button is available in the markdown toolbar.
-			const toolbar = rteEditor.githubEditor.markdownEditor.dom.toolbar;
+			const toolbar = githubEditor.dom.toolbar;
 			const button = toolbar && toolbar.querySelector( 'button.js-suggested-change-toolbar-item' );
 			return !!button;
 		}
@@ -274,15 +207,15 @@ const RteEditorConfig = {
 		/**
 		 * Gets the Saved Replies url from the dom.
 		 *
-		 * @param rteEditor
+		 * @param githubEditor
 		 * @returns {String} The url.
 		 */
-		function getSavedRepliesUrl( rteEditor ) {
-			const toolbar = rteEditor.githubEditor.markdownEditor.dom.toolbar;
+		function getSavedRepliesUrl( githubEditor ) {
+			const toolbar = githubEditor.dom.toolbar;
 			const el = toolbar && toolbar.querySelector( '.js-saved-reply-menu[src]' );
 			return el && el.getAttribute( 'src' );
 		}
 	}
 };
 
-export default RteEditorConfig;
+export default CKEditorConfig;

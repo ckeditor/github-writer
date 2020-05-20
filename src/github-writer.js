@@ -13,7 +13,7 @@
 /* global process */
 
 import App from './app/app';
-import { PageIncompatibilityError } from './app/util';
+import { PageIncompatibilityError } from './app/modules/util';
 
 if ( process.env.NODE_ENV !== 'production' ) {
 	console.time( 'GitHub Writer loaded and ready' );
@@ -25,7 +25,7 @@ try {
 		.then( () => {
 			if ( process.env.NODE_ENV !== 'production' ) {
 				console.timeEnd( 'GitHub Writer loaded and ready' );
-				console.log( App.pageManager );
+				console.log( App.page );
 			}
 		} )
 		.catch( reason => {

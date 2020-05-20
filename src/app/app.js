@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import PageManager from './pagemanager';
+import Page from './page';
 
 /**
  * Controls the application execution.
@@ -23,12 +23,15 @@ export default class App {
 	 */
 	static run() {
 		// Control if run() has been already called earlier.
-		if ( App.pageManager ) {
+		if ( App.page ) {
 			throw new Error( 'The application is already running.' );
 		}
 
-		App.pageManager = new PageManager();
+		App.page = new Page();
 
-		return App.pageManager.init();
+		// Import the router on demand to avoid circular references.
+		return import( './router' ).then( ( { default: router } ) => {
+			return router.run();
+		} );
 	}
 }

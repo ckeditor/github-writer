@@ -4,8 +4,8 @@
  */
 
 import App from '../../src/app/app';
-import PageManager from '../../src/app/pagemanager';
-import { createElementFromHtml, DomManipulator } from '../../src/app/util';
+import Page from '../../src/app/page';
+import { createElementFromHtml, DomManipulator } from '../../src/app/modules/util';
 
 import templateRoot from './html/root.html';
 import templateButtonEdit from './html/button-edit.html';
@@ -19,7 +19,7 @@ export const GitHubPage = {
 	domManipulator,
 
 	setApp: () => {
-		App.pageManager = new PageManager();
+		App.pageManager = new Page();
 		domManipulator.addRollbackOperation( () => delete App.pageManager );
 	},
 

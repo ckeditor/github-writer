@@ -6,7 +6,7 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import { addToolbarToDropdown, createDropdown } from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
 import normalizeToolbarConfig from '@ckeditor/ckeditor5-ui/src/toolbar/normalizetoolbarconfig';
-import RteEditor from '../editors/rteeditor';
+import utils from '../editor/utils';
 
 import kebabIcon from '../icons/kebab.svg';
 
@@ -51,7 +51,7 @@ export default class Kebab extends Plugin {
 			dropdown.toolbarView.fillFromConfig( toolbarConfig.items, editor.ui.componentFactory );
 
 			// Execute the toolbar items postfix, just like for the main toolbar.
-			RteEditor.toolbarItemsPostfix( dropdown.toolbarView, 's' );
+			utils.toolbarItemsPostfix( dropdown.toolbarView, 's' );
 
 			return dropdown;
 		} );

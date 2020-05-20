@@ -7,7 +7,7 @@ import Editor from '../../../src/app/editor';
 import MarkdownEditor from '../../../src/app/editors/markdowneditor';
 import WikiMarkdownEditor from '../../../src/app/editors/wikimarkdowneditor';
 
-import { PageIncompatibilityError } from '../../../src/app/util';
+import { PageIncompatibilityError } from '../../../src/app/modules/util';
 
 import { GitHubPage } from '../../_util/githubpage';
 

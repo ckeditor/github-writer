@@ -3,13 +3,13 @@
  * For licensing, see LICENSE.md.
  */
 
-import PageManager from '../../src/app/pagemanager';
+import Page from '../../src/app/page';
 import Editor from '../../src/app/editor';
-import { PageIncompatibilityError } from '../../src/app/util';
+import { PageIncompatibilityError } from '../../src/app/modules/util';
 
 import { GitHubPage } from '../_util/githubpage';
 
-describe( 'PageManager', () => {
+describe( 'Page', () => {
 	beforeEach( () => {
 		// We don't care about the proper editor creation in the tests here.
 		sinon.stub( Editor.prototype, 'create' ).callsFake( function() {
@@ -28,19 +28,19 @@ describe( 'PageManager', () => {
 		it( 'should detect missing page name', () => {
 			GitHubPage.reset();
 
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
-			expect( pageManager.page ).to.equals( 'unknown' );
+			expect( pageManager.name ).to.equals( 'unknown' );
 		} );
 
 		it( 'should detect the page name', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
-			expect( pageManager.page ).to.equals( 'repo_issue' );
+			expect( pageManager.name ).to.equals( 'repo_issue' );
 		} );
 
 		it( 'should detect the page type', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
 			expect( pageManager.type ).to.equals( 'comments' );
 		} );
@@ -48,7 +48,7 @@ describe( 'PageManager', () => {
 		it( 'should detect a wiki page type', () => {
 			GitHubPage.setPageName( 'repo_wiki' );
 
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
 			expect( pageManager.type ).to.equals( 'wiki' );
 		} );
@@ -65,7 +65,7 @@ describe( 'PageManager', () => {
 
 			const callback = sinon.spy();
 
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.addClickListener( '.test-button', callback );
 			pageManager.addClickListener( '.test-button-other', callback );
 
@@ -97,7 +97,7 @@ describe( 'PageManager', () => {
 
 			const callback = sinon.spy();
 
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.addClickListener( '.test-button-A', callback );
 
 			buttonB.click();
@@ -116,7 +116,7 @@ describe( 'PageManager', () => {
 				Editor.prototype.create.restore();
 				Editor.prototype.destroy.restore();
 
-				const pageManager = new PageManager();
+				const pageManager = new Page();
 				pageManager.init();
 
 				const { button, root } = GitHubPage.appendButton( { type } );
@@ -132,7 +132,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should click the write tab after creation (code line editor)', done => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.init();
 
 			const { button } = GitHubPage.appendButton( { type: 'code-line-comment' } );
@@ -149,7 +149,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( `should do nothing on action button without edit`, () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.init();
 
 			const { button } = GitHubPage.appendButton( { type: 'edit' } );
@@ -165,7 +165,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should destroy editors before pjax', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.init();
 
 			const stub = sinon.stub( pageManager, 'destroyEditors' );
@@ -178,7 +178,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should re-scan after pjax', done => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.init();
 
 			const stub = sinon.stub( pageManager, 'scan' );
@@ -193,7 +193,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should bootstrap quote selection', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
 			// Stubbed on before().
 			const spy = sinon.spy( pageManager, 'setupQuoteSelection' );
@@ -206,7 +206,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should fire scan()', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
 			// Stubbed on before().
 			const stub = sinon.stub( pageManager, 'scan' );
@@ -221,7 +221,7 @@ describe( 'PageManager', () => {
 
 	describe( 'scan()', () => {
 		it( 'should return a promise', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
 			GitHubPage.appendRoot();
 
@@ -238,7 +238,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should reject on error', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			const root = GitHubPage.appendRoot();
 
 			// Error caused by this.
@@ -254,7 +254,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should resolve to empty array', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
 			const promise = pageManager.scan();
 
@@ -273,7 +273,7 @@ describe( 'PageManager', () => {
 					GitHubPage.setPageName( 'repo_releases' );
 				}
 
-				const pageManager = new PageManager();
+				const pageManager = new Page();
 
 				GitHubPage.appendRoot( { type } );
 
@@ -291,7 +291,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should find comment editors', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
 			// One main editor.
 			GitHubPage.appendRoot();
@@ -323,7 +323,7 @@ describe( 'PageManager', () => {
 		}
 
 		it( 'should return a promise', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			const root = GitHubPage.appendRoot();
 			const editorPromise = pageManager.setupEditor( root );
 
@@ -332,7 +332,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should return the same promise when called again', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			const root = GitHubPage.appendRoot();
 			const editorPromise = pageManager.setupEditor( root );
 
@@ -344,7 +344,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should set the root id', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			const root = GitHubPage.appendRoot();
 
 			return pageManager.setupEditor( root )
@@ -355,7 +355,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should reject on error', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			const root = GitHubPage.appendRoot();
 
 			// Error caused by this.
@@ -371,7 +371,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should handle a dirty dom', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			const root = GitHubPage.appendRoot();
 
 			return pageManager.setupEditor( root )
@@ -397,7 +397,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should timeout (requestIdleCallback)', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			const root = GitHubPage.appendRoot();
 
 			expect( window ).to.have.property( 'requestIdleCallback' );
@@ -417,7 +417,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should timeout (setTimeout)', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			const root = GitHubPage.appendRoot();
 
 			const requestIdleCallback = window.requestIdleCallback;
@@ -444,7 +444,7 @@ describe( 'PageManager', () => {
 
 	describe( 'destroyEditors()', () => {
 		it( 'should destroy editors in a container', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
 			// Append an editor in document.body.
 			const bodyRoot = GitHubPage.appendRoot( { type: 'comment-edit' } );
@@ -472,7 +472,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should ignore destroyed editors', () => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 
 			// Append 3 editors in a container.
 			const container = GitHubPage.appendElementHtml( '<div></div>' );
@@ -499,7 +499,7 @@ describe( 'PageManager', () => {
 
 	describe( 'setupQuoteSelection()', () => {
 		it( 'should fire a new event after native event', done => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.setupQuoteSelection();
 
 			const container = GitHubPage.appendElementHtml( '<div></div>' );
@@ -522,7 +522,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should send the event data to the editor', done => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.setupQuoteSelection();
 
 			const container = GitHubPage.appendElementHtml( '<div></div>' );
@@ -549,7 +549,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should do nothing on empty text', done => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.setupQuoteSelection();
 
 			const container = GitHubPage.appendElementHtml( '<div></div>' );
@@ -574,7 +574,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should not setup twice', done => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.setupQuoteSelection();
 			pageManager.setupQuoteSelection();
 
@@ -583,7 +583,7 @@ describe( 'PageManager', () => {
 
 			pageManager.scan()
 				.then( () => {
-					const spy = sinon.spy( PageManager.prototype, 'setupEditor' );
+					const spy = sinon.spy( Page.prototype, 'setupEditor' );
 
 					container.dispatchEvent( new CustomEvent( 'quote-selection', {
 						bubbles: true,
@@ -595,7 +595,7 @@ describe( 'PageManager', () => {
 					setTimeout( () => {
 						expect( spy.callCount ).to.equals( 1 );
 
-						PageManager.prototype.setupEditor.restore();
+						Page.prototype.setupEditor.restore();
 
 						done();
 					}, 0 );
@@ -603,7 +603,7 @@ describe( 'PageManager', () => {
 		} );
 
 		it( 'should do nothing with wrong root match', done => {
-			const pageManager = new PageManager();
+			const pageManager = new Page();
 			pageManager.setupQuoteSelection();
 
 			const container = GitHubPage.appendElementHtml( '<div></div>' );
@@ -613,7 +613,7 @@ describe( 'PageManager', () => {
 					// Dirty it up with a editor like form which hasn't been scanned.
 					container.innerHTML = '<form class="js-inline-comment-form"></form>';
 
-					const spy = sinon.spy( PageManager.prototype, 'setupEditor' );
+					const spy = sinon.spy( Page.prototype, 'setupEditor' );
 
 					container.dispatchEvent( new CustomEvent( 'quote-selection', {
 						bubbles: true,
@@ -625,7 +625,7 @@ describe( 'PageManager', () => {
 					setTimeout( () => {
 						expect( spy.callCount ).to.equals( 0 );
 
-						PageManager.prototype.setupEditor.restore();
+						Page.prototype.setupEditor.restore();
 
 						done();
 					}, 0 );

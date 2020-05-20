@@ -40,6 +40,26 @@ export const isEmojiSupported = ( function() {
 	return !( onWindows7 || onWindows8 || onWindows81 || onLinux || onFreeBSD );
 }() );
 
+let _clickListeners;
+
+export function addClickListener( selector, callback ) {
+	if ( !_clickListeners ) {
+		_clickListeners = [];
+
+		document.addEventListener( 'click', ( { target } ) => {
+			_clickListeners.forEach( ( { selector, callback } ) => {
+				const wantedTarget = target.closest( selector );
+
+				if ( wantedTarget ) {
+					callback.call( this, wantedTarget );
+				}
+			} );
+		}, { passive: true, capture: true } );
+	}
+
+	_clickListeners.push( { selector, callback } );
+}
+
 /**
  * Creates an element out of its outer html string.
  *
@@ -62,11 +82,11 @@ export function createElementFromHtml( html ) {
 export function checkDom( dom ) {
 	Object.getOwnPropertyNames( dom ).forEach( key => {
 		const value = dom[ key ];
-		if ( !value ) {
+		if ( typeof value === 'undefined' ) {
 			throw new PageIncompatibilityError( key );
 		}
 
-		if ( Object.getPrototypeOf( value ) === Object.prototype ) {
+		if ( value && Object.getPrototypeOf( value ) === Object.prototype ) {
 			checkDom( value );
 		}
 	} );
@@ -290,6 +310,18 @@ export class DomManipulator {
 	 */
 	appendAfter( existingNode, node ) {
 		existingNode.after( node );
+
+		this.addRollbackOperation( () => node.remove() );
+	}
+
+	/**
+	 * Appends a node into another node (usually an HTMLElement) at the beginning of its child list.
+	 *
+	 * @param target {ParentNode} The target element.
+	 * @param node {Node|String} The node to be added.
+	 */
+	prepend( target, node ) {
+		target.prepend( node );
 
 		this.addRollbackOperation( () => node.remove() );
 	}

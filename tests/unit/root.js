@@ -3,12 +3,12 @@
  * For licensing, see LICENSE.md.
  */
 
-import PageManager from '../../src/app/pagemanager';
+import Page from '../../src/app/page';
 
 import { GitHubPage } from '../_util/githubpage';
 
 before( () => {
-	PageManager.MAX_TIMEOUT = 1;
+	Page.MAX_TIMEOUT = 1;
 } );
 
 // Page setup and cleanup.
