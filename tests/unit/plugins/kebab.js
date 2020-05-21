@@ -7,7 +7,7 @@ import Kebab from '../../../src/app/plugins/kebab';
 import DropdownView from '@ckeditor/ckeditor5-ui/src/dropdown/dropdownview';
 import ToolbarView from '@ckeditor/ckeditor5-ui/src/toolbar/toolbarview';
 
-import RteEditor from '../../../src/app/editors/rteeditor';
+import utils from '../../../src/app/editor/utils';
 
 import { createTestEditor } from '../../_util/ckeditor';
 
@@ -21,7 +21,7 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', () => {
-				sinon.spy( RteEditor, 'toolbarItemsPostfix' );
+				sinon.spy( utils, 'toolbarItemsPostfix' );
 
 				return createTestEditor( '', [ Kebab ], { kebabToolbar: [ 'bold', 'italic' ] } )
 					.then( editorObjects => ( { editor } = editorObjects ) );
@@ -76,8 +76,8 @@ describe( 'Plugins', () => {
 		} );
 
 		it( 'should call toolbarItemsPostfix', () => {
-			expect( RteEditor.toolbarItemsPostfix.callCount ).to.equals( 1 );
-			expect( RteEditor.toolbarItemsPostfix.args[ 0 ] ).to.eql( [ dropdown.toolbarView, 's' ] );
+			expect( utils.toolbarItemsPostfix.callCount ).to.equals( 1 );
+			expect( utils.toolbarItemsPostfix.args[ 0 ] ).to.eql( [ dropdown.toolbarView, 's' ] );
 		} );
 	} );
 } );

@@ -5,7 +5,7 @@
 
 import Suggestion from '../../../src/app/plugins/suggestion';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import Editor from '../../../src/app/editor';
+import Editor from '../../../src/app/editor/editor';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
 import QuoteSelection from '../../../src/app/plugins/quoteselection';
@@ -24,7 +24,7 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', () => {
-				sinon.stub( CKEditorConfig, 'get' ).returns( { plugins: [ Paragraph, Suggestion, HorizontalLineEditing ] } );
+				CKEditorConfig.get.returns( { plugins: [ Paragraph, Suggestion, HorizontalLineEditing ] } );
 
 				const root = GitHubPage.appendRoot();
 				root.querySelector( 'markdown-toolbar' ).insertAdjacentHTML( 'afterbegin',
@@ -34,8 +34,8 @@ describe( 'Plugins', () => {
 
 				return editor.create()
 					.then( editor => {
-						model = editor.rteEditor.ckeditor.model;
-						button = editor.rteEditor.ckeditor.ui.componentFactory.create( 'suggestion' );
+						model = editor.ckeditor.model;
+						button = editor.ckeditor.ui.componentFactory.create( 'suggestion' );
 					} );
 			} );
 

@@ -8,7 +8,7 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 
-import Editor from '../../../src/app/editor';
+import Editor from '../../../src/app/editor/editor';
 import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
 
 import { GitHubPage } from '../../_util/githubpage';
@@ -21,12 +21,12 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', () => {
-				sinon.stub( CKEditorConfig, 'get' ).returns( { plugins: [ Paragraph, ModeSwitcher ] } );
+				CKEditorConfig.get.returns( { plugins: [ Paragraph, ModeSwitcher ] } );
 
 				editor = new Editor( GitHubPage.appendRoot() );
 
 				return editor.create()
-					.then( editor => ( button = editor.rteEditor.ckeditor.ui.componentFactory.create( 'mode' ) ) );
+					.then( editor => ( button = editor.ckeditor.ui.componentFactory.create( 'mode' ) ) );
 			} );
 		}
 
