@@ -3,17 +3,17 @@
  * For licensing, see LICENSE.md.
  */
 
-import Editor from '../../src/app/editor/editor';
+import Editor from '../../../src/app/editor/editor';
 
-import { GitHubPage } from '../_util/githubpage';
+import { GitHubPage } from '../../_util/githubpage';
 
-import CKEditorConfig from '../../src/app/editor/ckeditorconfig';
+import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import ShiftEnter from '@ckeditor/ckeditor5-enter/src/shiftenter';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import EditorExtras from '../../src/app/plugins/editorextras';
-import LiveModelData from '../../src/app/plugins/livemodeldata';
+import EditorExtras from '../../../src/app/plugins/editorextras';
+import LiveModelData from '../../../src/app/plugins/livemodeldata';
 
 before( () => {
 	Editor.MAX_TIMEOUT = 1;

@@ -6,6 +6,12 @@
 import Editor from '../editor/editor';
 
 export default class WikiEditor extends Editor {
+	constructor( root ) {
+		super( root );
+
+		this.placeholder = null;
+	}
+
 	getDom( root ) {
 		const dom = super.getDom( root );
 
@@ -18,6 +24,15 @@ export default class WikiEditor extends Editor {
 	getSizeContainer() {
 		// Disable auto-resize as we have "grow forever" enabled in wikis.
 		return null;
+	}
+
+	getCKEditorConfig() {
+		const config = super.getCKEditorConfig();
+
+		// Wiki pages support autolinking on urls only.
+		config.githubWriter.autoLinking = { url: true };
+
+		return config;
 	}
 
 	injectToolbar( toolbarElement ) {

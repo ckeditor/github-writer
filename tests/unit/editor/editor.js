@@ -40,10 +40,65 @@ describe( 'Editor', () => {
 				expect( () => new Editor( root ) ).to.throw( PageIncompatibilityError );
 			} );
 
-			it( 'should root have the editor constructor class', () => {
+			it( 'should find the preview tab when in comment edit', () => {
+				const root = GitHubPage.appendRoot( { type: 'comment-edit' } );
+				const editor = new Editor( root );
+
+				expect( editor ).to.have.property( 'dom' );
+				expect( editor.dom.panels.preview ).to.be.an.instanceOf( HTMLElement );
+			} );
+
+			it( 'should throw error is there is no tabs', () => {
+				GitHubPage.setPageName( 'repo_releases' );
+
+				const root = GitHubPage.appendRoot( { type: 'release' } );
+				root.querySelector( '.tabnav-tabs' ).classList.remove( 'tabnav-tabs' );
+
+				expect( () => new Editor( root ) ).to.throw( PageIncompatibilityError );
+			} );
+
+			it( 'should set isEdit to false when not edit', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				expect( editor.dom.isEdit ).to.be.false;
+			} );
+
+			it( 'should set isEdit to true when edit', () => {
+				const editor = new Editor( GitHubPage.appendRoot( { type: 'comment-edit' } ) );
+
+				expect( editor.dom.isEdit ).to.be.true;
+			} );
+
+			it( 'should add the editor constructor class', () => {
 				const editor = new Editor( GitHubPage.appendRoot() );
 
 				expect( editor.dom.root.classList.contains( 'github-writer-editor' ) ).to.be.true;
+			} );
+
+			it( 'should add css classes to the panel elements', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				expect( editor.dom.panels.markdown.classList.contains( 'github-writer-panel-markdown' ) ).to.be.true;
+				expect( editor.dom.panels.preview.classList.contains( 'github-writer-panel-preview' ) ).to.be.true;
+			} );
+		} );
+
+		describe( 'focus()', () => {
+			it( 'should set focus into ckeditor', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						const spy = sinon.spy( editor.ckeditor, 'focus' );
+						editor.focus();
+						expect( spy.callCount ).to.equals( 1 );
+					} );
+			} );
+
+			it( 'should do nothing before ckeditor creation', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				expect( () => editor.focus() ).to.not.throw();
 			} );
 		} );
 

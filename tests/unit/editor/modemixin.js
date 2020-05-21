@@ -97,6 +97,26 @@ describe( 'Editor', () => {
 				expect( editor.checkDataLoss.callCount, 'checkDataLoss' ).to.equals( 0 );
 			} );
 
+			it( 'should fire textarea.change when switching to the markdown mode', done => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				GitHubPage.domManipulator.addEventListener( editor.dom.textarea, 'change', () => done() );
+
+				editor.setMode( Editor.modes.MARKDOWN );
+			} );
+
+			it( 'should not fire textarea.change when switching to rte mode', () => {
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				editor.setMode( Editor.modes.MARKDOWN );
+
+				GitHubPage.domManipulator.addEventListener( editor.dom.textarea, 'change', () => {
+					expect.fail( 'Event should not be fired.' );
+				} );
+
+				editor.setMode( Editor.modes.RTE );
+			} );
+
 			describe( 'data synch', () => {
 				it( 'should synch editors by default', () => {
 					const editor = new Editor( GitHubPage.appendRoot() );

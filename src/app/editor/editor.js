@@ -199,6 +199,15 @@ export default class Editor {
 		const container = this.dom.panelsContainer;
 		return this.dom.isEdit ? container : container.parentElement;
 	}
+
+	/**
+	 * Moves the selection focus into the editor contents.
+	 */
+	focus() {
+		if ( this.getMode() === editorModes.RTE ) {
+			this.ckeditor && this.ckeditor.focus();
+		}
+	}
 }
 
 // Static properties mixins.
