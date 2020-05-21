@@ -3,6 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
+import App from '../app';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import env from '@ckeditor/ckeditor5-utils/src/env';
 
@@ -15,9 +16,9 @@ const utils = {
 	 */
 	toolbarItemsPostfix( toolbar, tooltipPosition = 'n' ) {
 		// Postfix is possible only in pages type "comments" (not "wiki").
-		// if ( App.page.type !== 'comments' ) {
-		// 	return;
-		// }
+		if ( App.page.type !== 'comments' ) {
+			return;
+		}
 
 		const ctrlCmd = env.isMac ? 'cmd' : 'ctrl';
 

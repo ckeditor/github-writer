@@ -72,8 +72,8 @@ export default class MilestoneEditor extends Editor {
 		this.domManipulator.append( this.dom.textarea.closest( '.write-content' ), container );
 	}
 
-	_getCKEditorConfig() {
-		const config = super._getCKEditorConfig();
+	getCKEditorConfig() {
+		const config = super.getCKEditorConfig();
 
 		// This is not working.
 		// config.removePlugins = [

@@ -3,8 +3,6 @@
  * For licensing, see LICENSE.md.
  */
 
-import App from '../../src/app/app';
-import Page from '../../src/app/page';
 import { createElementFromHtml, DomManipulator } from '../../src/app/modules/util';
 
 import templateRoot from './html/root.html';
@@ -18,24 +16,16 @@ let textareaId = 0;
 export const GitHubPage = {
 	domManipulator,
 
-	setApp: () => {
-		App.pageManager = new Page();
-		domManipulator.addRollbackOperation( () => delete App.pageManager );
-	},
-
 	setPageName: ( name = 'repo_issue' ) => {
 		let meta = document.querySelector( 'meta[name="selected-link"]' );
+
 		if ( !meta ) {
 			meta = document.createElement( 'meta' );
 			meta.setAttribute( 'name', 'selected-link' );
 			domManipulator.append( document.body, meta );
 		}
 
-		meta.setAttribute( 'value', name || 'repo_issue' );
-
-		if ( App.pageManager ) {
-			GitHubPage.setApp();
-		}
+		meta.setAttribute( 'value', name );
 	},
 
 	/**

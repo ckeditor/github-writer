@@ -82,7 +82,7 @@ export function createElementFromHtml( html ) {
 export function checkDom( dom ) {
 	Object.getOwnPropertyNames( dom ).forEach( key => {
 		const value = dom[ key ];
-		if ( typeof value === 'undefined' ) {
+		if ( value === null || typeof value === 'undefined' ) {
 			throw new PageIncompatibilityError( key );
 		}
 

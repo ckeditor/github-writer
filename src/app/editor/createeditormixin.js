@@ -16,6 +16,9 @@ const { RTE, DESTROYED } = editorModes;
 // The list of created editor promises. The key in this list is the root element.
 const editors = new WeakMap();
 
+/**
+ * @mixin
+ */
 const CreateEditorStaticMixin = {
 	MAX_TIMEOUT: 500,
 
@@ -112,6 +115,9 @@ const CreateEditorStaticMixin = {
 	},
 
 	cleanup( rootElement ) {
+		rootElement.classList.remove( 'github-writer-mode-rte' );
+		rootElement.classList.remove( 'github-writer-mode-markdown' );
+
 		let element = rootElement.querySelector( '.github-writer-panel-rte' );
 		element && element.remove();
 
@@ -120,6 +126,9 @@ const CreateEditorStaticMixin = {
 	}
 };
 
+/**
+ * @mixin
+ */
 const CreateEditorInstanceMixin = {
 	create() {
 		if ( this._creationPromise ) {
@@ -188,30 +197,38 @@ const CreateEditorInstanceMixin = {
 					} )
 					.then( () => true );
 			}
+
+			promise = promise.then( returnValue => {
+				this.domManipulator.rollback();
+
+				/* istanbul ignore next */
+				if ( process.env.NODE_ENV !== 'production' ) {
+					console.log( `Editor id "${ this.id }" destroyed.`, this );
+				}
+
+				return returnValue;
+			} );
 		}
 
-		return promise.then( returnValue => {
-			this.domManipulator.rollback();
-
-			/* istanbul ignore next */
-			if ( process.env.NODE_ENV !== 'production' ) {
-				console.log( `Editor id "${ this.id }" destroyed.`, this );
-			}
-
-			return returnValue;
-		} );
+		return promise;
 	},
 
 	/**
 	 * Injects the CKEditor toolbar into the dom.
 	 *
 	 * @param {HTMLElement} toolbarElement The CKEditor toolbar element.
+	 * @protected
 	 */
 	injectToolbar( toolbarElement ) {
 		// Inject the rte toolbar right next to the markdown editor toolbar.
 		this.domManipulator.appendAfter( this.dom.toolbar, toolbarElement );
 	},
 
+	/**
+	 *
+	 * @param editable
+	 * @protected
+	 */
 	injectEditable( editable ) {
 		const container = this.createEditableContainer( editable );
 
@@ -224,6 +241,7 @@ const CreateEditorInstanceMixin = {
 	 * injected inside the element with class `.github-writer-ckeditor`.
 	 *
 	 * @returns {String} The parent tree html.
+	 * @protected
 	 */
 	createEditableContainer( editable ) {
 		// Mimic the minimum set of classes that are necessary for the editor, and its contents,
@@ -248,12 +266,21 @@ const CreateEditorInstanceMixin = {
 	},
 
 	/**
+	 * @return {{}}
+	 * @protected
+	 */
+	getCKEditorConfig() {
+		return CKEditorConfig.get( this );
+	},
+
+	/**
 	 * @param initialData {string}
 	 * @return {Promise<CKEditorGitHubEditor>}
+	 * @private
 	 */
-	_createCKEditor( initialData = '' ) {
+	_createCKEditor( initialData ) {
 		// Returns the promise that follows the creation of the internal CKEditor instance.
-		return CKEditorGitHubEditor.create( initialData, this._getCKEditorConfig() )
+		return CKEditorGitHubEditor.create( initialData || '', this.getCKEditorConfig() )
 			.then( editor => {
 				this.injectToolbar( editor.ui.view.toolbar.element );
 				this.injectEditable( editor.ui.getEditableElement() );
@@ -280,10 +307,6 @@ const CreateEditorInstanceMixin = {
 				 */
 				editor.fire( 'reallyReady' );
 			} );
-	},
-
-	_getCKEditorConfig() {
-		return CKEditorConfig.get( this );
 	}
 };
 

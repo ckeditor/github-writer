@@ -19,7 +19,7 @@ describe( 'App', () => {
 
 			App.run();
 
-			expect( App ).to.have.property( 'pageManager' ).instanceOf( Page );
+			expect( App ).to.have.property( 'page' ).instanceOf( Page );
 			expect( stub.calledOnce ).to.be.true;
 		} );
 

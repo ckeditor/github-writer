@@ -10,7 +10,7 @@ import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import CodeEditing from '@ckeditor/ckeditor5-basic-styles/src/code/codeediting';
 import CodeBlockEditing from '@ckeditor/ckeditor5-code-block/src/codeblockediting';
 
-describe( 'Editors', () => {
+describe( 'Editor', () => {
 	describe( 'CKEditorConfigMentions', () => {
 		let xhr;
 

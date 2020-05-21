@@ -27,7 +27,7 @@ export default class AutoLinkGitHub extends Plugin {
 		const wordFinder = editor.wordFinder;
 
 		// Get the list of features to be enabled.
-		const config = editor.config.get( 'githubWriter.autoLinking' );
+		const config = editor.config.get( 'githubWriter.autoLinking' ) || {};
 
 		{
 			// @user-name

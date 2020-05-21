@@ -71,10 +71,8 @@ const DataMixin = {
 	/**
 	 * Checks if the data present in the rte editor may indicate a potential for data loss when compared
 	 * to the data in the markdown editor.
-	 *
-	 * @private
 	 */
-	_checkDataLoss() {
+	checkDataLoss() {
 		// The trick is very simple. Both editors produce markdown, so we check if the one produced
 		// with the rte editor is semantically similar to the one in the markdown editor.
 

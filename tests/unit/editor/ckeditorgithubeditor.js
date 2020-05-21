@@ -13,7 +13,7 @@ import StrikethroughEditing from '@ckeditor/ckeditor5-basic-styles/src/strikethr
 import CodeEditing from '@ckeditor/ckeditor5-basic-styles/src/code/codeediting';
 import { setData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 
-describe( 'Editors', () => {
+describe( 'Editor', () => {
 	describe( 'CKEditorGitHubEditor', () => {
 		let editor;
 
@@ -26,6 +26,10 @@ describe( 'Editors', () => {
 
 		afterEach( () => {
 			return editor.destroy();
+		} );
+
+		it( 'should define builtinPlugins', () => {
+			expect( CKEditorGitHubEditor ).to.haveOwnProperty( 'builtinPlugins' ).an( 'array' );
 		} );
 
 		it( 'should set the data processor', () => {

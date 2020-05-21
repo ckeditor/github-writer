@@ -57,7 +57,7 @@ const ModeMixin = {
 
 			// If moving markdown -> rte.
 			if ( !options.noCheck && currentMode === MARKDOWN && mode === RTE ) {
-				if ( this._checkDataLoss() ) {
+				if ( this.checkDataLoss() ) {
 					// eslint-disable-next-line no-alert
 					if ( !confirm( `This markdown contains markup that may not be compatible with the rich-text editor and may be lost.\n` +
 						`\n` +
@@ -102,7 +102,7 @@ const ModeMixin = {
 	 * @private
 	 */
 	_setInitialMode( initialMode ) {
-		initialMode = initialMode || ( this._checkDataLoss() ? MARKDOWN : RTE );
+		initialMode = initialMode || ( this.checkDataLoss() ? MARKDOWN : RTE );
 
 		this.setMode( initialMode, { noSynch: true, noCheck: true } );
 

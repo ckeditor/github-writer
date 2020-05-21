@@ -22,16 +22,11 @@ export default class App {
 	 * @returns {Promise<Editor>} A promise which resolves once the main editor injected in the page is ready.
 	 */
 	static run() {
-		// Control if run() has been already called earlier.
-		if ( App.page ) {
-			throw new Error( 'The application is already running.' );
-		}
-
-		App.page = new Page();
-
 		// Import the router on demand to avoid circular references.
 		return import( './router' ).then( ( { default: router } ) => {
 			return router.run();
 		} );
 	}
 }
+
+App.page = new Page();

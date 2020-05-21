@@ -67,7 +67,7 @@ export default class Editor {
 			checkDom( this.dom );
 
 			// Ensure that the Write tab doesn't scroll up on click (e.g. release page).
-			if ( this.dom.tabs.write ) {
+			if ( this.dom.tabs && this.dom.tabs.write ) {
 				this.domManipulator.addEventListener( this.dom.tabs.write, 'click', ev => {
 					ev.preventDefault();
 				} );
