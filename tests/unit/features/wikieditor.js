@@ -7,7 +7,7 @@ import WikiEditor from '../../../src/app/features/wikieditor';
 import { GitHubPage } from '../../_util/githubpage';
 import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
 
-describe( 'Editors', () => {
+describe( 'Features', () => {
 	describe( 'WikiEditor', () => {
 		beforeEach( () => {
 			GitHubPage.setPageName( 'repo_wiki' );

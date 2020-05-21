@@ -106,6 +106,24 @@ export const GitHubPage = {
 				root.querySelector( '.preview-content' ).classList.remove( 'js-preview-panel' );
 				break;
 			}
+			case 'milestone': {
+				root.setAttribute( 'id', 'new_milestone' );
+				fixMilestone();
+				break;
+			}
+			case 'milestone-edit': {
+				root.classList.add( 'js-milestone-edit-form' );
+				fixMilestone();
+				break;
+			}
+			case 'saved-reply': {
+				root.classList.add( 'new_saved_reply' );
+				break;
+			}
+			case 'saved-reply-edit': {
+				root.classList.add( 'edit_saved_reply' );
+				break;
+			}
 			case 'wiki': {
 				root.setAttribute( 'name', 'gollum-editor' );
 				break;
@@ -131,6 +149,20 @@ export const GitHubPage = {
 
 		domManipulator.append( target, container );
 		return root;
+
+		function fixMilestone() {
+			// Add two containers around the textarea.
+			const textarea = root.querySelector( 'textarea' );
+
+			const textExpander = document.createElement( 'text-expander' );
+			textarea.after( textExpander );
+			textExpander.append( textarea );
+
+			const writeContent = document.createElement( 'div' );
+			writeContent.classList.add( 'write-content' );
+			textExpander.after( writeContent );
+			writeContent.append( textExpander );
+		}
 	},
 
 	appendButton: ( options = { type: 'edit' } ) => {

@@ -1,0 +1,26 @@
+/**
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+import NewIssueEditor from '../../../src/app/features/newissueeditor';
+import { GitHubPage } from '../../_util/githubpage';
+
+describe( 'Features', () => {
+	describe( 'NewIssueEditor', () => {
+		beforeEach( () => {
+			GitHubPage.setPageName( 'repo_issues' );
+		} );
+
+		describe( 'run()', () => {
+			it( 'should create an editor', () => {
+				const root = GitHubPage.appendRoot( { type: 'issue' } );
+
+				return NewIssueEditor.run().then( editor => {
+					expect( editor ).to.be.an.instanceOf( NewIssueEditor );
+					expect( editor.dom.root ).to.equals( root );
+				} );
+			} );
+		} );
+	} );
+} );
