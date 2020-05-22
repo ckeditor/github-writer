@@ -126,6 +126,7 @@ export const GitHubPage = {
 			}
 			case 'wiki': {
 				root.setAttribute( 'name', 'gollum-editor' );
+				root.querySelector( 'markdown-toolbar' ).remove();
 				break;
 			}
 			default: {

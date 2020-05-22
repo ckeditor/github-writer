@@ -4,11 +4,14 @@
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
+import Editor from '../editor/editor';
+import editorModes from '../editor/modes';
 
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import BlockQuoteEditing from '@ckeditor/ckeditor5-block-quote/src/blockquoteediting';
 
 import { scrollViewportToShowTarget } from '@ckeditor/ckeditor5-utils/src/dom/scroll';
+import { injectFunctionExecution } from '../modules/util';
 
 /**
  * Simulates the native "quote selection" feature from GitHub (the "r" key).
@@ -91,3 +94,62 @@ QuoteSelection.scrollToSelection = editor => {
 		editor.editing.view.scrollToTheSelection();
 	}, 0 );
 };
+
+{
+	// Our dear friends from GH made our lives much easier. A custom event is fired, containing the markdown
+	// representation of the selection.
+	//
+	// Buuut... for security reasons, Chrome extensions can't access the CustomEvent.details property
+	// (where the markdown is stored) from CustomEvent's fired in the page.
+	//
+	// To solve the problem, we inject a script that runs in the page context, listening to the desired event.
+	// This script then takes the information we need from the event and broadcast it with `window.postMessage`.
+	//
+	// Buuuut... for security reasons, Firefox extensions can't inject scripts in the page context.
+	// But, unlike with Chrome, they're allowed to access CustomEvent.details. So we run the script directly.
+	//
+	// Finally, we intercept the broadcasted message within the extension context and send the quote to the editor.
+
+	const addEventProxy = /* istanbul ignore next */ function() {
+		document.addEventListener( 'quote-selection', ev => {
+			// The target should contain its own main editor inside a form, which has a few possible class names.
+			const root = ev.target.querySelector(
+				'form.js-new-comment-form[data-github-writer-id],' +
+				'form.js-inline-comment-form[data-github-writer-id]' );
+
+			if ( root ) {
+				// Broadcast the event data that we need in the plugin.
+				window.postMessage( {
+					type: 'GitHub-Writer-Quote-Selection',
+					id: Number( root.getAttribute( 'data-github-writer-id' ) ),
+					text: ev.detail.selectionText
+				}, '*' );
+			}
+		}, false );
+	};
+
+	// Chrome.
+	/* istanbul ignore else */
+	if ( window.chrome ) {
+		injectFunctionExecution( addEventProxy );
+	}
+	// Firefox.
+	else {
+		addEventProxy();
+	}
+
+	// Listen to the broadcasted message.
+	window.addEventListener( 'message', event => {
+		if ( event.data.type === 'GitHub-Writer-Quote-Selection' && event.data.text ) {
+			// Retrieve the editor root.
+			const root = document.querySelector( `form[data-github-writer-id="${ event.data.id }"]` );
+
+			Editor.createEditor( root )
+				.then( editor => {
+					if ( editor.getMode() === editorModes.RTE ) {
+						editor.ckeditor.quoteSelection( event.data.text );
+					}
+				} );
+		}
+	}, false );
+}

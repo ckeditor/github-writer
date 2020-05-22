@@ -11,20 +11,6 @@ import { PageIncompatibilityError } from '../../../src/app/modules/util';
 
 describe( 'Editor', () => {
 	describe( 'CreateEditorStaticMixin', () => {
-		beforeEach( () => {
-			// We don't care about the proper editor creation in the tests here.
-			sinon.stub( Editor.prototype, 'create' ).callsFake( function() {
-				return Promise.resolve( this );
-			} );
-
-			// Same for destroy.
-			sinon.stub( Editor.prototype, 'destroy' );
-		} );
-
-		function failOnCatch( err ) {
-			expect.fail( err.message + '\n' + err.stack );
-		}
-
 		describe( 'createEditor()', () => {
 			it( 'should return a promise', () => {
 				const editorPromise = Editor.createEditor( GitHubPage.appendRoot() );
@@ -186,6 +172,8 @@ describe( 'Editor', () => {
 
 		describe( 'destroyEditors()', () => {
 			it( 'should destroy editors in a container', () => {
+				const spy = sinon.spy( Editor.prototype, 'destroy' );
+
 				// Append an editor in document.body.
 				const bodyRoot = GitHubPage.appendRoot( { type: 'comment-edit' } );
 				let bodyRootEditor;
@@ -209,13 +197,25 @@ describe( 'Editor', () => {
 						return Editor.destroyEditors( container );
 					} )
 					.then( () => {
-						const spy = Editor.prototype.destroy;
 						expect( spy.callCount ).to.equals( 2 );
 						expect( spy.calledOn( bodyRootEditor ) ).to.be.false;
 					} );
 			} );
 
+			it( 'should ignore dirty dom', () => {
+				const spy = sinon.spy( Editor.prototype, 'destroy' );
+
+				const bodyRoot = GitHubPage.appendRoot( { type: 'comment-edit' } );
+				bodyRoot.setAttribute( 'data-github-writer-id', 100 );
+
+				return Editor.destroyEditors( document.body ).then( () => {
+					expect( spy.callCount ).to.equals( 0 );
+				} );
+			} );
+
 			it( 'should ignore destroyed editors', () => {
+				sinon.spy( Editor.prototype, 'destroy' );
+
 				// Append 3 editors in a container.
 				const container = GitHubPage.appendElementHtml( '<div></div>' );
 				const root1 = GitHubPage.appendRoot( { type: 'comment-edit', target: container } );
@@ -229,7 +229,6 @@ describe( 'Editor', () => {
 				] )
 					.catch( failOnCatch )
 					.then( () => {
-						Editor.prototype.destroy.resetHistory();
 						return Editor.destroyEditors( container );
 					} )
 					.then( () => {
@@ -287,9 +286,6 @@ describe( 'Editor', () => {
 			} );
 
 			it( 'should remove editor elements', () => {
-				Editor.prototype.create.restore();
-				Editor.prototype.destroy.restore();
-
 				const root = GitHubPage.appendRoot();
 				const editor = new Editor( root );
 
@@ -615,3 +611,7 @@ describe( 'Editor', () => {
 		} );
 	} );
 } );
+
+function failOnCatch( err ) {
+	expect.fail( err.message + '\n' + err.stack );
+}

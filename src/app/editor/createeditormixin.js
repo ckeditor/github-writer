@@ -79,17 +79,17 @@ const CreateEditorStaticMixin = {
 			return Promise.reject( error );
 		}
 
-		editor.domManipulator.addAttribute( root, 'data-github-writer-id', editor.id );
-
 		editorCreatePromise = editor.create();
 
+		return editorCreatePromise;
+	},
+
+	addEditor( editor, editorCreatePromise ) {
 		// Save a reference to the root element, so we don't create editors for it again.
-		editors.set( root, editorCreatePromise );
+		editors.set( editor.dom.root, editorCreatePromise );
 
 		// Save also an id reference, this time to the editor itself.
 		editors[ editor.id ] = editor;
-
-		return editorCreatePromise;
 	},
 
 	/**
@@ -158,7 +158,7 @@ const CreateEditorInstanceMixin = {
 			}
 		}
 
-		return ( this._creationPromise = this._createCKEditor( initialData ).then( () => {
+		const promise = this._creationPromise = this._createCKEditor( initialData ).then( () => {
 			this._setInitialMode( initialMode );
 			this._setupForm();
 
@@ -181,7 +181,12 @@ const CreateEditorInstanceMixin = {
 			}
 
 			return this;
-		} ) );
+		} );
+
+		// Save it into the editor list.
+		this.constructor.addEditor( this, promise );
+
+		return promise;
 	},
 
 	destroy() {

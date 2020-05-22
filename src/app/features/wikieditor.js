@@ -18,6 +18,8 @@ export default class WikiEditor extends Editor {
 		dom.toolbarContainer = root.querySelector( '.comment-form-head' );
 		dom.panels.markdown = root.querySelector( '.previewable-comment-form > .write-content' );
 
+		delete dom.toolbar;
+
 		return dom;
 	}
 

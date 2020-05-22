@@ -74,6 +74,8 @@ export default class Editor {
 			}
 		}
 
+		this.domManipulator.addAttribute( root, 'data-github-writer-id', this.id );
+
 		// Add a class for this editor contructor, for easy to customize specific editors.
 		this.domManipulator.addClass( root, 'github-writer-' + this.constructor.name.toLowerCase() );
 
@@ -190,7 +192,7 @@ export default class Editor {
 		 *
 		 * @type {boolean} `true` if this editor dom  like the one in comment edit.
 		 */
-		dom.isEdit = dom.panelsContainer && dom.panelsContainer.nodeName === 'DIV';
+		dom.isEdit = !!dom.panelsContainer && dom.panelsContainer.nodeName === 'DIV';
 
 		return dom;
 	}

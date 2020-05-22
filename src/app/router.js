@@ -20,6 +20,10 @@ import CodeLineCommentEditor from './features/codelinecommenteditor';
 import NewPullRequestEditor from './features/newpullrequesteditor';
 import SavedReplyEditor from './features/savedreplyeditor';
 
+// We just want to ensure that utils is loaded, so we include this import.
+// eslint-disable-next-line no-unused-vars
+import PageIncompatibilityError from './modules/util';
+
 const routes = {
 	'repo_commits': [
 		{
@@ -86,7 +90,7 @@ const routes = {
 const router = {
 	run() {
 		const page = App.page.name;
-		const path = window.location.pathname;
+		const path = window.__getLocation().pathname;
 
 		const promises = [];
 
