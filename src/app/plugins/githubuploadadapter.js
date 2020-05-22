@@ -5,7 +5,7 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import FileRepository from '@ckeditor/ckeditor5-upload/src/filerepository';
-import { openXmlHttpRequest } from '../util';
+import { openXmlHttpRequest } from '../modules/util';
 
 /**
  * The upload adapter that integrates the GitHub file upload infrastructure with CKEditor.

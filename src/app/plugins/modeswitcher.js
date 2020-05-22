@@ -4,9 +4,11 @@
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import Editor from '../editor';
 import EditorExtras from './editorextras';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+
+import editorModes from '../editor/modes';
+const { RTE, MARKDOWN } = editorModes;
 
 import icon from '../icons/markdown.svg';
 
@@ -41,7 +43,7 @@ export default class ModeSwitcher extends Plugin {
 				// Make changes to the editor mode to be reflected by the button state.
 				githubEditor.on( 'mode', () => {
 					const mode = githubEditor.getMode();
-					const isMarkdown = mode === Editor.modes.MARKDOWN;
+					const isMarkdown = mode === MARKDOWN;
 
 					view.set( 'isOn', isMarkdown );
 
@@ -54,7 +56,7 @@ export default class ModeSwitcher extends Plugin {
 				} );
 
 				this.listenTo( view, 'execute', () => {
-					githubEditor.setMode( githubEditor.getMode() === Editor.modes.RTE ? Editor.modes.MARKDOWN : Editor.modes.RTE );
+					githubEditor.setMode( githubEditor.getMode() === RTE ? MARKDOWN : RTE );
 				} );
 			} );
 

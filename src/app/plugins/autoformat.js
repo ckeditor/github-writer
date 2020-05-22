@@ -8,7 +8,7 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import LiveRange from '@ckeditor/ckeditor5-engine/src/model/liverange';
 
-import { escapeRegex } from '../util';
+import { escapeRegex } from '../modules/util';
 
 /**
  * Enables a set of predefined auto-formatting actions.

@@ -5,7 +5,7 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import WordFinder from './wordfinder';
-import { createElementFromHtml, openXmlHttpRequest } from '../util';
+import { createElementFromHtml, openXmlHttpRequest } from '../modules/util';
 
 /**
  * Enables auto-linking and formatting on GitHub specific auto-linkable text present
@@ -27,7 +27,7 @@ export default class AutoLinkGitHub extends Plugin {
 		const wordFinder = editor.wordFinder;
 
 		// Get the list of features to be enabled.
-		const config = editor.config.get( 'githubWriter.autoLinking' );
+		const config = editor.config.get( 'githubWriter.autoLinking' ) || {};
 
 		{
 			// @user-name

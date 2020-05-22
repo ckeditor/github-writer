@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import { escapeRegex } from '../util';
+import { escapeRegex } from './util';
 
 // Control characters used in the search source to split the entries parts.
 const chars = {

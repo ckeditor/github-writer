@@ -61,7 +61,7 @@ export default class Suggestion extends Plugin {
 				// Get the original code lines from the button in the markdown toolbar.
 				// We do this at this stage because, during the RTE editor creation, GH may still not have filled
 				// the "data-lines" attribute.
-				const lines = editor.githubEditor.markdownEditor.dom.toolbar
+				const lines = editor.githubEditor.dom.toolbar
 					.querySelector( 'button.js-suggested-change-toolbar-item' )
 					.getAttribute( 'data-lines' );
 

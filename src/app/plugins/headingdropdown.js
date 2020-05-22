@@ -42,7 +42,7 @@ export default class HeadingDropdown extends Plugin {
 	init() {
 		const editor = this.editor;
 
-		const defaultHeading = App.pageManager.type === 'wiki' ? 'heading2' : 'heading3';
+		const defaultHeading = App.page.type === 'wiki' ? 'heading2' : 'heading3';
 
 		editor.ui.componentFactory.add( 'headingDropdown', locale => {
 			const dropdown = createDropdown( locale, SplitButtonView );

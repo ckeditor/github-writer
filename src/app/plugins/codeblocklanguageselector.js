@@ -16,7 +16,7 @@ import KeystrokeHandler from '@ckeditor/ckeditor5-utils/src/keystrokehandler';
 import { languages, aliases, searchSource, languagesCount } from '../data/languages';
 import mix from '@ckeditor/ckeditor5-utils/src/mix';
 import clickOutsideHandler from '@ckeditor/ckeditor5-ui/src/bindings/clickoutsidehandler';
-import { escapeRegex } from '../util';
+import { escapeRegex } from '../modules/util';
 
 /**
  * Appends a language selector button to code-blocks created in the editor.

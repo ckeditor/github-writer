@@ -12,7 +12,7 @@ import AutoLinkUrl from '../../../src/app/plugins/autolinkurl';
 
 import { getData as getViewData } from '@ckeditor/ckeditor5-engine/src/dev-utils/view';
 import { createTestEditor } from '../../_util/ckeditor';
-import { createElementFromHtml } from '../../../src/app/util';
+import { createElementFromHtml } from '../../../src/app/modules/util';
 
 describe( 'Plugins', () => {
 	describe( 'AutoLink (GitHub + Url)', () => {

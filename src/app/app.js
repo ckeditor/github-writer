@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import PageManager from './pagemanager';
+import Page from './page';
 
 /**
  * Controls the application execution.
@@ -22,13 +22,11 @@ export default class App {
 	 * @returns {Promise<Editor>} A promise which resolves once the main editor injected in the page is ready.
 	 */
 	static run() {
-		// Control if run() has been already called earlier.
-		if ( App.pageManager ) {
-			throw new Error( 'The application is already running.' );
-		}
-
-		App.pageManager = new PageManager();
-
-		return App.pageManager.init();
+		// Import the router on demand to avoid circular references.
+		return import( './router' ).then( ( { default: router } ) => {
+			return router.run();
+		} );
 	}
 }
+
+App.page = new Page();

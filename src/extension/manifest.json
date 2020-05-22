@@ -16,13 +16,17 @@
 	{
 	  "matches": [
 		"https://github.com/issues",
+		"https://github.com/*/issues",
 		"https://github.com/*/issues/*",
 		"https://github.com/*/pull/*",
 		"https://github.com/*/commit/*",
 		"https://github.com/*/compare/*",
 		"https://github.com/*/releases/*",
+		"https://github.com/*/milestones",
+		"https://github.com/*/milestones/*",
 		"https://github.com/*/wiki/_new*",
-		"https://github.com/*/wiki/*/_edit"
+		"https://github.com/*/wiki/*/_edit",
+		"https://github.com/settings/*"
 	  ],
 	  "js": [
 		"github-writer.js"

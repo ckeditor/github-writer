@@ -3,19 +3,34 @@
  * For licensing, see LICENSE.md.
  */
 
-import PageManager from '../../src/app/pagemanager';
+import Editor from '../../src/app/editor/editor';
 
 import { GitHubPage } from '../_util/githubpage';
 
+import CKEditorConfig from '../../src/app/editor/ckeditorconfig';
+import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import ShiftEnter from '@ckeditor/ckeditor5-enter/src/shiftenter';
+import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
+import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
+import EditorExtras from '../../src/app/plugins/editorextras';
+import LiveModelData from '../../src/app/plugins/livemodeldata';
+
 before( () => {
-	PageManager.MAX_TIMEOUT = 1;
+	Editor.MAX_TIMEOUT = 1;
 } );
 
 // Page setup and cleanup.
 {
-	beforeEach( 'setup the page and app', () => {
+	beforeEach( 'setup the page', () => {
 		GitHubPage.setPageName();
-		GitHubPage.setApp();
+
+		// Default to an essential editor configuration.
+		sinon.stub( CKEditorConfig, 'get' ).returns( {
+			plugins: [ EditorExtras, LiveModelData, Paragraph, ShiftEnter, Bold, Italic ]
+		} );
+
+		// Clear session storage.
+		sessionStorage.clear();
 	} );
 
 	afterEach( 'cleanup created editors', () => {
@@ -50,10 +65,8 @@ before( () => {
 
 	// Mute dev logging.
 	function muteConsole() {
-		sinon.stub( console, 'log' ).callsFake( ( ...args ) => {
-			if ( !args[ 1 ] || args[ 1 ].constructor.name !== 'Editor' ) {
-				console.log.wrappedMethod.apply( console, args );
-			}
-		} );
+		sinon.stub( console, 'log' );
+		sinon.stub( console, 'time' );
+		sinon.stub( console, 'timeEnd' );
 	}
 }

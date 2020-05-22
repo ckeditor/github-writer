@@ -4,7 +4,8 @@
  */
 
 import App from '../../src/app/app';
-import PageManager from '../../src/app/pagemanager';
+import Page from '../../src/app/page';
+import router from '../../src/app/router';
 
 import { GitHubPage } from '../_util/githubpage';
 
@@ -14,24 +15,16 @@ describe( 'App', () => {
 			GitHubPage.reset();
 		} );
 
-		it( 'should expose the PageManager and initialize it', () => {
-			const stub = sinon.stub( PageManager.prototype, 'init' );
-
-			App.run();
-
-			expect( App ).to.have.property( 'pageManager' ).instanceOf( PageManager );
-			expect( stub.calledOnce ).to.be.true;
+		it( 'should expose the Page', () => {
+			expect( App ).to.have.property( 'page' ).instanceOf( Page );
 		} );
 
-		it( 'should throw and error on second call', () => {
-			try {
-				App.run();
-				App.run();
+		it( 'should run the router', () => {
+			const stub = sinon.stub( router, 'run' );
 
-				expect.fail( 'should have thrown an error and not reach this line' );
-			} catch ( err ) {
-				expect( err ).to.be.an.instanceOf( Error );
-			}
+			return App.run().then( () => {
+				expect( stub.calledOnce ).to.be.true;
+			} );
 		} );
 	} );
 } );

@@ -3,9 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
-import App from '../../src/app/app';
-import PageManager from '../../src/app/pagemanager';
-import { createElementFromHtml, DomManipulator } from '../../src/app/util';
+import { createElementFromHtml, DomManipulator } from '../../src/app/modules/util';
 
 import templateRoot from './html/root.html';
 import templateButtonEdit from './html/button-edit.html';
@@ -18,24 +16,16 @@ let textareaId = 0;
 export const GitHubPage = {
 	domManipulator,
 
-	setApp: () => {
-		App.pageManager = new PageManager();
-		domManipulator.addRollbackOperation( () => delete App.pageManager );
-	},
-
 	setPageName: ( name = 'repo_issue' ) => {
 		let meta = document.querySelector( 'meta[name="selected-link"]' );
+
 		if ( !meta ) {
 			meta = document.createElement( 'meta' );
 			meta.setAttribute( 'name', 'selected-link' );
 			domManipulator.append( document.body, meta );
 		}
 
-		meta.setAttribute( 'value', name || 'repo_issue' );
-
-		if ( App.pageManager ) {
-			GitHubPage.setApp();
-		}
+		meta.setAttribute( 'value', name );
 	},
 
 	/**
@@ -116,8 +106,27 @@ export const GitHubPage = {
 				root.querySelector( '.preview-content' ).classList.remove( 'js-preview-panel' );
 				break;
 			}
+			case 'milestone': {
+				root.setAttribute( 'id', 'new_milestone' );
+				fixMilestone();
+				break;
+			}
+			case 'milestone-edit': {
+				root.classList.add( 'js-milestone-edit-form' );
+				fixMilestone();
+				break;
+			}
+			case 'saved-reply': {
+				root.classList.add( 'new_saved_reply' );
+				break;
+			}
+			case 'saved-reply-edit': {
+				root.classList.add( 'edit_saved_reply' );
+				break;
+			}
 			case 'wiki': {
 				root.setAttribute( 'name', 'gollum-editor' );
+				root.querySelector( 'markdown-toolbar' ).remove();
 				break;
 			}
 			default: {
@@ -141,6 +150,20 @@ export const GitHubPage = {
 
 		domManipulator.append( target, container );
 		return root;
+
+		function fixMilestone() {
+			// Add two containers around the textarea.
+			const textarea = root.querySelector( 'textarea' );
+
+			const textExpander = document.createElement( 'text-expander' );
+			textarea.after( textExpander );
+			textExpander.append( textarea );
+
+			const writeContent = document.createElement( 'div' );
+			writeContent.classList.add( 'write-content' );
+			textExpander.after( writeContent );
+			writeContent.append( textExpander );
+		}
 	},
 
 	appendButton: ( options = { type: 'edit' } ) => {
