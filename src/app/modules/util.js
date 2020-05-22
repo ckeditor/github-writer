@@ -61,6 +61,18 @@ export function addClickListener( selector, callback ) {
 }
 
 /**
+ * Prevents clicks inside an element to trigger pjax loading.
+ *
+ * @param element {HTMLElement} The element which content to block.
+ */
+export function blockPjaxClicks( element ) {
+	element.addEventListener( 'pjax:click', ev => {
+		ev.preventDefault();
+		ev.stopPropagation();
+	}, true );
+}
+
+/**
  * Creates an element out of its outer html string.
  *
  * @param {String} html The outer html of the element.

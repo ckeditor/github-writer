@@ -3,9 +3,14 @@
  * For licensing, see LICENSE.md.
  */
 
-import { GitHubPage } from '../../_util/githubpage';
 import Editor from '../../../src/app/editor/editor';
 import CKEditorGitHubEditor from '../../../src/app/editor/ckeditorgithubeditor';
+
+import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
+import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import Link from '@ckeditor/ckeditor5-link/src/link';
+
+import { GitHubPage } from '../../_util/githubpage';
 import utils from '../../../src/app/editor/utils';
 import { PageIncompatibilityError } from '../../../src/app/modules/util';
 
@@ -430,6 +435,24 @@ describe( 'Editor', () => {
 						.then( () => {
 							const editorTree = editor.dom.panelsContainer.nextSibling;
 							expect( editorTree.classList.contains( 'github-writer-panel-rte' ) ).to.be.true;
+						} );
+				} );
+
+				it( 'should block pjax clicks inside the editable', () => {
+					CKEditorConfig.get.returns( { plugins: [ Paragraph, Link ] } );
+
+					const editor = new Editor( GitHubPage.appendRoot( { text: 'Test [link](test-url)' } ) );
+
+					return editor.create()
+						.then( () => {
+							GitHubPage.domManipulator.addEventListener( document, 'pjax:click', () => {
+								expect.fail( 'document should not catch pjax:click' );
+							} );
+
+							const editable = editor.ckeditor.ui.getEditableElement();
+							const link = editable.querySelector( 'a' );
+
+							link.dispatchEvent( new CustomEvent( 'pjax:click', { bubbles: true, cancelable: true } ) );
 						} );
 				} );
 
