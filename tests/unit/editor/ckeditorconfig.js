@@ -4,6 +4,7 @@
  */
 
 import Editor from '../../../src/app/editor/editor';
+import WikiEditor from '../../../src/app/features/wikieditor';
 
 import { GitHubPage } from '../../_util/githubpage';
 import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
@@ -130,7 +131,7 @@ describe( 'Editor', () => {
 				const sinonXhr = sinon.useFakeXMLHttpRequest();
 				sinonXhr.onCreate = createdXhr => ( xhr = createdXhr );
 
-				const editor = new Editor( GitHubPage.appendRoot( { type: 'wiki' } ) );
+				const editor = new WikiEditor( GitHubPage.appendRoot( { type: 'wiki' } ) );
 
 				const config = CKEditorConfig.get( editor );
 				expect( config.githubWriter.upload ).to.be.a( 'function' );

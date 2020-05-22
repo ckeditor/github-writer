@@ -32,7 +32,7 @@ export default class WikiEditor extends Editor {
 		const config = super.getCKEditorConfig();
 
 		// Wiki pages support autolinking on urls only.
-		config.githubWriter.autoLinking = { url: true };
+		config.githubWriter && ( config.githubWriter.autoLinking = { url: true } );
 
 		return config;
 	}

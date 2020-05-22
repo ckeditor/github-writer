@@ -4,6 +4,8 @@
  */
 
 import Editor from '../../../src/app/editor/editor';
+import WikiEditor from '../../../src/app/features/wikieditor';
+
 import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import EditorExtras from '../../../src/app/plugins/editorextras';
@@ -65,7 +67,7 @@ describe( 'Editor', () => {
 			GitHubPage.reset();
 			GitHubPage.setPageName( 'repo_wiki' );
 
-			const editor = new Editor( GitHubPage.appendRoot( { type: 'wiki', text: 'Test' } ) );
+			const editor = new WikiEditor( GitHubPage.appendRoot( { type: 'wiki', text: 'Test' } ) );
 			editor.dom.root.insertAdjacentHTML( 'afterbegin', '<input value="" required>' );
 
 			return editor.create()
