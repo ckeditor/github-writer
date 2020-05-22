@@ -10,6 +10,7 @@ import CKEditorConfig from './ckeditorconfig';
 import utils from './utils';
 
 import editorModes from './modes';
+import { blockPjaxClicks } from '../modules/util';
 
 const { RTE, DESTROYED } = editorModes;
 
@@ -287,8 +288,13 @@ const CreateEditorInstanceMixin = {
 		// Returns the promise that follows the creation of the internal CKEditor instance.
 		return CKEditorGitHubEditor.create( initialData || '', this.getCKEditorConfig() )
 			.then( editor => {
+				const editable = editor.ui.getEditableElement();
+
 				this.injectToolbar( editor.ui.view.toolbar.element );
-				this.injectEditable( editor.ui.getEditableElement() );
+				this.injectEditable( editable );
+
+				// Block pjax loading when clicking links inside the editor. (#189)
+				blockPjaxClicks( editable );
 
 				// Post-fix to enable the GH tooltip on the toolbar. (Items are already rendered)
 				utils.toolbarItemsPostfix( editor.ui.view.toolbar );

@@ -5,6 +5,7 @@
 
 import {
 	addClickListener,
+	blockPjaxClicks,
 	checkDom,
 	createElementFromHtml,
 	DomManipulator,
@@ -72,6 +73,39 @@ describe( 'Modules', () => {
 				buttonA.click();
 				buttonA.querySelector( 'span' ).click();
 				expect( callback.calledTwice, 'button B' ).to.be.true;
+			} );
+		} );
+
+		describe( 'blockPjaxClicks', () => {
+			it( 'should selective block clicks', () => {
+				const pjaxContainer = createElementFromHtml(
+					'<div data-pjax-container>' +
+
+					'<div>' +
+					'<a id="link1">test</a>' +
+					'<a id="link2" data-pjax>test</a>' +
+					'</div>' +
+
+					'<div id="blockedContainer">' +
+					'<a id="link3">test</a>' +
+					'<a id="link4" data-pjax>test</a>' +
+					'</div>' +
+
+					'</div>'
+				);
+				const blockedContainer = pjaxContainer.querySelector( '#blockedContainer' );
+				blockPjaxClicks( blockedContainer );
+
+				// Catch all events that reached the container.
+				const clickListener = sinon.spy();
+				pjaxContainer.addEventListener( 'pjax:click', clickListener );
+
+				// Pjax-click all links.
+				for ( const link of pjaxContainer.querySelectorAll( 'a' ) ) {
+					link.dispatchEvent( new CustomEvent( 'pjax:click', { bubbles: true, cancelable: true } ) );
+				}
+
+				expect( clickListener.args.map( args => args[ 0 ].target.id ) ).to.eql( [ 'link1', 'link2' ] );
 			} );
 		} );
 
