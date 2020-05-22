@@ -57,6 +57,8 @@ import ControlClick from '../plugins/controlclick';
 import SmartCaret from '../plugins/smartcaret';
 import CodeBlockLanguageSelector from '../plugins/codeblocklanguageselector';
 import SavedReplies from '../plugins/savedreplies';
+
+import General from '../plugins/general';
 import LiveModelData from '../plugins/livemodeldata';
 
 // Inject our very own CKEditor theme overrides.
@@ -115,5 +117,5 @@ CKEditorGitHubEditor.builtinPlugins = [
 	AutoLinkUrl, AutoLinkGitHub,
 	QuoteSelection, SavedReplies, Messenger, EditorExtras, ControlClick, SmartCaret,
 	CodeBlockLanguageSelector,
-	LiveModelData
+	General, LiveModelData
 ];
