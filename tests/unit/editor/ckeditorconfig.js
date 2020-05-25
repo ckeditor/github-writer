@@ -25,11 +25,14 @@ describe( 'Editor', () => {
 			expect( config.toolbar ).to.be.an( 'array' );
 		} );
 
-		it( 'should set the placeholder text', () => {
-			const editor = new Editor( GitHubPage.appendRoot() );
+		it( 'should set the placeholder text out of the textarea', () => {
+			const root = GitHubPage.appendRoot();
+			root.querySelector( 'textarea' ).placeholder = 'Test';
+
+			const editor = new Editor( root );
 			const config = CKEditorConfig.get( editor );
 
-			expect( config.placeholder ).to.be.a( 'string' ).not.empty;
+			expect( config.placeholder ).to.be.a( 'string' ).equals( 'Test' );
 		} );
 
 		describe( 'mentions.feeds', () => {
