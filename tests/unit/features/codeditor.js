@@ -10,6 +10,11 @@ import CKEditorConfig from '../../../src/app/editor/ckeditorconfig';
 
 describe( 'Features', () => {
 	describe( 'CodeEditor', () => {
+		// Firefox has not support for the CodeEditor for now.
+		if ( !window.chrome ) {
+			return;
+		}
+
 		beforeEach( () => {
 			CKEditorConfig.get.restore();
 		} );

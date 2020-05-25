@@ -54,6 +54,7 @@ export default class CodeEditor extends Editor {
 		// Unfortunately Firefox doesn't seem to give any way for us to update CodeMirror when switching rte -> markdown.
 		// As for now, we're not supporting the code editor in Firefox.
 		// The manifest is also changed to reflect this. See webpack.config.js.
+		/* istanbul ignore next */
 		if ( !window.chrome ) {
 			return;
 		}
