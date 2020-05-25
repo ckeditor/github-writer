@@ -21,6 +21,8 @@
 		"https://github.com/*/pull/*",
 		"https://github.com/*/commit/*",
 		"https://github.com/*/compare/*",
+		"https://github.com/*/new/*",
+		"https://github.com/*/edit/*",
 		"https://github.com/*/releases/*",
 		"https://github.com/*/milestones",
 		"https://github.com/*/milestones/*",

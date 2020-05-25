@@ -96,6 +96,11 @@ form.github-writer-type-milestone .ck-editor__editable {
 	display: block !important;
 }
 
+/* But hide it for good if in the code editor but not for a markdown file. */
+.github-writer-mode-markdown.github-writer-code-editor-not-md .ck-toolbar__items > * {
+	display: none !important;
+}
+
 /* Get the GH toolbar closer to the RTE one (which is always available with the the Kebab button). */
 .github-writer-mode-markdown markdown-toolbar.px-2 {
 	padding-right: 3px !important;
@@ -152,17 +157,18 @@ div.github-writer-panel-rte.form-control {
 	display: none;
 }
 
-/* Here, we're fixing up a bit of mess from the GH CSS itself. The comment editing CSS is different from other editors in GH :/ */
-div.comment-form-head {
+/* Here, we're fixing up a bit of mess from the GH CSS itself.
+The comment editing CSS is different from other editors in GH :/ */
+form[data-github-writer-id]:not(.github-writer-type-code) div.comment-form-head {
 	padding: 8px 0 0 !important;
 	display: flex;
 	align-items: center;
 }
-div.comment-form-head > * {
+form[data-github-writer-id]:not(.github-writer-type-code) div.comment-form-head > * {
 	margin-top: -8px !important;
 }
-div.tabnav-tabs,
-nav.tabnav-tabs {
+form[data-github-writer-id]:not(.github-writer-type-code) div.tabnav-tabs,
+form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 	flex: auto;
 	margin: auto 8px -1px 8px !important;
 	order: -1;
@@ -211,6 +217,20 @@ nav.tabnav-tabs {
 /* Although the blur effect is nice, we're removing it here so the editor stays aligned with other fields. */
 .github-writer-wikieditor .ck-editor__editable.ck-blurred {
 	background-color: white !important;
+}
+
+/**********************************
+	Code editor specific stuff
+***********************************/
+
+/* Hide the preview tab */
+.github-writer-type-code.github-writer-mode-rte .preview.tabnav-tab {
+	display: none;
+}
+
+/* Hide the file actions */
+.github-writer-type-code.github-writer-mode-rte .file-actions {
+	display: none !important;
 }
 
 /**********************************

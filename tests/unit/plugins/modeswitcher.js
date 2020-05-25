@@ -78,5 +78,14 @@ describe( 'Plugins', () => {
 			button.fire( 'execute' );
 			expect( editor.getMode() ).to.equals( Editor.modes.RTE );
 		} );
+
+		it( 'should focus on switch to RTE', () => {
+			editor.setMode( Editor.modes.MARKDOWN );
+
+			const spy = sinon.spy( editor, 'focus' );
+
+			button.fire( 'execute' );
+			expect( spy.callCount ).to.equals( 1 );
+		} );
 	} );
 } );

@@ -82,12 +82,17 @@ const ModeMixin = {
 			}
 		}
 
+		// Update the submit buttons status when entering RTE.
+		if ( mode === RTE ) {
+			this._setSubmitStatus();
+		}
+
 		/**
 		 * Fired after a new mode has been activated in the editor.
 		 *
 		 * @event Editor#mode
 		 */
-		this.fire( 'mode' );
+		this.fire( 'mode', { from: currentMode, to: mode } );
 	},
 
 	/**
@@ -105,9 +110,6 @@ const ModeMixin = {
 		initialMode = initialMode || ( this.checkDataLoss() ? MARKDOWN : RTE );
 
 		this.setMode( initialMode, { noSynch: true, noCheck: true } );
-
-		// The submit status must always be updated when setting the initial mode.
-		this._setSubmitStatus();
 	}
 };
 

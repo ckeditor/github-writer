@@ -19,63 +19,101 @@ describe( 'Editor', () => {
 				it( `should get the mode (${ mode })`, () => {
 					const editor = new Editor( GitHubPage.appendRoot() );
 
-					editor.setMode( mode, { noCheck: true, noSynch: true } );
-					expect( editor.getMode() ).to.equals( mode );
+					return editor.create().then( () => {
+						if ( mode === Editor.modes.DESTROYED ) {
+							return editor.destroy().then( () => {
+								expect( editor.getMode() ).to.equals( mode );
+							} );
+						} else {
+							editor.setMode( mode, { noCheck: true, noSynch: true } );
+							expect( editor.getMode() ).to.equals( mode );
+						}
+					} );
 				} );
 			} );
 		} );
 
 		describe( 'setMode()', () => {
+			let editor;
+
+			beforeEach( () => {
+				editor = new Editor( GitHubPage.appendRoot() );
+				return editor.create();
+			} );
+
+			afterEach( () => {
+				editor.destroy();
+			} );
+
 			beforeEach( () => {
 				sinon.stub( window, 'confirm' ).returns( true );
 			} );
 
 			it( 'should fire the "mode" event', () => {
-				const editor = new Editor( GitHubPage.appendRoot() );
+				editor.setMode( Editor.modes.RTE );
 
-				editor.on( 'mode', () => {
-					expect( editor.getMode() ).to.equals( Editor.modes.DESTROYED );
+				editor.once( 'mode', ( ev, { from, to } ) => {
+					expect( from ).to.equals( Editor.modes.RTE );
+					expect( to ).to.equals( Editor.modes.MARKDOWN );
+					expect( editor.getMode() ).to.equals( Editor.modes.MARKDOWN );
 				} );
 
-				editor.setMode( Editor.modes.DESTROYED );
+				editor.setMode( Editor.modes.MARKDOWN );
 			} );
 
 			it( 'should not fire the "mode" event if no mode change', () => {
-				const editor = new Editor( GitHubPage.appendRoot() );
+				let tested = false;
 
-				editor.setMode( Editor.modes.DESTROYED );
+				editor.setMode( Editor.modes.MARKDOWN );
 
-				editor.on( 'mode', () => {
-					expect.fail( 'the mode event was fired' );
+				editor.once( 'mode', () => {
+					if ( !tested ) {
+						expect.fail( 'the mode event was fired' );
+					}
 				} );
 
-				editor.setMode( Editor.modes.DESTROYED );
+				editor.setMode( Editor.modes.MARKDOWN );
+
+				tested = true;
+			} );
+
+			it( 'should _setSubmitStatus when moving to rte', () => {
+				editor.setMode( Editor.modes.MARKDOWN );
+
+				const spy = sinon.spy( editor, '_setSubmitStatus' );
+
+				editor.setMode( Editor.modes.RTE );
+				expect( spy.callCount ).to.equals( 1 );
+			} );
+
+			it( 'should not_setSubmitStatus when moving to markdown', () => {
+				const spy = sinon.spy( editor, '_setSubmitStatus' );
+				editor.setMode( Editor.modes.MARKDOWN );
+				expect( spy.callCount ).to.equals( 0 );
 			} );
 
 			it( 'should click the write tab', () => {
-				const editor = new Editor( GitHubPage.appendRoot() );
-
 				// Stubbed by GitHubPage.appendRoot().
 				const stub = editor.dom.tabs.write.click;
 
-				// First setMode should not call it.
-				editor.setMode( Editor.modes.MARKDOWN );
 				expect( stub.callCount ).to.equals( 0 );
 
-				editor.setMode( Editor.modes.RTE );
+				editor.setMode( Editor.modes.MARKDOWN );
 				expect( stub.callCount ).to.equals( 1 );
 
-				editor.setMode( Editor.modes.MARKDOWN );
+				editor.setMode( Editor.modes.RTE );
 				expect( stub.callCount ).to.equals( 2 );
 
+				editor.setMode( Editor.modes.MARKDOWN );
+				expect( stub.callCount ).to.equals( 3 );
+
 				// Expect to be not called on destroy.
-				editor.setMode( Editor.modes.DESTROYED );
-				expect( stub.callCount ).to.equals( 2 );
+				return editor.destroy().then( () => {
+					expect( stub.callCount ).to.equals( 3 );
+				} );
 			} );
 
 			it( 'should set root classes', () => {
-				const editor = new Editor( GitHubPage.appendRoot() );
-
 				editor.setMode( Editor.modes.MARKDOWN );
 				expect( editor.dom.root.classList.contains( 'github-writer-mode-rte' ), 'rte' ).to.be.false;
 				expect( editor.dom.root.classList.contains( 'github-writer-mode-markdown' ), 'markdown' ).to.be.true;
@@ -86,28 +124,22 @@ describe( 'Editor', () => {
 			} );
 
 			it( 'should noSynch and noCheck when setting to destroyed', () => {
-				const editor = new Editor( GitHubPage.appendRoot() );
-
 				sinon.stub( editor, 'syncData' );
 				sinon.stub( editor, 'checkDataLoss' );
 
-				editor.setMode( Editor.modes.DESTROYED );
-
-				expect( editor.syncData.callCount, 'syncData' ).to.equals( 0 );
-				expect( editor.checkDataLoss.callCount, 'checkDataLoss' ).to.equals( 0 );
+				return editor.destroy().then( () => {
+					expect( editor.syncData.callCount, 'syncData' ).to.equals( 0 );
+					expect( editor.checkDataLoss.callCount, 'checkDataLoss' ).to.equals( 0 );
+				} );
 			} );
 
 			it( 'should fire textarea.change when switching to the markdown mode', done => {
-				const editor = new Editor( GitHubPage.appendRoot() );
-
 				GitHubPage.domManipulator.addEventListener( editor.dom.textarea, 'change', () => done() );
 
 				editor.setMode( Editor.modes.MARKDOWN );
 			} );
 
 			it( 'should not fire textarea.change when switching to rte mode', () => {
-				const editor = new Editor( GitHubPage.appendRoot() );
-
 				editor.setMode( Editor.modes.MARKDOWN );
 
 				GitHubPage.domManipulator.addEventListener( editor.dom.textarea, 'change', () => {
@@ -119,31 +151,25 @@ describe( 'Editor', () => {
 
 			describe( 'data synch', () => {
 				it( 'should synch editors by default', () => {
-					const editor = new Editor( GitHubPage.appendRoot() );
-
 					sinon.stub( editor, 'syncData' );
 
-					editor.setMode( Editor.modes.RTE );
+					editor.setMode( Editor.modes.MARKDOWN );
 
 					expect( editor.syncData.callCount, 'callCount' ).to.equals( 1 );
 				} );
 
 				it( 'should synch editors with noSynch=false', () => {
-					const editor = new Editor( GitHubPage.appendRoot() );
-
 					sinon.stub( editor, 'syncData' );
 
-					editor.setMode( Editor.modes.RTE, { noSynch: false } );
+					editor.setMode( Editor.modes.MARKDOWN, { noSynch: false } );
 
 					expect( editor.syncData.callCount, 'callCount' ).to.equals( 1 );
 				} );
 
 				it( 'should not synch editors with noSynch=true', () => {
-					const editor = new Editor( GitHubPage.appendRoot() );
-
 					sinon.stub( editor, 'syncData' );
 
-					editor.setMode( Editor.modes.RTE, { noSynch: true } );
+					editor.setMode( Editor.modes.MARKDOWN, { noSynch: true } );
 
 					expect( editor.syncData.callCount, 'callCount' ).to.equals( 0 );
 				} );
@@ -151,8 +177,6 @@ describe( 'Editor', () => {
 
 			describe( 'data check', () => {
 				it( 'should check by default', () => {
-					const editor = new Editor( GitHubPage.appendRoot() );
-
 					editor.setMode( Editor.modes.MARKDOWN );
 
 					sinon.stub( editor, 'checkDataLoss' ).returns( false );
@@ -163,8 +187,6 @@ describe( 'Editor', () => {
 				} );
 
 				it( 'should check with noCheck=false', () => {
-					const editor = new Editor( GitHubPage.appendRoot() );
-
 					editor.setMode( Editor.modes.MARKDOWN );
 
 					sinon.stub( editor, 'checkDataLoss' ).returns( false );
@@ -175,8 +197,6 @@ describe( 'Editor', () => {
 				} );
 
 				it( 'should not check with noCheck=true', () => {
-					const editor = new Editor( GitHubPage.appendRoot() );
-
 					editor.setMode( Editor.modes.MARKDOWN );
 
 					sinon.stub( editor, 'checkDataLoss' ).returns( false );
@@ -187,8 +207,6 @@ describe( 'Editor', () => {
 				} );
 
 				it( 'should ask user confirmation if data loss', () => {
-					const editor = new Editor( GitHubPage.appendRoot() );
-
 					editor.setMode( Editor.modes.MARKDOWN );
 
 					sinon.stub( editor, 'checkDataLoss' ).returns( true );
@@ -199,8 +217,6 @@ describe( 'Editor', () => {
 				} );
 
 				it( 'should ask user confirmation if data loss and abort if not confirmed', () => {
-					const editor = new Editor( GitHubPage.appendRoot() );
-
 					editor.setMode( Editor.modes.MARKDOWN );
 
 					sinon.stub( editor, 'checkDataLoss' ).returns( true );

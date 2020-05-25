@@ -28,7 +28,7 @@ class PullRequestPage extends CommentsTimelinePage {
 		await this.browserPage.click( 'button[name="comment_and_close"]' );
 
 		// Delete the branch.
-		await this.browserPage.waitFor( 'div.post-merge-message button[type="submit"]' );
+		await this.browserPage.waitFor( 'div.post-merge-message button[type="submit"]', { visible: true } );
 		await this.browserPage.click( 'div.post-merge-message button[type="submit"]' );
 
 		// After delete, the "restore" button should be displayed, which confirms the cleanup.

@@ -59,8 +59,13 @@ const SubmitStatusMixin = {
 
 		// Finally set the "disabled" property on all submit buttons.
 		{
-			// GH marks submit buttons that are sensitive to form validation with [data-disable-invalid].
-			this.dom.root.querySelectorAll( 'button[type="submit"][data-disable-invalid]' )
+			const selectors =
+				// GH marks submit buttons that are sensitive to form validation with [data-disable-invalid].
+				'button[type="submit"][data-disable-invalid],' +
+				// Except the code editor.
+				'button[type="submit"].btn-primary.js-blob-submit';
+
+			this.dom.root.querySelectorAll( selectors )
 				.forEach( button => ( button.disabled = disabled ) );
 		}
 

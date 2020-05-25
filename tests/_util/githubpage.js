@@ -106,6 +106,17 @@ export const GitHubPage = {
 				root.querySelector( '.preview-content' ).classList.remove( 'js-preview-panel' );
 				break;
 			}
+			case 'code': {
+				root.classList.add( 'js-blob-form' );
+				root.querySelector( 'textarea' ).setAttribute( 'data-codemirror-mode', 'text/x-gfm' );
+
+				root.querySelector( '.previewable-comment-form > file-attachment' ).classList.add( 'commit-create' );
+				root.querySelector( '.previewable-comment-form > .preview-content' ).classList.add( 'commit-preview' );
+
+				root.querySelector( 'markdown-toolbar' ).remove();
+				root.querySelector( '.tabnav-tabs' ).remove();
+				break;
+			}
 			case 'milestone': {
 				root.setAttribute( 'id', 'new_milestone' );
 				fixMilestone();
@@ -127,6 +138,8 @@ export const GitHubPage = {
 			case 'wiki': {
 				root.setAttribute( 'name', 'gollum-editor' );
 				root.querySelector( 'markdown-toolbar' ).remove();
+
+				removeUpload();
 				break;
 			}
 			default: {
@@ -146,7 +159,10 @@ export const GitHubPage = {
 		root.querySelector( 'textarea' ).id = 'test-' + ( ++textareaId );
 
 		// Mute the write tab click as it messes up with some tests.
-		sinon.stub( root.querySelector( '.write-tab' ), 'click' );
+		{
+			const write = root.querySelector( '.write-tab' );
+			write && sinon.stub( root.querySelector( '.write-tab' ), 'click' );
+		}
 
 		domManipulator.append( target, container );
 		return root;
@@ -163,6 +179,11 @@ export const GitHubPage = {
 			writeContent.classList.add( 'write-content' );
 			textExpander.after( writeContent );
 			writeContent.append( textExpander );
+		}
+
+		function removeUpload() {
+			root.querySelector( 'tab-container' ).append( root.querySelector( 'textarea' ) );
+			root.querySelector( 'file-attachment' ).remove();
 		}
 	},
 

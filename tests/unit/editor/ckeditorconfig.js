@@ -25,11 +25,14 @@ describe( 'Editor', () => {
 			expect( config.toolbar ).to.be.an( 'array' );
 		} );
 
-		it( 'should set the placeholder text', () => {
-			const editor = new Editor( GitHubPage.appendRoot() );
+		it( 'should set the placeholder text out of the textarea', () => {
+			const root = GitHubPage.appendRoot();
+			root.querySelector( 'textarea' ).placeholder = 'Test';
+
+			const editor = new Editor( root );
 			const config = CKEditorConfig.get( editor );
 
-			expect( config.placeholder ).to.be.a( 'string' ).not.empty;
+			expect( config.placeholder ).to.be.a( 'string' ).equals( 'Test' );
 		} );
 
 		describe( 'mentions.feeds', () => {
@@ -78,7 +81,11 @@ describe( 'Editor', () => {
 					' data-upload-repository-id="repo_id"' +
 					'></div>' );
 
-				const editor = new Editor( GitHubPage.appendRoot( { target: uploadElement } ) );
+				const root = GitHubPage.appendRoot();
+				root.querySelector( 'textarea' ).after( uploadElement );
+				uploadElement.append( root.querySelector( 'textarea' ) );
+
+				const editor = new Editor( root );
 
 				const config = CKEditorConfig.get( editor );
 				expect( config.githubWriter.upload ).to.be.a( 'function' );
@@ -102,7 +109,11 @@ describe( 'Editor', () => {
 					'<input class="js-data-upload-policy-url-csrf" type="hidden" value="token">' +
 					'</div>' );
 
-				const editor = new Editor( GitHubPage.appendRoot( { target: uploadElement } ) );
+				const root = GitHubPage.appendRoot();
+				root.querySelector( 'textarea' ).after( uploadElement );
+				uploadElement.append( root.querySelector( 'textarea' ) );
+
+				const editor = new Editor( root );
 
 				const config = CKEditorConfig.get( editor );
 				expect( config.githubWriter.upload ).to.be.a( 'function' );

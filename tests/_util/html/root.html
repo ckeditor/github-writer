@@ -7,6 +7,7 @@
 <form action="/server" accept-charset="UTF-8" method="post" class="previewable-comment-form">
 	<tab-container class="previewable-comment-form" data-preview-url="/preview">
 		<file-attachment data-upload-repository-id="1234" data-upload-policy-url="/upload/policies/assets">
+			<textarea required></textarea>
 		</file-attachment>
 		<div class="js-preview-panel preview-content"></div>
 		<nav class="tabnav-tabs">
@@ -18,11 +19,12 @@
 		There was an error creating your Issue.
 	</div>
 
-	<textarea required></textarea>
-
 	<button type="submit" class="btn-primary" data-disable-invalid>Submit</button>
 
 	<!-- Wiki editor extras -->
 	<div class="comment-form-head"></div>
 	<div class="write-content"></div>
+
+	<!-- Code editor extras -->
+	<div class="file-header"></div>
 </form>
