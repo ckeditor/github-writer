@@ -3,8 +3,6 @@
  * For licensing, see LICENSE.md.
  */
 
-import App from '../app';
-
 import { config as languagesConfig } from '../data/languages';
 import { list as emojiList } from '../data/emojis';
 import CKEditorConfigMentions from './ckeditorconfigmentions';
@@ -119,8 +117,8 @@ const CKEditorConfig = {
 			// Try to get the element holding the upload related data.
 			const uploadDataElement = githubEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
 
-			// This element is most likely not present in wiki pages, so we need a different strategy for it.
-			if ( !uploadDataElement && App.page.type === 'wiki' ) {
+			// Enable upload in pages that have no native support for it (e.g. wiki and code editor).
+			if ( !uploadDataElement ) {
 				return getConfigFunction( () => {
 					// Make a xhr request to retrieve the dom of the "New Issue" page.
 					return getNewIssuePageDom()
