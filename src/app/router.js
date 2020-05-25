@@ -19,6 +19,7 @@ import ReviewEditor from './features/revieweditor';
 import CodeLineCommentEditor from './features/codelinecommenteditor';
 import NewPullRequestEditor from './features/newpullrequesteditor';
 import SavedReplyEditor from './features/savedreplyeditor';
+import NewCodeEditor from './features/newcodeditor';
 import CodeEditor from './features/codeditor';
 
 // We just want to ensure that utils is loaded, so we include this import.
@@ -66,6 +67,10 @@ const routes = {
 		{
 			pattern: /\/compare\//,
 			features: [ NewPullRequestEditor ]
+		},
+		{
+			pattern: /\/new\//,
+			features: [ NewCodeEditor ]
 		},
 		{
 			pattern: /\/edit\//,

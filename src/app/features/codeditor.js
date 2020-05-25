@@ -10,6 +10,8 @@ export default class CodeEditor extends Editor {
 	constructor( root ) {
 		super( root );
 
+		root.classList.add( 'github-writer-type-code' );
+
 		registerUpdateListener( this );
 	}
 
