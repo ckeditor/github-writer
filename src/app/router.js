@@ -30,7 +30,7 @@ const routes = {
 	'repo_commits': [
 		{
 			pattern: /\/commit\/.+/,
-			features: [ NewCommentEditor, CommentEditor ]
+			features: [ NewCommentEditor, CommentEditor, CodeLineCommentEditor ]
 		}
 	],
 	'repo_issues': [
