@@ -51,6 +51,13 @@ export default class CodeEditor extends Editor {
 	}
 
 	static run() {
+		// Unfortunately Firefox doesn't seem to give any way for us to update CodeMirror when switching rte -> markdown.
+		// As for now, we're not supporting the code editor in Firefox.
+		// The manifest is also changed to reflect this. See webpack.config.js.
+		if ( !window.chrome ) {
+			return;
+		}
+
 		const root = document.querySelector( 'form.js-blob-form' );
 
 		// Enable it for markdown editing only.
@@ -93,6 +100,7 @@ function registerUpdateListener( editor ) {
 		};
 
 		// Different ways to o it for Chrome and Firefox.
+		// We're actually not supporting Firefox at this stage. See run().
 		window.chrome ? injectFunctionExecution( register ) : /* istanbul ignore next */ register();
 
 		registerUpdateListener.ready = true;

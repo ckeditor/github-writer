@@ -182,6 +182,14 @@ function transformManifest( content, target ) {
 
 		if ( target === 'chrome' ) {
 			delete content.browser_specific_settings;
+		} else {
+			// Firefox doesn't have support for the CodeEditor for now.
+			content.content_scripts[ 0 ].matches = content.content_scripts[ 0 ].matches.filter( entry => {
+				return ![
+					'https://github.com/*/new/*',
+					'https://github.com/*/edit/*'
+				].includes( entry );
+			} );
 		}
 	}
 
