@@ -115,7 +115,7 @@ const CKEditorConfig = {
 		// configurations but on the first time the configuration is required (on the first attempt to upload a file).
 		function getUploadConfig() {
 			// Try to get the element holding the upload related data.
-			const uploadDataElement = githubEditor.dom.textarea.closest( '*[data-upload-policy-url]' );
+			const uploadDataElement = githubEditor.dom.textarea.closest( '[data-upload-policy-url]' );
 
 			// Enable upload in pages that have no native support for it (e.g. wiki and code editor).
 			if ( !uploadDataElement ) {
@@ -123,7 +123,7 @@ const CKEditorConfig = {
 					// Make a xhr request to retrieve the dom of the "New Issue" page.
 					return getNewIssuePageDom()
 						// Take the element with the upload information out of that page.
-						.then( rootElement => rootElement.querySelector( '*[data-upload-policy-url]' ) )
+						.then( rootElement => rootElement.querySelector( '[data-upload-policy-url]' ) )
 						.then( uploadDataElement => getConfigPromise( uploadDataElement ) );
 				} );
 			}

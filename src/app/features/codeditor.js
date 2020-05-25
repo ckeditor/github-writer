@@ -47,8 +47,6 @@ export default class CodeEditor extends Editor {
 
 	injectEditable( editable ) {
 		const container = this.createEditableContainer( editable );
-		// container.classList.remove( 'mx-md-2' );
-
 		this.domManipulator.appendAfter( this.dom.root.querySelector( '.commit-create' ), container );
 	}
 
@@ -81,7 +79,7 @@ function registerUpdateListener( editor ) {
 	} );
 
 	if ( !registerUpdateListener.ready ) {
-		const register = function() {
+		const register = /* istanbul ignore next */ function() {
 			window.addEventListener( 'message', event => {
 				if ( event.data.type === 'GitHub-Writer-CodeEditor-Update' ) {
 					// Retrieve the editor root, the textarea and the CodeMirror instance.
@@ -95,7 +93,7 @@ function registerUpdateListener( editor ) {
 		};
 
 		// Different ways to o it for Chrome and Firefox.
-		window.chrome ? injectFunctionExecution( register ) : register();
+		window.chrome ? injectFunctionExecution( register ) : /* istanbul ignore next */ register();
 
 		registerUpdateListener.ready = true;
 	}

@@ -81,7 +81,11 @@ describe( 'Editor', () => {
 					' data-upload-repository-id="repo_id"' +
 					'></div>' );
 
-				const editor = new Editor( GitHubPage.appendRoot( { target: uploadElement } ) );
+				const root = GitHubPage.appendRoot();
+				root.querySelector( 'textarea' ).after( uploadElement );
+				uploadElement.append( root.querySelector( 'textarea' ) );
+
+				const editor = new Editor( root );
 
 				const config = CKEditorConfig.get( editor );
 				expect( config.githubWriter.upload ).to.be.a( 'function' );
@@ -105,7 +109,11 @@ describe( 'Editor', () => {
 					'<input class="js-data-upload-policy-url-csrf" type="hidden" value="token">' +
 					'</div>' );
 
-				const editor = new Editor( GitHubPage.appendRoot( { target: uploadElement } ) );
+				const root = GitHubPage.appendRoot();
+				root.querySelector( 'textarea' ).after( uploadElement );
+				uploadElement.append( root.querySelector( 'textarea' ) );
+
+				const editor = new Editor( root );
 
 				const config = CKEditorConfig.get( editor );
 				expect( config.githubWriter.upload ).to.be.a( 'function' );
