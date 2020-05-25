@@ -19,17 +19,14 @@ export default class CodeEditor extends Editor {
 		dom.toolbarContainer = root.querySelector( '.file-header' );
 		dom.panels.markdown = root.querySelector( '.commit-create' );
 		dom.panels.preview = root.querySelector( '.commit-preview' );
+		dom.panelsContainer = dom.panels.markdown.parentElement;
+
+		dom.isEdit = true;
 
 		delete dom.tabs;
 		delete dom.toolbar;
-		delete dom.panelsContainer;
 
 		return dom;
-	}
-
-	getSizeContainer() {
-		// TODO: Enable auto-resizing.
-		return null;
 	}
 
 	getCKEditorConfig() {
