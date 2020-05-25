@@ -211,7 +211,61 @@ class CommentEditor extends Editor {
 	}
 }
 
+/**
+ * The editor used to add the first comment in a code line in PRs.
+ */
+class NewLineCommentEditor extends Editor {
+	/**
+	 * @param page {GitHubPage} The current page.
+	 * @param id {String} The editor id.
+	 * @param line {Number} The sequential line position in the diff list. It's not the line number in the file.
+	 */
+	constructor( page, id, line ) {
+		super( page, id );
+
+		this.line = line;
+	}
+
+	/**
+	 * Submits the form and waits for the comment to show up in the list of comments.
+	 *
+	 * @return {Promise<GitHubPage>} The current page.
+	 */
+	async submit() {
+		// Get the current number of comments.
+		const commentsCount = await this.page.browserPage.evaluate( function submitBefore( position ) {
+			const button = document.querySelector(
+				`button.js-add-single-line-comment[data-position="${ position }"]` );
+			const container = button
+				.closest( 'tr' )
+				.nextElementSibling
+				.querySelector( '.js-comments-holder' );
+
+			return container.querySelectorAll( '.review-comment-contents.js-suggested-changes-contents' ).length;
+		}, this.line );
+
+		await super.submit();
+
+		// Wait for the count of comments to increase.
+		await this.page.browserPage.waitForFunction( function submitAfter( position, expectedCount ) {
+			const button = document.querySelector(
+				`button.js-add-single-line-comment[data-position="${ position }"]` );
+			const container = button
+				.closest( 'tr' )
+				.nextElementSibling
+				.querySelector( '.js-comments-holder' );
+
+			const count = container.querySelectorAll( '.review-comment-contents.js-suggested-changes-contents' ).length;
+
+			return count === expectedCount;
+		}, {}, this.line, commentsCount + 1 );
+
+		return this.page;
+	}
+}
+
 module.exports.Editor = Editor;
 module.exports.MainEditor = MainEditor;
 module.exports.NewCommentEditor = NewCommentEditor;
 module.exports.CommentEditor = CommentEditor;
+module.exports.NewLineCommentEditor = NewLineCommentEditor;

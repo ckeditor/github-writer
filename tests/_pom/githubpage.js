@@ -74,9 +74,10 @@ class GitHubPage {
 	 *
 	 * @param selector {String|ElementHandle} The root element selector or the element itself.
 	 * @param [EditorClass=Editor] {Function} The editor class used to create returned editor instance.
+	 * @param extraArgs {...*} Extra arguments to pass to the EditorClass constructor.
 	 * @returns {Editor} The editor.
 	 */
-	async getEditorByRoot( selector, EditorClass = Editor ) {
+	async getEditorByRoot( selector, EditorClass = Editor, ...extraArgs ) {
 		const root = ( typeof selector === 'string' ) ? await this.browserPage.$( selector ) : selector;
 
 		if ( !root ) {
@@ -89,7 +90,7 @@ class GitHubPage {
 			throw new Error( `No editor found for the root \`${ selector }\`.` );
 		}
 
-		return new EditorClass( this, id );
+		return new EditorClass( this, id, ...extraArgs );
 	}
 
 	/**

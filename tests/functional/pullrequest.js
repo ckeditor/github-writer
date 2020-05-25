@@ -83,4 +83,42 @@ describe( 'Pull Request', function() {
 			'<p>Editing with <strong>GitHub Writer</strong>.</p>\n' +
 			`<p>Time stamp: ${ timestamp }.</p>` );
 	} );
+
+	it( 'should add a code line comment', async () => {
+		expect( page ).to.be.an.instanceOf( PullRequestPage );
+
+		const timestamp = ( new Date() ).toISOString();
+
+		const editor = await page.getLineCommentEditor( 1 );
+		await editor.type(
+			'Code line comment with [Ctrl+B]GitHub Writer[Ctrl+B].',
+			'[Enter]',
+			`Time stamp: ${ timestamp }.`
+		);
+
+		await editor.submit();
+
+		expect( await page.getLineCommentHtml( 1, 0 ) ).to.equals(
+			'<p>Code line comment with <strong>GitHub Writer</strong>.</p>\n' +
+			`<p>Time stamp: ${ timestamp }.</p>` );
+	} );
+
+	it( 'should add a review comment', async () => {
+		expect( page ).to.be.an.instanceOf( PullRequestPage );
+
+		const timestamp = ( new Date() ).toISOString();
+
+		const editor = await page.getReviewEditor();
+		await editor.type(
+			'Reviewing with [Ctrl+B]GitHub Writer[Ctrl+B].',
+			'[Enter]',
+			`Time stamp: ${ timestamp }.`
+		);
+
+		await editor.submit();
+
+		expect( await page.getCommentHtml( 2 ) ).to.equals(
+			'<p>Reviewing with <strong>GitHub Writer</strong>.</p>\n' +
+			`<p>Time stamp: ${ timestamp }.</p>` );
+	} );
 } );
