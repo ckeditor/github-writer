@@ -4,6 +4,7 @@
  */
 
 const GitHubPage = require( '../githubpage' );
+const { MainEditor } = require( '../editor' );
 const util = require( '../util' );
 
 /**
@@ -20,12 +21,37 @@ class FileEditPage extends GitHubPage {
 	}
 
 	/**
-	 * Appends text to a new line at the end of the file.
+	 * Gets the editor used for the issue description body.
+	 *
+	 * @returns {Promise<MainEditor>} The editor.
+	 */
+	async getMainEditor() {
+		return await this.getEditorByRoot( 'form.js-blob-form', MainEditor );
+	}
+
+	/**
+	 * Appends text to a new line at the end of the file using GitHub Writer.
 	 *
 	 * @param textToType
 	 * @return {Promise<void>}
 	 */
 	async appendText( textToType ) {
+		const editor = await this.getMainEditor();
+		await editor.type(
+			// Move to the end of the contents.
+			'[Ctrl+A][ArrowRight]',
+			'[Enter]',
+			textToType
+		);
+	}
+
+	/**
+	 * Appends text to a new line at the end of the file using CodeMirror.
+	 *
+	 * @param textToType
+	 * @return {Promise<void>}
+	 */
+	async appendCodeMirrorText( textToType ) {
 		const selector = '.CodeMirror-code > div:last-of-type';
 		await this.browserPage.waitFor( selector, { visible: true } );
 
