@@ -57,6 +57,7 @@ export default class ModeSwitcher extends Plugin {
 
 				this.listenTo( view, 'execute', () => {
 					githubEditor.setMode( githubEditor.getMode() === RTE ? MARKDOWN : RTE );
+					githubEditor.focus();
 				} );
 			} );
 
