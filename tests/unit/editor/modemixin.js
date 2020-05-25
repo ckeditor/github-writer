@@ -50,7 +50,11 @@ describe( 'Editor', () => {
 			} );
 
 			it( 'should fire the "mode" event', () => {
-				editor.once( 'mode', () => {
+				editor.setMode( Editor.modes.RTE );
+
+				editor.once( 'mode', ( ev, { from, to } ) => {
+					expect( from ).to.equals( Editor.modes.RTE );
+					expect( to ).to.equals( Editor.modes.MARKDOWN );
 					expect( editor.getMode() ).to.equals( Editor.modes.MARKDOWN );
 				} );
 
@@ -71,6 +75,21 @@ describe( 'Editor', () => {
 				editor.setMode( Editor.modes.MARKDOWN );
 
 				tested = true;
+			} );
+
+			it( 'should _setSubmitStatus when moving to rte', () => {
+				editor.setMode( Editor.modes.MARKDOWN );
+
+				const spy = sinon.spy( editor, '_setSubmitStatus' );
+
+				editor.setMode( Editor.modes.RTE );
+				expect( spy.callCount ).to.equals( 1 );
+			} );
+
+			it( 'should not_setSubmitStatus when moving to markdown', () => {
+				const spy = sinon.spy( editor, '_setSubmitStatus' );
+				editor.setMode( Editor.modes.MARKDOWN );
+				expect( spy.callCount ).to.equals( 0 );
 			} );
 
 			it( 'should click the write tab', () => {

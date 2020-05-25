@@ -76,6 +76,25 @@ describe( 'Editor', () => {
 				} );
 		} );
 
+		it( 'should control the submit button in the code editor', () => {
+			const editor = new Editor( GitHubPage.appendRoot() );
+			const codeSubmit = GitHubPage.appendElementHtml(
+				'<button type="submit" class="btn-primary js-blob-submit">Submit</button>' );
+
+			editor.dom.root.append( codeSubmit );
+
+			return editor.create()
+				.then( () => {
+					expect( codeSubmit.disabled ).to.be.true;
+
+					editor.setData( 'Test' );
+					expect( codeSubmit.disabled ).to.be.false;
+
+					editor.setData( '' );
+					expect( codeSubmit.disabled ).to.be.true;
+				} );
+		} );
+
 		it( 'should react to pending actions', () => {
 			const editor = new Editor( GitHubPage.appendRoot( { text: 'Test' } ) );
 
