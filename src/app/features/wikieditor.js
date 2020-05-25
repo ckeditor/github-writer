@@ -6,12 +6,6 @@
 import Editor from '../editor/editor';
 
 export default class WikiEditor extends Editor {
-	constructor( root ) {
-		super( root );
-
-		this.placeholder = null;
-	}
-
 	getDom( root ) {
 		const dom = super.getDom( root );
 

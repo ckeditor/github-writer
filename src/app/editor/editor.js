@@ -36,8 +36,6 @@ export default class Editor {
 	constructor( root ) {
 		this.id = ++idCounter;
 
-		this.placeholder = 'Leave a comment';
-
 		this.domManipulator = new DomManipulator();
 
 		// Expose the list of editors in the extension console in the dev build.
@@ -73,6 +71,8 @@ export default class Editor {
 				} );
 			}
 		}
+
+		this.placeholder = this.dom.textarea.getAttribute( 'placeholder' );
 
 		this.domManipulator.addAttribute( root, 'data-github-writer-id', this.id );
 
