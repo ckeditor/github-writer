@@ -35,7 +35,6 @@
     "@ckeditor/ckeditor5-basic-styles": "^19.0.0",
     "@ckeditor/ckeditor5-block-quote": "^19.0.0",
     "@ckeditor/ckeditor5-clipboard": "^19.0.0",
-    "@ckeditor/ckeditor5-code-block": "ckeditor/ckeditor5-code-block#github-rte",
     "@ckeditor/ckeditor5-core": "^19.0.0",
     "@ckeditor/ckeditor5-editor-decoupled": "^19.0.0",
     "@ckeditor/ckeditor5-engine": "^19.0.0",
@@ -47,8 +46,6 @@
     "@ckeditor/ckeditor5-inspector": "^2.0.0",
     "@ckeditor/ckeditor5-link": "^19.0.0",
     "@ckeditor/ckeditor5-list": "^19.0.0",
-    "@ckeditor/ckeditor5-markdown-gfm": "ckeditor/ckeditor5-markdown-gfm#github-rte",
-    "@ckeditor/ckeditor5-mention": "ckeditor/ckeditor5-mention#github-rte",
     "@ckeditor/ckeditor5-paragraph": "^19.0.0",
     "@ckeditor/ckeditor5-paste-from-office": "^19.0.0",
     "@ckeditor/ckeditor5-remove-format": "^19.0.0",
@@ -62,7 +59,6 @@
     "linguist-languages": "^7.9.0"
   },
   "devDependencies": {
-    "@ckeditor/ckeditor5-dev-tests": "ckeditor/ckeditor5-dev/packages/ckeditor5-dev-tests#github-rte",
     "@ckeditor/ckeditor5-dev-utils": "^13.0.1",
     "chai": "^4.2.0",
     "copy-webpack-plugin": "^5.1.1",
@@ -73,6 +69,7 @@
     "html-to-json": "^0.6.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "mocha": "^7.1.2",
+    "mrgit": "^1.0.0",
     "postcss-loader": "^3.0.0",
     "puppeteer": "3.0.4",
     "raw-loader": "^4.0.1",
@@ -89,9 +86,23 @@
     "build-dev": "webpack --mode development --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "emojis": "node ./dev/updateemojis.js",
     "lint": "eslint --quiet --ignore-path .gitignore '**/*.js'",
-    "svg-cleanup": "svgo --config=./dev/svgo.config.json ./src/app/icons/*.svg"
+    "svg-cleanup": "svgo --config=./dev/svgo.config.json ./src/app/icons/*.svg",
+    "sync": "./node_modules/.bin/mrgit sync"
   },
   "eslintIgnore": [
     "build/**"
-  ]
+  ],
+  "workspaces": {
+    "packages": [
+      "packages/ckeditor5/packages/ckeditor5-code-block",
+      "packages/ckeditor5/packages/ckeditor5-markdown-gfm",
+      "packages/ckeditor5/packages/ckeditor5-mention",
+      "packages/ckeditor5-dev/packages/ckeditor5-dev-tests"
+    ],
+    "nohoist": [
+      "**/husky",
+      "**/husky/**",
+      "**/npm"
+    ]
+  }
 }

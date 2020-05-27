@@ -1,5 +1,6 @@
 /.idea/
 /node_modules/
+/packages/
 /tmp/
 /build/
 /coverage/
