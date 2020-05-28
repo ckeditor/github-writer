@@ -98,11 +98,6 @@
       "packages/ckeditor5/packages/ckeditor5-markdown-gfm",
       "packages/ckeditor5/packages/ckeditor5-mention",
       "packages/ckeditor5-dev/packages/ckeditor5-dev-tests"
-    ],
-    "nohoist": [
-      "**/husky",
-      "**/husky/**",
-      "**/npm"
     ]
   }
 }
