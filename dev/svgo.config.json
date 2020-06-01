@@ -1,9 +1,9 @@
 {
 	"plugins": [
 		"collapseGroups",
-		"removeDimensions",
-		{ "removeAttrs": { "attrs": "(fill|stroke|fill-rule)" } },
+		{ "removeAttrs": { "attrs": "(fill|stroke)" } },
 		{ "convertPathData": { "noSpaceAfterFlags": false } },
+		{ "removeViewBox": false },
 		"removeTitle",
 		"removeComments",
 		"removeMetadata"
