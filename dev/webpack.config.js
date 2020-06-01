@@ -79,6 +79,12 @@ module.exports = ( env, argv ) => {
 			} ),
 
 			// Use GH svg icons to match their UI.
+			getIconReplacement( 'heading1' ),
+			getIconReplacement( 'heading2' ),
+			getIconReplacement( 'heading3' ),
+			getIconReplacement( 'heading4' ),
+			getIconReplacement( 'heading5' ),
+			getIconReplacement( 'heading6' ),
 			getIconReplacement( 'bold' ),
 			getIconReplacement( 'italic' ),
 			getIconReplacement( 'quote', 'blockquote' ),
@@ -87,6 +93,11 @@ module.exports = ( env, argv ) => {
 			getIconReplacement( 'bulletedlist' ),
 			getIconReplacement( 'numberedlist' ),
 			getIconReplacement( 'todolist' ),
+			getIconReplacement( 'horizontalline' ),
+			getIconReplacement( 'strikethrough' ),
+			getIconReplacement( 'remove-format', 'removeformat' ),
+			getIconReplacement( 'image' ),
+			getIconReplacement( 'table' ),
 
 			new CopyPlugin( {
 				patterns: [

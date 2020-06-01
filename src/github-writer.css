@@ -101,6 +101,13 @@ form.github-writer-type-milestone .ck-editor__editable {
 	display: none !important;
 }
 
+/* Hide the mention and issue ref buttons so the markdown toolbar will not break in two rows */
+.github-writer-mode-markdown markdown-toolbar md-mention,
+.github-writer-mode-markdown markdown-toolbar md-ref
+{
+	display: none !important;
+}
+
 /* Get the GH toolbar closer to the RTE one (which is always available with the the Kebab button). */
 .github-writer-mode-markdown markdown-toolbar.px-2 {
 	padding-right: 3px !important;
