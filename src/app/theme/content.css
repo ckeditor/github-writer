@@ -79,6 +79,7 @@
 	& div.ck-horizontal-line {
 		padding: 0;
 		overflow: initial;
+		display: block;
 
 		& hr {
 			height: .25em;
