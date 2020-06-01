@@ -63,6 +63,11 @@
 
 			&.ck-splitbutton__arrow {
 				margin-left: 0 !important;
+				padding-left: 0 !important;
+			}
+
+			& .ck-dropdown__arrow {
+				margin-left: 4px;
 			}
 		}
 
@@ -108,6 +113,12 @@
 
 		& > .ck-file-dialog-button {
 			margin: 0;
+		}
+
+		& button[aria-label="Add a link <ctrl+k>"] svg,
+		& button[aria-label="Add a link <cmd+k>"] svg,
+		& button[aria-label="Add a task list"] svg {
+			margin-left: -3px;
 		}
 	}
 }
