@@ -88,18 +88,20 @@ module.exports = ( env, argv ) => {
 			getIconReplacement( 'numberedlist' ),
 			getIconReplacement( 'todolist' ),
 
-			new CopyPlugin( [
-				{
-					from: 'src/extension/manifest.json',
-					to: 'github-writer-chrome',
-					transform: content => transformManifest( content, 'chrome' )
-				},
-				{
-					from: 'src/extension/manifest.json',
-					to: 'github-writer-firefox',
-					transform: content => transformManifest( content, 'firefox' )
-				}
-			] ),
+			new CopyPlugin( {
+				patterns: [
+					{
+						from: 'src/extension/manifest.json',
+						to: 'github-writer-chrome',
+						transform: content => transformManifest( content, 'chrome' )
+					},
+					{
+						from: 'src/extension/manifest.json',
+						to: 'github-writer-firefox',
+						transform: content => transformManifest( content, 'firefox' )
+					}
+				]
+			} ),
 
 			new FileManagerPlugin( {
 				onStart: [
@@ -139,7 +141,10 @@ module.exports = ( env, argv ) => {
 						{
 							archive: [
 								{ source: 'build/github-writer-chrome', destination: 'build/github-writer-chrome.zip' },
-								{ source: 'build/github-writer-firefox', destination: 'build/github-writer-firefox.xpi' }
+								{
+									source: 'build/github-writer-firefox',
+									destination: 'build/github-writer-firefox.xpi'
+								}
 							]
 						} : {}
 				]
