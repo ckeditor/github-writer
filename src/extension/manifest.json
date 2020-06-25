@@ -7,9 +7,8 @@
   "version": "{package.json -> version}",
   "author": "{package.json -> author}",
   "permissions": [
-	// The following are domains used by GitHub to upload files. We need to have permissions on them,
+	// Amazon S3 is used by GitHub to upload files. We need to have permissions on it,
 	// so we avoid cross-origin issues when mimicking the upload within the GitHubUploadAdapter class.
-	"https://github.com/",
 	"https://*.s3.amazonaws.com/"
   ],
   "content_scripts": [
