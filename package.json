@@ -69,6 +69,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "mocha": "^8.0.1",
     "mrgit": "^1.0.0",
+    "null-loader": "^4.0.0",
     "postcss-loader": "^3.0.0",
     "puppeteer": "4.0.1",
     "raw-loader": "^4.0.1",

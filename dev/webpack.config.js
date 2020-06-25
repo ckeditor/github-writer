@@ -47,7 +47,13 @@ module.exports = ( env, argv ) => {
 				},
 				{
 					test: [
-						/ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
+						/ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/
+					],
+
+					use: [ 'null-loader' ]
+				},
+				{
+					test: [
 						/[/\\]src[/\\]app[/\\]theme[/\\].+\.css$/
 					],
 
@@ -104,11 +110,13 @@ module.exports = ( env, argv ) => {
 					{
 						from: 'src/extension/manifest.json',
 						to: 'github-writer-chrome',
+						force: true,
 						transform: content => transformManifest( content, 'chrome' )
 					},
 					{
 						from: 'src/extension/manifest.json',
 						to: 'github-writer-firefox',
+						force: true,
 						transform: content => transformManifest( content, 'firefox' )
 					}
 				]
@@ -126,13 +134,6 @@ module.exports = ( env, argv ) => {
 
 							{ source: 'src/extension', destination: 'build/github-writer-firefox' },
 							{ source: 'src/github-writer.css', destination: 'build/github-writer-firefox' }
-						]
-					},
-					{
-						// Delete the manifest templates. They'll be recreated by the CopyPlugin.
-						delete: [
-							'build/github-writer-chrome/manifest.json',
-							'build/github-writer-firefox/manifest.json'
 						]
 					}
 				],
