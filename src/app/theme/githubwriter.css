@@ -7,13 +7,58 @@
 	This is the entry point for the theme CSS.
 */
 
-/* UI */
-@import "toolbar.css";
-@import "mentions.css";
-@import "controlclick.css";
-@import "filteredlist.css";
-@import "codeblock.css";
+.ck-toolbar__items {
+	display: inherit;
+}
 
-/* Contents */
-@import "content.css";
-@import "autolink.css";
+.toolbar-item .ck-tooltip,
+.toolbar-item .ck-button__label {
+	display: none;
+}
+
+.ck-toolbar__separator {
+	height: 1px;
+}
+
+.ck.ck-dropdown {
+	display: inline-block;
+	position: relative;
+
+	& .ck-dropdown__panel {
+		display: none;
+		position: absolute;
+		z-index: 999;
+
+		&.ck-dropdown__panel-visible {
+			display: inline-block;
+		}
+
+		&.ck-dropdown__panel_ne,
+		&.ck-dropdown__panel_nw {
+			top: auto;
+			bottom: 100%;
+		}
+
+		&.ck-dropdown__panel_se,
+		&.ck-dropdown__panel_sw {
+			top: 100%;
+			bottom: auto;
+		}
+
+		&.ck-dropdown__panel_ne,
+		&.ck-dropdown__panel_se {
+			left: 0;
+			right: auto;
+		}
+
+		&.ck-dropdown__panel_nw,
+		&.ck-dropdown__panel_sw {
+			left: auto;
+			right: 0;
+		}
+	}
+}
+
+.ck-hidden {
+	display: none!important;
+}

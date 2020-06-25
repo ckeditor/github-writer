@@ -290,14 +290,14 @@ const CreateEditorInstanceMixin = {
 			.then( editor => {
 				const editable = editor.ui.getEditableElement();
 
+				// Post-fix to enable the GH tooltip on the toolbar. (Items are already rendered)
+				utils.toolbarItemsPostfix( editor.ui.view.toolbar );
+
 				this.injectToolbar( editor.ui.view.toolbar.element );
 				this.injectEditable( editable );
 
 				// Block pjax loading when clicking links inside the editor. (#189)
 				blockPjaxClicks( editable );
-
-				// Post-fix to enable the GH tooltip on the toolbar. (Items are already rendered)
-				utils.toolbarItemsPostfix( editor.ui.view.toolbar );
 
 				// Expose the main objects of the API, for cross logic.
 				editor.githubEditor = this;

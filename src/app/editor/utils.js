@@ -5,6 +5,7 @@
 
 import App from '../app';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+import themer from '../modules/themer';
 import env from '@ckeditor/ckeditor5-utils/src/env';
 
 const utils = {
@@ -19,6 +20,8 @@ const utils = {
 		if ( App.page.type !== 'comments' ) {
 			return;
 		}
+
+		themer.fixToolbar( toolbar );
 
 		const ctrlCmd = env.isMac ? 'cmd' : 'ctrl';
 
