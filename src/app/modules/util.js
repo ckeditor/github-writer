@@ -159,16 +159,20 @@ export function injectFunctionExecution( fn ) {
 export function openXmlHttpRequest( url, method = 'POST' ) {
 	const location = window.__getLocation();
 
+	const isLocal = url.startsWith( '/' );
+
 	// Firefox needs the whole url, so we fix it here, if necessary.
-	if ( url.startsWith( '/' ) ) {
+	if ( isLocal ) {
 		url = `${ location.protocol }//${ location.host }${ url }`;
 	}
 
 	const xhr = new XMLHttpRequest();
 	xhr.open( method, url, true );
 
-	// Some of the requests don't work without this one.
-	xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
+	if ( isLocal ) {
+		// GitHub requires this on some of the local XHR requests.
+		xhr.setRequestHeader( 'X-Requested-With', 'XMLHttpRequest' );
+	}
 
 	return xhr;
 }

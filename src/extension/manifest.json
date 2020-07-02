@@ -9,6 +9,7 @@
   "permissions": [
 	// Amazon S3 is used by GitHub to upload files. We need to have permissions on it,
 	// so we avoid cross-origin issues when mimicking the upload within the GitHubUploadAdapter class.
+	// Firefox only.
 	"https://*.s3.amazonaws.com/"
   ],
   "content_scripts": [

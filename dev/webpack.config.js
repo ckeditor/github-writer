@@ -197,6 +197,7 @@ function transformManifest( content, target ) {
 		}
 
 		if ( target === 'chrome' ) {
+			delete content.permissions;
 			delete content.browser_specific_settings;
 		} else {
 			// Firefox doesn't have support for the CodeEditor for now.
