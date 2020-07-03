@@ -7,6 +7,10 @@ import Editor from '../editor/editor';
 import { addClickListener } from '../modules/util';
 
 export default class NewInlineCommentEditor extends Editor {
+	getSizeContainer() {
+		return this.dom.root;
+	}
+
 	static run() {
 		// Edit option for comments: listen to "comment action" buttons and create the editor.
 		addClickListener( '.js-toggle-inline-comment-form', button => {

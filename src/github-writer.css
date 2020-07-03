@@ -287,6 +287,10 @@ form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 	max-height: none !important;
 }
 
+.github-writer-size-container > fieldset {
+	display: contents;
+}
+
 /* display:flex disables margin merge, so we fix the buttons distance in new comments. */
 .github-writer-size-container div.tabnav.mb-2 {
 	margin-top: 0 !important;
