@@ -81,7 +81,7 @@ describe( 'Plugins', () => {
 						expect( xhr.responseType ).to.equals( 'json' );
 						expect( xhr.async ).to.be.true;
 						expect( xhr.requestHeaders ).to.have.property( 'Accept', 'application/json' );
-						expect( xhr.requestHeaders ).to.have.property( 'X-Requested-With', 'XMLHttpRequest' );
+						expect( xhr.requestHeaders ).to.not.have.property( 'X-Requested-With', 'XMLHttpRequest' );
 
 						expect( xhr.requestBody ).to.be.an.instanceOf( FormData );
 						expect( xhr.requestBody.get( 'name' ) ).to.equals( 'image.jpeg' );

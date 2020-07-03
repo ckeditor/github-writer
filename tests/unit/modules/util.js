@@ -433,9 +433,14 @@ describe( 'Modules', () => {
 				expect( xhr.method ).to.equals( 'GET' );
 			} );
 
-			it( 'should set the X-Requested-With header', () => {
-				openXmlHttpRequest( 'test' );
+			it( 'should set the X-Requested-With header for local urls', () => {
+				openXmlHttpRequest( '/test' );
 				expect( xhr.requestHeaders ).to.have.property( 'X-Requested-With', 'XMLHttpRequest' );
+			} );
+
+			it( 'should not set the X-Requested-With header for external', () => {
+				openXmlHttpRequest( 'test' );
+				expect( xhr.requestHeaders ).to.not.have.property( 'X-Requested-With' );
 			} );
 
 			it( 'should fix URLs starting with "/"', () => {

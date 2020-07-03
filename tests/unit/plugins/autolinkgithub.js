@@ -9,7 +9,7 @@ import { GitHubPage } from '../../_util/githubpage';
 describe( 'Plugins', () => {
 	describe( 'AutoLinkGitHub', () => {
 		describe( 'GitHubLinkDataLoader', () => {
-			const previewUrl = 'https://preview/test';
+			const previewUrl = '/test';
 			const previewToken = 'the-token';
 			let sinonXhr;
 			let element;
@@ -74,7 +74,7 @@ describe( 'Plugins', () => {
 
 			describe( 'load()', () => {
 				function checkXhr( xhr ) {
-					expect( xhr.url ).to.equals( previewUrl );
+					expect( xhr.url.substring( xhr.url.length - previewUrl.length ) ).to.equals( previewUrl );
 					expect( xhr.method ).to.equals( 'POST' );
 					expect( xhr.async ).to.be.true;
 					expect( xhr.requestHeaders ).to.have.property( 'X-Requested-With', 'XMLHttpRequest' );
