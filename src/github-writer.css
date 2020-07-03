@@ -263,6 +263,9 @@ form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 .github-writer-size-container {
 	display: flex;
 	flex-direction: column;
+
+	/* This is to allow the container to shrink, so it'll not grow with its children contents. */
+	min-width: auto;
 }
 
 /* The following ensures that the editor doesn't show up when preloading it before editing comments */
