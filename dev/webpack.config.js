@@ -15,6 +15,7 @@ const path = require( 'path' );
 const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 
 const packageJson = require( '../package.json' );
+const version = packageJson.version;
 
 let isProduction = false;
 
@@ -151,10 +152,13 @@ module.exports = ( env, argv ) => {
 					( isProduction ) ?
 						{
 							archive: [
-								{ source: 'build/github-writer-chrome', destination: 'build/github-writer-chrome.zip' },
+								{
+									source: 'build/github-writer-chrome',
+									destination: `build/github-writer-v${ version }-chrome.zip`
+								},
 								{
 									source: 'build/github-writer-firefox',
-									destination: 'build/github-writer-firefox.xpi'
+									destination: `build/github-writer-v${ version }-firefox.xpi`
 								}
 							]
 						} : {}
