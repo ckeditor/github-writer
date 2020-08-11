@@ -144,7 +144,7 @@ export default class Emoji extends Plugin {
 						const element = data.viewItem;
 
 						if ( element.hasClass( 'emoji' ) ) {
-							if ( element.parent && element.parent.is( 'g-emoji' ) ) {
+							if ( element.parent && element.parent.is( 'element', 'g-emoji' ) ) {
 								conversionApi.consumable.consume( element, { name: true } );
 								evt.stop();
 							}

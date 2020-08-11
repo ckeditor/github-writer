@@ -251,7 +251,7 @@ export class InlineAutoFormatter extends AutoFormatter {
 		//   + Anything which is not a space.
 		const regex = new RegExp( '^\\s' + escapeRegex( this.marker ) + '(?!' + escapeRegex( this.marker[ 0 ] ) + ')[^\\s]' );
 
-		while ( textNode && textNode.is( 'text' ) ) {
+		while ( textNode && textNode.is( '$text' ) ) {
 			let valid = textNode === position.textNode;
 
 			if ( !valid ) {
@@ -341,7 +341,7 @@ export class BlockAutoFormatter extends AutoFormatter {
 	onMarker( editor, position ) {
 		const block = position.parent;
 
-		if ( !block.is( 'paragraph' ) ) {
+		if ( !block.is( 'element', 'paragraph' ) ) {
 			return;
 		}
 
