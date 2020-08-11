@@ -108,8 +108,8 @@ class LiveDocumentData {
 							// If the element ended up between texts, there is a chance that it split them,
 							// creating additional text nodes. As we don't have means to know that,
 							// we refresh all texts (for simplicity).
-							const isBetweenTexts = element.previousSibling && element.previousSibling.is( 'text' ) &&
-								element.nextSibling && element.nextSibling.is( 'text' );
+							const isBetweenTexts = element.previousSibling && element.previousSibling.is( '$text' ) &&
+								element.nextSibling && element.nextSibling.is( '$text' );
 							if ( isBetweenTexts ) {
 								tree.refreshTexts( position.parent );
 							}
@@ -323,7 +323,7 @@ class Tree {
 
 		// Insert all text nodes back again.
 		Array.from( modelNode.getChildren() ).forEach( child => {
-			if ( child.is( 'text' ) ) {
+			if ( child.is( '$text' ) ) {
 				children.splice( child.index, 0, this.getDefinition( child ) );
 			}
 		} );
