@@ -56,6 +56,7 @@
     "@ckeditor/ckeditor5-upload": "^21.0.0",
     "@ckeditor/ckeditor5-utils": "^21.0.0",
     "@ckeditor/ckeditor5-widget": "^21.0.0",
+    "@mlewand/ckeditor5-keyboard-marker": "https://github.com/mlewand/ckeditor5-keyboard-marker.git",
     "linguist-languages": "^7.10.0"
   },
   "devDependencies": {
@@ -95,8 +96,7 @@
     "packages": [
       "packages/ckeditor5/packages/ckeditor5-markdown-gfm",
       "packages/ckeditor5/packages/ckeditor5-mention",
-      "packages/ckeditor5-dev/packages/ckeditor5-dev-tests",
-      "packages/ckeditor5-keyboard-marker"
+      "packages/ckeditor5-dev/packages/ckeditor5-dev-tests"
     ]
   }
 }
