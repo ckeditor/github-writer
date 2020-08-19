@@ -20,7 +20,6 @@ import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 import Kbd from '@mlewand/ckeditor5-keyboard-marker/src/Kbd';
 
 import HeadingDropdown from '../plugins/headingdropdown';
-import HeadingTabKey from '../plugins/headingtabkey';
 
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 
@@ -104,7 +103,7 @@ export default class CKEditorGitHubEditor extends DecoupledEditor {
 CKEditorGitHubEditor.builtinPlugins = [
 	Essentials, Paragraph, Enter, AutoFormat, Mention, Emoji,
 	Image, ImageUpload, GitHubUploadAdapter,
-	HeadingDropdown, HeadingTabKey,
+	HeadingDropdown,
 	Bold, Italic, SmartCode, Strikethrough, Kbd,
 	BlockQuote,
 	Link,
