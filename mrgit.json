@@ -1,6 +1,5 @@
 {
 	"dependencies": {
-		"@ckeditor/ckeditor5": "git@github.com:ckeditor/ckeditor5.git#github-writer",
 		"@ckeditor/ckeditor5-dev": "git@github.com:ckeditor/ckeditor5-dev.git#github-writer"
 	}
 }

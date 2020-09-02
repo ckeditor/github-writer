@@ -47,6 +47,8 @@
     "@ckeditor/ckeditor5-inspector": "^2.2.0",
     "@ckeditor/ckeditor5-link": "^22.0.0",
     "@ckeditor/ckeditor5-list": "^22.0.0",
+    "@ckeditor/ckeditor5-markdown-gfm": "^22.0.0",
+    "@ckeditor/ckeditor5-mention": "^22.0.0",
     "@ckeditor/ckeditor5-paragraph": "^22.0.0",
     "@ckeditor/ckeditor5-paste-from-office": "^22.0.0",
     "@ckeditor/ckeditor5-remove-format": "^22.0.0",
@@ -94,8 +96,6 @@
   ],
   "workspaces": {
     "packages": [
-      "packages/ckeditor5/packages/ckeditor5-markdown-gfm",
-      "packages/ckeditor5/packages/ckeditor5-mention",
       "packages/ckeditor5-dev/packages/ckeditor5-dev-tests"
     ]
   }
