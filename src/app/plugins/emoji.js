@@ -67,20 +67,20 @@ export default class Emoji extends Plugin {
 			// which is the whole point of auto-linking, in fact.
 			editor.conversion.for( 'editingDowncast' ).elementToElement( {
 				model: 'emoji',
-				view: ( modelElement, viewWriter ) => {
+				view: ( modelElement, { writer } ) => {
 					const name = modelElement.getAttribute( 'name' );
 					const emojiInfo = emojis[ name ];
 
-					const gEmoji = viewWriter.createContainerElement( 'g-emoji', {
+					const gEmoji = writer.createContainerElement( 'g-emoji', {
 						'contenteditable': 'false',
 						'alias': name
 					} );
 
 					if ( isEmojiSupported && emojiInfo.unicode ) {
-						const viewText = viewWriter.createText( emojiInfo.unicode );
-						viewWriter.insert( viewWriter.createPositionAt( gEmoji, 0 ), viewText );
+						const viewText = writer.createText( emojiInfo.unicode );
+						writer.insert( writer.createPositionAt( gEmoji, 0 ), viewText );
 					} else {
-						const image = viewWriter.createEmptyElement( 'img', {
+						const image = writer.createEmptyElement( 'img', {
 							'class': 'emoji',
 							'height': '20',
 							'width': '20',
@@ -88,7 +88,7 @@ export default class Emoji extends Plugin {
 							'alt': `:${ name }:`,
 							'src': emojiInfo.url
 						} );
-						viewWriter.insert( viewWriter.createPositionAt( gEmoji, 0 ), image );
+						writer.insert( writer.createPositionAt( gEmoji, 0 ), image );
 					}
 
 					return gEmoji;
@@ -97,13 +97,13 @@ export default class Emoji extends Plugin {
 
 			editor.conversion.for( 'dataDowncast' ).elementToElement( {
 				model: 'emoji',
-				view: ( modelElement, viewWriter ) => {
+				view: ( modelElement, { writer } ) => {
 					// It's not possible to downcast an element to plain text, so we wrap the text in a <span>.
 					// This <span> will be in any case stripped out when converting the data to markdown on output.
-					const emoji = viewWriter.createContainerElement( 'span' );
+					const emoji = writer.createContainerElement( 'span' );
 
-					const viewText = viewWriter.createText( `:${ modelElement.getAttribute( 'name' ) }:` );
-					viewWriter.insert( viewWriter.createPositionAt( emoji, 0 ), viewText );
+					const viewText = writer.createText( `:${ modelElement.getAttribute( 'name' ) }:` );
+					writer.insert( writer.createPositionAt( emoji, 0 ), viewText );
 
 					return emoji;
 				}
@@ -116,22 +116,22 @@ export default class Emoji extends Plugin {
 				// Convert <g-emoji>.
 				editor.conversion.for( 'upcast' ).elementToElement( {
 					view: 'g-emoji',
-					model: ( viewElement, modelWriter ) => {
+					model: ( viewElement, { writer } ) => {
 						const name = viewElement.getAttribute( 'alias' );
-						return createEmojiElement( name, modelWriter );
+						return createEmojiElement( name, writer );
 					}
 				} );
 
 				// Convert <img class="emoji"> (see next conversion.for( 'upcast' ) for exception)
 				editor.conversion.for( 'upcast' ).elementToElement( {
 					view: 'img',
-					model: ( viewElement, modelWriter ) => {
+					model: ( viewElement, { writer } ) => {
 						if ( viewElement.hasClass( 'emoji' ) ) {
 							let name = viewElement.getAttribute( 'alt' );
 							name = name && name.replace( /:/g, '' );
 
 							if ( emojis[ name ] ) {
-								return createEmojiElement( name, modelWriter );
+								return createEmojiElement( name, writer );
 							}
 						}
 					},

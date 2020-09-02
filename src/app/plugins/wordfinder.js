@@ -170,7 +170,7 @@ class WordFinderManager {
 
 		this.editor.conversion.for( conversionGroup ).attributeToElement( {
 			model: 'word',
-			view: ( modelAttributeValue, viewWriter ) => {
+			view: ( modelAttributeValue, { writer } ) => {
 				if ( !modelAttributeValue ) {
 					return;
 				}
@@ -204,7 +204,7 @@ class WordFinderManager {
 				const elementName = converter( attribs );
 
 				// Using the same priority as link for compatibility with ControlClick.
-				return viewWriter.createAttributeElement( elementName, attribs, { priority: 5 } );
+				return writer.createAttributeElement( elementName, attribs, { priority: 5 } );
 			}
 		} );
 	}
