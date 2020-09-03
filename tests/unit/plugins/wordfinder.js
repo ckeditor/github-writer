@@ -6,6 +6,7 @@
 import WordFinder from '../../../src/app/plugins/wordfinder';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 import HeadingEditing from '@ckeditor/ckeditor5-heading/src/headingediting';
 import CKEditorGitHubEditor from '../../../src/app/editor/ckeditorgithubeditor';
 
@@ -25,7 +26,7 @@ describe( 'Plugins', () => {
 				'The second paragraph of text for the styler.';
 
 			beforeEach( 'create the test editor', () => {
-				return createTestEditor( defaultData, [ WordFinder, HeadingEditing ] )
+				return createTestEditor( defaultData, [ WordFinder, HeadingEditing, Strikethrough ] )
 					.then( ret => ( { editor, model, root } = ret ) )
 					.then( () => {
 						wordFinder = editor.wordFinder;
@@ -433,7 +434,7 @@ describe( 'Plugins', () => {
 				it( 'should not have the attribute if covered by different formatting', () => {
 					editor.wordFinder.add( { type: 'a', pattern: /CD/ } );
 
-					editor.setData( '_AB C_**D EF**' );
+					editor.setData( '~AB C~**D EF**' );
 
 					checkTextNodes( root.getNodeByPath( [ 0, 0 ] ),
 						[ 'AB C', 'D EF' ],
