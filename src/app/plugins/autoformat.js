@@ -220,12 +220,12 @@ export class InlineAutoFormatter extends AutoFormatter {
 	constructor( marker, command ) {
 		super( marker, command );
 
-		// Build the regex used to search for an opening match.
-		// E.g.: /(^|[^\s|`])`[\s.,;:?!]?$/:
+		// Build the regex used to search for a closing match.
+		// E.g.: /(^|[^\s|`])`[\s.,;:?!'")]?$/:
 		//   > (Group) Anything which is not space or the first character of the marker.
 		//   + Marker
 		//   + Space or punctuation, if any.
-		this.typingRegex = new RegExp( '(^|[^\\s|' + escapeRegex( marker[ 0 ] ) + '])' + escapeRegex( marker ) + '[\\s.,;:?!]?$' );
+		this.typingRegex = new RegExp( '(^|[^\\s|' + escapeRegex( marker[ 0 ] ) + '])' + escapeRegex( marker ) + '[\\s.,;:?!\'")]?$' );
 	}
 
 	/**
@@ -245,11 +245,11 @@ export class InlineAutoFormatter extends AutoFormatter {
 		// Build the regex used to search for an opening match.
 		// E.g.: /^\s`(?!`)[^\s]/:
 		//   > Beginning of the string
-		//   + Space
+		//   + Space or punctuation.
 		//   + Marker
 		//     - Followed by anything which is not the first character of the marker.
 		//   + Anything which is not a space.
-		const regex = new RegExp( '^\\s' + escapeRegex( this.marker ) + '(?!' + escapeRegex( this.marker[ 0 ] ) + ')[^\\s]' );
+		const regex = new RegExp( '^[\\s\'"(]' + escapeRegex( this.marker ) + '(?!' + escapeRegex( this.marker[ 0 ] ) + ')[^\\s]' );
 
 		while ( textNode && textNode.is( '$text' ) ) {
 			let valid = textNode === position.textNode;

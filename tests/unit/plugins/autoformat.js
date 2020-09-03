@@ -123,6 +123,24 @@ describe( 'Plugins', () => {
 				}
 			] );
 
+			testAutoFormatting( 'Inline within parenthesis and quotes', [
+				{
+					before: '<paragraph>foo (**bar*[]), baz</paragraph>',
+					key: '*',
+					after: '<paragraph>foo (<$text bold="true">bar</$text>[]), baz</paragraph>'
+				},
+				{
+					before: '<paragraph>foo "_bar[]". baz</paragraph>',
+					key: '_',
+					after: '<paragraph>foo "<$text italic="true">bar</$text>[]". baz</paragraph>'
+				},
+				{
+					before: '<paragraph>foo \'`bar[]\'? baz</paragraph>',
+					key: '`',
+					after: '<paragraph>foo \'<$text code="true">bar</$text>[]\'? baz</paragraph>'
+				}
+			] );
+
 			testAutoFormatting( 'Inline with soft-break', [
 				{
 					before: '<paragraph>foo<softBreak></softBreak>**barbaz*[]</paragraph>',
