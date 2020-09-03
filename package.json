@@ -62,7 +62,7 @@
     "linguist-languages": "^7.10.0"
   },
   "devDependencies": {
-    "@ckeditor/ckeditor5-dev-utils": "^23.3.0",
+    "@ckeditor/ckeditor5-dev-utils": "^23.4.0",
     "chai": "^4.2.0",
     "copy-webpack-plugin": "^6.1.0",
     "eslint": "^7.8.1",
