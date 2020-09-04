@@ -14,6 +14,10 @@ export default class NewCodeEditor extends CodeEditor {
 		this._checkFileType();
 	}
 
+	get type() {
+		return 'NewCodeEditor';
+	}
+
 	_setInitialMode() {
 		super._setInitialMode( editorModes.MARKDOWN );
 	}

@@ -15,6 +15,10 @@ export default class CodeEditor extends Editor {
 		registerUpdateListener( this );
 	}
 
+	get type() {
+		return 'CodeEditor';
+	}
+
 	getDom( root ) {
 		const dom = super.getDom( root );
 

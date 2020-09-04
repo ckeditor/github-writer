@@ -7,6 +7,10 @@ import Editor from '../editor/editor';
 import { addClickListener } from '../modules/util';
 
 export default class CommentEditor extends Editor {
+	get type() {
+		return 'CommentEditor';
+	}
+
 	injectEditable( editable ) {
 		const container = this.createEditableContainer( editable );
 

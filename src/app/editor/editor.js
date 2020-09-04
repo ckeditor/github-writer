@@ -76,8 +76,8 @@ export default class Editor {
 
 		this.domManipulator.addAttribute( root, 'data-github-writer-id', this.id );
 
-		// Add a class for this editor contructor, for easy to customize specific editors.
-		this.domManipulator.addClass( root, 'github-writer-' + this.constructor.name.toLowerCase() );
+		// Add a class for this editor type, for easy to customize specific editors.
+		this.domManipulator.addClass( root, 'github-writer-' + String( this.type ).toLowerCase() );
 
 		// Inject our classes in the dom. These will help controlling the editor through CSS.
 		this.domManipulator.addClass( this.dom.panels.markdown, 'github-writer-panel-markdown' );

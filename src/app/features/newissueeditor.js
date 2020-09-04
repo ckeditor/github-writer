@@ -6,6 +6,10 @@
 import Editor from '../editor/editor';
 
 export default class NewIssueEditor extends Editor {
+	get type() {
+		return 'NewIssueEditor';
+	}
+
 	static run() {
 		return this.createEditor( 'form#new_issue' );
 	}
