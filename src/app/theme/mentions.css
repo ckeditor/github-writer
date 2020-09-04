@@ -33,6 +33,7 @@
 			line-height: 21px;
 			color: #586069;
 			vertical-align: inherit;
+			cursor: inherit;
 		}
 
 		& g-emoji {
