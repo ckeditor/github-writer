@@ -7,6 +7,10 @@ import Editor from '../editor/editor';
 import { addClickListener } from '../modules/util';
 
 export default class NewInlineCommentEditor extends Editor {
+	get type() {
+		return 'NewInlineCommentEditor';
+	}
+
 	getSizeContainer() {
 		return this.dom.root;
 	}

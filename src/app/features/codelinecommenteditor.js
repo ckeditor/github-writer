@@ -8,6 +8,10 @@ import Editor from '../editor/editor';
 let listening = false;
 
 export default class CodeLineCommentEditor extends Editor {
+	get type() {
+		return 'CodeLineCommentEditor';
+	}
+
 	static run() {
 		if ( !listening ) {
 			// Code line comments: the "+" button...fires an event when the form for code comments is injected.

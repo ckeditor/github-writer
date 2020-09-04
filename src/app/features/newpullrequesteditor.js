@@ -6,6 +6,10 @@
 import Editor from '../editor/editor';
 
 export default class NewPullRequestEditor extends Editor {
+	get type() {
+		return 'NewPullRequestEditor';
+	}
+
 	static run() {
 		return this.createEditor( 'form#new_pull_request' );
 	}

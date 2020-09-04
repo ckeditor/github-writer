@@ -6,6 +6,10 @@
 import Editor from '../editor/editor';
 
 export default class NewCommentEditor extends Editor {
+	get type() {
+		return 'NewCommentEditor';
+	}
+
 	getSizeContainer() {
 		return this.dom.root.querySelector( '.timeline-comment' );
 	}

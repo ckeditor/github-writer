@@ -38,6 +38,10 @@ export default class MilestoneEditor extends Editor {
 		root.classList.add( 'github-writer-type-milestone' );
 	}
 
+	get type() {
+		return 'MilestoneEditor';
+	}
+
 	getDom( root ) {
 		const dom = super.getDom( root );
 
