@@ -42,7 +42,7 @@
 			border: 0;
 
 			/* Color */
-			color: #586069;
+			color: var(--color-text-secondary);
 
 			/* Height */
 			display: block;
