@@ -28,7 +28,7 @@ div.github-writer-ckeditor .ck-editor__editable {
 }
 
 div.github-writer-ckeditor .ck-editor__editable.ck-blurred {
-	background-color: #fafbfc;
+	background-color: transparent;
 }
 
 div.github-writer-ckeditor .ck-editor__editable.ck-focused {
