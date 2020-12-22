@@ -13,7 +13,12 @@
 @import "controlclick.css";
 @import "filteredlist.css";
 @import "codeblock.css";
+@import "panel.css";
 
 /* Contents */
 @import "content.css";
 @import "autolink.css";
+
+.ck-link-actions .ck-button__label {
+	color: var(--color-text-link) !important;
+}

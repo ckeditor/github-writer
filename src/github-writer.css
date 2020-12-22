@@ -28,11 +28,11 @@ div.github-writer-ckeditor .ck-editor__editable {
 }
 
 div.github-writer-ckeditor .ck-editor__editable.ck-blurred {
-	background-color: #fafbfc;
+	background-color: var(--color-input-contrast-bg);
 }
 
 div.github-writer-ckeditor .ck-editor__editable.ck-focused {
-	background-color: #fff;
+	background-color: var(--color-input-bg);
 }
 
 /* Release page specific. */
@@ -50,8 +50,8 @@ form.github-writer-type-milestone .ck-editor__editable {
 
 /* The CKEditor placeholder. Matches the inspected rules from the GH textarea on Chrome. */
 .ck.ck-editor__editable > .ck-placeholder::before {
-	color: #6a737d;
-	opacity: .54;
+	color: var(--color-text-placeholder);
+	opacity: 1;
 	position: absolute;
 }
 
@@ -223,7 +223,7 @@ form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 
 /* Although the blur effect is nice, we're removing it here so the editor stays aligned with other fields. */
 .github-writer-wikieditor .ck-editor__editable.ck-blurred {
-	background-color: white !important;
+	background-color: var(--color-input-bg) !important;
 }
 
 /**********************************

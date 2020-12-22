@@ -8,7 +8,7 @@
 	width: 250px;
 	max-width: 250px;
 
-	color: #586069;
+	color: var(--color-text-secondary);
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
 
 	& * {
@@ -17,30 +17,37 @@
 	}
 
 	& .select-menu-header {
-		background: #f6f8fa;
+		background: var(--color-bg-overlay);
 		padding: 8px 10px;
-		border-bottom: 1px solid #e1e4e8;
+		border-bottom: 1px solid var(--color-select-menu-border-secondary);
 		line-height: 16px;
 
 		& .select-menu-title {
 			font-weight: 600;
-			color: #24292e;
+			color: var(--color-text-primary);
 			line-height: inherit;
 		}
 	}
 
 	& .select-menu-filters {
-		background-color: #f6f8fa;
+		background-color: var(--color-bg-overlay);
+
+		& input {
+			color: var(--color-text-primary);
+			background-color: var(--color-input-bg);
+		}
 	}
 
 	& .select-menu-header code,
 	& .select-menu-item code {
+		color: var(--color-text-primary);
 		font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 		font-size: 12px;
 		line-height: 16px;
 		margin-left: 5px;
 
 		& * {
+			color: inherit;
 			font-family: inherit;
 			font-size: inherit;
 			line-height: inherit;
@@ -50,7 +57,7 @@
 	& .ck.ck-button.select-menu-item {
 		cursor: pointer;
 		border: 0;
-		border-bottom: 1px solid #eaecef;
+		border-bottom: 1px solid var(--color-select-menu-border-secondary);
 		padding: calc(0.2 * var(--ck-line-height-base) * var(--ck-font-size-base)) calc(0.4 * var(--ck-line-height-base) * var(--ck-font-size-base));
 		line-height: 18px;
 
@@ -61,8 +68,8 @@
 		&:hover,
 		&:active,
 		&:focus {
-			color: #fff !important;
-			background-color: #0366d6;
+			color: var(--color-state-selected-primary-text) !important;
+			background-color: var(--color-state-selected-primary-bg);
 			box-shadow: none;
 		}
 
@@ -88,14 +95,15 @@
 	}
 
 	& .select-menu-footer {
+		color: var(--color-text-primary);
 		border-bottom: 0;
 	}
 
 	& .form-control {
 		&:focus {
-			border-color: #2188ff;
+			border-color: var(--color-state-focus-border);
 			outline: none;
-			box-shadow: inset 0 1px 2px rgba(27, 31, 35, .075), 0 0 0 0.2em rgba(3, 102, 214, .3);
+			box-shadow: var(--color-state-focus-shadow);
 		}
 	}
 
