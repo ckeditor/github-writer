@@ -69,10 +69,16 @@ describe( 'Editor', () => {
 				expect( editor.dom.isEdit ).to.be.true;
 			} );
 
-			it( 'should add the editor constructor class', () => {
-				const editor = new Editor( GitHubPage.appendRoot() );
+			it( 'should add the editor type class', () => {
+				class TestEditor extends Editor {
+					get type() {
+						return 'Test';
+					}
+				}
 
-				expect( editor.dom.root.classList.contains( 'github-writer-editor' ) ).to.be.true;
+				const editor = new TestEditor( GitHubPage.appendRoot() );
+
+				expect( editor.dom.root.classList.contains( 'github-writer-test' ) ).to.be.true;
 			} );
 
 			it( 'should add css classes to the panel elements', () => {
