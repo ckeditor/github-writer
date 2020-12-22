@@ -28,11 +28,11 @@ div.github-writer-ckeditor .ck-editor__editable {
 }
 
 div.github-writer-ckeditor .ck-editor__editable.ck-blurred {
-	background-color: transparent;
+	background-color: var(--color-input-contrast-bg);
 }
 
 div.github-writer-ckeditor .ck-editor__editable.ck-focused {
-	background-color: transparent;
+	background-color: var(--color-input-bg);
 }
 
 /* Release page specific. */
