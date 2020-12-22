@@ -29,6 +29,7 @@
 }
 
 .ck.ck-toolbar {
+	background: transparent !important;
 	margin: 0 15px 0 0;
 	padding: 0;
 
@@ -54,7 +55,7 @@
 
 			&.ck-on,
 			&:not(.ck-disabled):hover {
-				color: #0366d6;
+				color: var(--color-text-link);
 			}
 
 			&.ck-splitbutton__action {

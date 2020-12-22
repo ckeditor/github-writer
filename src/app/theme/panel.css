@@ -1,0 +1,30 @@
+/**
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+.ck-balloon-panel, .ck-dropdown__panel {
+	box-shadow: var(--color-autocomplete-shadow) !important;
+	background: var(--color-bg-overlay) !important;
+	border: 1px solid var(--color-border-overlay) !important;
+	border-radius: 6px !important;
+}
+
+.ck.ck-balloon-panel[class*=arrow_n]:after {
+	border-bottom-color: var(--color-bg-overlay) !important;
+	margin-top: var(--color-border-overlay) !important;
+}
+
+.ck.ck-balloon-panel[class*=arrow_s]:after {
+	border-top-color: var(--color-bg-overlay) !important;
+	margin-bottom: var(--color-border-overlay) !important;
+}
+
+.ck-list {
+	color: var(--color-text-primary) !important;
+	background: var(--color-bg-overlay) !important;
+}
+
+.ck-button {
+	color: var(--color-text-primary) !important;
+}

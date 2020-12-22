@@ -16,17 +16,11 @@
 
 		/* Styles used in the code editor */
 		padding: 0;
-		background: #ffffff;
+		background: var(--color-bg-primary);
 
 		& > img {
 			margin: 0;
 			min-width: auto;
-		}
-	}
-
-	&.ck-blurred {
-		& .image > img {
-			mix-blend-mode: multiply;
 		}
 	}
 
@@ -85,7 +79,7 @@
 			height: .25em;
 			padding: 0;
 			margin: 24px 0;
-			background-color: #e1e4e8;
+			background-color: var(--color-border-primary);
 			border: 0;
 		}
 	}
@@ -97,7 +91,8 @@
 
 	/* Code block */
 	& pre {
-		background-color: hsl(210, 29%, 97%);
+		color: var(--color-text-primary);
+		background-color: var(--color-bg-tertiary);
 		border: 0;
 		padding: 16px;
 
@@ -107,7 +102,7 @@
 	}
 
 	&.ck-blurred pre {
-		background-color: hsl(225, 35%, 95%);
+		background-color: var(--color-bg-tertiary);
 	}
 
 	/* Table */
@@ -123,7 +118,7 @@
 			}
 
 			& tr:nth-child(2n) {
-				background: #f6f8fa;
+				background: var(--color-bg-tertiary);
 			}
 
 			& th {
@@ -133,7 +128,7 @@
 			& th,
 			& td {
 				padding: 6px 13px;
-				border: 1px solid #dfe2e5 !important;
+				border: 1px solid var(--color-markdown-table-tr-border) !important;
 				width: auto;
 			}
 		}

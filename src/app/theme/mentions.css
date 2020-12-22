@@ -5,7 +5,7 @@
 
 .ck-mentions {
 	& li.ck-list__item {
-		border-bottom: 1px solid #dfe2e5 !important;
+		border-bottom: 1px solid var(--color-autocomplete-row-border) !important;
 
 		&:last-child {
 			border-bottom: 0 !important;
@@ -20,8 +20,8 @@
 
 		&:hover,
 		&.ck-on {
-			background: #0366d6 !important;
-			color: #fff !important;
+			background: var(--color-state-selected-primary-bg) !important;
+			color: var(--color-state-selected-primary-text) !important;
 
 			& > small {
 				color: #fff !important;
@@ -31,7 +31,7 @@
 		& small {
 			font-weight: 400;
 			line-height: 21px;
-			color: #586069;
+			color: var(--color-text-secondary);
 			vertical-align: inherit;
 			cursor: inherit;
 		}

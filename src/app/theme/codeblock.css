@@ -14,7 +14,7 @@
 			right: 1px;
 			padding: 0 var(--ck-spacing-medium);
 			border: 0;
-			color: hsla(209, 50%, 25%, 1.1);
+			color: var(--color-state-selected-primary-bg);
 			background: none;
 			font-size: 10px;
 			font-family: var(--ck-font-face);
@@ -41,8 +41,8 @@
 			&.ck-on,
 			&:active,
 			&:hover {
-				color: #fff;
-				background: #0366d6;
+				color: var(--color-state-selected-primary-text);
+				background: var(--color-state-selected-primary-bg);
 			}
 
 			& > .ck-dropdown__arrow {
