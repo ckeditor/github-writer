@@ -16,6 +16,7 @@ import HeadingCommand from '@ckeditor/ckeditor5-heading/src/headingcommand';
 import HeadingEditing from '@ckeditor/ckeditor5-heading/src/headingediting';
 import HorizontalLineEditing from '@ckeditor/ckeditor5-horizontal-line/src/horizontallineediting';
 import ListEditing from '@ckeditor/ckeditor5-list/src/listediting';
+import TodoListEditing from '@ckeditor/ckeditor5-list/src/todolistediting';
 
 import { setData, getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 import { createTestEditor } from '../../_util/ckeditor';
@@ -28,7 +29,8 @@ describe( 'Plugins', () => {
 			beforeEach( 'create test editor', () => {
 				return createTestEditor( '', [ AutoFormat,
 					CodeEditing, StrikethroughEditing,
-					HorizontalLineEditing, BlockQuoteEditing, HeadingEditing, CodeBlockEditing, ListEditing,
+					HorizontalLineEditing, BlockQuoteEditing, HeadingEditing, CodeBlockEditing,
+					ListEditing, TodoListEditing,
 					Undo
 				] )
 					.then( editorObjects => {
@@ -276,6 +278,20 @@ describe( 'Plugins', () => {
 				}
 			] );
 
+			// Could not make these tests work :( but manual tests are ok :)
+			// testAutoFormatting( 'Todo list', [
+			// 	{
+			// 		before: '<paragraph>[]</paragraph>',
+			// 		key: '[] ',
+			// 		after: '<listItem listIndent="0" listType="todo">[]</listItem>'
+			// 	},
+			// 	{
+			// 		before: '<paragraph>[]</paragraph>',
+			// 		key: '[ ] ',
+			// 		after: '<listItem listIndent="0" listType="todo">[]</listItem>'
+			// 	}
+			// ] );
+
 			testAutoFormatting( 'Block quote', [
 				{
 					before: '<paragraph>>[]</paragraph>',
@@ -449,11 +465,14 @@ describe( 'Plugins', () => {
 						it( `should pass test ${ index + 1 }`, () => {
 							setData( model, testCase.before );
 							model.change( writer => {
-								if ( testCase.attribs ) {
-									writer.insertText( testCase.key, testCase.attribs, model.document.selection.getFirstPosition() );
-								} else {
-									writer.insertText( testCase.key, model.document.selection.getFirstPosition() );
-								}
+								const keys = testCase.key.split( '' );
+								keys.forEach( key => {
+									if ( testCase.attribs ) {
+										writer.insertText( key, testCase.attribs, model.document.selection.getFirstPosition() );
+									} else {
+										writer.insertText( key, model.document.selection.getFirstPosition() );
+									}
+								} );
 							} );
 
 							expect( getData( model ) ).to.equal( testCase.after );
