@@ -65,6 +65,8 @@ export default class AutoFormat extends Plugin {
 		autoFormat.add( 'bulletedList -', new BlockAutoFormatter( '- ', 'bulletedList' ) );
 		autoFormat.add( 'numberedList', new BlockAutoFormatter( '1. ', 'numberedList' ) );
 		autoFormat.add( 'numberedList 1)', new BlockAutoFormatter( '1) ', 'numberedList' ) );
+		autoFormat.add( 'todoList)', new BlockAutoFormatter( '[ ] ', 'todoList' ) );
+		autoFormat.add( 'todoList 1)', new BlockAutoFormatter( '[] ', 'todoList' ) );
 
 		// Headings
 		{
