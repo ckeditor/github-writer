@@ -59,7 +59,7 @@
     "@ckeditor/ckeditor5-utils": "^27.1.0",
     "@ckeditor/ckeditor5-widget": "^27.1.0",
     "@mlewand/ckeditor5-keyboard-marker": "^1.0.3",
-    "linguist-languages": "^7.12.2"
+    "linguist-languages": "^7.14.0"
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-dev-utils": "^24.0.2",
