@@ -135,8 +135,9 @@ describe( 'Plugins', () => {
 				expect( getData( model ) ).to.equal(
 					'[<image alt=":octocat:" src="image-url"></image>]' );
 				expect( getViewData( editor.editing.view ) ).to.equals(
-					'[<figure class="ck-widget image" contenteditable="false">' +
-					'<img alt=":octocat:" src="image-url"></img></figure>]' );
+					'[<figure class="ck-widget ck-widget_selected image" contenteditable="false">' +
+					'<img alt=":octocat:" src="image-url"></img>' +
+					'<div class="ck ck-reset_all ck-widget__type-around"></div></figure>]' );
 				expect( editor.getData().replace( /\u00a0/g, ' ' ) ).to.equals( '![:octocat:](image-url)' );
 			} );
 
@@ -146,8 +147,9 @@ describe( 'Plugins', () => {
 				expect( getData( model ) ).to.equal(
 					'[<image alt=":testtest:" src="image-url"></image>]' );
 				expect( getViewData( editor.editing.view ) ).to.equals(
-					'[<figure class="ck-widget image" contenteditable="false">' +
-					'<img alt=":testtest:" src="image-url"></img></figure>]' );
+					'[<figure class="ck-widget ck-widget_selected image" contenteditable="false">' +
+					'<img alt=":testtest:" src="image-url"></img>' +
+					'<div class="ck ck-reset_all ck-widget__type-around"></div></figure>]' );
 				expect( editor.getData().replace( /\u00a0/g, ' ' ) ).to.equals( '![:testtest:](image-url)' );
 			} );
 

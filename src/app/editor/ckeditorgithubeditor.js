@@ -90,8 +90,7 @@ export default class CKEditorGitHubEditor extends DecoupledEditor {
 				styles: {
 					'word-wrap': 'break-word'
 				}
-			},
-			converterPriority: 'high'
+			}
 		} );
 	}
 
