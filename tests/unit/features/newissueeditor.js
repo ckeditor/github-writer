@@ -21,6 +21,13 @@ describe( 'Features', () => {
 					expect( editor.dom.root ).to.equals( root );
 				} );
 			} );
+
+			it( 'should not create the editor if the Issue Template feature is enabled (#259)', () => {
+				GitHubPage.appendRoot( { type: 'issue' } );
+				GitHubPage.appendElementHtml( '<div class="issue-form-body">Issue Template</div>' );
+
+				expect( NewIssueEditor.run() ).to.be.undefined;
+			} );
 		} );
 	} );
 } );

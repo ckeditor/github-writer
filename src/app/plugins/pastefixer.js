@@ -39,7 +39,7 @@ export default class PasteFixer extends Plugin {
 			// 	}
 			// } );
 
-			editor.plugins.get( 'Clipboard' ).on( 'inputTransformation', ( evt, data ) => {
+			editor.plugins.get( 'ClipboardPipeline' ).on( 'inputTransformation', ( evt, data ) => {
 				// We just want to catch pasting of a single url that is auto-linking to itself.
 				const node = data.content.childCount === 1 && data.content.getChild( 0 );
 

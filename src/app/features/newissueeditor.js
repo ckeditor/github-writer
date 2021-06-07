@@ -11,6 +11,11 @@ export default class NewIssueEditor extends Editor {
 	}
 
 	static run() {
+		// As for now we disable the editor when the new Issue Template feature is enabled. (#259)
+		if ( document.querySelector( '.issue-form-body' ) ) {
+			return;
+		}
+
 		return this.createEditor( 'form#new_issue' );
 	}
 }
