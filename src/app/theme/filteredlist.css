@@ -8,7 +8,7 @@
 	width: 250px;
 	max-width: 250px;
 
-	color: var(--color-text-secondary);
+	color: var(--color-fg-muted);
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
 
 	& * {
@@ -17,30 +17,37 @@
 	}
 
 	& .select-menu-header {
-		background: var(--color-bg-overlay);
+		background: var(--color-canvas-overlay);
 		padding: 8px 10px;
-		border-bottom: 1px solid var(--color-select-menu-border-secondary);
+		border-bottom: 1px solid var(--color-border-muted);
 		line-height: 16px;
 
 		& .select-menu-title {
 			font-weight: 600;
-			color: var(--color-text-primary);
+			color: var(--color-fg-default);
 			line-height: inherit;
 		}
 	}
 
 	& .select-menu-filters {
-		background-color: var(--color-bg-overlay);
+		background-color: var(--color-canvas-overlay);
 
 		& input {
-			color: var(--color-text-primary);
-			background-color: var(--color-input-bg);
+			padding: 5px 12px;
+			font-size: 14px;
+			line-height: 20px;
+			color: var(--color-fg-default);
+			background-color: var(--color-canvas-default);
+			border: 1px solid var(--color-border-default);
+			border-radius: 6px;
+			outline: none;
+			box-shadow: var(--color-primer-shadow-inset);
 		}
 	}
 
 	& .select-menu-header code,
 	& .select-menu-item code {
-		color: var(--color-text-primary);
+		color: var(--color-fg-default);
 		font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 		font-size: 12px;
 		line-height: 16px;
@@ -54,10 +61,11 @@
 		}
 	}
 
-	& .ck.ck-button.select-menu-item {
+	& .ck.ck-button:not(.ck-disabled).select-menu-item {
 		cursor: pointer;
 		border: 0;
-		border-bottom: 1px solid var(--color-select-menu-border-secondary);
+		color: var(--color-fg-default) !important;
+		border-bottom: 1px solid var(--color-border-muted);
 		padding: calc(0.2 * var(--ck-line-height-base) * var(--ck-font-size-base)) calc(0.4 * var(--ck-line-height-base) * var(--ck-font-size-base));
 		line-height: 18px;
 
@@ -68,15 +76,22 @@
 		&:hover,
 		&:active,
 		&:focus {
-			color: var(--color-state-selected-primary-text) !important;
-			background-color: var(--color-state-selected-primary-bg);
+			color: var(--color-fg-on-emphasis) !important;
+			background-color: var(--color-accent-emphasis);
 			box-shadow: none;
+
+			& .description {
+				color: var(--color-fg-default) !important;
+			}
 		}
 
 		& * {
 			cursor: inherit;
 			color: inherit;
 			background-color: inherit;
+		}
+		& .description {
+			color: var(--color-fg-muted) !important;
 		}
 	}
 
@@ -95,15 +110,15 @@
 	}
 
 	& .select-menu-footer {
-		color: var(--color-text-primary);
+		color: var(--color-fg-default);
 		border-bottom: 0;
 	}
 
 	& .form-control {
 		&:focus {
-			border-color: var(--color-state-focus-border);
+			border-color: var(--color-accent-emphasis);
 			outline: none;
-			box-shadow: var(--color-state-focus-shadow);
+			box-shadow: var(--color-primer-shadow-focus);
 		}
 	}
 
