@@ -43,7 +43,7 @@
 			border: 0;
 
 			/* Color */
-			color: var(--color-text-secondary);
+			color: var(--color-fg-muted) !important;
 
 			/* Height */
 			display: block;
@@ -55,7 +55,7 @@
 
 			&.ck-on,
 			&:not(.ck-disabled):hover {
-				color: var(--color-text-link);
+				color: var(--color-accent-fg) !important;
 			}
 
 			&.ck-splitbutton__action {
