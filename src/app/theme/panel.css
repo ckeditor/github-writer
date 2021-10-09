@@ -4,27 +4,27 @@
  */
 
 .ck-balloon-panel, .ck-dropdown__panel {
-	box-shadow: var(--color-autocomplete-shadow) !important;
-	background: var(--color-bg-overlay) !important;
-	border: 1px solid var(--color-border-overlay) !important;
+	box-shadow: var(--color-shadow-large) !important;
+	background: var(--color-canvas-overlay) !important;
+	border: 1px solid var(--color-border-default) !important;
 	border-radius: 6px !important;
 }
 
 .ck.ck-balloon-panel[class*=arrow_n]:after {
-	border-bottom-color: var(--color-bg-overlay) !important;
-	margin-top: var(--color-border-overlay) !important;
+	border-bottom-color: var(--color-canvas-overlay) !important;
+	margin-top: var(--color-border-default) !important;
 }
 
 .ck.ck-balloon-panel[class*=arrow_s]:after {
-	border-top-color: var(--color-bg-overlay) !important;
-	margin-bottom: var(--color-border-overlay) !important;
+	border-top-color: var(--color-canvas-overlay) !important;
+	margin-bottom: var(--color-border-default) !important;
 }
 
 .ck-list {
-	color: var(--color-text-primary) !important;
-	background: var(--color-bg-overlay) !important;
+	color: var(--color-fg-default) !important;
+	background: var(--color-canvas-overlay) !important;
 }
 
 .ck-button {
-	color: var(--color-text-primary) !important;
+	color: var(--color-fg-default) !important;
 }
