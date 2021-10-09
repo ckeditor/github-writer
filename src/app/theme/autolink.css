@@ -6,11 +6,11 @@
 .ck-content autolink {
 	&:not([data-type="sha"]),
 	&[data-type="sha"]:not([data-status-pending]) {
-		color: var(--color-text-link);
+		color: var(--color-accent-fg);
 	}
 
 	&[data-type="person"] {
-		color: var(--color-text-primary);
+		color: var(--color-fg-default);
 		font-weight: 600;
 		white-space: nowrap;
 	}
@@ -21,7 +21,7 @@
 		padding: .2em .4em;
 		margin: 0;
 		font-size: 85%;
-		background-color: var(--color-markdown-code-bg);
+		background-color: var(--color-neutral-muted);
 		border-radius: 3px;
 		font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 		font-weight: 400;
