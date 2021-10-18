@@ -1,6 +1,6 @@
 ## GitHub Writer - Running tests
 
-The GitHub Writer source code contains three sets of tests that fulfil different goals:
+The GitHub Writer source code contains three sets of tests that fulfill different goals:
 
  * [Unit tests](#unit-tests): guarantees that the source code works as expected.
  * [Functional tests](#functional-tests): test GitHub Writer directly inside the GitHub.com website.
@@ -12,11 +12,11 @@ The GitHub Writer source code contains three sets of tests that fulfil different
 
 GitHub Writer comes with an extensive suite of unit tests. It's our goal to keep 100% code coverage with quality and "real" tests.
 
-We use [CKEditor 5 Tests](https://www.npmjs.com/package/@ckeditor/ckeditor5-dev-tests) as our test framework. It brings several goodies with it, like Karma, Mocha, Chai, Sinon, Istanbul, webpack, among other tools.
+We use [CKEditor 5 Tests](https://www.npmjs.com/package/@ckeditor/ckeditor5-dev-tests) as our test framework. It brings several goodies with it, like Karma, Mocha, Chai, Sinon, Istanbul, Webpack, among other tools.
 
 #### Preparing the runner
 
-Unfortunately CKEditor 5 Tests cannot be used as is for GitHub Writer. There is a [pull request pending acceptation](https://github.com/ckeditor/ckeditor5-dev/pull/594) that is necessary.
+Unfortunately, CKEditor 5 Tests cannot be used as-is for GitHub Writer. There is a [pull request pending acceptation](https://github.com/ckeditor/ckeditor5-dev/pull/594) that is necessary.
 
 Fortunately, a git branch is available with the patched code. So, to run unit tests, the first step is cloning to patched runner locally:
 
@@ -26,7 +26,7 @@ git clone https://github.com/ckeditor/ckeditor5-dev.git
 
 # Move to GitHub Writer branch.
 cd ckeditor5-dev
-git checkout github-rte
+git checkout github-writer
 
 # Install dependencies.
 yarn
@@ -36,11 +36,17 @@ cd packages/ckeditor5-dev-tests
 yarn link
 ```
 
+After that, install the CKEditor 5 testing environment:
+
+```sh
+npm i --save-dev @ckeditor/ckeditor5-dev-tests
+```
+
 Now we can update our local copy of GitHub Writer, so it'll link to the above code:
 
 ```sh
 cd [some-path]/github-writer
-yarn link @ckeditor/ckeditor5-dev-tests
+yarn link "@ckeditor/ckeditor5-dev-tests"
 ```
 
 #### Running unit test
@@ -65,11 +71,11 @@ The source code contains a suite of automated **functional tests** that can be r
 
 #### First step, build the extension
 
-The fist step is building the browser extension to be tested from source. Check the [Developer Documentation](../dev/README.md) for details.
+The first step is building the browser extension to be tested from the source. Check the [Developer Documentation](../dev/README.md) for details.
 
 #### Test runner configuration
 
-The tests run in the browser and real life GitHub.com pages are navigated and their features used, with the extension enabled, just like an end user would do. All this is automated by our test runner.
+The tests run in the browser and real-life GitHub.com pages are navigated and their features used, with the extension enabled, just like an end-user would do. All this is automated by our test runner.
 
 There are two things that the runner needs to have to be able to use github.com properly:
 
@@ -108,7 +114,7 @@ Now lay back and enjoy watching the test runner doing its job.
 
 ##### About the browser/user profile
 
-Note that tests are run under a dedicated browser profile, not using the operating system one. So it's safe to assume that your everyday use browser is not at risk, neither your personal information.
+Note that tests are run under a dedicated browser profile, not using the operating system one. So it's safe to assume that your everyday use browser is not at risk, neither is your personal information.
 
 Additionally, because of the above, the browser session used for testing has no extensions installed. The only extension loaded, as expected, is your local build of GitHub Writer, which is reloaded from scratch for every test run.
 
