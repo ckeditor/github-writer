@@ -84,15 +84,15 @@
     "webpack-cli": "^3.3.12"
   },
   "scripts": {
-    "test": "node ./node_modules/.bin/ckeditor5-dev-tests -sc --files=./tests/unit/**/*.js --coverage-paths=./src",
-    "test-functional": "./node_modules/.bin/mocha ./tests/functional/*.js --timeout 15000",
-    "test-compat": "./node_modules/.bin/mocha ./tests/compat/*.js --timeout 15000",
+    "test": "ckeditor5-dev-tests -sc --files=./tests/unit/**/*.js --coverage-paths=./src",
+    "test-functional": "mocha ./tests/functional/*.js --timeout 15000",
+    "test-compat": "mocha ./tests/compat/*.js --timeout 15000",
     "build": "webpack --mode production --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "build-dev": "webpack --mode development --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "emojis": "node ./dev/updateemojis.js",
     "lint": "eslint --quiet --ignore-path .gitignore '**/*.js'",
     "svg-cleanup": "svgo --config=./dev/svgo.config.json ./src/app/icons/*.svg",
-    "sync": "./node_modules/.bin/mrgit sync"
+    "sync": "mrgit sync"
   },
   "eslintIgnore": [
     "build/**"
