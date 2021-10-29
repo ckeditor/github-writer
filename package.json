@@ -63,7 +63,6 @@
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-dev-utils": "^25.4.0",
-    "@ckeditor/ckeditor5-dev-tests": "^25.4.0",
     "chai": "^4.3.4",
     "copy-webpack-plugin": "^6.4.1",
     "eslint": "^7.28.0",
