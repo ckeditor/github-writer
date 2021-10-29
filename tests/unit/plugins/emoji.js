@@ -131,14 +131,14 @@ describe( 'Plugins', () => {
 			} );
 
 			it( 'should not upcast <img> which is not emoji', () => {
-				pasteHtml( editor, '<p><img alt=":octocat:" src="image-url"></p>' );
+				pasteHtml( editor, '<img alt=":octocat:" src="image-url">' );
 
 				expect( getData( model ) ).to.equal(
-					'<paragraph><imageInline alt=":octocat:" src="image-url"></imageInline>[]</paragraph>' );
+					'[<imageBlock alt=":octocat:" src="image-url"></imageBlock>]' );
 				expect( getViewData( editor.editing.view ) ).to.equals(
-					'<p><span class="ck-widget image-inline" contenteditable="false">' +
+					'[<figure class="ck-widget ck-widget_selected image" contenteditable="false">' +
 					'<img alt=":octocat:" src="image-url"></img>' +
-					'</span>[]</p>' );
+					'<div class="ck ck-reset_all ck-widget__type-around"></div></figure>]' );
 				expect( editor.getData().replace( /\u00a0/g, ' ' ) ).to.equals( '![:octocat:](image-url)' );
 			} );
 
