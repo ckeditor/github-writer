@@ -25,7 +25,7 @@ class IssuePage extends CommentsTimelinePage {
 	 * @return {Promise<GitHubPage>} The page loaded after the issue is deleted (`/issues`);
 	 */
 	async deleteIssue() {
-		await this.browserPage.click( '.discussion-sidebar-item svg.octicon-trashcan' );
+		await this.browserPage.click( '.discussion-sidebar-item svg.octicon-trash' );
 		await this.waitForNavigation( this.browserPage.click( 'button[name="verify_delete"]' ) );
 
 		return await GitHubPage.getCurrentPage();
