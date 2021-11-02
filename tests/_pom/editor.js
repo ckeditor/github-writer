@@ -68,7 +68,9 @@ class Editor {
 	 */
 	async submit() {
 		const selector = `[data-github-writer-id="${ this.id }"] .btn-primary`;
-		await this.page.browserPage.click( selector );
+		const matchedElementHandles = await this.page.browserPage.$$( selector );
+
+		await matchedElementHandles[ matchedElementHandles.length - 1 ].click();
 		return this.page;
 	}
 
