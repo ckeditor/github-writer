@@ -20,7 +20,7 @@ describe( 'Pull Request', function() {
 	} );
 
 	it( 'should create a new pull request', async () => {
-		page = await FileEditPage.getPage( 'master/README.md' );
+		page = await FileEditPage.getPage( 'main/README.md' );
 
 		const timestamp = ( new Date() ).toISOString();
 
