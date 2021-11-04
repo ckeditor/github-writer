@@ -67,10 +67,18 @@ class Editor {
 	 * @return {Promise<GitHubPage>} The current page.
 	 */
 	async submit() {
-		const selector = `[data-github-writer-id="${ this.id }"] .btn-primary`;
+		const selector = `[data-github-writer-id="${ this.id }"] .btn-primary[type="submit"]`;
 		const matchedElementHandles = await this.page.browserPage.$$( selector );
 
-		await matchedElementHandles[ matchedElementHandles.length - 1 ].click();
+		// On the `newIssue` page there are 2 submit buttons available. Filtering the one visible is needed, as they're
+		// positioned differently, depending on the browser window size (devtools on/off).
+		if ( matchedElementHandles.length > 1 ) {
+			await matchedElementHandles.filter( handle => {
+				return handle.boundingBox() ? handle.click() : ''; } );
+		} else {
+			await matchedElementHandles[ 0 ].click();
+		}
+
 		return this.page;
 	}
 
