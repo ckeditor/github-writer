@@ -47,9 +47,8 @@ const util = {
 	 *  - [Enter]
 	 *  - [Ctrl+ArrowRight]
 	 *  - [Ctrl+Shift+Alt+Z]
-	 *  - [CtrlCmd+Space]
 	 *
-	 *  The "CtrlCmd" modified sends the `command` (meta) key on mac and the `control` key in other OSs.
+	 *  By default "Ctrl" is used, and it is modified to equal `Control` or `Meta`, depending on the OS used.
 	 *
 	 * @param targetElement {ElementHandle} The element to receive the typing.
 	 * @param texts {...String} The texts to be typed.
@@ -75,8 +74,7 @@ const util = {
 					modifiers = modifiers.map( key => key
 						.replace( /Shift/i, 'Shift' )
 						.replace( /Alt/i, 'Alt' )
-						.replace( /CtrlCmd/i, ctrlCmdKey )
-						.replace( /Ctrl/i, 'Control' )
+						.replace( /Ctrl/i, ctrlCmdKey )
 					);
 
 					for ( let i = 0; i < modifiers.length; i++ ) {
@@ -95,7 +93,7 @@ const util = {
 		}
 
 		async function getCtrlCmdKey() {
-			return await browserPage.evaluate( () => /Mac/i.test( navigator.platform ) ? 'Meta' : 'Control' );
+			return await browserPage.evaluate( () => /MacIntel/i.test( navigator.platform ) ? 'Meta' : 'Control' );
 		}
 	}
 };
