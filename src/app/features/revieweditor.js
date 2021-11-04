@@ -11,6 +11,6 @@ export default class ReviewEditor extends Editor {
 	}
 
 	static run() {
-		return this.createEditor( 'div.pull-request-review-menu > form' );
+		return this.createEditor( 'div.SelectMenu-list > form.color-bg-primary' );
 	}
 }

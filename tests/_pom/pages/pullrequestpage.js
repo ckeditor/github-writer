@@ -71,7 +71,7 @@ class PullRequestPage extends CommentsTimelinePage {
 
 		await this.browserPage.click( '.js-reviews-toggle' );
 
-		return await this.getEditorByRoot( 'div.pull-request-review-menu > form', MainEditor );
+		return await this.getEditorByRoot( 'div.SelectMenu-list form.color-bg-primary', MainEditor );
 	}
 
 	/**
@@ -115,7 +115,7 @@ class PullRequestPage extends CommentsTimelinePage {
 			container = container && container.querySelector( '.js-comments-holder' );
 
 			return !!container && !!container.querySelectorAll(
-				'.review-comment-contents.js-suggested-changes-contents' )[ index ];
+				'.js-pending-review-comment .js-suggested-changes-contents' )[ index ];
 		}, {}, position, index );
 
 		return await this.browserPage.evaluate( function getLineCommentHtmlEval( position, index ) {
@@ -127,7 +127,7 @@ class PullRequestPage extends CommentsTimelinePage {
 				.querySelector( '.js-comments-holder' );
 
 			const element = container.querySelectorAll(
-				'.review-comment-contents.js-suggested-changes-contents .js-comment-body' )[ index ];
+				'.js-pending-review-comment .js-suggested-changes-contents .js-comment-body' )[ index ];
 			return element.innerHTML.replace( /^\s+|\s+$/g, '' );
 		}, position, index );
 	}

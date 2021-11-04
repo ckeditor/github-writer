@@ -57,11 +57,11 @@ class CommentsTimelinePage extends GitHubPage {
 	async getCommentHtml( index ) {
 		// Wait for the comment to be available.
 		await this.browserPage.waitForFunction( function getCommentHtmlWait( index ) {
-			return !!document.querySelectorAll( '.timeline-comment.comment td.comment-body' )[ index ];
+			return !!document.querySelectorAll( '.timeline-comment.comment .js-comment-body' )[ index ];
 		}, {}, index );
 
 		return await this.browserPage.evaluate( function getCommentHtmlEval( index ) {
-			const element = document.querySelectorAll( '.timeline-comment.comment td.comment-body' )[ index ];
+			const element = document.querySelectorAll( '.timeline-comment.comment .js-comment-body' )[ index ];
 			return element.innerHTML.replace( /^\s+|\s+$/g, '' );
 		}, index );
 	}
