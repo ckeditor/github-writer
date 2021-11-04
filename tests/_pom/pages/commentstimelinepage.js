@@ -27,12 +27,20 @@ class CommentsTimelinePage extends GitHubPage {
 	 */
 	async editComment( index ) {
 		const root = ( await this.browserPage.$$( 'form.js-comment-update' ) )[ index ];
-		const editButton = await root.evaluateHandle( root =>
-			root.closest( '.timeline-comment' ).querySelector( '.js-comment-edit-button' ) );
-		const actionButton = await editButton.evaluateHandle( editButton =>
-			editButton.closest( 'details-menu' ).previousElementSibling );
+
+		const actionButton = await root.evaluateHandle( root =>
+			root.closest( '.timeline-comment' ).querySelector( '.show-more-popover' )
+				.parentElement.querySelector( 'summary[role=button]' ) );
+
+		actionButton.hover();
+		await this.browserPage.waitFor( 2000 );
 
 		await actionButton.click();
+		await this.hasElement( '.js-comment-edit-button' );
+
+		const editButton = await actionButton.evaluateHandle( actionButton =>
+			actionButton.parentElement.querySelector( '.dropdown-menu' ).querySelector( '.js-comment-edit-button' ) );
+
 		await this.waitVisible( editButton );
 		await editButton.click();
 		await this.waitVisible( root );
