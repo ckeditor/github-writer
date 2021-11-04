@@ -257,7 +257,7 @@ class NewLineCommentEditor extends Editor {
 				.nextElementSibling
 				.querySelector( '.js-comments-holder' );
 
-			const count = container.querySelectorAll( '.review-comment-contents.js-suggested-changes-contents' ).length;
+			const count = container.querySelectorAll( '.js-pending-review-comment .js-suggested-changes-contents' ).length;
 
 			return count === expectedCount;
 		}, {}, this.line, commentsCount + 1 );
