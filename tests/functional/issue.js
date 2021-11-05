@@ -15,8 +15,7 @@ describe( 'Issue', function() {
 		if ( page instanceof IssuePage ) {
 			await page.deleteIssue();
 		}
-		// Forcing wait so the page can fully load before PR tests start to run.
-		await page.browserPage.waitFor( 2000 );
+		await page.waitForNavigation();
 	} );
 
 	it( 'should create a new issue', async () => {

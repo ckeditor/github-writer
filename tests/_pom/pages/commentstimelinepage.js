@@ -33,7 +33,7 @@ class CommentsTimelinePage extends GitHubPage {
 				.parentElement.querySelector( 'summary[role=button]' ) );
 
 		actionButton.hover();
-		await this.browserPage.waitFor( 2000 );
+		await this.browserPage.waitForSelector( '.js-comment-edit-button' );
 
 		await actionButton.click();
 		await this.hasElement( '.js-comment-edit-button' );
