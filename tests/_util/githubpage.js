@@ -78,8 +78,9 @@ export const GitHubPage = {
 			}
 			case 'pull-request-review': {
 				container = document.createElement( 'div' );
-				container.classList.add( 'pull-request-review-menu' );
+				container.classList.add( 'SelectMenu-list' );
 				container.append( root );
+				root.classList.add( 'color-bg-primary' );
 				break;
 			}
 			case 'comment-code-line': {
