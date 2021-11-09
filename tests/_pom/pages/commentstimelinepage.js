@@ -22,18 +22,23 @@ class CommentsTimelinePage extends GitHubPage {
 	/**
 	 * Opens the comment editing editor.
 	 *
-	 * @param index {Number} The comment index in the page.
+	 * @param {Number} index The comment index in the page.
+	 * @param {Object} [options] Additional comment edit customizations.
+	 * @param {Boolean} [options.skipHover=false] If set to `true` puppeteer will do pointer hover over
+	 * the action button before clicking it.
 	 * @return {Promise<CommentEditor>} The editor used to edit the comment.
 	 */
-	async editComment( index ) {
+	async editComment( index, options = { skipHover: false } ) {
 		const root = ( await this.browserPage.$$( 'form.js-comment-update' ) )[ index ];
 
 		const actionButton = await root.evaluateHandle( root =>
 			root.closest( '.timeline-comment' ).querySelector( '.show-more-popover' )
 				.parentElement.querySelector( 'summary[role=button]' ) );
 
-		actionButton.hover();
-		await this.browserPage.waitForSelector( '.js-comment-edit-button' );
+		if ( options.skipHover !== true ) {
+			actionButton.hover();
+			await this.browserPage.waitForSelector( '.js-comment-edit-button' );
+		}
 
 		await actionButton.click();
 		await this.hasElement( '.js-comment-edit-button' );
