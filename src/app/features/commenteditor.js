@@ -21,12 +21,15 @@ export default class CommentEditor extends Editor {
 	static run() {
 		// Edit option for comments: listen to "comment action" buttons and create the editor.
 		addClickListener( '.timeline-comment-action', actionsButton => {
-			let editButton = actionsButton.closest( 'details' );
-			editButton = editButton && editButton.querySelector( '.js-comment-edit-button' );
+			// We're only interested in clicking on more button not on the reaction button.
+			if ( !actionsButton.matches( '[role="button"].timeline-comment-action' ) ) {
+				return;
+			}
 
-			if ( editButton ) {
-				const rootElement = editButton.closest( '.js-comment' ).querySelector( 'form.js-comment-update' );
-				this.createEditor( rootElement, true );
+			const commentForm = actionsButton.closest( '.js-comment' ).querySelector( 'form.js-comment-update' );
+
+			if ( commentForm ) {
+				this.createEditor( commentForm, true );
 			}
 		} );
 
