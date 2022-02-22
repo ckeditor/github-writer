@@ -104,7 +104,7 @@ export class AutoFormatManager extends Map {
 		// Sniff for typing that makes the text match one of the auto-formatting markers.
 		model.document.on( 'change', ( evt, batch ) => {
 			// Preliminary checks.
-			if ( batch.type === 'transparent' || !model.document.selection.isCollapsed ) {
+			if ( ( batch.isUndo || !batch.isLocal ) || !model.document.selection.isCollapsed ) {
 				return;
 			}
 
