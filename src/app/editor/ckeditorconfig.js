@@ -24,7 +24,8 @@ const CKEditorConfig = {
 				'headingdropdown', 'bold', 'italic', '|',
 				'blockquote', 'smartcode', 'link', '|',
 				'bulletedlist', 'numberedlist', 'todolist', '|',
-				'savedreplies', 'kebab'
+				'savedreplies', 'kebab',
+				'Mermaid'
 			],
 			kebabToolbar: [ 'strikethrough', 'kbd', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ],
 			table: {

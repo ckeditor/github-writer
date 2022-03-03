@@ -49,6 +49,7 @@
     "@ckeditor/ckeditor5-list": "^32.0.0",
     "@ckeditor/ckeditor5-markdown-gfm": "^32.0.0",
     "@ckeditor/ckeditor5-mention": "^32.0.0",
+    "@cksource/ckeditor5-mermaid": "^0.0.1",
     "@ckeditor/ckeditor5-paragraph": "^32.0.0",
     "@ckeditor/ckeditor5-paste-from-office": "^32.0.0",
     "@ckeditor/ckeditor5-remove-format": "^32.0.0",
