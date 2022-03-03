@@ -1,0 +1,29 @@
+.ck-mermaid__wrapper {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+}
+
+.ck-mermaid__split-mode .ck-mermaid__editing-view {
+	border: 0.2em solid var(--ck-color-text);
+	width: 50%;
+	min-height: 60px;
+}
+
+.ck-mermaid__split-mode .ck-mermaid__preview {
+	width: 50%;
+	text-align: center;
+}
+
+.ck-mermaid__preview-mode .ck-mermaid__editing-view {
+	display:none;
+}
+
+.ck-mermaid__source-mode .ck-mermaid__preview {
+	display:none;
+}
+
+.ck-mermaid__source-mode textarea {
+	width: 100%;
+	min-height: 60px;
+}
