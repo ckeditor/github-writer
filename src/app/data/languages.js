@@ -42,22 +42,6 @@ Object.values( linguist ).forEach( ( { name, aliases: languageAliases } ) => {
 } );
 
 /**
- * This helper will add the Mermaid Diagram support to the `codeBlockLanguageSelector` as it is not yet available by default
- * in `linguist-languages`. It specifies configuration, aliases, and search keywords that can be used by GH Writer `codeBlock` feature.
- *
- * languages list:  { 'Mermaid': [ 'mermaid', 'mmd' ] }
- * aliases: { 'mmd' : 'Mermaid', 'mermaid': 'Mermaid' }
- *
- */
-( function supportMermaidDiagrams() {
-	config.push( { language: 'mermaid', label: 'Mermaid' } );
-	languages.Mermaid = [ 'mermaid', 'mmd' ];
-	aliases.mmd = 'Mermaid';
-	aliases.mermaid = 'Mermaid';
-	searchLines.push( '>mermaid,mmd|Mermaid' );
-}() );
-
-/**
  * The list of languages available for syntax highlighting in GitHub. For example:
  * {
  *     'HTML': [ 'html', 'xhtml' ],
