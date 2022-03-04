@@ -97,7 +97,7 @@ import '../theme/mermaid.css';
 			 const link = 'https://mermaid-js.github.io/mermaid/#/flowchart';
 
 			 buttonView.set( {
-				 label: t( 'Mermaid info' ),
+				 label: t( 'Learn more about Mermaid diagrams' ),
 				 icon: infoIcon,
 				 tooltip: true
 			 } );
@@ -200,7 +200,7 @@ import '../theme/mermaid.css';
  function getSelectedElement( selection ) {
 	 const viewElement = selection.getSelectedElement();
 
-	 if ( viewElement && viewElement.hasClass( 'ck-mermaid__wrapper' ) ) {
+	 if ( viewElement && viewElement.hasClass( 'ck-mermaid' ) ) {
 		 return viewElement;
 	 }
 
@@ -302,7 +302,7 @@ export function checkIsOn( editor, commandName ) {
 			 },
 			 view: modelAttributeValue => ( {
 				 key: 'class',
-				 value: 'ck-mermaid__' + modelAttributeValue + '-mode'
+				 value: 'ck-mermaid--' + modelAttributeValue + '-mode'
 			 } )
 		 } );
 	 }
@@ -356,7 +356,7 @@ export function checkIsOn( editor, commandName ) {
 		 const targetViewPosition = mapper.toViewPosition( model.createPositionBefore( data.item ) );
 
 		 const wrapperAttributes = {
-			 class: [ 'ck-mermaid__wrapper' ]
+			 class: [ 'ck-mermaid' ]
 		 };
 		 const textareaAttributes = {
 			 class: [ 'ck-mermaid__editing-view' ],

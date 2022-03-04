@@ -1,29 +1,46 @@
-.ck-mermaid__wrapper {
+/* Mermaid wrapper */
+.ck-mermaid {
 	display: flex;
-	align-items: stretch;
 	justify-content: center;
 }
 
-.ck-mermaid__split-mode .ck-mermaid__editing-view {
-	border: 0.2em solid var(--ck-color-text);
-	width: 50%;
-	min-height: 60px;
+/* Editing
+ Assigned to textarea
+ */
+.ck-mermaid .ck-mermaid__editing-view {
+	padding: 16px;
+	background-color: var(--color-canvas-subtle); /* just like pre element */
+	min-height: 200px;
+	border: 0;
+	resize: vertical;
+	font-size: 12px; /* just like pre element */
+	outline: 0; /* just like pre element */
 }
 
-.ck-mermaid__split-mode .ck-mermaid__preview {
-	width: 50%;
+/* Preview */
+.ck-mermaid__preview {
 	text-align: center;
 }
 
-.ck-mermaid__preview-mode .ck-mermaid__editing-view {
-	display:none;
-}
-
-.ck-mermaid__source-mode .ck-mermaid__preview {
-	display:none;
-}
-
-.ck-mermaid__source-mode textarea {
+/* Source mode */
+.ck-mermaid--source-mode .ck-mermaid__editing-view {
 	width: 100%;
-	min-height: 60px;
+}
+
+.ck-mermaid--source-mode .ck-mermaid__preview {
+	display: none;
+}
+
+/* Split mode */
+.ck-mermaid--split-mode .ck-mermaid__editing-view {
+	width: 50%;
+}
+
+.ck-mermaid--split-mode .ck-mermaid__preview {
+	width: 50%;
+}
+
+/* Preview mode */
+.ck-mermaid--preview-mode .ck-mermaid__editing-view {
+	display: none;
 }
