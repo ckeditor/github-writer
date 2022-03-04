@@ -22,6 +22,20 @@
 	text-align: center;
 }
 
+/* Preview error state */
+[id^="dmermaid-"] {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	justify-content: center;
+}
+
+[id^="dmermaid-"] svg {
+	display: block;
+	width: 60%;
+	height: auto;
+}
+
 /* Source mode */
 .ck-mermaid--source-mode .ck-mermaid__editing-view {
 	width: 100%;
