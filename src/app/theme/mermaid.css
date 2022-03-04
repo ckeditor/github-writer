@@ -8,7 +8,7 @@
  Assigned to textarea
  */
 .ck-mermaid .ck-mermaid__editing-view {
-	padding: 16px;
+	padding: 16px; /* just like pre element */
 	background-color: var(--color-canvas-subtle); /* just like pre element */
 	min-height: 200px;
 	border: 0;
@@ -19,7 +19,8 @@
 
 /* Preview */
 .ck-mermaid__preview {
-	text-align: center;
+	display: flex;
+	justify-content: center;
 }
 
 /* Preview error state */
