@@ -58,7 +58,7 @@ import CodeBlockLanguageSelector from '../plugins/codeblocklanguageselector';
 import SavedReplies from '../plugins/savedreplies';
 import LiveModelData from '../plugins/livemodeldata';
 
-import Mermaid from '@cksource/ckeditor5-mermaid/src/mermaid';
+import Mermaid from '@ckeditor/ckeditor5-mermaid/src/mermaid';
 
 // Inject our very own CKEditor theme overrides.
 import '../theme/githubwriter.css';
