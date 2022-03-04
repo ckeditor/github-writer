@@ -1,5 +1,5 @@
 /* Mermaid wrapper */
-.ck-mermaid {
+.ck-mermaid__wrapper {
 	display: flex;
 	justify-content: center;
 }
@@ -7,7 +7,7 @@
 /* Editing
  Assigned to textarea
  */
-.ck-mermaid .ck-mermaid__editing-view {
+.ck-mermaid__wrapper .ck-mermaid__editing-view {
 	padding: 16px; /* just like pre element */
 	background-color: var(--color-canvas-subtle); /* just like pre element */
 	min-height: 200px;
@@ -38,24 +38,24 @@
 }
 
 /* Source mode */
-.ck-mermaid--source-mode .ck-mermaid__editing-view {
+.ck-mermaid__source-mode .ck-mermaid__editing-view {
 	width: 100%;
 }
 
-.ck-mermaid--source-mode .ck-mermaid__preview {
+.ck-mermaid__source-mode .ck-mermaid__preview {
 	display: none;
 }
 
 /* Split mode */
-.ck-mermaid--split-mode .ck-mermaid__editing-view {
+.ck-mermaid__split-mode .ck-mermaid__editing-view {
 	width: 50%;
 }
 
-.ck-mermaid--split-mode .ck-mermaid__preview {
+.ck-mermaid__split-mode .ck-mermaid__preview {
 	width: 50%;
 }
 
 /* Preview mode */
-.ck-mermaid--preview-mode .ck-mermaid__editing-view {
+.ck-mermaid__preview-mode .ck-mermaid__editing-view {
 	display: none;
 }
