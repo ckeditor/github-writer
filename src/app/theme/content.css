@@ -92,7 +92,7 @@
 	/* Code block */
 	& pre {
 		color: var(--color-fg-default);
-		background-color: var(--color-canvas-subtle);
+		background-color: hsla(0, 0%, 78%, .3);
 		border: 0;
 		padding: 16px;
 
@@ -102,7 +102,7 @@
 	}
 
 	&.ck-blurred pre {
-		background-color: var(--color-canvas-subtle);
+		background-color: hsla(0, 0%, 78%, .3)
 	}
 
 	/* Table */

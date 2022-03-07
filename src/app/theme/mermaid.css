@@ -1,0 +1,16 @@
+/**
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+.ck-mermaid__wrapper {
+	margin-bottom: 16px; /* Overlaping borders with widgets after the mermaid (#1531). */
+
+	&::before { /* Hiding github's placeholder displayed over the mermaid widget (#1527). */
+		display: none
+	}
+
+	& textarea {
+		color: var(--color-fg-default)
+	}
+}
