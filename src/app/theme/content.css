@@ -3,6 +3,10 @@
  * For licensing, see LICENSE.md.
  */
 
+:root {
+	--ck-color-pre-background: hsla(0, 0%, 78%, .3);
+}
+
 /*
 	Our goal here is making the editor content look as similar as possible with the final content
 	users will have after publishing.
@@ -92,7 +96,7 @@
 	/* Code block */
 	& pre {
 		color: var(--color-fg-default);
-		background-color: var(--color-canvas-subtle);
+		background-color: var(--ck-color-pre-background);
 		border: 0;
 		padding: 16px;
 
@@ -102,7 +106,7 @@
 	}
 
 	&.ck-blurred pre {
-		background-color: var(--color-canvas-subtle);
+		background-color: var(--ck-color-pre-background);
 	}
 
 	/* Table */

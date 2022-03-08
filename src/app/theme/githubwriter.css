@@ -14,6 +14,7 @@
 @import "filteredlist.css";
 @import "codeblock.css";
 @import "panel.css";
+@import "mermaid.css";
 
 /* Contents */
 @import "content.css";
