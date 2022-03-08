@@ -4,13 +4,13 @@
  */
 
 .ck-mermaid__wrapper {
-	margin-bottom: 16px; /* Overlaping borders with widgets after the mermaid (#1531). */
+	margin-bottom: 16px; /* Overlapping borders with widgets after the mermaid (internal #1531). */
 
-	&::before { /* Hiding github's placeholder displayed over the mermaid widget (#1527). */
-		display: none
+	&::before { /* Hiding github's placeholder displayed over the mermaid widget (internal #1527). */
+		display: none;
 	}
 
 	& textarea {
-		color: var(--color-fg-default)
+		color: var(--color-fg-default);
 	}
 }
