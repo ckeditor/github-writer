@@ -24,10 +24,10 @@ const CKEditorConfig = {
 				'headingdropdown', 'bold', 'italic', '|',
 				'blockquote', 'smartcode', 'link', '|',
 				'bulletedlist', 'numberedlist', 'todolist', '|',
-				'savedreplies', 'kebab',
-				'Mermaid'
+				'savedreplies', 'kebab'
 			],
-			kebabToolbar: [ 'strikethrough', 'kbd', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ],
+			kebabToolbar: [ 'strikethrough', 'kbd', 'removeFormat', '|',
+				'imageupload', 'horizontalline', 'insertTable', 'mermaid', '|', 'mode' ],
 			table: {
 				contentToolbar: [ 'tableColumn', 'tableRow' ]
 			},
