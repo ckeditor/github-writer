@@ -28,3 +28,21 @@
 .ck-button {
 	color: var(--color-fg-default) !important;
 }
+
+/* Mermaid balloon toolbar styles */
+.ck.ck-balloon-panel .ck-toolbar[aria-label="Mermaid toolbar"] {
+	margin: 0;
+
+	& .ck.ck-toolbar__separator {
+		margin-right: 0;
+		width: 5px;
+		&::before {
+			content: "|";
+			font-size: 20px;
+			line-height: 20px;
+			text-align: center;
+			vertical-align: text-top;
+			color: var(--color-fg-muted);
+		}
+	}
+}
