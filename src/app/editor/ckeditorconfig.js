@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md.
  */
 
@@ -26,7 +26,8 @@ const CKEditorConfig = {
 				'bulletedlist', 'numberedlist', 'todolist', '|',
 				'savedreplies', 'kebab'
 			],
-			kebabToolbar: [ 'strikethrough', 'kbd', 'removeFormat', '|', 'imageupload', 'horizontalline', 'insertTable', '|', 'mode' ],
+			kebabToolbar: [ 'strikethrough', 'kbd', 'removeFormat', '|',
+				'imageupload', 'horizontalline', 'insertTable', 'mermaid', '|', 'mode' ],
 			table: {
 				contentToolbar: [ 'tableColumn', 'tableRow' ]
 			},

@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md.
  */
 
@@ -58,6 +58,8 @@ import CodeBlockLanguageSelector from '../plugins/codeblocklanguageselector';
 import SavedReplies from '../plugins/savedreplies';
 import LiveModelData from '../plugins/livemodeldata';
 
+import Mermaid from '@ckeditor/ckeditor5-mermaid/src/mermaid';
+
 // Inject our very own CKEditor theme overrides.
 import '../theme/githubwriter.css';
 
@@ -113,5 +115,6 @@ CKEditorGitHubEditor.builtinPlugins = [
 	AutoLinkUrl, AutoLinkGitHub,
 	QuoteSelection, SavedReplies, Messenger, EditorExtras, ControlClick, SmartCaret,
 	CodeBlockLanguageSelector,
-	LiveModelData
+	LiveModelData,
+	Mermaid
 ];
