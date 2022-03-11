@@ -35,12 +35,13 @@
 }
 
 .ck.ck-balloon-panel [aria-label="Mermaid toolbar"] .ck-button {
-	line-height: 21px;
+	line-height: 1;
+	margin: 3px 4px !important;
 }
 
 .ck.ck-balloon-panel [aria-label="Mermaid toolbar"] .ck.ck-toolbar__separator {
-	margin-right: var(--ck-spacing-small);
-	margin-left: var(--ck-spacing-small);
+	margin-left: 0;
+	margin-right: 0;
 	width: 1px;
 	min-width: 1px;
 	background: var(--color-border-default);
