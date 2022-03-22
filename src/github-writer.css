@@ -27,6 +27,10 @@ div.github-writer-ckeditor .ck-editor__editable {
 	min-height: inherit;
 }
 
+div.github-writer-ckeditor .ck-editor__editable.ck.ck-content {
+	border-radius: 6px;
+}
+
 div.github-writer-ckeditor .ck-editor__editable.ck-blurred {
 	background-color: var(--color-canvas-inset);
 }
