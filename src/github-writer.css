@@ -27,6 +27,11 @@ div.github-writer-ckeditor .ck-editor__editable {
 	min-height: inherit;
 }
 
+div.github-writer-ckeditor .ck-editor__editable.ck.ck-content {
+	/* https://github.com/ckeditor/github-writer/issues/311 */
+	border-radius: 6px;
+}
+
 div.github-writer-ckeditor .ck-editor__editable.ck-blurred {
 	background-color: var(--color-canvas-inset);
 }
