@@ -28,6 +28,7 @@ div.github-writer-ckeditor .ck-editor__editable {
 }
 
 div.github-writer-ckeditor .ck-editor__editable.ck.ck-content {
+	/* https://github.com/ckeditor/github-writer/issues/311 */
 	border-radius: 6px;
 }
 
