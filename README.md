@@ -44,6 +44,7 @@ One of the goals of this extension is to provide all the typical features availa
         *   Drag-and-drop
         *   Paste
         *   Open file dialog
+*   Mermaid diagrams
 *   Auto-complete
     *   People (list when typing "@")
     *   Issues and PRs (list when typing "#")
