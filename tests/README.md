@@ -36,12 +36,6 @@ cd packages/ckeditor5-dev-tests
 yarn link
 ```
 
-After that, install the CKEditor 5 testing environment:
-
-```sh
-npm i --save-dev @ckeditor/ckeditor5-dev-tests
-```
-
 Now we can update our local copy of GitHub Writer, so it'll link to the above code:
 
 ```sh
