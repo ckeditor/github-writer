@@ -1,12 +1,13 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md.
  */
 
 import Emoji from '../../../src/app/plugins/emoji';
 
 import Clipboard from '@ckeditor/ckeditor5-clipboard/src/clipboard';
-import ImageEditing from '@ckeditor/ckeditor5-image/src/image/imageediting';
+import ImageInlineEditing from '@ckeditor/ckeditor5-image/src/image/imageinlineediting';
+import ImageBlockEditing from '@ckeditor/ckeditor5-image/src/image/imageblockediting';
 
 import { createTestEditor } from '../../_util/ckeditor';
 import { getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
@@ -18,7 +19,7 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', () => {
-				return createTestEditor( '', [ Emoji, Clipboard, ImageEditing ] )
+				return createTestEditor( '', [ Emoji, Clipboard, ImageInlineEditing, ImageBlockEditing ] )
 					.then( editorObjects => ( { editor, model, root } = editorObjects ) )
 					.then( () => {
 						editable = editor.ui.getEditableElement();
@@ -130,10 +131,10 @@ describe( 'Plugins', () => {
 			} );
 
 			it( 'should not upcast <img> which is not emoji', () => {
-				pasteHtml( editor, '<p><img alt=":octocat:" src="image-url"></p>' );
+				pasteHtml( editor, '<img alt=":octocat:" src="image-url">' );
 
 				expect( getData( model ) ).to.equal(
-					'[<image alt=":octocat:" src="image-url"></image>]' );
+					'[<imageBlock alt=":octocat:" src="image-url"></imageBlock>]' );
 				expect( getViewData( editor.editing.view ) ).to.equals(
 					'[<figure class="ck-widget ck-widget_selected image" contenteditable="false">' +
 					'<img alt=":octocat:" src="image-url"></img>' +
@@ -145,11 +146,11 @@ describe( 'Plugins', () => {
 				pasteHtml( editor, '<p><img class="emoji" alt=":testtest:" src="image-url"></p>' );
 
 				expect( getData( model ) ).to.equal(
-					'[<image alt=":testtest:" src="image-url"></image>]' );
+					'<paragraph><imageInline alt=":testtest:" src="image-url"></imageInline>[]</paragraph>' );
 				expect( getViewData( editor.editing.view ) ).to.equals(
-					'[<figure class="ck-widget ck-widget_selected image" contenteditable="false">' +
+					'<p><span class="ck-widget image-inline" contenteditable="false">' +
 					'<img alt=":testtest:" src="image-url"></img>' +
-					'<div class="ck ck-reset_all ck-widget__type-around"></div></figure>]' );
+					'</span>[]</p>' );
 				expect( editor.getData().replace( /\u00a0/g, ' ' ) ).to.equals( '![:testtest:](image-url)' );
 			} );
 

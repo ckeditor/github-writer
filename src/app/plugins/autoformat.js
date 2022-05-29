@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md.
  */
 
@@ -104,7 +104,7 @@ export class AutoFormatManager extends Map {
 		// Sniff for typing that makes the text match one of the auto-formatting markers.
 		model.document.on( 'change', ( evt, batch ) => {
 			// Preliminary checks.
-			if ( batch.type === 'transparent' || !model.document.selection.isCollapsed ) {
+			if ( ( batch.isUndo || !batch.isLocal ) || !model.document.selection.isCollapsed ) {
 				return;
 			}
 

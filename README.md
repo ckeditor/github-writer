@@ -44,6 +44,7 @@ One of the goals of this extension is to provide all the typical features availa
         *   Drag-and-drop
         *   Paste
         *   Open file dialog
+*   Mermaid diagrams
 *   Auto-complete
     *   People (list when typing "@")
     *   Issues and PRs (list when typing "#")
@@ -91,7 +92,7 @@ The source code contains additional readme files with technical details about th
 
 ---
 
-Copyright (c) 2003-2020, [CKSource](https://cksource.com/) Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2022, [CKSource](http://cksource.com) Holding sp. z o.o. All rights reserved.
 
 GitHub is a trademark of [GitHub](https://github.com/), Inc.
 

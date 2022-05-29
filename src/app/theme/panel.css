@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md.
  */
 
@@ -27,4 +27,21 @@
 
 .ck-button {
 	color: var(--color-fg-default) !important;
+}
+
+/* Mermaid balloon toolbar styles */
+.ck.ck-balloon-panel [aria-label="Mermaid toolbar"] {
+	margin: 0;
+}
+
+.ck.ck-balloon-panel [aria-label="Mermaid toolbar"] .ck-button {
+	line-height: 1;
+}
+
+.ck.ck-balloon-panel [aria-label="Mermaid toolbar"] .ck.ck-toolbar__separator {
+	margin-right: var(--ck-spacing-medium);
+	margin-left: var(--ck-spacing-small);
+	width: 1px;
+	min-width: 1px;
+	background: var(--color-border-default);
 }
