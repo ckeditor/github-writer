@@ -78,7 +78,7 @@ There are two things that the runner needs to have to be able to use github.com 
 *   A real GitHub user name and password. The runner will impersonate this account, logging into github.com with these credentials.
 *   A real GitHub repository name. The runner will use the features available in this repository to perform tests (create issues, PRs, wiki pages, etc.)
 
-**Attention:** It is evident that the above account and repository should be created on purpose and stay dedicated to testing. There is no warranty that data may not be lost in the account or the repository due to the test runner and, mainly, **credentials will be available as plain text in a local configuration file**.
+**Attention:** It is evident that the above account and repository should be created on purpose and stay dedicated to testing. There is no warranty that data may not be lost in the account or the repository due to the test runner and, mainly, **credentials will be available as plain text in a local configuration file**. Currently there is no common account used for testing - everyone has to create their own one.
 
 ##### The configuration file
 
