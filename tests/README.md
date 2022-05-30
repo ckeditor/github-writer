@@ -57,6 +57,8 @@ To run with Firefox:
 yarn test --browsers=Firefox
 ```
 
+If you're experiencing the test fails or slowdown on FF, rerun them and keep the window with Karma focused.
+
 ---
 
 ### Functional tests
