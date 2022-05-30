@@ -70,6 +70,7 @@
     "eslint-config-ckeditor5": "^3.1.0",
     "eslint-plugin-no-unsanitized": "^3.1.5",
     "filemanager-webpack-plugin": "^2.0.5",
+    "istanbul-instrumenter-loader": "^3.0.1",
     "html-to-json": "^0.6.0",
     "karma-sinon-chai": "^2.0.2",
     "karma-webpack": "^4.0.2",
