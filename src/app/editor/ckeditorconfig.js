@@ -26,6 +26,9 @@ const CKEditorConfig = {
 				'bulletedlist', 'numberedlist', 'todolist', '|',
 				'savedreplies', 'kebab'
 			],
+			image: {
+				toolbar: [ 'imageTextAlternative' ]
+			},
 			kebabToolbar: [ 'strikethrough', 'kbd', 'removeFormat', '|',
 				'imageupload', 'horizontalline', 'insertTable', 'mermaid', '|', 'mode' ],
 			table: {
