@@ -79,6 +79,11 @@
 		"unicode": "🉑"
 	},
 	{
+		"name": "accordion",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa97.png",
+		"unicode": "🪗"
+	},
+	{
 		"name": "adhesive_bandage",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa79.png",
 		"unicode": "🩹"
@@ -150,6 +155,11 @@
 		"name": "amphora",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f3fa.png",
 		"unicode": "🏺"
+	},
+	{
+		"name": "anatomical_heart",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fac0.png",
+		"unicode": "🫀"
 	},
 	{
 		"name": "anchor",
@@ -653,6 +663,11 @@
 		"unicode": "🧔"
 	},
 	{
+		"name": "beaver",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9ab.png",
+		"unicode": "🦫"
+	},
+	{
 		"name": "bed",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f6cf.png",
 		"unicode": "🛏️"
@@ -677,9 +692,8 @@
 	},
 	{
 		"name": "beetle",
-		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f41e.png",
-		"aka": "bug",
-		"unicode": "🐞"
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fab2.png",
+		"unicode": "🪲"
 	},
 	{
 		"name": "beginner",
@@ -706,6 +720,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f514.png",
 		"aka": "sound notification",
 		"unicode": "🔔"
+	},
+	{
+		"name": "bell_pepper",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fad1.png",
+		"unicode": "🫑"
 	},
 	{
 		"name": "bellhop_bell",
@@ -784,6 +803,16 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f382.png",
 		"aka": "party",
 		"unicode": "🎂"
+	},
+	{
+		"name": "bison",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9ac.png",
+		"unicode": "🦬"
+	},
+	{
+		"name": "black_cat",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f408-2b1b.png",
+		"unicode": "🐈‍⬛"
 	},
 	{
 		"name": "black_circle",
@@ -882,6 +911,11 @@
 		"unicode": "🟦"
 	},
 	{
+		"name": "blueberries",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fad0.png",
+		"unicode": "🫐"
+	},
+	{
 		"name": "blush",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f60a.png",
 		"aka": "proud",
@@ -941,6 +975,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f4a5.png",
 		"aka": "collision explode",
 		"unicode": "💥"
+	},
+	{
+		"name": "boomerang",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa83.png",
+		"unicode": "🪃"
 	},
 	{
 		"name": "boot",
@@ -1063,12 +1102,6 @@
 		"unicode": "🧱"
 	},
 	{
-		"name": "bride_with_veil",
-		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f470.png",
-		"aka": "marriage wedding",
-		"unicode": "👰"
-	},
-	{
 		"name": "bridge_at_night",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f309.png",
 		"unicode": "🌉"
@@ -1123,6 +1156,16 @@
 		"name": "brunei",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f1e7-1f1f3.png",
 		"unicode": "🇧🇳"
+	},
+	{
+		"name": "bubble_tea",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9cb.png",
+		"unicode": "🧋"
+	},
+	{
+		"name": "bucket",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1faa3.png",
+		"unicode": "🪣"
 	},
 	{
 		"name": "bug",
@@ -1351,6 +1394,11 @@
 		"name": "carousel_horse",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f3a0.png",
 		"unicode": "🎠"
+	},
+	{
+		"name": "carpentry_saw",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa9a.png",
+		"unicode": "🪚"
 	},
 	{
 		"name": "carrot",
@@ -1786,6 +1834,11 @@
 		"unicode": "🧥"
 	},
 	{
+		"name": "cockroach",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fab3.png",
+		"unicode": "🪳"
+	},
+	{
 		"name": "cocktail",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f378.png",
 		"aka": "drink",
@@ -1813,6 +1866,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/26b0.png",
 		"aka": "funeral",
 		"unicode": "⚰️"
+	},
+	{
+		"name": "coin",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa99.png",
+		"unicode": "🪙"
 	},
 	{
 		"name": "cold_face",
@@ -2360,6 +2418,11 @@
 		"unicode": "😥"
 	},
 	{
+		"name": "disguised_face",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f978.png",
+		"unicode": "🥸"
+	},
+	{
 		"name": "diving_mask",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f93f.png",
 		"unicode": "🤿"
@@ -2394,6 +2457,11 @@
 		"name": "do_not_litter",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f6af.png",
 		"unicode": "🚯"
+	},
+	{
+		"name": "dodo",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9a4.png",
+		"unicode": "🦤"
 	},
 	{
 		"name": "dog",
@@ -2507,11 +2575,6 @@
 		"unicode": "📀"
 	},
 	{
-		"name": "e-mail",
-		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f4e7.png",
-		"unicode": "📧"
-	},
-	{
 		"name": "eagle",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f985.png",
 		"unicode": "🦅"
@@ -2611,6 +2674,11 @@
 		"unicode": "🐘"
 	},
 	{
+		"name": "elevator",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f6d7.png",
+		"unicode": "🛗"
+	},
+	{
 		"name": "elf",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9dd.png",
 		"unicode": "🧝"
@@ -2627,9 +2695,9 @@
 	},
 	{
 		"name": "email",
-		"url": "https://github.githubassets.com/images/icons/emoji/unicode/2709.png",
-		"aka": "envelope letter",
-		"unicode": "✉️"
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f4e7.png",
+		"aka": "e-mail",
+		"unicode": "📧"
 	},
 	{
 		"name": "end",
@@ -2640,6 +2708,12 @@
 		"name": "england",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f3f4-e0067-e0062-e0065-e006e-e0067-e007f.png",
 		"unicode": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
+	},
+	{
+		"name": "envelope",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/2709.png",
+		"aka": "letter email",
+		"unicode": "✉️"
 	},
 	{
 		"name": "envelope_with_arrow",
@@ -2739,10 +2813,25 @@
 		"unicode": "👀"
 	},
 	{
+		"name": "face_exhaling",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f62e-1f4a8.png",
+		"unicode": "😮‍💨"
+	},
+	{
+		"name": "face_in_clouds",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f636-1f32b.png",
+		"unicode": "😶‍🌫️"
+	},
+	{
 		"name": "face_with_head_bandage",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f915.png",
 		"aka": "hurt",
 		"unicode": "🤕"
+	},
+	{
+		"name": "face_with_spiral_eyes",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f635-1f4ab.png",
+		"unicode": "😵‍💫"
 	},
 	{
 		"name": "face_with_thermometer",
@@ -2954,6 +3043,11 @@
 		"unicode": "😨"
 	},
 	{
+		"name": "feather",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fab6.png",
+		"unicode": "🪶"
+	},
+	{
 		"name": "feelsgood",
 		"url": "https://github.githubassets.com/images/icons/emoji/feelsgood.png"
 	},
@@ -3129,6 +3223,11 @@
 		"unicode": "🥿"
 	},
 	{
+		"name": "flatbread",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fad3.png",
+		"unicode": "🫓"
+	},
+	{
 		"name": "fleur_de_lis",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/269c.png",
 		"unicode": "⚜️"
@@ -3160,6 +3259,11 @@
 		"unicode": "😳"
 	},
 	{
+		"name": "fly",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fab0.png",
+		"unicode": "🪰"
+	},
+	{
 		"name": "flying_disc",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f94f.png",
 		"unicode": "🥏"
@@ -3180,6 +3284,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f301.png",
 		"aka": "karl",
 		"unicode": "🌁"
+	},
+	{
+		"name": "fondue",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fad5.png",
+		"unicode": "🫕"
 	},
 	{
 		"name": "foot",
@@ -3745,6 +3854,11 @@
 		"unicode": "🎧"
 	},
 	{
+		"name": "headstone",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1faa6.png",
+		"unicode": "🪦"
+	},
+	{
 		"name": "health_worker",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9d1-2695.png",
 		"unicode": "🧑‍⚕️"
@@ -3781,6 +3895,11 @@
 		"name": "heart_eyes_cat",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f63b.png",
 		"unicode": "😻"
+	},
+	{
+		"name": "heart_on_fire",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/2764-1f525.png",
+		"unicode": "❤️‍🔥"
 	},
 	{
 		"name": "heartbeat",
@@ -3905,6 +4024,11 @@
 		"unicode": "🇭🇰"
 	},
 	{
+		"name": "hook",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa9d.png",
+		"unicode": "🪝"
+	},
+	{
 		"name": "horse",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f434.png",
 		"unicode": "🐴"
@@ -3992,6 +4116,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f62f.png",
 		"aka": "silence speechless",
 		"unicode": "😯"
+	},
+	{
+		"name": "hut",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f6d6.png",
+		"unicode": "🛖"
 	},
 	{
 		"name": "ice_cream",
@@ -4318,6 +4447,11 @@
 		"unicode": "🧎‍♀️"
 	},
 	{
+		"name": "knot",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1faa2.png",
+		"unicode": "🪢"
+	},
+	{
 		"name": "koala",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f428.png",
 		"unicode": "🐨"
@@ -4363,6 +4497,17 @@
 		"name": "lacrosse",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f94d.png",
 		"unicode": "🥍"
+	},
+	{
+		"name": "ladder",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa9c.png",
+		"unicode": "🪜"
+	},
+	{
+		"name": "lady_beetle",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f41e.png",
+		"aka": "bug",
+		"unicode": "🐞"
 	},
 	{
 		"name": "laos",
@@ -4566,6 +4711,11 @@
 		"unicode": "🍭"
 	},
 	{
+		"name": "long_drum",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa98.png",
+		"unicode": "🪘"
+	},
+	{
 		"name": "loop",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/27bf.png",
 		"unicode": "➿"
@@ -4632,6 +4782,11 @@
 		"unicode": "🧳"
 	},
 	{
+		"name": "lungs",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fac1.png",
+		"unicode": "🫁"
+	},
+	{
 		"name": "luxembourg",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f1f1-1f1fa.png",
 		"unicode": "🇱🇺"
@@ -4690,6 +4845,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9d9-2640.png",
 		"aka": "wizard",
 		"unicode": "🧙‍♀️"
+	},
+	{
+		"name": "magic_wand",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa84.png",
+		"unicode": "🪄"
 	},
 	{
 		"name": "magnet",
@@ -4758,6 +4918,11 @@
 		"unicode": "🇲🇹"
 	},
 	{
+		"name": "mammoth",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9a3.png",
+		"unicode": "🦣"
+	},
+	{
 		"name": "man",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f468.png",
 		"aka": "mustache father dad",
@@ -4774,6 +4939,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f468-1f680.png",
 		"aka": "space",
 		"unicode": "👨‍🚀"
+	},
+	{
+		"name": "man_beard",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9d4-2642.png",
+		"unicode": "🧔‍♂️"
 	},
 	{
 		"name": "man_cartwheeling",
@@ -4808,6 +4978,11 @@
 		"unicode": "👨‍🌾"
 	},
 	{
+		"name": "man_feeding_baby",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f468-1f37c.png",
+		"unicode": "👨‍🍼"
+	},
+	{
 		"name": "man_firefighter",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f468-1f692.png",
 		"unicode": "👨‍🚒"
@@ -4830,9 +5005,8 @@
 	},
 	{
 		"name": "man_in_tuxedo",
-		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f935.png",
-		"aka": "groom marriage wedding",
-		"unicode": "🤵"
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f935-2642.png",
+		"unicode": "🤵‍♂️"
 	},
 	{
 		"name": "man_judge",
@@ -4920,6 +5094,11 @@
 		"name": "man_with_turban",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f473-2642.png",
 		"unicode": "👳‍♂️"
+	},
+	{
+		"name": "man_with_veil",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f470-2642.png",
+		"unicode": "👰‍♂️"
 	},
 	{
 		"name": "mango",
@@ -5065,6 +5244,11 @@
 		"unicode": "🤼‍♂️"
 	},
 	{
+		"name": "mending_heart",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/2764-1fa79.png",
+		"unicode": "❤️‍🩹"
+	},
+	{
 		"name": "menorah",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f54e.png",
 		"unicode": "🕎"
@@ -5134,6 +5318,11 @@
 		"unicode": "🖕"
 	},
 	{
+		"name": "military_helmet",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa96.png",
+		"unicode": "🪖"
+	},
+	{
 		"name": "milk_glass",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f95b.png",
 		"unicode": "🥛"
@@ -5152,6 +5341,11 @@
 		"name": "minidisc",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f4bd.png",
 		"unicode": "💽"
+	},
+	{
+		"name": "mirror",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa9e.png",
+		"unicode": "🪞"
 	},
 	{
 		"name": "mobile_phone_off",
@@ -5330,6 +5524,11 @@
 		"unicode": "🐁"
 	},
 	{
+		"name": "mouse_trap",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1faa4.png",
+		"unicode": "🪤"
+	},
+	{
 		"name": "movie_camera",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f3a5.png",
 		"aka": "film video",
@@ -5384,6 +5583,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f507.png",
 		"aka": "sound volume",
 		"unicode": "🔇"
+	},
+	{
+		"name": "mx_claus",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9d1-1f384.png",
+		"unicode": "🧑‍🎄"
 	},
 	{
 		"name": "myanmar",
@@ -5453,6 +5657,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f913.png",
 		"aka": "geek glasses",
 		"unicode": "🤓"
+	},
+	{
+		"name": "nesting_dolls",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa86.png",
+		"unicode": "🪆"
 	},
 	{
 		"name": "netherlands",
@@ -5537,6 +5746,11 @@
 		"name": "nine",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/0039-20e3.png",
 		"unicode": "9️⃣"
+	},
+	{
+		"name": "ninja",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f977.png",
+		"unicode": "🥷"
 	},
 	{
 		"name": "niue",
@@ -5747,6 +5961,11 @@
 		"name": "older_woman",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f475.png",
 		"unicode": "👵"
+	},
+	{
+		"name": "olive",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fad2.png",
+		"unicode": "🫒"
 	},
 	{
 		"name": "om",
@@ -6072,6 +6291,11 @@
 		"unicode": "🧑‍🤝‍🧑"
 	},
 	{
+		"name": "people_hugging",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fac2.png",
+		"unicode": "🫂"
+	},
+	{
 		"name": "performing_arts",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f3ad.png",
 		"aka": "theater drama",
@@ -6094,6 +6318,11 @@
 		"unicode": "🧑‍🦱"
 	},
 	{
+		"name": "person_feeding_baby",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9d1-1f37c.png",
+		"unicode": "🧑‍🍼"
+	},
+	{
 		"name": "person_fencing",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f93a.png",
 		"unicode": "🤺"
@@ -6107,6 +6336,12 @@
 		"name": "person_in_motorized_wheelchair",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9d1-1f9bc.png",
 		"unicode": "🧑‍🦼"
+	},
+	{
+		"name": "person_in_tuxedo",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f935.png",
+		"aka": "groom marriage wedding",
+		"unicode": "🤵"
 	},
 	{
 		"name": "person_red_hair",
@@ -6127,6 +6362,12 @@
 		"name": "person_with_turban",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f473.png",
 		"unicode": "👳"
+	},
+	{
+		"name": "person_with_veil",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f470.png",
+		"aka": "marriage wedding",
+		"unicode": "👰"
 	},
 	{
 		"name": "peru",
@@ -6153,6 +6394,11 @@
 		"name": "pick",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/26cf.png",
 		"unicode": "⛏️"
+	},
+	{
+		"name": "pickup_truck",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f6fb.png",
+		"unicode": "🛻"
 	},
 	{
 		"name": "pie",
@@ -6184,6 +6430,16 @@
 		"name": "pilot",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9d1-2708.png",
 		"unicode": "🧑‍✈️"
+	},
+	{
+		"name": "pinata",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa85.png",
+		"unicode": "🪅"
+	},
+	{
+		"name": "pinched_fingers",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f90c.png",
+		"unicode": "🤌"
 	},
 	{
 		"name": "pinching_hand",
@@ -6221,6 +6477,11 @@
 		"unicode": "🍕"
 	},
 	{
+		"name": "placard",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1faa7.png",
+		"unicode": "🪧"
+	},
+	{
 		"name": "place_of_worship",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f6d0.png",
 		"unicode": "🛐"
@@ -6241,6 +6502,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f97a.png",
 		"aka": "puppy eyes",
 		"unicode": "🥺"
+	},
+	{
+		"name": "plunger",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1faa0.png",
+		"unicode": "🪠"
 	},
 	{
 		"name": "point_down",
@@ -6271,6 +6537,11 @@
 		"name": "poland",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f1f5-1f1f1.png",
 		"unicode": "🇵🇱"
+	},
+	{
+		"name": "polar_bear",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f43b-2744.png",
+		"unicode": "🐻‍❄️"
 	},
 	{
 		"name": "police_car",
@@ -6335,6 +6606,11 @@
 		"name": "potato",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f954.png",
 		"unicode": "🥔"
+	},
+	{
+		"name": "potted_plant",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fab4.png",
+		"unicode": "🪴"
 	},
 	{
 		"name": "pouch",
@@ -6764,6 +7040,11 @@
 		"unicode": "🤖"
 	},
 	{
+		"name": "rock",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1faa8.png",
+		"unicode": "🪨"
+	},
+	{
 		"name": "rocket",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f680.png",
 		"aka": "ship launch",
@@ -6790,6 +7071,11 @@
 		"name": "roller_coaster",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f3a2.png",
 		"unicode": "🎢"
+	},
+	{
+		"name": "roller_skate",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f6fc.png",
+		"unicode": "🛼"
 	},
 	{
 		"name": "romania",
@@ -7040,10 +7326,20 @@
 		"unicode": "🙀"
 	},
 	{
+		"name": "screwdriver",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa9b.png",
+		"unicode": "🪛"
+	},
+	{
 		"name": "scroll",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f4dc.png",
 		"aka": "document",
 		"unicode": "📜"
+	},
+	{
+		"name": "seal",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9ad.png",
+		"unicode": "🦭"
 	},
 	{
 		"name": "seat",
@@ -7091,6 +7387,11 @@
 		"name": "seven",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/0037-20e3.png",
 		"unicode": "7️⃣"
+	},
+	{
+		"name": "sewing_needle",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1faa1.png",
+		"unicode": "🪡"
 	},
 	{
 		"name": "seychelles",
@@ -7359,6 +7660,11 @@
 		"name": "smiley_cat",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f63a.png",
 		"unicode": "😺"
+	},
+	{
+		"name": "smiling_face_with_tear",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f972.png",
+		"unicode": "🥲"
 	},
 	{
 		"name": "smiling_face_with_three_hearts",
@@ -8013,6 +8319,11 @@
 		"unicode": "🥡"
 	},
 	{
+		"name": "tamale",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fad4.png",
+		"unicode": "🫔"
+	},
+	{
 		"name": "tanabata_tree",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f38b.png",
 		"unicode": "🎋"
@@ -8048,6 +8359,11 @@
 		"name": "teacher",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9d1-1f3eb.png",
 		"unicode": "🧑‍🏫"
+	},
+	{
+		"name": "teapot",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fad6.png",
+		"unicode": "🫖"
 	},
 	{
 		"name": "technologist",
@@ -8101,6 +8417,11 @@
 		"name": "thinking",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f914.png",
 		"unicode": "🤔"
+	},
+	{
+		"name": "thong_sandal",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa74.png",
+		"unicode": "🩴"
 	},
 	{
 		"name": "thought_balloon",
@@ -8226,6 +8547,11 @@
 		"unicode": "🦷"
 	},
 	{
+		"name": "toothbrush",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1faa5.png",
+		"unicode": "🪥"
+	},
+	{
 		"name": "top",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f51d.png",
 		"unicode": "🔝"
@@ -8276,6 +8602,16 @@
 		"name": "tram",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f68a.png",
 		"unicode": "🚊"
+	},
+	{
+		"name": "transgender_flag",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f3f3-26a7.png",
+		"unicode": "🏳️‍⚧️"
+	},
+	{
+		"name": "transgender_symbol",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/26a7.png",
+		"unicode": "⚧️"
 	},
 	{
 		"name": "triangular_flag_on_post",
@@ -8893,6 +9229,11 @@
 		"unicode": "🌬️"
 	},
 	{
+		"name": "window",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fa9f.png",
+		"unicode": "🪟"
+	},
+	{
 		"name": "wine_glass",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f377.png",
 		"unicode": "🍷"
@@ -8927,6 +9268,11 @@
 		"unicode": "👩‍🚀"
 	},
 	{
+		"name": "woman_beard",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f9d4-2640.png",
+		"unicode": "🧔‍♀️"
+	},
+	{
 		"name": "woman_cartwheeling",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f938-2640.png",
 		"unicode": "🤸‍♀️"
@@ -8959,6 +9305,11 @@
 		"unicode": "👩‍🌾"
 	},
 	{
+		"name": "woman_feeding_baby",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f469-1f37c.png",
+		"unicode": "👩‍🍼"
+	},
+	{
 		"name": "woman_firefighter",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f469-1f692.png",
 		"unicode": "👩‍🚒"
@@ -8978,6 +9329,11 @@
 		"name": "woman_in_motorized_wheelchair",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f469-1f9bc.png",
 		"unicode": "👩‍🦼"
+	},
+	{
+		"name": "woman_in_tuxedo",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f935-2640.png",
+		"unicode": "🤵‍♀️"
 	},
 	{
 		"name": "woman_judge",
@@ -9068,6 +9424,12 @@
 		"unicode": "👳‍♀️"
 	},
 	{
+		"name": "woman_with_veil",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f470-2640.png",
+		"aka": "bride_with_veil",
+		"unicode": "👰‍♀️"
+	},
+	{
 		"name": "womans_clothes",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f45a.png",
 		"unicode": "👚"
@@ -9088,6 +9450,11 @@
 		"unicode": "🚺"
 	},
 	{
+		"name": "wood",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fab5.png",
+		"unicode": "🪵"
+	},
+	{
 		"name": "woozy_face",
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f974.png",
 		"aka": "groggy",
@@ -9098,6 +9465,11 @@
 		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1f5fa.png",
 		"aka": "travel",
 		"unicode": "🗺️"
+	},
+	{
+		"name": "worm",
+		"url": "https://github.githubassets.com/images/icons/emoji/unicode/1fab1.png",
+		"unicode": "🪱"
 	},
 	{
 		"name": "worried",
