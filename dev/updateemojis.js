@@ -10,7 +10,7 @@
 /* global __dirname */
 
 // The test API is used to login and navigate through GitHub.com.
-const NewIssuePage = require( '../tests/_pom/newissuepage' );
+const NewIssuePage = require( '../tests/_pom/pages/newissuepage' );
 
 const fs = require( 'fs' );
 const path = require( 'path' );
