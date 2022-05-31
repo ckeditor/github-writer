@@ -2,7 +2,7 @@
 name: "\U0001F477 Task"
 about: It's neither a bug nor a feature request.
 title: ''
-labels: ''
+labels: task
 assignees: ''
 
 ---
