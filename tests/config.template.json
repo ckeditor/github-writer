@@ -1,9 +1,9 @@
 {
-  	"github" : {
+	"github": {
 		"repo": "repo_where_to_run_tests username/reponame",
 		"credentials": {
-	  		"name": "github_user_login_name_used_to_run_tests",
-	  		"password": "github_user_password"
+			"name": "github_user_login_name_used_to_run_tests",
+			"password": "github_user_password"
 		}
-  	}
+	}
 }
