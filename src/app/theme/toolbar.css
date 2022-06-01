@@ -28,18 +28,26 @@
 	width: auto;
 }
 
+.tabnav .ck.ck-toolbar {
+	margin: 0 15px 0 0;
+	padding: 4px;
+}
+
 .ck.ck-toolbar {
 	background: transparent !important;
-	margin: 0 15px 0 0;
 	padding: 0;
 
 	& > .ck-toolbar__items {
 		margin: 0 !important;
 
+		& > .ck:last-child {
+			margin-right: 4px !important; /* We need to overwrite css with much higher specificity. */
+		}
+
 		& .ck-button {
 			/* Spacing between buttons */
 			padding: 4px;
-			margin: 0 4px !important;
+			margin: 0 4px;
 			border: 0;
 
 			/* Color */
@@ -47,7 +55,6 @@
 
 			/* Height */
 			display: block;
-			line-height: 21px;
 			float: left;
 
 			/* Cursor */
@@ -73,7 +80,11 @@
 		}
 
 		& > .ck-dropdown {
-			margin: 0 4px;
+			margin: 3px 4px;
+
+			&:last-child {
+				margin: 3px 4px !important; /* We need to overwrite css with much higher specificity. */
+			}
 
 			& > .ck-splitbutton > .ck-button,
 			& > .ck-button.ck-dropdown__button {
@@ -82,15 +93,18 @@
 
 			& .ck.ck-toolbar {
 				margin: 0;
-				padding: 4px;
 			}
 		}
 
 		/* We're using the separator to mimic the margin that GH has between its toolbar blocks. */
 		& .ck-toolbar__separator {
-			margin-right: 16px;
 			width: 0;
 			min-width: 0;
+			margin-left: 4px;
+			margin-right: 4px;
+			width: 1px;
+			min-width: 1px;
+			background: var(--color-border-default);
 		}
 
 		/* Fixes the toggle button in dropdown lists (#41) */

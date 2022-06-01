@@ -34,13 +34,14 @@
 	margin: 0;
 }
 
-.ck.ck-balloon-panel [aria-label="Mermaid toolbar"] .ck-button {
+.ck.ck-balloon-panel .ck.ck-toolbar .ck-button {
 	line-height: 1;
+	margin: 3px 4px;
 }
 
 .ck.ck-balloon-panel [aria-label="Mermaid toolbar"] .ck.ck-toolbar__separator {
-	margin-right: var(--ck-spacing-medium);
-	margin-left: var(--ck-spacing-small);
+	margin-left: 0;
+	margin-right: 0;
 	width: 1px;
 	min-width: 1px;
 	background: var(--color-border-default);
