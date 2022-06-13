@@ -269,6 +269,9 @@ form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 	display: flex;
 	flex-direction: column;
 
+	/* Don't cover the area outside the editor. See #266. */
+	overflow: auto;
+
 	/* This is to allow the container to shrink, so it'll not grow with its children contents. */
 	min-width: auto;
 }
@@ -307,3 +310,7 @@ form.new-pr-form .timeline-comment > div.d-flex.flex-justify-end.m-2 {
 	margin-top: 0 !important;
 }
 
+/* Added margin makes the editor visually coherent. */
+.github-writer-size-container > .file-header {
+	margin-bottom: 8px;
+}
