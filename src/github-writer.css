@@ -311,6 +311,14 @@ form.new-pr-form .timeline-comment > div.d-flex.flex-justify-end.m-2 {
 }
 
 /* Added margin makes the editor visually coherent. */
+/* Make position of header sticky to the top */
 .github-writer-size-container > .file-header {
-	margin-bottom: 8px;
+    margin-bottom: 8px;
+    position: sticky;
+    top: 0;
+}
+
+/* make file content scrollable vertically */
+.github-writer-size-container .file{
+    overflow-y: scroll;
 }
