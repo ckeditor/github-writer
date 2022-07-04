@@ -314,3 +314,8 @@ form.new-pr-form .timeline-comment > div.d-flex.flex-justify-end.m-2 {
 .github-writer-size-container > .file-header {
 	margin-bottom: 8px;
 }
+
+/* Mimick the max size of the container set by GitHub. See #329. */
+.ck.ck-content.ck-editor__editable {
+    max-height: 646px;
+}
