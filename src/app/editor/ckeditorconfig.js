@@ -32,7 +32,7 @@ const CKEditorConfig = {
 			kebabToolbar: [ 'strikethrough', 'kbd', 'removeFormat', '|',
 				'imageupload', 'horizontalline', 'insertTable', 'mermaid', '|', 'mode' ],
 			table: {
-				contentToolbar: [ 'tableColumn', 'tableRow' ]
+				contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
 			},
 			placeholder: githubEditor.placeholder,
 			heading: {
