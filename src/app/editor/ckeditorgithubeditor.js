@@ -28,7 +28,7 @@ import TodoList from '@ckeditor/ckeditor5-list/src/todolist';
 
 import Link from '@ckeditor/ckeditor5-link/src/link';
 
-import Image from '@ckeditor/ckeditor5-image/src/image';
+import ImageBlock from '@ckeditor/ckeditor5-image/src/imageblock';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import GitHubUploadAdapter from '../plugins/githubuploadadapter';
@@ -104,7 +104,7 @@ export default class CKEditorGitHubEditor extends DecoupledEditor {
 
 CKEditorGitHubEditor.builtinPlugins = [
 	Essentials, Paragraph, Enter, AutoFormat, Mention, Emoji,
-	Image, ImageUpload, ImageToolbar,
+	ImageBlock, ImageUpload, ImageToolbar,
 	GitHubUploadAdapter,
 	HeadingDropdown,
 	Bold, Italic, SmartCode, Strikethrough, Kbd,
