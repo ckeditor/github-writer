@@ -67,8 +67,18 @@ class Editor {
 	 * @return {Promise<GitHubPage>} The current page.
 	 */
 	async submit() {
-		const selector = `[data-github-writer-id="${ this.id }"] .btn-primary`;
-		await this.page.browserPage.click( selector );
+		const selector = `[data-github-writer-id="${ this.id }"] .btn-primary[type="submit"]`;
+		const matchedElementHandles = await this.page.browserPage.$$( selector );
+
+		// On the `newIssue` page there are 2 submit buttons available. Filtering the one visible is needed, as they're
+		// positioned differently, depending on the browser window size (devtools on/off).
+		if ( matchedElementHandles.length > 1 ) {
+			await matchedElementHandles.filter( handle => {
+				return handle.boundingBox() ? handle.click() : ''; } );
+		} else {
+			await matchedElementHandles[ 0 ].click();
+		}
+
 		return this.page;
 	}
 
@@ -255,7 +265,7 @@ class NewLineCommentEditor extends Editor {
 				.nextElementSibling
 				.querySelector( '.js-comments-holder' );
 
-			const count = container.querySelectorAll( '.review-comment-contents.js-suggested-changes-contents' ).length;
+			const count = container.querySelectorAll( '.js-pending-review-comment .js-suggested-changes-contents' ).length;
 
 			return count === expectedCount;
 		}, {}, this.line, commentsCount + 1 );

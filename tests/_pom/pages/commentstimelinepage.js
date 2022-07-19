@@ -22,17 +22,30 @@ class CommentsTimelinePage extends GitHubPage {
 	/**
 	 * Opens the comment editing editor.
 	 *
-	 * @param index {Number} The comment index in the page.
+	 * @param {Number} index The comment index in the page.
+	 * @param {Object} [options] Additional comment edit customizations.
+	 * @param {Boolean} [options.skipHover=false] If set to `true` puppeteer will do pointer hover over
+	 * the action button before clicking it.
 	 * @return {Promise<CommentEditor>} The editor used to edit the comment.
 	 */
-	async editComment( index ) {
+	async editComment( index, options = { skipHover: false } ) {
 		const root = ( await this.browserPage.$$( 'form.js-comment-update' ) )[ index ];
-		const editButton = await root.evaluateHandle( root =>
-			root.closest( '.timeline-comment' ).querySelector( '.js-comment-edit-button' ) );
-		const actionButton = await editButton.evaluateHandle( editButton =>
-			editButton.closest( 'details-menu' ).previousElementSibling );
+
+		const actionButton = await root.evaluateHandle( root =>
+			root.closest( '.timeline-comment' ).querySelector( '.show-more-popover' )
+				.parentElement.querySelector( 'summary[role=button]' ) );
+
+		if ( options.skipHover !== true ) {
+			actionButton.hover();
+			await this.browserPage.waitForSelector( '.js-comment-edit-button' );
+		}
 
 		await actionButton.click();
+		await this.hasElement( '.js-comment-edit-button' );
+
+		const editButton = await actionButton.evaluateHandle( actionButton =>
+			actionButton.parentElement.querySelector( '.dropdown-menu' ).querySelector( '.js-comment-edit-button' ) );
+
 		await this.waitVisible( editButton );
 		await editButton.click();
 		await this.waitVisible( root );
@@ -49,11 +62,11 @@ class CommentsTimelinePage extends GitHubPage {
 	async getCommentHtml( index ) {
 		// Wait for the comment to be available.
 		await this.browserPage.waitForFunction( function getCommentHtmlWait( index ) {
-			return !!document.querySelectorAll( '.timeline-comment.comment td.comment-body' )[ index ];
+			return !!document.querySelectorAll( '.timeline-comment.comment .js-comment-body' )[ index ];
 		}, {}, index );
 
 		return await this.browserPage.evaluate( function getCommentHtmlEval( index ) {
-			const element = document.querySelectorAll( '.timeline-comment.comment td.comment-body' )[ index ];
+			const element = document.querySelectorAll( '.timeline-comment.comment .js-comment-body' )[ index ];
 			return element.innerHTML.replace( /^\s+|\s+$/g, '' );
 		}, index );
 	}

@@ -20,7 +20,7 @@ describe( 'Pull Request', function() {
 	} );
 
 	it( 'should create a new pull request', async () => {
-		page = await FileEditPage.getPage( 'master/README.md' );
+		page = await FileEditPage.getPage( 'main/README.md' );
 
 		const timestamp = ( new Date() ).toISOString();
 
@@ -42,8 +42,8 @@ describe( 'Pull Request', function() {
 		expect( page ).to.be.an.instanceOf( PullRequestPage );
 
 		expect( await page.getCommentHtml( 0 ) ).to.equals(
-			'<p>Typing inside <strong>GitHub Writer</strong>.</p>\n' +
-			`<p>Time stamp: ${ timestamp }.</p>` );
+			'<p dir="auto">Typing inside <strong>GitHub Writer</strong>.</p>\n' +
+			`<p dir="auto">Time stamp: ${ timestamp }.</p>` );
 	} );
 
 	it( 'should create a new comment', async () => {
@@ -61,8 +61,8 @@ describe( 'Pull Request', function() {
 		await editor.submit();
 
 		expect( await page.getCommentHtml( 1 ) ).to.equals(
-			'<p>Commenting with <strong>GitHub Writer</strong>.</p>\n' +
-			`<p>Time stamp: ${ timestamp }.</p>` );
+			'<p dir="auto">Commenting with <strong>GitHub Writer</strong>.</p>\n' +
+			`<p dir="auto">Time stamp: ${ timestamp }.</p>` );
 	} );
 
 	it( 'should edit the created comment', async () => {
@@ -80,8 +80,8 @@ describe( 'Pull Request', function() {
 		await editor.submit();
 
 		expect( await page.getCommentHtml( 1 ) ).to.equals(
-			'<p>Editing with <strong>GitHub Writer</strong>.</p>\n' +
-			`<p>Time stamp: ${ timestamp }.</p>` );
+			'<p dir="auto">Editing with <strong>GitHub Writer</strong>.</p>\n' +
+			`<p dir="auto">Time stamp: ${ timestamp }.</p>` );
 	} );
 
 	it( 'should add a code line comment', async () => {
@@ -99,8 +99,8 @@ describe( 'Pull Request', function() {
 		await editor.submit();
 
 		expect( await page.getLineCommentHtml( 1, 0 ) ).to.equals(
-			'<p>Code line comment with <strong>GitHub Writer</strong>.</p>\n' +
-			`<p>Time stamp: ${ timestamp }.</p>` );
+			'<p dir="auto">Code line comment with <strong>GitHub Writer</strong>.</p>\n' +
+			`<p dir="auto">Time stamp: ${ timestamp }.</p>` );
 	} );
 
 	it( 'should add a review comment', async () => {
@@ -118,7 +118,7 @@ describe( 'Pull Request', function() {
 		await editor.submit();
 
 		expect( await page.getCommentHtml( 2 ) ).to.equals(
-			'<p>Reviewing with <strong>GitHub Writer</strong>.</p>\n' +
-			`<p>Time stamp: ${ timestamp }.</p>` );
+			'<p dir="auto">Reviewing with <strong>GitHub Writer</strong>.</p>\n' +
+			`<p dir="auto">Time stamp: ${ timestamp }.</p>` );
 	} );
 } );
