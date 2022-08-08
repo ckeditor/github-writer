@@ -124,15 +124,20 @@ export default router;
 
 // Handle editors inside pjax containers.
 {
-	document.addEventListener( 'pjax:start', ( { target } ) => {
+	document.addEventListener( 'turbo:before-visit', ( { target } ) => {
+		/* istanbul ignore next */
+		if ( process.env.NODE_ENV !== 'production' ) {
+			console.log( 'navigation started -> destroying editors', target );
+		}
+
 		Editor.destroyEditors( target );
 	}, { passive: true } );
 
-	document.addEventListener( 'pjax:end', () => {
+	document.addEventListener( 'turbo:render', () => {
 		setTimeout( () => {
 			/* istanbul ignore next */
 			if ( process.env.NODE_ENV !== 'production' ) {
-				console.log( `pjax ended -> running the router on "${ window.location.pathname }"` );
+				console.log( `navigation ended -> running the router on "${ window.location.pathname }"` );
 			}
 
 			router.run();
