@@ -78,7 +78,7 @@ export const GitHubPage = {
 			}
 			case 'pull-request-review': {
 				container = document.createElement( 'div' );
-				container.classList.add( 'pull-request-review-menu' );
+				container.classList.add( 'js-reviews-container' );
 				container.append( root );
 				break;
 			}
