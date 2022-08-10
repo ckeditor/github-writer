@@ -71,7 +71,7 @@ class PullRequestPage extends CommentsTimelinePage {
 
 		await this.browserPage.click( '.js-reviews-toggle' );
 
-		return await this.getEditorByRoot( 'div.pull-request-review-menu > form', MainEditor );
+		return await this.getEditorByRoot( 'div.js-reviews-container > form', MainEditor );
 	}
 
 	/**
