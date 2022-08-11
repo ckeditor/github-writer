@@ -269,9 +269,6 @@ form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 	display: flex;
 	flex-direction: column;
 
-	/* Don't cover the area outside the editor. See #266. */
-	overflow: auto;
-
 	/* This is to allow the container to shrink, so it'll not grow with its children contents. */
 	min-width: auto;
 }
