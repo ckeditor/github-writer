@@ -56,22 +56,22 @@ describe( 'Router', () => {
 		} );
 	} );
 
-	describe( 'pjax', () => {
-		it( 'should destroy editors before pjax', () => {
+	describe( 'turbo', () => {
+		it( 'should destroy editors before turbo navigation', () => {
 			const stub = sinon.stub( Editor, 'destroyEditors' );
 			expect( stub.called, 'no call before' ).to.be.false;
 
-			document.body.dispatchEvent( new CustomEvent( 'pjax:start', { bubbles: true } ) );
+			document.body.dispatchEvent( new CustomEvent( 'turbo:before-visit', { bubbles: true } ) );
 
 			expect( stub.calledOnce, 'one call after' ).to.be.true;
 			expect( stub.firstCall.calledWith( document.body ) ).to.be.true;
 		} );
 
-		it( 'should re-scan after pjax', done => {
+		it( 'should re-scan after turbo rendering', done => {
 			const stub = sinon.stub( router, 'run' );
 			expect( stub.called, 'no call before' ).to.be.false;
 
-			document.body.dispatchEvent( new CustomEvent( 'pjax:end', { bubbles: true } ) );
+			document.body.dispatchEvent( new CustomEvent( 'turbo:render', { bubbles: true } ) );
 
 			setTimeout( () => {
 				expect( stub.calledOnce, 'one call after' ).to.be.true;
