@@ -23,8 +23,9 @@ import HeadingDropdown from '../plugins/headingdropdown';
 
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 
-import List from '@ckeditor/ckeditor5-list/src/list';
-import TodoList from '@ckeditor/ckeditor5-list/src/todolist';
+// import List from '@ckeditor/ckeditor5-list/src/list';
+// import TodoList from '@ckeditor/ckeditor5-list/src/todolist';
+import DocumentList from '@ckeditor/ckeditor5-list/src/documentlist';
 
 import Link from '@ckeditor/ckeditor5-link/src/link';
 
@@ -110,7 +111,8 @@ CKEditorGitHubEditor.builtinPlugins = [
 	Bold, Italic, SmartCode, Strikethrough, Kbd,
 	BlockQuote,
 	Link,
-	List, TodoList,
+	// List, TodoList,
+	DocumentList,
 	HorizontalLine, Table, TableToolbar,
 	Kebab, RemoveFormat, ModeSwitcher, Suggestion,
 	PasteFromOffice, PasteFixer,
