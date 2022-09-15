@@ -15,8 +15,7 @@ import CodeBlockEditing from '@ckeditor/ckeditor5-code-block/src/codeblockeditin
 import HeadingCommand from '@ckeditor/ckeditor5-heading/src/headingcommand';
 import HeadingEditing from '@ckeditor/ckeditor5-heading/src/headingediting';
 import HorizontalLineEditing from '@ckeditor/ckeditor5-horizontal-line/src/horizontallineediting';
-import ListEditing from '@ckeditor/ckeditor5-list/src/listediting';
-import TodoListEditing from '@ckeditor/ckeditor5-list/src/todolistediting';
+import { ListEditing, TodoListEditing } from '@ckeditor/ckeditor5-list/src/';
 
 import { setData, getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 import { createTestEditor } from '../../_util/ckeditor';
