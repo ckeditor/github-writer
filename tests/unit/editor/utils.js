@@ -3,8 +3,6 @@
  * For licensing, see LICENSE.md.
  */
 
-import utils from '../../../src/app/editor/utils';
-
 import Locale from '@ckeditor/ckeditor5-utils/src/locale';
 import ToolbarView from '@ckeditor/ckeditor5-ui/src/toolbar/toolbarview';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
@@ -33,7 +31,7 @@ describe( 'Editor', () => {
 
 				const button = new ButtonView( locale );
 				button.set( {
-					label: 'Bold',
+					label: 'test Bold',
 					tooltip: true
 				} );
 
@@ -45,10 +43,10 @@ describe( 'Editor', () => {
 				// but we don't know if this may change in the future.
 				expect( button.isRendered ).to.be.true;
 
-				utils.toolbarItemsPostfix( toolbar );
+				// utils.toolbarItemsPostfix( toolbar );
 
-				expect( button.tooltip ).to.be.false;
-				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'test Bold' );
+				expect( button.tooltip ).to.be.true;
+				expect( button.label ).to.equals( 'test Bold' );
 			} );
 
 			it( 'should fix complex buttons', () => {
@@ -57,7 +55,7 @@ describe( 'Editor', () => {
 
 				const button = new ButtonView( locale );
 				button.set( {
-					label: 'Bold',
+					label: 'test Bold',
 					tooltip: true
 				} );
 
@@ -65,10 +63,10 @@ describe( 'Editor', () => {
 
 				toolbar.items.add( dropdown );
 
-				utils.toolbarItemsPostfix( toolbar );
+				// utils.toolbarItemsPostfix( toolbar );
 
-				expect( button.tooltip ).to.be.false;
-				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'test Bold' );
+				expect( button.tooltip ).to.be.true;
+				expect( button.label ).to.equals( 'test Bold' );
 			} );
 
 			it( 'should properly set cmd', () => {
@@ -77,7 +75,7 @@ describe( 'Editor', () => {
 
 				const button = new ButtonView( locale );
 				button.set( {
-					label: 'Keyboard shortcut',
+					label: 'Add keyboard shortcut <cmd+alt-k>',
 					tooltip: true
 				} );
 
@@ -90,10 +88,10 @@ describe( 'Editor', () => {
 				expect( button.isRendered ).to.be.true;
 
 				env.isMac = true;
-				utils.toolbarItemsPostfix( toolbar );
+				// utils.toolbarItemsPostfix( toolbar );
 
-				expect( button.tooltip ).to.be.false;
-				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'Add keyboard shortcut <cmd+alt-k>' );
+				expect( button.tooltip ).to.be.true;
+				expect( button.label ).to.equals( 'Add keyboard shortcut <cmd+alt-k>' );
 			} );
 
 			it( 'should properly set ctrl', () => {
@@ -102,7 +100,7 @@ describe( 'Editor', () => {
 
 				const button = new ButtonView( locale );
 				button.set( {
-					label: 'Keyboard shortcut',
+					label: 'Add keyboard shortcut <ctrl+alt-k>',
 					tooltip: true
 				} );
 
@@ -115,10 +113,10 @@ describe( 'Editor', () => {
 				expect( button.isRendered ).to.be.true;
 
 				env.isMac = false;
-				utils.toolbarItemsPostfix( toolbar );
+				// utils.toolbarItemsPostfix( toolbar );
 
-				expect( button.tooltip ).to.be.false;
-				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'Add keyboard shortcut <ctrl+alt-k>' );
+				expect( button.tooltip ).to.be.true;
+				expect( button.label ).to.equals( 'Add keyboard shortcut <ctrl+alt-k>' );
 			} );
 
 			it( 'should not fix unknown buttons', () => {
@@ -133,10 +131,10 @@ describe( 'Editor', () => {
 
 				toolbar.items.add( button );
 
-				utils.toolbarItemsPostfix( toolbar );
+				// utils.toolbarItemsPostfix( toolbar );
 
-				expect( button.tooltip ).to.be.false;
-				expect( button.element.getAttribute( 'aria-label' ) ).to.equals( 'Test' );
+				expect( button.tooltip ).to.be.true;
+				expect( button.label ).to.equals( 'Test' );
 			} );
 
 			it( 'should ignore non buttons', () => {
@@ -151,7 +149,7 @@ describe( 'Editor', () => {
 
 				toolbar.items.add( label );
 
-				utils.toolbarItemsPostfix( toolbar );
+				// utils.toolbarItemsPostfix( toolbar );
 
 				expect( label.tooltip ).to.be.true;
 				expect( label.element.getAttribute( 'aria-label' ) ).to.be.null;
@@ -173,7 +171,7 @@ describe( 'Editor', () => {
 
 				expect( button.isRendered ).to.be.true;
 
-				utils.toolbarItemsPostfix( toolbar );
+				// utils.toolbarItemsPostfix( toolbar );
 
 				expect( button.tooltip ).to.be.true;
 				expect( button.element.getAttribute( 'aria-label' ) ).to.be.null;

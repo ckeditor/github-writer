@@ -7,8 +7,6 @@ import Kebab from '../../../src/app/plugins/kebab';
 import DropdownView from '@ckeditor/ckeditor5-ui/src/dropdown/dropdownview';
 import ToolbarView from '@ckeditor/ckeditor5-ui/src/toolbar/toolbarview';
 
-import utils from '../../../src/app/editor/utils';
-
 import { createTestEditor } from '../../_util/ckeditor';
 
 import iconKebab from '../../../src/app/icons/kebab.svg';
@@ -21,8 +19,6 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', () => {
-				sinon.spy( utils, 'toolbarItemsPostfix' );
-
 				return createTestEditor( '', [ Kebab ], { kebabToolbar: [ 'bold', 'italic' ] } )
 					.then( editorObjects => ( { editor } = editorObjects ) );
 			} );
@@ -46,7 +42,7 @@ describe( 'Plugins', () => {
 		} );
 
 		it( 'should have the right classes', () => {
-			expect( dropdown.buttonView.class ).to.equals( 'github-writer-kebab-button tooltipped tooltipped-n' );
+			expect( dropdown.buttonView.class ).to.equals( 'github-writer-kebab-button' );
 		} );
 
 		it( 'should have the right attributes', () => {
@@ -73,11 +69,6 @@ describe( 'Plugins', () => {
 			icons.forEach( ( icon, index ) => {
 				expect( dropdown.toolbarView.items.get( index ).icon, 'index ' + index ).to.equals( icon );
 			} );
-		} );
-
-		it( 'should call toolbarItemsPostfix', () => {
-			expect( utils.toolbarItemsPostfix.callCount ).to.equals( 1 );
-			expect( utils.toolbarItemsPostfix.args[ 0 ] ).to.eql( [ dropdown.toolbarView, 's' ] );
 		} );
 	} );
 } );

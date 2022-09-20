@@ -60,8 +60,6 @@ describe( 'Plugins', () => {
 					component.render();
 					const button = component.buttonView.element;
 
-					expect( button.classList.contains( 'tooltipped' ) ).to.be.true;
-					expect( button.classList.contains( 'tooltipped-n' ) ).to.be.true;
 					expect( button.getAttribute( 'aria-label' ) ).to.equals( 'Insert a reply' );
 				} );
 

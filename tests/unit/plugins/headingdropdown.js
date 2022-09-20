@@ -79,10 +79,6 @@ describe( 'Plugins', () => {
 				expect( dropdown.panelPosition ).to.equals( 'se' );
 			} );
 
-			it( 'should have the right classes', () => {
-				expect( dropdown.class ).to.equals( 'tooltipped tooltipped-n' );
-			} );
-
 			it( 'should have the right attributes', () => {
 				expect( dropdown.template.attributes ).to.have.property( 'aria-label' );
 			} );
