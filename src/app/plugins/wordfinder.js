@@ -552,7 +552,7 @@ class WordFinderManager {
 					const pos = selection.anchor;
 					// We don't want to remove the attribute when inside the text node but when over its boundaries.
 					if ( !pos.textNode ) {
-						model.enqueueChange( 'transparent', writer => {
+						model.enqueueChange( { isUndoable: false }, writer => {
 							writer.removeSelectionAttribute( attribute );
 						} );
 					}
