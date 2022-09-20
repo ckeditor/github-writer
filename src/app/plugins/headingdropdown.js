@@ -49,11 +49,6 @@ export default class HeadingDropdown extends Plugin {
 
 			dropdown.panelPosition = 'se';
 
-			dropdown.set( {
-				// The tooltipped tooltipped-n (north) classes enable the GH tooltip.
-				class: 'tooltipped tooltipped-n'
-			} );
-
 			dropdown.extendTemplate( {
 				attributes: {
 					// The GH tooltip text is taken from aria-label.

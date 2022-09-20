@@ -29,9 +29,7 @@ export default class SavedReplies extends Plugin {
 
 			dropdown.buttonView.set( {
 				label: 'Insert a reply',
-				icon,
-				// The tooltipped tooltipped-n (north) classes enable the GH tooltip.
-				class: 'tooltipped tooltipped-n'
+				icon
 			} );
 
 			dropdown.buttonView.extendTemplate( {
