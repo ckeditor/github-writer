@@ -18,6 +18,7 @@ export default class SavedReplies extends Plugin {
 	 */
 	init() {
 		const editor = this.editor;
+		const t = editor.t;
 		const url = editor.config.get( 'githubWriter.savedReplies.url' );
 
 		// Register the 'savedreplies' component, a dropdown.
@@ -25,18 +26,11 @@ export default class SavedReplies extends Plugin {
 			const dropdown = createDropdown( locale );
 
 			dropdown.class = 'github-writer-saved-replies-button';
-			dropdown.panelPosition = 'sw';
 
 			dropdown.buttonView.set( {
+				tooltip: t( 'Insert a reply' ),
 				label: 'Insert a reply',
 				icon
-			} );
-
-			dropdown.buttonView.extendTemplate( {
-				attributes: {
-					// The GH tooltip text is taken from aria-label.
-					'aria-label': 'Insert a reply'
-				}
 			} );
 
 			const repliesList = new RepliesListView( editor.locale, url );

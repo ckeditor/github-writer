@@ -41,22 +41,14 @@ export default class HeadingDropdown extends Plugin {
 	 */
 	init() {
 		const editor = this.editor;
-
+		const t = editor.t;
 		const defaultHeading = App.page.type === 'wiki' ? 'heading2' : 'heading3';
 
 		editor.ui.componentFactory.add( 'headingDropdown', locale => {
 			const dropdown = createDropdown( locale, SplitButtonView );
 
-			dropdown.panelPosition = 'se';
-
-			dropdown.extendTemplate( {
-				attributes: {
-					// The GH tooltip text is taken from aria-label.
-					'aria-label': 'Add header text'
-				}
-			} );
-
 			dropdown.buttonView.set( {
+				tooltip: t( 'Add header text' ),
 				label: 'Add header text',
 				icon: icons.heading3
 			} );

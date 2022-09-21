@@ -20,26 +20,19 @@ export default class Kebab extends Plugin {
 	 */
 	init() {
 		const editor = this.editor;
+		const t = editor.t;
 
 		// Register the 'kebab' component, a dropdown.
 		editor.ui.componentFactory.add( 'kebab', locale => {
 			const dropdown = createDropdown( locale );
 
 			dropdown.class = 'github-writer-kebab-button';
-			dropdown.panelPosition = 'sw';
 
 			dropdown.buttonView.set( {
+				tooltip: t( 'More options...' ),
 				label: 'More options...',
 				icon: kebabIcon,
-				// The tooltipped tooltipped-n (north) classes enable the GH tooltip.
 				class: 'github-writer-kebab-button'
-			} );
-
-			dropdown.buttonView.extendTemplate( {
-				attributes: {
-					// The GH tooltip text is taken from aria-label.
-					'aria-label': 'More options...'
-				}
 			} );
 
 			// Initializes the 'toolbarView' property of the dropdown.
