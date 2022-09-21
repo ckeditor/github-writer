@@ -75,16 +75,12 @@ describe( 'Plugins', () => {
 				dropdown = editor.ui.componentFactory.create( 'headingDropdown' );
 			} );
 
-			it( 'should have the right position', () => {
-				expect( dropdown.panelPosition ).to.equals( 'se' );
-			} );
-
-			it( 'should have the right attributes', () => {
-				expect( dropdown.template.attributes ).to.have.property( 'aria-label' );
-			} );
-
 			it( 'button should have the right label', () => {
-				expect( dropdown.buttonView.label ).to.equals( dropdown.template.attributes[ 'aria-label' ][ 0 ] );
+				expect( dropdown.buttonView.label ).to.equals( 'Add header text' );
+			} );
+
+			it( 'button should have the right tooltip', () => {
+				expect( dropdown.buttonView.tooltip ).to.equals( 'Add header text' );
 			} );
 
 			it( 'button should have the right icon', () => {

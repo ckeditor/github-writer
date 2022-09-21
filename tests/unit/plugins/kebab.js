@@ -37,20 +37,16 @@ describe( 'Plugins', () => {
 			expect( editor.ui.componentFactory.create( 'kebab' ) ).to.be.an.instanceOf( DropdownView );
 		} );
 
-		it( 'should have the right position', () => {
-			expect( dropdown.panelPosition ).to.equals( 'sw' );
-		} );
-
 		it( 'should have the right classes', () => {
 			expect( dropdown.buttonView.class ).to.equals( 'github-writer-kebab-button' );
 		} );
 
-		it( 'should have the right attributes', () => {
-			expect( dropdown.buttonView.template.attributes ).to.have.property( 'aria-label' );
+		it( 'should have the right tooltip', () => {
+			expect( dropdown.buttonView.tooltip ).to.equals( 'More options...' );
 		} );
 
 		it( 'button should have the right label', () => {
-			expect( dropdown.buttonView.label ).to.equals( dropdown.buttonView.template.attributes[ 'aria-label' ][ 0 ] );
+			expect( dropdown.buttonView.label ).to.equals( 'More options...' );
 		} );
 
 		it( 'button should have the right icon', () => {

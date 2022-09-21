@@ -48,19 +48,12 @@ describe( 'Plugins', () => {
 					expect( component.class ).to.equals( 'github-writer-saved-replies-button' );
 				} );
 
-				it( 'should open to sw', () => {
-					expect( component.panelPosition ).to.equals( 'sw' );
-				} );
-
-				it( 'should set its button label', () => {
+				it( 'button should have the right label', () => {
 					expect( component.buttonView.label ).to.equals( 'Insert a reply' );
 				} );
 
-				it( 'should be ready for GH tooltips', () => {
-					component.render();
-					const button = component.buttonView.element;
-
-					expect( button.getAttribute( 'aria-label' ) ).to.equals( 'Insert a reply' );
+				it( 'should have the right tooltip', () => {
+					expect( component.buttonView.tooltip ).to.equals( 'Insert a reply' );
 				} );
 
 				it( 'should register a keyboard shortcut', () => {
