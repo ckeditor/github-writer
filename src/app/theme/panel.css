@@ -47,7 +47,8 @@
 	background: var(--color-border-default);
 }
 
-/* When GitHub is in  */
+/* When GitHub uses the light mode, we need to overwrite parts of the color scheme
+	so it still resembles the original GitHub looks. */
 html[data-color-mode="light"] .ck.ck-balloon-panel.ck-balloon-panel_arrow_n.ck-balloon-panel_with-arrow.ck-tooltip {
 	background-color: var(--ck-color-tooltip-background) !important
 }
