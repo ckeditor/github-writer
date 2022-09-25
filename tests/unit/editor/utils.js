@@ -43,8 +43,6 @@ describe( 'Editor', () => {
 				// but we don't know if this may change in the future.
 				expect( button.isRendered ).to.be.true;
 
-				// utils.toolbarItemsPostfix( toolbar );
-
 				expect( button.tooltip ).to.be.true;
 				expect( button.label ).to.equals( 'test Bold' );
 			} );
@@ -62,8 +60,6 @@ describe( 'Editor', () => {
 				const dropdown = new DropdownView( locale, button, new DropdownPanelView( locale ) );
 
 				toolbar.items.add( dropdown );
-
-				// utils.toolbarItemsPostfix( toolbar );
 
 				expect( button.tooltip ).to.be.true;
 				expect( button.label ).to.equals( 'test Bold' );
@@ -88,7 +84,6 @@ describe( 'Editor', () => {
 				expect( button.isRendered ).to.be.true;
 
 				env.isMac = true;
-				// utils.toolbarItemsPostfix( toolbar );
 
 				expect( button.tooltip ).to.be.true;
 				expect( button.label ).to.equals( 'Add keyboard shortcut <cmd+alt-k>' );
@@ -113,7 +108,6 @@ describe( 'Editor', () => {
 				expect( button.isRendered ).to.be.true;
 
 				env.isMac = false;
-				// utils.toolbarItemsPostfix( toolbar );
 
 				expect( button.tooltip ).to.be.true;
 				expect( button.label ).to.equals( 'Add keyboard shortcut <ctrl+alt-k>' );
@@ -131,8 +125,6 @@ describe( 'Editor', () => {
 
 				toolbar.items.add( button );
 
-				// utils.toolbarItemsPostfix( toolbar );
-
 				expect( button.tooltip ).to.be.true;
 				expect( button.label ).to.equals( 'Test' );
 			} );
@@ -148,8 +140,6 @@ describe( 'Editor', () => {
 				} );
 
 				toolbar.items.add( label );
-
-				// utils.toolbarItemsPostfix( toolbar );
 
 				expect( label.tooltip ).to.be.true;
 				expect( label.element.getAttribute( 'aria-label' ) ).to.be.null;
@@ -170,8 +160,6 @@ describe( 'Editor', () => {
 				toolbar.items.add( button );
 
 				expect( button.isRendered ).to.be.true;
-
-				// utils.toolbarItemsPostfix( toolbar );
 
 				expect( button.tooltip ).to.be.true;
 				expect( button.element.getAttribute( 'aria-label' ) ).to.be.null;
