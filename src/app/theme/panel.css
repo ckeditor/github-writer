@@ -47,12 +47,39 @@
 	background: var(--color-border-default);
 }
 
-/* When GitHub uses the light mode, we need to overwrite parts of the color scheme
-	so it still resembles the original GitHub looks. */
+/* When GitHub uses the light mode or any other popular color scheme,
+	we need to overwrite parts of the color scheme so it still
+	resembles the original GitHub looks. */
 html[data-color-mode="light"] .ck.ck-balloon-panel.ck-balloon-panel_arrow_n.ck-balloon-panel_with-arrow.ck-tooltip {
-	background-color: var(--ck-color-tooltip-background) !important
+	background-color: var(--ck-color-tooltip-background) !important;
 }
 
 html[data-color-mode="light"] .ck.ck-balloon-panel[class*=arrow_n]:after {
-	border-bottom-color: var(--ck-color-tooltip-background) !important
+	border-bottom-color: var(--ck-color-tooltip-background) !important;
+}
+
+html[data-color-mode="light"] .ck.ck-balloon-panel[class*=arrow_n].ck-toolbar-container:after {
+	border-bottom-color: var(--color-canvas-overlay) !important;
+}
+
+/* Dark theme */
+html[data-color-mode="dark"] .ck.ck-balloon-panel[class*=arrow_n].ck-toolbar-container:before {
+	border-bottom-color: rgb( 48, 54, 61)
+}
+html[data-color-mode="dark"] .ck.ck-balloon-panel[class*=arrow_s].ck-toolbar-container:before  {
+	border-top-color: rgb( 48, 54, 61)
+}
+
+/* Auto / sync with the system theme */
+html[data-color-mode="auto"] .ck.ck-balloon-panel[class*=arrow_s].ck-toolbar-container:before {
+    border-top-color: initial;
+}
+
+html[data-color-mode="auto"] .ck.ck-balloon-panel[class*=arrow_n].ck-toolbar-container:before {
+    border-bottom-color: initial;
+}
+
+/* tooltip arrow */
+html[data-color-mode="auto"] .ck.ck-balloon-panel[class*=arrow_n].ck-tooltip:after {
+	border-bottom-color: var(--ck-color-panel-background);
 }
