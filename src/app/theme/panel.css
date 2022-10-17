@@ -20,6 +20,11 @@
 	margin-bottom: var(--color-border-default) !important;
 }
 
+/* After updating ckeditor to 35.2.1 the update to the balloon panel arrow styling was needed, see #377. */
+html[data-color-mode="dark"] .ck.ck-balloon-panel[class*=arrow_n]:before {
+	margin-top: inherit;
+}
+
 .ck-list {
 	color: var(--color-fg-default) !important;
 	background: var(--color-canvas-overlay) !important;
