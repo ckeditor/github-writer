@@ -456,19 +456,6 @@ describe( 'Editor', () => {
 						} );
 				} );
 
-				it( 'should call the toolbar postfix', () => {
-					const editor = new Editor( GitHubPage.appendRoot() );
-
-					sinon.spy( editor, 'injectToolbar' );
-					sinon.spy( utils, 'toolbarItemsPostfix' );
-
-					return editor.create()
-						.then( () => {
-							expect( utils.toolbarItemsPostfix.callCount ).to.equals( 1 );
-							expect( utils.toolbarItemsPostfix.calledAfter( editor.injectToolbar ) ).to.be.true;
-						} );
-				} );
-
 				it( 'should cross reference Editor <-> CKEditor', () => {
 					const editor = new Editor( GitHubPage.appendRoot() );
 

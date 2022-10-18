@@ -34,10 +34,6 @@ describe( 'Plugins', () => {
 			expect( button ).to.be.an.instanceOf( ButtonView );
 		} );
 
-		it( 'button should have a label', () => {
-			expect( button.label ).to.be.a( 'string' );
-		} );
-
 		it( 'button should have the right icon', () => {
 			expect( button.icon ).to.equals( icon );
 		} );
@@ -62,11 +58,11 @@ describe( 'Plugins', () => {
 
 			editor.setMode( Editor.modes.MARKDOWN );
 			expect( button.isOn ).to.be.true;
-			expect( button.element.getAttribute( 'aria-label' ) ).to.be.a( 'string' ).not.equals( button.label + '1' );
+			expect( button.label ).to.be.equal( 'Switch to rich-text editing' );
 
 			editor.setMode( Editor.modes.RTE );
 			expect( button.isOn ).to.be.false;
-			expect( button.element.getAttribute( 'aria-label' ) ).to.equals( button.label );
+			expect( button.label ).to.be.equal( 'Edit markdown (nostalgia)' );
 		} );
 
 		it( 'should switch modes on click', () => {
