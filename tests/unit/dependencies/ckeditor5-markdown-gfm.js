@@ -5,7 +5,8 @@
 
 import CodeBlockEditing from '@ckeditor/ckeditor5-code-block/src/codeblockediting';
 import KbdEditing from '@mlewand/ckeditor5-keyboard-marker/src/KbdEditing';
-import { ListEditing, TodoListEditing } from '@ckeditor/ckeditor5-list/src/';
+import ListEditing from '@ckeditor/ckeditor5-list/src/list/listediting';
+import TodoListEditing from '@ckeditor/ckeditor5-list/src/todolist/todolistediting';
 
 import { createTestEditor } from '../../_util/ckeditor';
 import { getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
