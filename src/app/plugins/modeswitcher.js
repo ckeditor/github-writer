@@ -30,7 +30,6 @@ export default class ModeSwitcher extends Plugin {
 			const view = new ButtonView( locale );
 
 			view.set( {
-				label: 'Edit markdown (nostalgia)',
 				icon,
 				class: 'github-writer-mode-button',
 				tooltip: true,
@@ -48,10 +47,10 @@ export default class ModeSwitcher extends Plugin {
 					view.set( 'isOn', isMarkdown );
 
 					if ( view.element ) {
-						// To make it fancy, let's change the tooltip as well.
-						view.element.setAttribute( 'aria-label', isMarkdown ?
+						// Set the correct label based on the editor mode.
+						view.set( { label: isMarkdown ?
 							'Switch to rich-text editing' :
-							view.label );
+							'Edit markdown (nostalgia)' } );
 					}
 				} );
 
