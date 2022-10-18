@@ -7,7 +7,6 @@
 
 import CKEditorGitHubEditor from './ckeditorgithubeditor';
 import CKEditorConfig from './ckeditorconfig';
-import utils from './utils';
 
 import editorModes from './modes';
 import { blockPjaxClicks } from '../modules/util';
@@ -295,9 +294,6 @@ const CreateEditorInstanceMixin = {
 
 				// Block pjax loading when clicking links inside the editor. (#189)
 				blockPjaxClicks( editable );
-
-				// Post-fix to enable the GH tooltip on the toolbar. (Items are already rendered)
-				utils.toolbarItemsPostfix( editor.ui.view.toolbar );
 
 				// Expose the main objects of the API, for cross logic.
 				editor.githubEditor = this;
