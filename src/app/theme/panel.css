@@ -12,13 +12,21 @@
 
 .ck.ck-balloon-panel[class*=arrow_n]:after {
 	border-bottom-color: var(--color-canvas-overlay) !important;
-	margin-top: var(--color-border-default) !important;
 }
 
 .ck.ck-balloon-panel[class*=arrow_s]:after {
 	border-top-color: var(--color-canvas-overlay) !important;
-	margin-bottom: var(--color-border-default) !important;
 }
+
+/* After updating ckeditor to 35.2.1 the update to the balloon panel arrow color was needed. See #377. */
+.ck.ck-balloon-panel[class*=arrow_n]:before {
+	border-bottom-color: var(--color-border-default);
+}
+
+.ck.ck-balloon-panel[class*=arrow_s]:before {
+	border-top-color: var(--color-border-default);
+}
+/* ********** */
 
 .ck-list {
 	color: var(--color-fg-default) !important;
@@ -51,8 +59,4 @@
 	so it still resembles the original GitHub looks. */
 html[data-color-mode="light"] .ck.ck-balloon-panel.ck-balloon-panel_arrow_n.ck-balloon-panel_with-arrow.ck-tooltip {
 	background-color: var(--ck-color-tooltip-background) !important
-}
-
-html[data-color-mode="light"] .ck.ck-balloon-panel[class*=arrow_n]:after {
-	border-bottom-color: var(--ck-color-tooltip-background) !important
 }
