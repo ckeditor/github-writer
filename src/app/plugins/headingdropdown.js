@@ -56,8 +56,10 @@ export default class HeadingDropdown extends Plugin {
 			dropdown.buttonView.on( 'execute', () => {
 				if ( editor.commands.get( 'heading' ).value ) {
 					editor.execute( 'paragraph' );
+					editor.focus();
 				} else {
 					editor.execute( 'heading', { value: defaultHeading } );
+					editor.focus();
 				}
 			} );
 
@@ -83,6 +85,14 @@ export default class HeadingDropdown extends Plugin {
 				'paragraph'
 			] );
 			dropdown.toolbarView.fillFromConfig( toolbarConfig.items, editor.ui.componentFactory );
+
+			dropdown.on( 'change:isOpen', ( evt, name, isOpen ) => {
+				if ( isOpen ) {
+					return;
+				}
+
+				editor.focus();
+			}, { priority: 'lowest' } );
 
 			return dropdown;
 		} );
