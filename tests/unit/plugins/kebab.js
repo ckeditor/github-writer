@@ -10,7 +10,7 @@ import ToolbarView from '@ckeditor/ckeditor5-ui/src/toolbar/toolbarview';
 import { createTestEditor } from '../../_util/ckeditor';
 
 import iconKebab from '../../../src/app/icons/kebab.svg';
-import iconBold from '@ckeditor/ckeditor5-basic-styles/theme/icons/bold.svg';
+import iconBold from '@ckeditor/ckeditor5-core/theme/icons/bold.svg';
 import iconItalic from '@ckeditor/ckeditor5-basic-styles/theme/icons/italic.svg';
 
 describe( 'Plugins', () => {
