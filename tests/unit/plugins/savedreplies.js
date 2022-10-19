@@ -84,6 +84,7 @@ describe( 'Plugins', () => {
 
 					it( 'should insert the reply on user selection', () => {
 						editor.focus = sinon.stub();
+						component.render();
 						component.isOpen = true;
 
 						list.fire( 'reply', 'Test **reply**.' );
