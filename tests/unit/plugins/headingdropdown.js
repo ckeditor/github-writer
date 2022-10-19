@@ -24,7 +24,7 @@ import iconHeading3 from '@ckeditor/ckeditor5-heading/theme/icons/heading3.svg';
 import iconHeading4 from '@ckeditor/ckeditor5-heading/theme/icons/heading4.svg';
 import iconHeading5 from '@ckeditor/ckeditor5-heading/theme/icons/heading5.svg';
 import iconHeading6 from '@ckeditor/ckeditor5-heading/theme/icons/heading6.svg';
-import iconParagraph from '@ckeditor/ckeditor5-paragraph/theme/icons/paragraph.svg';
+import iconParagraph from '@ckeditor/ckeditor5-core/theme/icons/paragraph.svg';
 
 describe( 'Plugins', () => {
 	describe( 'HeadingDropdown', () => {
