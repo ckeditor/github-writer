@@ -135,6 +135,17 @@
 		& button[aria-label="Add a task list"] svg {
 			margin-left: -3px;
 		}
+
+		& .ck-insert-table-dropdown-grid-box {
+			margin: var(--ck-insert-table-dropdown-box-margin);
+			border: 1px solid var(--ck-color-base-border);
+
+			&.ck-button.ck-on,
+			&.ck-button:not(.ck-disabled):hover {
+				border-color: var(--ck-color-focus-border);
+				background: var(--ck-color-focus-outer-shadow);
+			}
+		}
 	}
 }
 
@@ -144,4 +155,8 @@
 .ck.ck-dropdown,
 .ck.ck-dropdown__panel {
 	background: inherit;
+}
+
+html[data-color-mode="dark"] .ck.ck-toolbar>.ck-toolbar__items .ck-insert-table-dropdown__label {
+	color: #FFF;
 }
