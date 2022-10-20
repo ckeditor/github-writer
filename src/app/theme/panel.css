@@ -60,3 +60,8 @@
 html[data-color-mode="light"] .ck.ck-balloon-panel.ck-balloon-panel_arrow_n.ck-balloon-panel_with-arrow.ck-tooltip {
 	background-color: var(--ck-color-tooltip-background) !important
 }
+
+/* Updating tooltip's text color for the 'sync-with-system' theme. See #390. */
+html[data-color-mode="auto"] .ck.ck-balloon-panel.ck-tooltip .ck-tooltip__text {
+	color: var(--ck-color-tooltip-background)
+}
