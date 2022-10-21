@@ -56,11 +56,10 @@ export default class HeadingDropdown extends Plugin {
 			dropdown.buttonView.on( 'execute', () => {
 				if ( editor.commands.get( 'heading' ).value ) {
 					editor.execute( 'paragraph' );
-					editor.focus();
 				} else {
 					editor.execute( 'heading', { value: defaultHeading } );
-					editor.focus();
 				}
+				editor.focus(); // (#380)
 			} );
 
 			// Control the button state.
