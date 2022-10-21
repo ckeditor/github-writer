@@ -86,14 +86,6 @@ export default class HeadingDropdown extends Plugin {
 			] );
 			dropdown.toolbarView.fillFromConfig( toolbarConfig.items, editor.ui.componentFactory );
 
-			dropdown.on( 'change:isOpen', ( evt, name, isOpen ) => {
-				if ( isOpen ) {
-					return;
-				}
-
-				editor.focus();
-			}, { priority: 'lowest' } );
-
 			return dropdown;
 		} );
 	}
