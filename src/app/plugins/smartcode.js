@@ -72,6 +72,7 @@ export default class SmartCode extends Plugin {
 				}
 
 				editor.execute( command );
+				editor.focus();
 			} );
 
 			return view;
