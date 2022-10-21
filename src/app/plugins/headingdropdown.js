@@ -59,6 +59,7 @@ export default class HeadingDropdown extends Plugin {
 				} else {
 					editor.execute( 'heading', { value: defaultHeading } );
 				}
+				editor.focus(); // (#380)
 			} );
 
 			// Control the button state.
