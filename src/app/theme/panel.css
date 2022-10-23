@@ -10,11 +10,11 @@
 	border-radius: 6px !important;
 }
 
-.ck.ck-balloon-panel[class*=arrow_n]:after {
+.ck.ck-balloon-panel[class*=arrow_n]:not(.ck-tooltip):after {
 	border-bottom-color: var(--color-canvas-overlay) !important;
 }
 
-.ck.ck-balloon-panel[class*=arrow_s]:after {
+.ck.ck-balloon-panel[class*=arrow_s]:not(.ck-tooltip):after {
 	border-top-color: var(--color-canvas-overlay) !important;
 }
 
@@ -59,4 +59,20 @@
 	so it still resembles the original GitHub looks. */
 html[data-color-mode="light"] .ck.ck-balloon-panel.ck-balloon-panel_arrow_n.ck-balloon-panel_with-arrow.ck-tooltip {
 	background-color: var(--ck-color-tooltip-background) !important
+}
+
+/* Updating tooltip's text color for the 'sync-with-system' and 'dark' theme. See #390. */
+html[data-color-mode="auto"] .ck.ck-balloon-panel {
+	&.ck-tooltip {
+		background-color: var(--ck-color-tooltip-background) !important;
+
+		&[class*=arrow_n]:after,
+		&[class*=arrow_s]:after {
+			border-bottom-color: var(--ck-color-panel-background) !important;
+		}
+	}
+}
+
+html[data-color-mode="dark"] .ck.ck-balloon-panel.ck-tooltip {
+	background-color: var(--ck-color-tooltip-background) !important;
 }
