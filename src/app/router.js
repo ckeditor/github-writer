@@ -83,7 +83,7 @@ const routes = {
 			features: [ WikiEditor ]
 		}
 	],
-	'/settings/replies': [
+	'saved_replies': [
 		{
 			pattern: /\/settings\/replies/,
 			features: [ SavedReplyEditor ]
