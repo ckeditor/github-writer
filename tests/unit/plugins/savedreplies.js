@@ -103,12 +103,13 @@ describe( 'Plugins', () => {
 					} );
 
 					it( 'should focus the view on open', () => {
+						// https://github.com/ckeditor/github-writer/pull/395#issuecomment-1282060378
 						sinon.stub( list, 'focus' );
 
 						component.render();
 						component.isOpen = true;
 
-						expect( list.focus.callCount ).to.equals( 2 ); // #363
+						expect( list.focus.callCount ).to.equals( 1 );
 					} );
 				} );
 			} );
