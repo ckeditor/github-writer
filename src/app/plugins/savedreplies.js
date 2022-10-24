@@ -45,8 +45,6 @@ export default class SavedReplies extends Plugin {
 			repliesList.on( 'reply', ( evt, body ) => insertReply( body ) );
 
 			dropdown.panelView.children.add( repliesList );
-			dropdown.panelView.on( 'change:isVisible', ( eventInfo, name, isVisible ) =>
-				( isVisible && repliesList.focus() ), { priority: 'low' } );
 
 			// Register `Ctrl+.' to open the dropdown.
 			editor.keystrokes.set( [ 'ctrl', 190 ], ( data, cancel ) => {
