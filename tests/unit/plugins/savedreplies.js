@@ -103,6 +103,7 @@ describe( 'Plugins', () => {
 					} );
 
 					it( 'should focus the view on open', () => {
+						// https://github.com/ckeditor/github-writer/pull/395#issuecomment-1282060378
 						sinon.stub( list, 'focus' );
 
 						component.render();
