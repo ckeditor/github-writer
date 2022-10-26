@@ -2,7 +2,10 @@
 
 GitHub Writer is a WYSIWYG rich-text editor for GitHub. The extension is available when creating or commenting on issues, reviews, pull requests, and wikis. 
 
-It provides all the features available in the GitHub plain-text editor, including Markdown input. For features like tables, it offers a much easier experience in comparison to plain-text Markdown and allows users to be more productive. 
+It provides all the features available in the GitHub plain-text editor, including Markdown input. For features like tables, it offers a much easier experience in comparison to plain-text Markdown and allows users to be more productive. It has been adapted to look good on various themes:
+
+<table><tbody><tr><td>Dark theme</td><td>Light theme</td></tr><tr><td><figure class="image"><img src="https://user-images.githubusercontent.com/11699569/198013158-2a3538b8-56ff-4125-9455-d2162a0378f8.png"></figure></td><td><figure class="image"><img src="https://user-images.githubusercontent.com/11699569/198013180-8f64778f-5b48-4184-ad5e-70f2f316c395.png"></figure></td></tr></tbody></table>
+
 
 It is powered by [CKEditor 5](https://ckeditor.com/ckeditor-5/), a modern JavaScript rich-text editor.
 
