@@ -7,8 +7,6 @@ import Kebab from '../../../src/app/plugins/kebab';
 import DropdownView from '@ckeditor/ckeditor5-ui/src/dropdown/dropdownview';
 import ToolbarView from '@ckeditor/ckeditor5-ui/src/toolbar/toolbarview';
 
-import utils from '../../../src/app/editor/utils';
-
 import { createTestEditor } from '../../_util/ckeditor';
 
 import iconKebab from '../../../src/app/icons/kebab.svg';
@@ -21,8 +19,6 @@ describe( 'Plugins', () => {
 
 		{
 			beforeEach( 'create test editor', () => {
-				sinon.spy( utils, 'toolbarItemsPostfix' );
-
 				return createTestEditor( '', [ Kebab ], { kebabToolbar: [ 'bold', 'italic' ] } )
 					.then( editorObjects => ( { editor } = editorObjects ) );
 			} );
@@ -41,20 +37,16 @@ describe( 'Plugins', () => {
 			expect( editor.ui.componentFactory.create( 'kebab' ) ).to.be.an.instanceOf( DropdownView );
 		} );
 
-		it( 'should have the right position', () => {
-			expect( dropdown.panelPosition ).to.equals( 'sw' );
-		} );
-
 		it( 'should have the right classes', () => {
-			expect( dropdown.buttonView.class ).to.equals( 'github-writer-kebab-button tooltipped tooltipped-n' );
+			expect( dropdown.buttonView.class ).to.equals( 'github-writer-kebab-button' );
 		} );
 
-		it( 'should have the right attributes', () => {
-			expect( dropdown.buttonView.template.attributes ).to.have.property( 'aria-label' );
+		it( 'should have the right tooltip', () => {
+			expect( dropdown.buttonView.tooltip ).to.equals( 'More options...' );
 		} );
 
 		it( 'button should have the right label', () => {
-			expect( dropdown.buttonView.label ).to.equals( dropdown.buttonView.template.attributes[ 'aria-label' ][ 0 ] );
+			expect( dropdown.buttonView.label ).to.equals( 'More options...' );
 		} );
 
 		it( 'button should have the right icon', () => {
@@ -73,11 +65,6 @@ describe( 'Plugins', () => {
 			icons.forEach( ( icon, index ) => {
 				expect( dropdown.toolbarView.items.get( index ).icon, 'index ' + index ).to.equals( icon );
 			} );
-		} );
-
-		it( 'should call toolbarItemsPostfix', () => {
-			expect( utils.toolbarItemsPostfix.callCount ).to.equals( 1 );
-			expect( utils.toolbarItemsPostfix.args[ 0 ] ).to.eql( [ dropdown.toolbarView, 's' ] );
 		} );
 	} );
 } );

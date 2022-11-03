@@ -41,27 +41,14 @@ export default class HeadingDropdown extends Plugin {
 	 */
 	init() {
 		const editor = this.editor;
-
+		const t = editor.t;
 		const defaultHeading = App.page.type === 'wiki' ? 'heading2' : 'heading3';
 
 		editor.ui.componentFactory.add( 'headingDropdown', locale => {
 			const dropdown = createDropdown( locale, SplitButtonView );
 
-			dropdown.panelPosition = 'se';
-
-			dropdown.set( {
-				// The tooltipped tooltipped-n (north) classes enable the GH tooltip.
-				class: 'tooltipped tooltipped-n'
-			} );
-
-			dropdown.extendTemplate( {
-				attributes: {
-					// The GH tooltip text is taken from aria-label.
-					'aria-label': 'Add header text'
-				}
-			} );
-
 			dropdown.buttonView.set( {
+				tooltip: t( 'Add header text' ),
 				label: 'Add header text',
 				icon: icons.heading3
 			} );
@@ -72,6 +59,7 @@ export default class HeadingDropdown extends Plugin {
 				} else {
 					editor.execute( 'heading', { value: defaultHeading } );
 				}
+				editor.focus(); // (#380)
 			} );
 
 			// Control the button state.
