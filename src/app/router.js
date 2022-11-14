@@ -122,12 +122,23 @@ const router = {
 
 export default router;
 
-// Handle editors inside pjax containers.
+// Handle editors inside turbo containers.
 {
-	document.addEventListener( 'turbo:before-visit', ( { target } ) => {
+	// Destroy all editors when a link is clicked (#416).
+	document.addEventListener( 'turbo:click', ( { target } ) => {
 		/* istanbul ignore next */
 		if ( process.env.NODE_ENV !== 'production' ) {
-			console.log( 'navigation started -> destroying editors', target );
+			console.log( 'navigation by click started -> destroying editors', target.getRootNode().documentElement );
+		}
+
+		Editor.destroyEditors( target.getRootNode().documentElement );
+	}, { passive: true } );
+
+	// Destroy all editors while using the browser navigation (#416).
+	document.addEventListener( 'turbo:visit', ( { target } ) => {
+		/* istanbul ignore next */
+		if ( process.env.NODE_ENV !== 'production' ) {
+			console.log( 'visit started -> destroying editors', target );
 		}
 
 		Editor.destroyEditors( target );
