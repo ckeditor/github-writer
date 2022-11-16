@@ -38,7 +38,7 @@ describe( 'Plugins', () => {
 
 			const viewDocument = editor.editing.view.document;
 
-			viewDocument.fire( 'keydown',
+			viewDocument.fire( 'enter',
 				new DomEventData( viewDocument, new Event( 'keydown' ),
 					{ keyCode: keyCodes.enter } ) );
 
@@ -50,9 +50,9 @@ describe( 'Plugins', () => {
 
 			const viewDocument = editor.editing.view.document;
 
-			viewDocument.fire( 'keydown',
+			viewDocument.fire( 'enter',
 				new DomEventData( viewDocument, new Event( 'keydown' ),
-					{ keyCode: keyCodes.enter, shiftKey: true } ) );
+					{ keyCode: keyCodes.enter, isSoft: true } ) );
 
 			expect( getData( model ) ).to.equal( '<paragraph>Test<softBreak></softBreak>[]</paragraph>' );
 		} );
@@ -61,9 +61,9 @@ describe( 'Plugins', () => {
 			{ name: 'alt+enter', keyCode: keyCodes.enter, altKey: true },
 			{ name: 'ctrl+enter', keyCode: keyCodes.enter, ctrlKey: true },
 			{ name: 'cmd+enter', keyCode: keyCodes.enter, metaKey: true },
-			{ name: 'alt+shift+enter', keyCode: keyCodes.enter, shiftKey: true, altKey: true },
-			{ name: 'ctrl+shift+enter', keyCode: keyCodes.enter, shiftKey: true, ctrlKey: true },
-			{ name: 'cmd+shift+enter', keyCode: keyCodes.enter, shiftKey: true, metaKey: true }
+			{ name: 'alt+shift+enter', keyCode: keyCodes.enter, isSoft: true, altKey: true },
+			{ name: 'ctrl+shift+enter', keyCode: keyCodes.enter, isSoft: true, ctrlKey: true },
+			{ name: 'cmd+shift+enter', keyCode: keyCodes.enter, isSoft: true, metaKey: true }
 		].forEach( keystroke => {
 			it( `should block ${ keystroke.name }`, () => {
 				setData( model, '<paragraph>Test[]</paragraph>' );
@@ -74,7 +74,7 @@ describe( 'Plugins', () => {
 				const domEvent = new Event( 'keydown' );
 				Object.assign( domEvent, keystroke );
 
-				viewDocument.fire( 'keydown',
+				viewDocument.fire( 'enter',
 					new DomEventData( viewDocument, domEvent,
 						keystroke ) );
 
