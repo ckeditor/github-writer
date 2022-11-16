@@ -57,11 +57,20 @@ describe( 'Router', () => {
 	} );
 
 	describe( 'turbo', () => {
-		it( 'should destroy editors before turbo navigation', () => {
+		it( 'should destroy editors on link navigation', () => {
 			const stub = sinon.stub( Editor, 'destroyEditors' );
 			expect( stub.called, 'no call before' ).to.be.false;
 
-			document.body.dispatchEvent( new CustomEvent( 'turbo:before-visit', { bubbles: true } ) );
+			document.body.dispatchEvent( new CustomEvent( 'turbo:click', { bubbles: true } ) );
+
+			expect( stub.calledOnce, 'one call after' ).to.be.true;
+		} );
+
+		it( 'should destroy editors on browser navigation', () => {
+			const stub = sinon.stub( Editor, 'destroyEditors' );
+			expect( stub.called, 'no call before' ).to.be.false;
+
+			document.body.dispatchEvent( new CustomEvent( 'turbo:visit', { bubbles: true } ) );
 
 			expect( stub.calledOnce, 'one call after' ).to.be.true;
 			expect( stub.firstCall.calledWith( document.body ) ).to.be.true;
