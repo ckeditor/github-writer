@@ -310,14 +310,14 @@ export class LanguageSelectorButtonView extends DropdownButtonView {
 					positions: [
 						( ...args ) => {
 							const pos = positions.southEastArrowNorthEast( ...args );
-							pos.top -= BalloonPanelView.arrowVerticalOffset;
-							pos.left -= BalloonPanelView.arrowHorizontalOffset;
+							pos.top -= BalloonPanelView.arrowHeightOffset;
+							pos.left -= BalloonPanelView.arrowSideOffset;
 							return pos;
 						},
 						( ...args ) => {
 							const pos = positions.southWestArrowNorthWest( ...args );
-							pos.top -= BalloonPanelView.arrowVerticalOffset;
-							pos.left += BalloonPanelView.arrowHorizontalOffset;
+							pos.top -= BalloonPanelView.arrowHeightOffset;
+							pos.left += BalloonPanelView.arrowSideOffset;
 							return pos;
 						}
 					]
