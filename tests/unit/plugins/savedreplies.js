@@ -101,7 +101,7 @@ describe( 'Plugins', () => {
 						component.render();
 						component.isOpen = true;
 
-						expect( list.focus.callCount ).to.equals( 1 ); // #363
+						expect( list.focus.callCount ).to.equals( 1 );
 					} );
 				} );
 			} );
