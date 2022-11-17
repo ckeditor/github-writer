@@ -35,7 +35,7 @@ const routes = {
 	],
 	'repo_issues': [
 		{
-			pattern: /\/issues\/new/,
+			pattern: /\/issues\/new$/,
 			features: [ NewIssueEditor ]
 		},
 		{
