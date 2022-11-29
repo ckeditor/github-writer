@@ -2,8 +2,28 @@ name: github-writer
 on: [push]
 
 jobs:
+
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - name: Install node dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
   build:
-    name: Test
+    name: github-writer
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,5 +49,19 @@ jobs:
         with:
           cmd: build-dev # will run `yarn build-dev` command
 
+    #   - name: Testing github-writer
+    #     uses: borales/actions-yarn@v4
+    #     with:
+    #       cmd: test # will run `yarn test` command
+
+    #   - name: Run test in FUNCTIONAL
+    #     uses: borales/actions-yarn@v4
+    #     with:
+    #       cmd: test-functional # will run `yarn test-functional` command
+
+    #   - name: Run test in COMPAT
+    #     uses: borales/actions-yarn@v4
+    #     with:
+    #       cmd: test-compat # will run `yarn test-compat` command
 
 
