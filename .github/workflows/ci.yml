@@ -2,22 +2,29 @@ name: github-writer
 on: [push]
 
 jobs:
-  eslint:
+  run-linters:
+    name: Run linters
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
         with:
-          node-version: 16
-      - name: ESLint Code Review
-        uses: yousufkalim/eslint-action@latest
+          node-version: 12
+
+      # ESLint and Prettier must be in `package.json`
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # Optional
-          eslint-args: '--ignore-path=.gitignore'
-          eslintrc: true # Set this to true if you want to use your own .eslintrc rules
-          extensions: 'js,jsx,ts,tsx'
-          auto-auto-fix-before-test: false # Set this to true if want to format and fix all the lint issue before testing
-          annotations: true
+          eslint: true
+          prettier: true
+
   build:
     name: Building Github-Writer
     runs-on: ubuntu-latest
@@ -45,10 +52,10 @@ jobs:
         with:
           cmd: build-dev # will run `yarn build-dev` command
 
-    #   - name: Testing github-writer
-    #     uses: borales/actions-yarn@v4
-    #     with:
-    #       cmd: test # will run `yarn test` command
+      - name: Testing github-writer
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test # will run `yarn test` command
 
     #   - name: Run test in FUNCTIONAL
     #     uses: borales/actions-yarn@v4
