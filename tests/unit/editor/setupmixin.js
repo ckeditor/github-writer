@@ -631,6 +631,21 @@ describe( 'Editor', () => {
 						expect( editor ).to.be.an.instanceOf( Editor );
 					} );
 			} );
+
+			it( 'should call "change:addAction" action', () => {
+				const editor = new Editor( GitHubPage.appendRoot( ) );
+
+				return editor.create()
+					.then( () => {
+						const event = new Event( 'submit' );
+						const spy = sinon.spy( event, 'change:addAction' );
+
+						const pendingActions = this.ckeditor.plugins.get( 'PendingActions' );
+						pendingActions.fire( 'change:addAction', 'submit' );
+
+						expect( spy.callCount ).to.equals( 1 );
+					} );
+			} );
 		} );
 	} );
 } );

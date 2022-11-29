@@ -143,12 +143,19 @@ const SetupMixin = {
 			this.domManipulator.addEventListener( form, 'reset', () => {
 				// We actually want it 'after-reset', so form elements are clean, thus setTimeout.
 				setTimeout( () => {
+					const pendingActions = this.ckeditor.plugins.get( 'PendingActions' );
+
 					this.setCKEditorData( this.dom.textarea.defaultValue );
 					this._setInitialMode();
 
 					// The above setData() locked the form and saved session data. Undo it.
 					unlockForm( this );
 					sessionStorage.removeItem( this.sessionKey );
+
+					// Remove submit pending action to undisable actual submit button
+					if ( this.ckeditor.plugins.get( 'PendingActions' ).hasAny ) {
+						pendingActions.fire( 'change:removeAction', 'submit' );
+					}
 				} );
 			} );
 		}
@@ -170,6 +177,16 @@ const SetupMixin = {
 						// Block the form post.
 						ev.preventDefault();
 						ev.stopImmediatePropagation();
+					}
+
+					const pendingActions = this.ckeditor.plugins.get( 'PendingActions' );
+
+					// Add submit pending action to disable actual submit button for preventing possibility
+					// clicking on that more than one time.
+					if ( !this.ckeditor.plugins.get( 'PendingActions' ).hasAny ) {
+						requestIdleCallback( () => {
+							pendingActions.fire( 'change:addAction', 'submit' );
+						} );
 					}
 				}
 			} );
@@ -333,9 +350,27 @@ const SetupMixin = {
 	_setupPendingActions() {
 		if ( this.ckeditor.plugins.has( 'PendingActions' ) ) {
 			const pendingActions = this.ckeditor.plugins.get( 'PendingActions' );
+			const actions = new Map();
 
 			pendingActions.on( 'change:hasAny', () => {
 				this._setSubmitStatus();
+			} );
+
+			// Add to PendingActions collection new action.
+			pendingActions.on( 'change:addAction', ( _, name ) => {
+				const action = pendingActions.add( name );
+
+				actions.set( name, action );
+			} );
+
+			// Remove action from PendingActions collection.
+			pendingActions.on( 'change:removeAction', ( _, name ) => {
+				const action = actions.get( name );
+
+				if ( action ) {
+					pendingActions.remove( action );
+					actions.delete( name );
+				}
 			} );
 		}
 	}
