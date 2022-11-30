@@ -258,18 +258,18 @@ describe( 'Editor', () => {
 			} );
 
 			it( 'should unlock the form during submit', () => {
-				const editor = new Editor( GitHubPage.appendRoot( ) );
+				const editor = new Editor( GitHubPage.appendRoot( { text: 'test' } ) );
 				const textarea = editor.dom.root.querySelector( 'textarea' );
 
 				return editor.create()
 					.then( () => {
-						expect( textarea.validity.customError, '1' ).to.be.false;
+						expect( textarea.validity.customError ).to.be.false;
 						editor.setData( 'Changed data' );
-						expect( textarea.validity.customError, '2' ).to.be.true;
+						expect( textarea.validity.customError ).to.be.true;
 
 						editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
 
-						expect( textarea.validity.customError, '3' ).to.be.false;
+						expect( textarea.validity.customError ).to.be.false;
 					} );
 			} );
 
