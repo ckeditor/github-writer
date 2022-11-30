@@ -141,21 +141,22 @@ const SetupMixin = {
 		// Reset the rte editor on form reset (e.g. after a new comment is added).
 		{
 			this.domManipulator.addEventListener( form, 'reset', () => {
+				if ( this.ckeditor.plugins.has( 'PendingActions' ) ) {
+					const pendingActions = ckeditor.plugins.get( 'PendingActions' );
+
+					// Remove submit pending action to undisable actual submit button
+					if ( pendingActions.hasAny ) {
+						pendingActions.fire( 'change:removeAction', 'submit' );
+					}
+				}
 				// We actually want it 'after-reset', so form elements are clean, thus setTimeout.
 				setTimeout( () => {
-					const pendingActions = this.ckeditor.plugins.get( 'PendingActions' );
-
 					this.setCKEditorData( this.dom.textarea.defaultValue );
 					this._setInitialMode();
 
 					// The above setData() locked the form and saved session data. Undo it.
 					unlockForm( this );
 					sessionStorage.removeItem( this.sessionKey );
-
-					// Remove submit pending action to undisable actual submit button
-					if ( this.ckeditor.plugins.get( 'PendingActions' ).hasAny ) {
-						pendingActions.fire( 'change:removeAction', 'submit' );
-					}
 				} );
 			} );
 		}
@@ -179,14 +180,16 @@ const SetupMixin = {
 						ev.stopImmediatePropagation();
 					}
 
-					const pendingActions = this.ckeditor.plugins.get( 'PendingActions' );
+					if ( this.ckeditor.plugins.has( 'PendingActions' ) ) {
+						const pendingActions = ckeditor.plugins.get( 'PendingActions' );
 
-					// Add submit pending action to disable actual submit button for preventing possibility
-					// clicking on that more than one time.
-					if ( !this.ckeditor.plugins.get( 'PendingActions' ).hasAny ) {
-						requestIdleCallback( () => {
-							pendingActions.fire( 'change:addAction', 'submit' );
-						} );
+						// Add submit pending action to disable actual submit button for preventing possibility
+						// clicking on that more than one time.
+						if ( !this.ckeditor.plugins.get( 'PendingActions' ).hasAny ) {
+							setTimeout( () => {
+								pendingActions.fire( 'change:addAction', 'submit' );
+							} );
+						}
 					}
 				}
 			} );

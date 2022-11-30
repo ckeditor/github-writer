@@ -258,18 +258,18 @@ describe( 'Editor', () => {
 			} );
 
 			it( 'should unlock the form during submit', () => {
-				const editor = new Editor( GitHubPage.appendRoot( { text: 'test' } ) );
+				const editor = new Editor( GitHubPage.appendRoot( ) );
 				const textarea = editor.dom.root.querySelector( 'textarea' );
 
 				return editor.create()
 					.then( () => {
-						expect( textarea.validity.customError ).to.be.false;
+						expect( textarea.validity.customError, '1' ).to.be.false;
 						editor.setData( 'Changed data' );
-						expect( textarea.validity.customError ).to.be.true;
+						expect( textarea.validity.customError, '2' ).to.be.true;
 
 						editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
 
-						expect( textarea.validity.customError ).to.be.false;
+						expect( textarea.validity.customError, '3' ).to.be.false;
 					} );
 			} );
 
@@ -632,18 +632,140 @@ describe( 'Editor', () => {
 					} );
 			} );
 
-			it( 'should call "change:addAction" action', () => {
+			it( 'should call "change:addAction" event', () => {
+				CKEditorConfig.get.returns( { plugins: [ QuoteSelection, PendingActions ] } );
+
 				const editor = new Editor( GitHubPage.appendRoot( ) );
 
 				return editor.create()
 					.then( () => {
-						const event = new Event( 'submit' );
-						const spy = sinon.spy( event, 'change:addAction' );
+						const pendingActions = editor.ckeditor.plugins.get( 'PendingActions' );
+						const spy = sinon.spy( pendingActions, 'add' );
 
-						const pendingActions = this.ckeditor.plugins.get( 'PendingActions' );
 						pendingActions.fire( 'change:addAction', 'submit' );
 
 						expect( spy.callCount ).to.equals( 1 );
+					} );
+			} );
+
+			it( 'should call "change:removeAction" event', () => {
+				CKEditorConfig.get.returns( { plugins: [ QuoteSelection, PendingActions ] } );
+
+				const editor = new Editor( GitHubPage.appendRoot( ) );
+
+				return editor.create()
+					.then( () => {
+						const pendingActions = editor.ckeditor.plugins.get( 'PendingActions' );
+						const spy = sinon.spy( pendingActions, 'remove' );
+
+						pendingActions.fire( 'change:addAction', 'submit' );
+
+						pendingActions.fire( 'change:removeAction', 'submit' );
+
+						expect( spy.callCount ).to.equals( 1 );
+					} );
+			} );
+
+			it( 'should not call "change:removeAction" event if the are no pending action', () => {
+				CKEditorConfig.get.returns( { plugins: [ QuoteSelection, PendingActions ] } );
+
+				const editor = new Editor( GitHubPage.appendRoot( ) );
+
+				return editor.create()
+					.then( () => {
+						const pendingActions = editor.ckeditor.plugins.get( 'PendingActions' );
+						const spy = sinon.spy( pendingActions, 'remove' );
+
+						pendingActions.fire( 'change:removeAction', 'submit' );
+
+						expect( spy.callCount ).to.equals( 0 );
+					} );
+			} );
+
+			it( 'should not remove pending action', done => {
+				CKEditorConfig.get.returns( { plugins: [ QuoteSelection, PendingActions ] } );
+				const editor = new Editor( GitHubPage.appendRoot() );
+				editor.dom.root.querySelector( 'textarea' ).defaultValue = 'Test';
+
+				editor.create()
+					.then( () => {
+						const pendingActions = editor.ckeditor.plugins.get( 'PendingActions' );
+						const spy = sinon.spy( pendingActions, 'remove' );
+
+						editor.setData( 'Changed data' );
+						editor.dom.textarea.form.dispatchEvent( new Event( 'reset' ) );
+
+						setTimeout( () => {
+							expect( spy.callCount ).to.equals( 0 );
+							done();
+						}, 1 );
+					} );
+			} );
+
+			it( 'should remove pending action', done => {
+				CKEditorConfig.get.returns( { plugins: [ QuoteSelection, PendingActions ] } );
+				const editor = new Editor( GitHubPage.appendRoot() );
+				editor.dom.root.querySelector( 'textarea' ).defaultValue = 'Test';
+
+				editor.create()
+					.then( () => {
+						const pendingActions = editor.ckeditor.plugins.get( 'PendingActions' );
+						const spy = sinon.spy( pendingActions, 'remove' );
+
+						pendingActions.fire( 'change:addAction', 'submit' );
+						editor.setData( 'Changed data' );
+						editor.dom.textarea.form.dispatchEvent( new Event( 'reset' ) );
+
+						setTimeout( () => {
+							expect( spy.callCount ).to.equals( 1 );
+							done();
+						}, 1 );
+					} );
+			} );
+
+			it( 'should sync editors on submit.click', () => {
+				CKEditorConfig.get.returns( { plugins: [ QuoteSelection, PendingActions ] } );
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						const spy = sinon.spy( editor, 'syncData' );
+						editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
+
+						expect( spy.callCount ).to.equals( 1 );
+					} );
+			} );
+
+			it( 'should add new pending action', () => {
+				CKEditorConfig.get.returns( { plugins: [ QuoteSelection, PendingActions ] } );
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						const pendingActions = editor.ckeditor.plugins.get( 'PendingActions' );
+						const spy = sinon.spy( editor, 'syncData' );
+
+						pendingActions.fire( 'change:addAction', 'submit' );
+						editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
+
+						expect( spy.callCount ).to.equals( 1 );
+					} );
+			} );
+
+			it( 'should not add new pending action if any action exist', () => {
+				CKEditorConfig.get.returns( { plugins: [ QuoteSelection, PendingActions ] } );
+				const editor = new Editor( GitHubPage.appendRoot() );
+
+				return editor.create()
+					.then( () => {
+						const pendingActions = editor.ckeditor.plugins.get( 'PendingActions' );
+						pendingActions.fire( 'change:addAction', 'submit' );
+
+						const spy = sinon.spy( pendingActions, 'add' );
+
+						editor.dom.getSubmitBtn().dispatchEvent( new Event( 'click' ) );
+
+						expect( spy.callCount ).to.equals( 0 );
 					} );
 			} );
 		} );

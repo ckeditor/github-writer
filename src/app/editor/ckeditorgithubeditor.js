@@ -8,6 +8,7 @@ import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataproces
 import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
 import AttributeElement from '@ckeditor/ckeditor5-engine/src/view/attributeelement';
 
+import PendingActions from '@ckeditor/ckeditor5-core/src/pendingactions';
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import Enter from '../plugins/enter';
@@ -118,5 +119,6 @@ CKEditorGitHubEditor.builtinPlugins = [
 	QuoteSelection, SavedReplies, Messenger, EditorExtras, ControlClick, SmartCaret,
 	CodeBlockLanguageSelector,
 	LiveModelData,
-	Mermaid
+	Mermaid,
+	PendingActions
 ];
