@@ -45,4 +45,8 @@ jobs:
         with:
           cmd: build-dev # will run `yarn build-dev` command
 
+      - name: Running Lint
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint # will run `yarn build-dev` command
 
