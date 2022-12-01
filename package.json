@@ -92,7 +92,7 @@
     "build": "webpack --mode production --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "build-dev": "webpack --mode development --config dev/webpack.config.js && bash ./dev/gzipsize.sh",
     "emojis": "node ./dev/updateemojis.js",
-    "lint": "eslint --quiet --ignore-path .gitignore **/*.js",
+    "lint": "eslint --quiet --ignore-path .gitignore '**/*.js'",
     "svg-cleanup": "svgo --config=./dev/svgo.config.json ./src/app/icons/*.svg",
     "sync": "mrgit sync"
   },
