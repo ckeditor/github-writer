@@ -45,4 +45,7 @@ jobs:
         with:
           cmd: build-dev # will run `yarn build-dev` command
 
-
+      - name: Run test in FUNCTIONAL
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test-functional # will run `yarn test-functional` command
