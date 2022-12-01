@@ -2,22 +2,6 @@ name: github-writer
 on: [push]
 
 jobs:
-  eslint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: ESLint Code Review
-        uses: yousufkalim/eslint-action@latest
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # Optional
-          eslint-args: '--ignore-path=.gitignore'
-          eslintrc: true # Set this to true if you want to use your own .eslintrc rules
-          extensions: 'js,jsx,ts,tsx'
-          auto-auto-fix-before-test: false # Set this to true if want to format and fix all the lint issue before testing
-          annotations: true
   build:
     name: Building Github-Writer
     runs-on: ubuntu-latest
@@ -49,4 +33,3 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: lint # will run `yarn build-dev` command
-
