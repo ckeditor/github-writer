@@ -48,6 +48,7 @@ jobs:
       - name: Run test in COMPAT
         uses: borales/actions-yarn@v4
         with:
+          run: node ./dev/updateemojis.js
           cmd: test-compat # will run `yarn build-dev` command
 
 
