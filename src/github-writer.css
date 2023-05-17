@@ -235,11 +235,6 @@ form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 	Code editor specific stuff
 ***********************************/
 
-/* Hide the preview tab */
-.github-writer-type-code.github-writer-mode-rte .preview.tabnav-tab {
-	display: none;
-}
-
 /* Hide the file actions */
 .github-writer-type-code.github-writer-mode-rte .file-actions {
 	display: none !important;
