@@ -49,7 +49,7 @@
     "@ckeditor/ckeditor5-list": "^35.3.1",
     "@ckeditor/ckeditor5-markdown-gfm": "^35.3.1",
     "@ckeditor/ckeditor5-mention": "^35.3.1",
-    "@ckeditor/ckeditor5-mermaid": "ckeditor/ckeditor5-mermaid#v0.0.2",
+    "@ckeditor/ckeditor5-mermaid": "^0.0.2",
     "@ckeditor/ckeditor5-paragraph": "^35.3.1",
     "@ckeditor/ckeditor5-paste-from-office": "^35.3.1",
     "@ckeditor/ckeditor5-remove-format": "^35.3.1",
@@ -101,7 +101,8 @@
   ],
   "workspaces": {
     "packages": [
-      "packages/ckeditor5-dev/packages/ckeditor5-dev-tests"
+      "packages/ckeditor5-dev/packages/ckeditor5-dev-tests",
+      "packages/ckeditor5-mermaid"
     ]
   },
   "resolutions": {
