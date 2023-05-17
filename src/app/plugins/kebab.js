@@ -38,9 +38,11 @@ export default class Kebab extends Plugin {
 			// Initializes the 'toolbarView' property of the dropdown.
 			addToolbarToDropdown( dropdown, [] );
 
-			// Fill the toolbar with the configured items.
-			const toolbarConfig = normalizeToolbarConfig( editor.config.get( 'kebabToolbar' ) );
-			dropdown.toolbarView.fillFromConfig( toolbarConfig.items, editor.ui.componentFactory );
+			dropdown.once( 'change:isOpen', () => {
+				// Fill the toolbar with the configured items.
+				const toolbarConfig = normalizeToolbarConfig( editor.config.get( 'kebabToolbar' ) );
+				dropdown.toolbarView.fillFromConfig( toolbarConfig.items, editor.ui.componentFactory );
+			} );
 
 			return dropdown;
 		} );

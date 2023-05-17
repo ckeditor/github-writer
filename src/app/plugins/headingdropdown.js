@@ -70,20 +70,22 @@ export default class HeadingDropdown extends Plugin {
 				dropdown.buttonView.bind( 'icon' ).to( headingCommand, 'value', value => value ? icons[ value ] : icons[ defaultHeading ] );
 			}
 
-			// Initializes the 'toolbarView' property of the dropdown.
-			addToolbarToDropdown( dropdown, [] );
+			dropdown.once( 'change:isOpen', () => {
+				// Initializes the 'toolbarView' property of the dropdown.
+				addToolbarToDropdown( dropdown, [] );
 
-			// Fill the toolbar with the configured items.
-			const toolbarConfig = normalizeToolbarConfig( [
-				'heading1',
-				'heading2',
-				'heading3',
-				'heading4',
-				'heading5',
-				'heading6',
-				'paragraph'
-			] );
-			dropdown.toolbarView.fillFromConfig( toolbarConfig.items, editor.ui.componentFactory );
+				// Fill the toolbar with the configured items.
+				const toolbarConfig = normalizeToolbarConfig( [
+					'heading1',
+					'heading2',
+					'heading3',
+					'heading4',
+					'heading5',
+					'heading6',
+					'paragraph'
+				] );
+				dropdown.toolbarView.fillFromConfig( toolbarConfig.items, editor.ui.componentFactory );
+			} );
 
 			return dropdown;
 		} );
