@@ -92,7 +92,7 @@ The source code contains additional readme files with technical details about th
 
 ---
 
-Copyright (c) 2003-2022, [CKSource](http://cksource.com) Holding sp. z o.o. All rights reserved.
+Copyright (c) 2003-2023, [CKSource Holding sp. z o.o.](http://cksource.com) All rights reserved.
 
 GitHub is a trademark of [GitHub](https://github.com/), Inc.
 
