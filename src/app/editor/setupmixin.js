@@ -156,7 +156,7 @@ const SetupMixin = {
 		// Setup listeners for submit buttons.
 		{
 			this.domManipulator.addEventListener( 'button[type="submit"]', 'click', ( ev, button ) => {
-				if ( button.closest( 'form' ) === form ) {
+				if ( ( button.closest( 'form' ) === form ) || button.form === form ) {
 					// We want to play safe here an not allow the form to be posted if there is any error in the synchronization.
 					try {
 						syncOnSubmit( this );
