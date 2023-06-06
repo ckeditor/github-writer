@@ -106,6 +106,38 @@ export class Adapter {
 						// The final URL of the file is already known, even before the upload. We save it here.
 						returnUrl = response.asset.href;
 
+						/**
+						 * This is a copy&paste code from gitHub source code `attachment-upload.ts`
+						 *
+						 * It marks uploaded file as completed and return correct URL.
+						 */
+						const url = typeof response.asset_upload_url === 'string' ? response.asset_upload_url : null;
+						const token = typeof response.asset_upload_authenticity_token == 'string' ?
+							response.asset_upload_authenticity_token : null;
+
+						if ( !( url && token ) ) {
+							return;
+						}
+
+						const form = new FormData();
+						form.append( 'authenticity_token', token );
+
+						fetch( url, {
+							method: 'PUT',
+							body: form,
+							credentials: 'same-origin',
+							headers: {
+								Accept: 'application/json',
+								'X-Requested-With': 'XMLHttpRequest'
+							}
+						} )
+							.then( response => response.json() )
+							.then( response => {
+								returnUrl = response.href;
+							} );
+
+						/* End of copied GitHub code */
+
 						// Retrieve the target Amazon S3 upload URL.
 						const uploadUrl = response.upload_url;
 
