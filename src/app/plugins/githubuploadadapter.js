@@ -103,26 +103,19 @@ export class Adapter {
 						// Step 2: the real upload takes place this time to Amazon S3 servers,
 						// using information returned from Step 1.
 
-						// The final URL of the file is already known, even before the upload. We save it here.
-						returnUrl = response.asset.href;
-
-						/**
-						 * This is a copy&paste code from gitHub source code `attachment-upload.ts`
-						 *
-						 * It marks uploaded file as completed and return correct URL.
-						 */
-						const url = typeof response.asset_upload_url === 'string' ? response.asset_upload_url : null;
-						const token = typeof response.asset_upload_authenticity_token == 'string' ?
+						const assetUrl = typeof response.asset_upload_url === 'string' ? response.asset_upload_url : null;
+						const authenticityToken = typeof response.asset_upload_authenticity_token == 'string' ?
 							response.asset_upload_authenticity_token : null;
 
-						if ( !( url && token ) ) {
+						if ( !( assetUrl && authenticityToken ) ) {
 							return;
 						}
 
 						const form = new FormData();
-						form.append( 'authenticity_token', token );
 
-						fetch( url, {
+						form.append( 'authenticity_token', authenticityToken );
+
+						fetch( assetUrl, {
 							method: 'PUT',
 							body: form,
 							credentials: 'same-origin',
@@ -133,10 +126,9 @@ export class Adapter {
 						} )
 							.then( response => response.json() )
 							.then( response => {
+								// The final URL of the file is already known, even before the upload. We save it here.
 								returnUrl = response.href;
 							} );
-
-						/* End of copied GitHub code */
 
 						// Retrieve the target Amazon S3 upload URL.
 						const uploadUrl = response.upload_url;
