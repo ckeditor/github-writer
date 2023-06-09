@@ -52,8 +52,8 @@ export class Adapter {
 	 * @returns {Promise<{default: *}>} A promise that resolves to an object containing the url to reach the uploaded file.
 	 */
 	upload() {
-		// This variable holds the final result of the whole upload logic: the URL to the uploaded file.
-		let returnUrl;
+		// This variable holds response data from first asset upload ( to pass it to the `sendAssetRequest`).
+		let assetResponse;
 
 		// This is an async operation that involves 2 or 3 xhr requests.
 		//
@@ -103,32 +103,8 @@ export class Adapter {
 						// Step 2: the real upload takes place this time to Amazon S3 servers,
 						// using information returned from Step 1.
 
-						const assetUrl = typeof response.asset_upload_url === 'string' ? response.asset_upload_url : null;
-						const authenticityToken = typeof response.asset_upload_authenticity_token == 'string' ?
-							response.asset_upload_authenticity_token : null;
-
-						if ( !( assetUrl && authenticityToken ) ) {
-							return;
-						}
-
-						const form = new FormData();
-
-						form.append( 'authenticity_token', authenticityToken );
-
-						fetch( assetUrl, {
-							method: 'PUT',
-							body: form,
-							credentials: 'same-origin',
-							headers: {
-								Accept: 'application/json',
-								'X-Requested-With': 'XMLHttpRequest'
-							}
-						} )
-							.then( response => response.json() )
-							.then( response => {
-								// The final URL of the file is already known, even before the upload. We save it here.
-								returnUrl = response.href;
-							} );
+						// Assign asset response to variable
+						assetResponse = response;
 
 						// Retrieve the target Amazon S3 upload URL.
 						const uploadUrl = response.upload_url;
@@ -153,10 +129,14 @@ export class Adapter {
 						this._sendRequest( data );
 					} ) )
 					.then( ( /* { file, response } */ ) => {
-						// Upload concluded! Simply send the file URL back, according to CKEditor specs.
-						return {
-							default: returnUrl
-						};
+						// Step 3: Retrieve the final uploaded asset URL using response data gathered on Step 1.
+						return this.sendAssetRequest( assetResponse )
+							.then( returnUrl => {
+								// Upload concluded! Simply send the file URL back, according to CKEditor specs.
+								return {
+									default: returnUrl
+								};
+							} );
 					} );
 			} );
 	}
@@ -235,5 +215,37 @@ export class Adapter {
 	 */
 	_sendRequest( data ) {
 		this.xhr.send( data );
+	}
+
+	/**
+	 * Sends a request to receive a final asset URL.
+	 */
+	sendAssetRequest( response ) {
+		const assetUrl = typeof response.asset_upload_url === 'string' ? response.asset_upload_url : null;
+		const authenticityToken = typeof response.asset_upload_authenticity_token == 'string' ?
+			response.asset_upload_authenticity_token : null;
+
+		if ( !( assetUrl && authenticityToken ) ) {
+			return;
+		}
+
+		const form = new FormData();
+
+		form.append( 'authenticity_token', authenticityToken );
+
+		return fetch( assetUrl, {
+			method: 'PUT',
+			body: form,
+			credentials: 'same-origin',
+			headers: {
+				Accept: 'application/json',
+				'X-Requested-With': 'XMLHttpRequest'
+			}
+		} )
+			.then( response => response.json() )
+			.then( response => {
+				// The final URL of the file is already known, even before the upload. We save it here.
+				return response.href;
+			} );
 	}
 }
