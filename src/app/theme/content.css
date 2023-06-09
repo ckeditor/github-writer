@@ -156,3 +156,16 @@
 		}
 	}
 }
+
+
+/*
+https://github.com/ckeditor/github-writer/pull/450#issuecomment-1584553496
+https://github.com/ckeditor/github-writer/pull/450#issuecomment-1584573368
+*/
+.file.open {
+	& .image {
+		&.ck-widget {
+			display: block;
+		}
+	}
+}
