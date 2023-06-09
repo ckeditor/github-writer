@@ -52,9 +52,6 @@ export class Adapter {
 	 * @returns {Promise<{default: *}>} A promise that resolves to an object containing the url to reach the uploaded file.
 	 */
 	upload() {
-		// This variable holds the final result of the whole upload logic: the URL to the uploaded file.
-		let returnUrl;
-
 		// This is an async operation that involves 2 or 3 xhr requests.
 		//
 		// Start by taking the upload configuration, extracting it from the page.
@@ -68,7 +65,15 @@ export class Adapter {
 				return this.loader.file
 					// Uploading on GH is made out of two steps. In our logic we're trying to mimic the requests that
 					// the original GH pages do, including the exact sets of headers and data.
-					.then( file => new Promise( ( resolve, reject ) => {
+					.then( getAssetUploadPolicy.bind( this ) )
+					// The file and the response from the above request are passed along.
+					.then( uploadFile.bind( this ) )
+					// Finally we need to confirm the upload (GH added this feature in 2023).
+					// See https://github.com/ckeditor/github-writer/issues/444 for more details.
+					.then( sendAssetRequest.bind( this ) );
+
+				function getAssetUploadPolicy( file ) {
+					return new Promise( ( resolve, reject ) => {
 						// Step 1: a setup request is made to the GH servers, returning the target upload URL
 						// and authentication tokens.
 
@@ -97,14 +102,13 @@ export class Adapter {
 
 						// Run!
 						this._sendRequest( data );
-					} ) )
-					// The file and the response from the above request are passed along.
-					.then( ( { file, response } ) => new Promise( ( resolve, reject ) => {
-						// Step 2: the real upload takes place this time to Amazon S3 servers,
-						// using information returned from Step 1.
+					} );
+				}
 
-						// The final URL of the file is already known, even before the upload. We save it here.
-						returnUrl = response.asset.href;
+				function uploadFile( { file, response } ) {
+					return new Promise( ( resolve, reject ) => {
+						// Step 2: the real upload takes place this time to Amazon S3 servers,
+						// using information returned from asset policy at Step 1.
 
 						// Retrieve the target Amazon S3 upload URL.
 						const uploadUrl = response.upload_url;
@@ -123,17 +127,51 @@ export class Adapter {
 						this._initRequest( uploadUrl );
 
 						// _initListeners is the one responsible to resolve this promise.
-						this._initListeners( resolve, reject, file );
+						this._initListeners( resolveParams => {
+							resolve( {
+								...resolveParams,
+								assetPolicyResponse: response
+							} );
+						}, reject, file );
 
 						// Run!
 						this._sendRequest( data );
-					} ) )
-					.then( ( /* { file, response } */ ) => {
-						// Upload concluded! Simply send the file URL back, according to CKEditor specs.
-						return {
-							default: returnUrl
-						};
 					} );
+				}
+
+				function sendAssetRequest( { /* file, response, */ assetPolicyResponse } ) {
+					let assetUrl = typeof assetPolicyResponse.asset_upload_url === 'string' ? assetPolicyResponse.asset_upload_url : null;
+					const authenticityToken = typeof assetPolicyResponse.asset_upload_authenticity_token == 'string' ?
+						assetPolicyResponse.asset_upload_authenticity_token : null;
+
+					if ( !( assetUrl && authenticityToken ) ) {
+						return;
+					}
+
+					// Firefox fix (https://github.com/ckeditor/github-writer/pull/450#issuecomment-1580669679).
+					assetUrl = assetUrl.startsWith( 'https' ) ? assetUrl : `${ window.location.origin }${ assetUrl }`;
+
+					const form = new FormData();
+
+					form.append( 'authenticity_token', authenticityToken );
+
+					return fetch( assetUrl, {
+						method: 'PUT',
+						body: form,
+						credentials: 'same-origin',
+						headers: {
+							Accept: 'application/json',
+							'X-Requested-With': 'XMLHttpRequest'
+						}
+					} )
+						.then( response => response.json() )
+						.then( response => {
+							// The final URL of the file is already known, even before the upload. We save it here.
+							return {
+								default: response.href
+							};
+						} );
+				}
 			} );
 	}
 
