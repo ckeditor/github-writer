@@ -221,13 +221,16 @@ export class Adapter {
 	 * Sends a request to receive a final asset URL.
 	 */
 	sendAssetRequest( response ) {
-		const assetUrl = typeof response.asset_upload_url === 'string' ? response.asset_upload_url : null;
+		let assetUrl = typeof response.asset_upload_url === 'string' ? response.asset_upload_url : null;
 		const authenticityToken = typeof response.asset_upload_authenticity_token == 'string' ?
 			response.asset_upload_authenticity_token : null;
 
 		if ( !( assetUrl && authenticityToken ) ) {
 			return;
 		}
+
+		// Firefox fix
+		assetUrl = assetUrl.startsWith( 'https' ) ? assetUrl : `${ window.location.origin }${ assetUrl }`;
 
 		const form = new FormData();
 
