@@ -138,7 +138,7 @@ export default class Editor {
 				 * @type {HTMLElement}
 				 * @memberOf MarkdownEditor#dom.panels
 				 */
-				markdown: root.querySelector( '.previewable-comment-form > file-attachment' ),
+				markdown: root.querySelector( '.previewable-comment-form file-attachment' ),
 
 				/**
 				 * The preview panel.
@@ -149,9 +149,13 @@ export default class Editor {
 				preview:
 					root.querySelector(
 						// This one is used on New Issue and Add Comment.
-						'.previewable-comment-form > .js-preview-panel,' +
-						// This one is used on Edit Comment.
-						'.previewable-comment-form > .preview-content' )
+						'.previewable-comment-form .js-preview-panel,' +
+						// This one is used on Edit Comment (structure up to May 2023).
+						'.previewable-comment-form > .preview-content,' +
+						// Another selector for Edit Comment but this div looks rather buggy,
+						// so it might be that GH will clean this up soon, see
+						// https://github.com/ckeditor/github-writer/pull/455#discussion_r1224359359
+						'.previewable-comment-form > div > .preview-content' )
 			},
 
 			tabs: {
