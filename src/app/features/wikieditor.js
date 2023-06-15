@@ -14,7 +14,7 @@ export default class WikiEditor extends Editor {
 		const dom = super.getDom( root );
 
 		dom.toolbarContainer = root.querySelector( '.comment-form-head' );
-		dom.panels.markdown = root.querySelector( '.previewable-comment-form > .write-content' );
+		dom.panels.markdown = root.querySelector( '.previewable-comment-form > file-attachment > .write-content' );
 
 		delete dom.toolbar;
 
@@ -30,6 +30,7 @@ export default class WikiEditor extends Editor {
 		const config = super.getCKEditorConfig();
 
 		// Wiki pages support autolinking on urls only.
+		// eslint-disable-next-line no-unused-expressions
 		config.githubWriter && ( config.githubWriter.autoLinking = { url: true } );
 
 		return config;

@@ -29,8 +29,9 @@ class CommentsTimelinePage extends GitHubPage {
 		const root = ( await this.browserPage.$$( 'form.js-comment-update' ) )[ index ];
 		const editButton = await root.evaluateHandle( root =>
 			root.closest( '.timeline-comment' ).querySelector( '.js-comment-edit-button' ) );
-		const actionButton = await editButton.evaluateHandle( editButton =>
-			editButton.closest( 'details-menu' ).previousElementSibling );
+		const actionButton = await root.evaluateHandle( root =>
+			root.closest( '.timeline-comment' ).querySelector( '.timeline-comment-action' )
+		);
 
 		await actionButton.click();
 		await this.waitVisible( editButton );
@@ -60,4 +61,3 @@ class CommentsTimelinePage extends GitHubPage {
 }
 
 module.exports = CommentsTimelinePage;
-

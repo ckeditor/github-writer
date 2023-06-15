@@ -37,7 +37,7 @@ class NewWikiPage extends GitHubPage {
 		const selector = 'form[name="gollum-editor"][data-github-writer-id]';
 
 		// Wait for the editor to be created.
-		await this.browserPage.waitFor( selector, { visible: true } );
+		await this.browserPage.waitForSelector( selector, { visible: true } );
 
 		return await this.getEditorByRoot( selector, MainEditor );
 	}

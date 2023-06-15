@@ -40,12 +40,12 @@ class WikiPage extends GitHubPage {
 		await this.browserPage.click( '.gh-header-actions :nth-child(2)' );
 
 		// Wait for the delete button.
-		await this.browserPage.waitFor( '.btn-danger' );
+		await this.browserPage.waitForSelector( '.Button--danger' );
 
 		// Click the button and confirm the alert dialog.
 		await this.waitForNavigation(
 			util.waitForDialog().accept(),
-			this.browserPage.click( '.btn-danger' )
+			this.browserPage.click( '.Button--danger' )
 		);
 
 		return await GitHubPage.getCurrentPage();

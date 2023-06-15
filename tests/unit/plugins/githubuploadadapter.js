@@ -92,6 +92,8 @@ describe( 'Plugins', () => {
 
 						xhr.respond( 200, { 'Content-Type': 'application/json' }, JSON.stringify( {
 							upload_url: 'amazon-upload-url',
+							asset_upload_authenticity_token: 'upload-token',
+							asset_upload_url: '/',
 							asset: {
 								href: 'final-image-url'
 							},
