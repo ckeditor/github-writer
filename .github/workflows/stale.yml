@@ -12,13 +12,12 @@ jobs:
     steps:
       - uses: gorzelinski/stale@add-reaction-updates
         with:
-          stale-issue-message: "There has been no activity in this issue for three years. Now it is marked as stale and will be closed in 30 days. We know it may be valid, so if you're interested in the solution, leave a comment or reaction."
-          stale-pr-message: "There has been no activity in this PR for three years. Now it is marked as stale and will be closed in 30 days. We know it may be valid, so if you're interested in the contribution, leave a comment or reaction."
-          close-issue-message: "We have closed the issue because of the lack of activity for last three years. We know it might be valid, so you can open a similar issue if needed."
-          close-pr-message: "We have closed the PR because of the lack of activity for last three years. We know it might be valid, so you can open a similar PR if needed."
+          stale-issue-message: "There has been no activity in this issue for the last three years. Now it is marked as stale and will be closed in 30 days. We know it may be valid, so if you're interested in the solution, leave a comment or reaction."
+          stale-pr-message: "There has been no activity in this PR for the last three years. Now it is marked as stale and will be closed in 30 days. We know it may be valid, so if you're interested in the contribution, leave a comment or reaction."
+          close-issue-message: "We have closed the issue because of the lack of activity for the last three years. We know it might be valid, so you can open a similar issue if needed."
+          close-pr-message: "We have closed the PR because of the lack of activity for the last three years. We know it might be valid, so you can open a similar PR if needed."
           days-before-stale: 1095
           days-before-close: 30
           exempt-issue-labels: support
           exempt-pr-labels: support
           ignore-reactions: false
-          debug-only: true
