@@ -22,4 +22,5 @@ jobs:
           exempt-issue-labels: support
           exempt-pr-labels: support
           ignore-reactions: false
-          operations-per-run: 90
+          operations-per-run: 60
+          ascending: true
