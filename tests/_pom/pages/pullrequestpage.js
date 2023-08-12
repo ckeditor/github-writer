@@ -71,7 +71,7 @@ class PullRequestPage extends CommentsTimelinePage {
 
 		await this.browserPage.click( '.js-reviews-toggle' );
 
-		return await this.getEditorByRoot( 'div.js-reviews-container > form', MainEditor );
+		return await this.getEditorByRoot( '#pull_requests_submit_review', MainEditor );
 	}
 
 	/**
@@ -115,19 +115,21 @@ class PullRequestPage extends CommentsTimelinePage {
 			container = container && container.querySelector( '.js-comments-holder' );
 
 			return !!container && !!container.querySelectorAll(
-				'.review-comment-contents.js-suggested-changes-contents' )[ index ];
+				'.js-suggested-changes-contents' )[ index ];
 		}, {}, position, index );
 
 		return await this.browserPage.evaluate( function getLineCommentHtmlEval( position, index ) {
 			const button = document.querySelector(
 				`button.js-add-single-line-comment[data-position="${ position }"]` );
+
 			const container = button
 				.closest( 'tr' )
 				.nextElementSibling
 				.querySelector( '.js-comments-holder' );
 
 			const element = container.querySelectorAll(
-				'.review-comment-contents.js-suggested-changes-contents .js-comment-body' )[ index ];
+				'.js-comment-body' )[ index ];
+			console.error( 'element', element );
 			return element.innerHTML.replace( /^\s+|\s+$/g, '' );
 		}, position, index );
 	}
@@ -138,16 +140,18 @@ class PullRequestPage extends CommentsTimelinePage {
 	 * @return {Promise<void>}
 	 */
 	async closePullRequest() {
+		await this.browserPage.waitForNavigation();
+
 		await this.switchTab( 'conversation' );
 
 		await this.browserPage.click( 'button[name="comment_and_close"]' );
 
 		// Delete the branch.
-		await this.browserPage.waitFor( 'div.post-merge-message button[type="submit"]', { visible: true } );
+		await this.browserPage.waitForSelector( 'div.post-merge-message button[type="submit"]', { visible: true } );
 		await this.browserPage.click( 'div.post-merge-message button[type="submit"]' );
 
 		// After delete, the "restore" button should be displayed, which confirms the cleanup.
-		await this.browserPage.waitFor( 'form.pull-request-ref-restore' );
+		await this.browserPage.waitForSelector( 'form.pull-request-ref-restore' );
 	}
 }
 

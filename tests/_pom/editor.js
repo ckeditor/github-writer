@@ -3,6 +3,7 @@
  * For licensing, see LICENSE.md.
  */
 
+const FORM_TYPE = require( './formsubmittypes' );
 const util = require( './util' );
 
 let messageCount = 0;
@@ -66,9 +67,27 @@ class Editor {
 	 *
 	 * @return {Promise<GitHubPage>} The current page.
 	 */
-	async submit() {
-		const selector = `[data-github-writer-id="${ this.id }"] .btn-primary`;
-		await this.page.browserPage.click( selector );
+	async submit( formType = FORM_TYPE.PRIMARY ) {
+		switch ( formType ) {
+			case FORM_TYPE.NEW_PR:
+				await this.page.browserPage.click( `[data-github-writer-id="${ this.id }"] .btn-primary` );
+				break;
+			case FORM_TYPE.PR_NEW_COMMENT:
+				await this.page.browserPage.click( '.js-new-comment-form .btn-primary' );
+				break;
+			case FORM_TYPE.PR_EDIT_COMMENT:
+				await this.page.browserPage.click( '.js-comment-update .Button--primary' );
+				break;
+			case FORM_TYPE.PR_CODE_LINE_COMMENT:
+				await this.page.browserPage.click( '.js-line-comments button[name="single_comment"]' );
+				break;
+			case FORM_TYPE.PR_REVIEW_COMMENT:
+				await this.page.browserPage.click( 'button[form="pull_requests_submit_review"]' );
+				break;
+			default:
+				await this.page.browserPage.click( `[data-github-writer-id="${ this.id }"] .btn-primary` );
+				break;
+		}
 		return this.page;
 	}
 
@@ -143,8 +162,8 @@ class MainEditor extends Editor {
 	 *
 	 * @return {Promise<GitHubPage>} The page loaded after submit.
 	 */
-	async submit() {
-		await this.page.waitForNavigation( super.submit() );
+	async submit( formType ) {
+		await this.page.waitForNavigation( super.submit( formType ) );
 
 		const GitHubPage = require( './githubpage' );
 		return await GitHubPage.getCurrentPage();
@@ -161,14 +180,14 @@ class NewCommentEditor extends Editor {
 	 *
 	 * @return {Promise<GitHubPage>} The current page.
 	 */
-	async submit() {
+	async submit( formType ) {
 		// Get the current number of comments.
 		const commentsCount = await this.page.browserPage.evaluate( () => {
 			const elements = document.querySelectorAll( '.timeline-comment.comment td.comment-body' );
 			return elements.length;
 		} );
 
-		await super.submit();
+		await super.submit( formType );
 
 		// Wait for the count of comments to increase.
 		await this.page.browserPage.waitForFunction( function( expectedCount ) {
@@ -190,8 +209,8 @@ class CommentEditor extends Editor {
 	 *
 	 * @return {Promise<IssuePage>}
 	 */
-	async submit() {
-		await super.submit();
+	async submit( formType ) {
+		await super.submit( formType );
 
 		// Wait for the count of comments to increase.
 		await this.page.browserPage.waitForFunction( function( id ) {
@@ -231,7 +250,7 @@ class NewLineCommentEditor extends Editor {
 	 *
 	 * @return {Promise<GitHubPage>} The current page.
 	 */
-	async submit() {
+	async submit( formType ) {
 		// Get the current number of comments.
 		const commentsCount = await this.page.browserPage.evaluate( function submitBefore( position ) {
 			const button = document.querySelector(
@@ -241,13 +260,14 @@ class NewLineCommentEditor extends Editor {
 				.nextElementSibling
 				.querySelector( '.js-comments-holder' );
 
-			return container.querySelectorAll( '.review-comment-contents.js-suggested-changes-contents' ).length;
+			return container.querySelectorAll( '.js-suggested-changes-contents' ).length;
 		}, this.line );
 
-		await super.submit();
+		await super.submit( formType );
 
 		// Wait for the count of comments to increase.
 		await this.page.browserPage.waitForFunction( function submitAfter( position, expectedCount ) {
+			console.error( 'position:', position );
 			const button = document.querySelector(
 				`button.js-add-single-line-comment[data-position="${ position }"]` );
 			const container = button
@@ -255,7 +275,7 @@ class NewLineCommentEditor extends Editor {
 				.nextElementSibling
 				.querySelector( '.js-comments-holder' );
 
-			const count = container.querySelectorAll( '.review-comment-contents.js-suggested-changes-contents' ).length;
+			const count = container.querySelectorAll( '.js-suggested-changes-contents' ).length;
 
 			return count === expectedCount;
 		}, {}, this.line, commentsCount + 1 );

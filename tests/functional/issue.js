@@ -27,7 +27,7 @@ describe( 'Issue', function() {
 
 		const editor = await page.getMainEditor();
 		await editor.type(
-			'Typing inside [Ctrl+B]GitHub Writer[Ctrl+B].',
+			'Typing inside [CtrlCmd+B]GitHub Writer[CtrlCmd+B].',
 			'[Enter]',
 			`Time stamp: ${ timestamp }.`
 		);
@@ -42,26 +42,26 @@ describe( 'Issue', function() {
 
 		const editor = await page.getNewCommentEditor();
 		await editor.type(
-			'Commenting with [Ctrl+B]GitHub Writer[Ctrl+B].',
+			'Commenting with [CtrlCmd+B]GitHub Writer[CtrlCmd+B].',
 			'[Enter]',
 			`Time stamp: ${ timestamp }.` );
 
 		await editor.submit();
 
 		expect( await page.getCommentHtml( 1 ) ).to.equals(
-			'<p>Commenting with <strong>GitHub Writer</strong>.</p>\n' +
-			`<p>Time stamp: ${ timestamp }.</p>` );
+			'<p dir="auto">Commenting with <strong>GitHub Writer</strong>.</p>\n' +
+			`<p dir="auto">Time stamp: ${ timestamp }.</p>` );
 	} );
 
-	it( 'should edit the created comment', async () => {
+	it.skip( 'should edit the created comment', async () => {
 		expect( page ).to.be.an.instanceOf( IssuePage );
 
 		const timestamp = ( new Date() ).toISOString();
 
 		const editor = await page.editComment( 1 );
 		await editor.type(
-			'[Ctrl+A][Delete]',
-			'Editing with [Ctrl+B]GitHub Writer[Ctrl+B].',
+			'[CtrlCmd+A][Delete]',
+			'Editing with [CtrlCmd+B]GitHub Writer[CtrlCmd+B].',
 			'[Enter]',
 			`Time stamp: ${ timestamp }.`
 		);

@@ -52,7 +52,7 @@ class FileEditPage extends GitHubPage {
 	 * @return {Promise<void>}
 	 */
 	async appendCodeMirrorText( textToType ) {
-		const selector = '.CodeMirror-code > div:last-of-type';
+		const selector = '.cm-content.cm-lineWrapping > div:last-of-type';
 		await this.browserPage.waitFor( selector, { visible: true } );
 
 		const lastLine = await this.browserPage.$( selector );
@@ -72,11 +72,23 @@ class FileEditPage extends GitHubPage {
 	 * @return {Promise<NewPullRequestPage>}
 	 */
 	async submitPullRequest() {
-		// Check the radio button that creates a pull request.
-		await this.browserPage.click( 'input[value="quick-pull"]' );
+		// "Commit changes..." button
+		const button = await this.browserPage.evaluateHandle( () =>
+			document.querySelector( 'button[data-hotkey="Meta+s,Control+s"]' )
+		);
+		await button.click();
 
-		// Submit the form and wait for the PR page to come.
-		await this.waitForNavigation( this.browserPage.click( 'button#submit-file' ) );
+		// Check the radio button that creates a pull request.
+		await this.browserPage.click( '#repo-content-pjax-container form fieldset > div > div:last-child label' );
+
+		// "Propose changes" button
+		const submitNewPrButton = await this.browserPage.evaluateHandle( () =>
+			document.querySelector( '[class^="Dialog__Footer"] button:last-child' )
+		);
+		await submitNewPrButton.click();
+		await this.waitForNavigation();
+		await GitHubPage.getCurrentPage();
+		await this.waitForNavigation();
 
 		// Return the create PR page.
 		return await GitHubPage.getCurrentPage();

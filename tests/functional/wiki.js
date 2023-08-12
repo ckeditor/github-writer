@@ -28,7 +28,7 @@ describe( 'Wiki', function() {
 
 		const editor = await page.getMainEditor();
 		await editor.type(
-			'Typing inside [Ctrl+B]GitHub Writer[Ctrl+B].',
+			'Typing inside [CtrlCmd+B]GitHub Writer[CtrlCmd+B].',
 			'[Enter]',
 			`Time stamp: ${ timestamp }.`
 		);
