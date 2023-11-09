@@ -14,7 +14,7 @@ export default class WikiEditor extends Editor {
 		const dom = super.getDom( root );
 
 		dom.toolbarContainer = root.querySelector( '.comment-form-head' );
-		dom.panels.markdown = root.querySelector( '.previewable-comment-form > .write-content' );
+		dom.panels.markdown = root.querySelector( '.previewable-comment-form > file-attachment > .write-content' );
 
 		delete dom.toolbar;
 
