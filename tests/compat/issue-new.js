@@ -24,11 +24,11 @@ describe( 'Issue - New', function() {
 			'toolbar': root + ' markdown-toolbar',
 			'textarea': root + ' textarea',
 			'tab -> write': root + ' .write-tab',
-			'panels container': root + ' .previewable-comment-form',
-			'panel -> markdown': root + ' .previewable-comment-form > file-attachment',
+			'panels container': root + ' .js-previewable-comment-form',
+			'panel -> markdown': root + ' .js-previewable-comment-form > file-attachment',
 			'panel -> preview':
-				root + ' .previewable-comment-form > .js-preview-panel, ' +
-				root + ' .previewable-comment-form > .preview-content',
+				root + ' .js-previewable-comment-form > .js-preview-panel, ' +
+				root + ' .js-previewable-comment-form > .preview-content',
 			'buttons -> submit':
 				root + ' input[type=submit].btn-primary,' +
 				root + ' button[type=submit].btn-primary',
