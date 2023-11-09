@@ -32,8 +32,15 @@ div.github-writer-ckeditor .ck-editor__editable.ck.ck-content {
 	border-radius: 6px;
 }
 
+/* Top corners should not be rounded anymore. See #470 */
+div.github-writer-ckeditor .ck-editor__editable.ck.ck-content {
+	border-top-right-radius: 0;
+	border-top-left-radius: 0;
+}
+
+/* Keep the original background color on blur. See #470 */
 div.github-writer-ckeditor .ck-editor__editable.ck-blurred {
-	background-color: var(--color-canvas-inset);
+	background-color: var(--color-canvas-default);
 }
 
 div.github-writer-ckeditor .ck-editor__editable.ck-focused {
@@ -81,6 +88,12 @@ form.github-writer-type-milestone .ck-editor__editable {
 /* Remove the markdown message when in RTE. */
 .github-writer-mode-rte .tabnav-extra {
 	display: none;
+}
+
+/* Bottom corners should not by rounded anymore. See #470 */
+.github-writer-mode-rte .js-previewable-comment-form {
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
 }
 
 /* Markdown mode */
@@ -140,7 +153,7 @@ div.github-writer-ckeditor .ck-editor__editable.ck-focused {
 
 div.github-writer-ckeditor .ck-editor__editable {
 	border: none !important;
-	padding: 0 8px;
+	padding: 0 var(--stack-padding-normal, 16px);
 	width: 100%;
 }
 
@@ -164,6 +177,23 @@ div.github-writer-panel-rte.form-control {
 	width: auto;
 }
 
+/* Adjust editor layout after recent GH changes. See See #470 */
+div.github-writer-panel-rte.form-control {
+	margin: 0 !important;
+	border-top: none;
+	border-top-right-radius: 0;
+	border-top-left-radius: 0;
+	top: -1px;
+}
+
+.js-comment-update div.github-writer-panel-rte.form-control {
+	top: 0;
+}
+
+.js-comment-update div.github-writer-panel-rte.form-control {
+	border: none;
+}
+
 /* Do not show the arrow in the Kebab button. */
 .github-writer-kebab-button .ck-dropdown__arrow {
 	display: none;
@@ -182,7 +212,6 @@ form[data-github-writer-id]:not(.github-writer-type-code) div.comment-form-head 
 form[data-github-writer-id]:not(.github-writer-type-code) div.tabnav-tabs,
 form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 	flex: auto;
-	margin: auto 8px -1px 8px !important;
 	order: -1;
 	white-space: nowrap;
 }
@@ -231,6 +260,11 @@ form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 	background-color: var(--color-canvas-default) !important;
 }
 
+/* Remove the gab between toolbar and editor. See #470 */
+.github-writer-wikieditor .comment-form-head {
+	margin-bottom: 0;
+}
+
 /**********************************
 	Code editor specific stuff
 ***********************************/
@@ -277,7 +311,7 @@ form[data-github-writer-id]:not(.github-writer-type-code) nav.tabnav-tabs {
 .previewable-edit .github-writer-size-container {
 	display: none !important;
 }
-.is-comment-editing .github-writer-size-container.previewable-comment-form {
+.is-comment-editing .github-writer-size-container.js-previewable-comment-form {
 	display: flex !important;
 }
 
