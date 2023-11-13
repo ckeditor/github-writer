@@ -177,7 +177,7 @@ div.github-writer-panel-rte.form-control {
 	width: auto;
 }
 
-/* Adjust editor layout after recent GH changes. See See #470 */
+/* Adjust editor layout after recent GH changes. See #470 */
 div.github-writer-panel-rte.form-control {
 	margin: 0 !important;
 	border-top: none;
