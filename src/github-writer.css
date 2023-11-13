@@ -186,6 +186,11 @@ div.github-writer-panel-rte.form-control {
 	top: -1px;
 }
 
+/* Adjust editor layout after recent GH changes. See #470 */
+form.github-writer-revieweditor .github-writer-panel-rte.form-control {
+	margin-bottom: var(--stack-padding-normal, 16px) !important;
+}
+
 .js-comment-update div.github-writer-panel-rte.form-control {
 	top: 0;
 }
