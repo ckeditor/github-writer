@@ -110,8 +110,8 @@ export const GitHubPage = {
 				root.classList.add( 'js-blob-form' );
 				root.querySelector( 'textarea' ).setAttribute( 'data-codemirror-mode', 'text/x-gfm' );
 
-				root.querySelector( '.previewable-comment-form > file-attachment' ).classList.add( 'commit-create' );
-				root.querySelector( '.previewable-comment-form > .preview-content' ).classList.add( 'commit-preview' );
+				root.querySelector( '.js-previewable-comment-form > file-attachment' ).classList.add( 'commit-create' );
+				root.querySelector( '.js-previewable-comment-form > .preview-content' ).classList.add( 'commit-preview' );
 
 				root.querySelector( 'markdown-toolbar' ).remove();
 				root.querySelector( '.tabnav-tabs' ).remove();
