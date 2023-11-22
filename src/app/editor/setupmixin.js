@@ -141,6 +141,14 @@ const SetupMixin = {
 		// Reset the rte editor on form reset (e.g. after a new comment is added).
 		{
 			this.domManipulator.addEventListener( form, 'reset', () => {
+				if ( this.ckeditor.plugins.has( 'PendingActions' ) ) {
+					const pendingActions = ckeditor.plugins.get( 'PendingActions' );
+
+					// Remove submit pending action to undisable actual submit button
+					if ( pendingActions.hasAny ) {
+						pendingActions.fire( 'change:removeAction', 'submit' );
+					}
+				}
 				// We actually want it 'after-reset', so form elements are clean, thus setTimeout.
 				setTimeout( () => {
 					this.setCKEditorData( this.dom.textarea.defaultValue );
@@ -170,6 +178,18 @@ const SetupMixin = {
 						// Block the form post.
 						ev.preventDefault();
 						ev.stopImmediatePropagation();
+					}
+
+					if ( this.ckeditor.plugins.has( 'PendingActions' ) ) {
+						const pendingActions = ckeditor.plugins.get( 'PendingActions' );
+
+						// Add submit pending action to disable actual submit button for preventing possibility
+						// clicking on that more than one time.
+						if ( !this.ckeditor.plugins.get( 'PendingActions' ).hasAny ) {
+							setTimeout( () => {
+								pendingActions.fire( 'change:addAction', 'submit' );
+							} );
+						}
 					}
 				}
 			} );
@@ -333,9 +353,27 @@ const SetupMixin = {
 	_setupPendingActions() {
 		if ( this.ckeditor.plugins.has( 'PendingActions' ) ) {
 			const pendingActions = this.ckeditor.plugins.get( 'PendingActions' );
+			const actions = new Map();
 
 			pendingActions.on( 'change:hasAny', () => {
 				this._setSubmitStatus();
+			} );
+
+			// Add to PendingActions collection new action.
+			pendingActions.on( 'change:addAction', ( _, name ) => {
+				const action = pendingActions.add( name );
+
+				actions.set( name, action );
+			} );
+
+			// Remove action from PendingActions collection.
+			pendingActions.on( 'change:removeAction', ( _, name ) => {
+				const action = actions.get( name );
+
+				if ( action ) {
+					pendingActions.remove( action );
+					actions.delete( name );
+				}
 			} );
 		}
 	}
