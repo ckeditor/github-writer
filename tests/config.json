@@ -1,0 +1,9 @@
+{
+	"github" : {
+	  "repo": "username/reponame",
+	  "credentials": {
+		"name": "username",
+		"password": "password"
+	  }
+	}
+  }

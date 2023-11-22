@@ -1,0 +1,35 @@
+name: github-writer
+on: [push]
+
+jobs:
+  build:
+    name: Building Github-Writer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install # will run `yarn install` command
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # if needed
+      - name: Build github-writer
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build # will run `yarn build` command
+
+      - name: Build dev github-writer
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build-dev # will run `yarn build-dev` command
+
+      - name: Running Lint
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint # will run `yarn build-dev` command
