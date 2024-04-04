@@ -5,7 +5,6 @@
 
 .ck-balloon-panel, .ck-dropdown__panel {
 	box-shadow: var(--color-shadow-large) !important;
-	background: var(--color-canvas-overlay) !important;
 	border: 1px solid var(--color-border-default) !important;
 	border-radius: 6px !important;
 }
