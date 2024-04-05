@@ -51,7 +51,7 @@
 			border: 0;
 
 			/* Color */
-			color: var(--fgColor-muted, var(--color-fg-muted)) !important;
+			color: var(--fgColor-muted) !important;
 
 			/* Height */
 			display: block;
@@ -99,7 +99,7 @@
 			margin-right: 4px;
 			width: 1px;
 			min-width: 1px;
-			background: var(--color-border-default);
+			background: var(--borderColor-default);
 		}
 
 		/* Fixes the toggle button in dropdown lists (#41) */

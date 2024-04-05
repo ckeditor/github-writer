@@ -4,36 +4,37 @@
  */
 
 .ck-balloon-panel, .ck-dropdown__panel {
-	box-shadow: var(--color-shadow-large) !important;
-	border: 1px solid var(--color-border-default) !important;
+	box-shadow: var(--shadow-floating-large) !important;
+	background-color: var(--bgColor-muted) !important;
+	border: 1px solid var(--borderColor-default) !important;
 	border-radius: 6px !important;
 }
 
 .ck.ck-balloon-panel[class*=arrow_n]:not(.ck-tooltip):after {
-	border-bottom-color: var(--color-canvas-overlay) !important;
+	border-bottom-color: var(--overlay-borderColor) !important;
 }
 
 .ck.ck-balloon-panel[class*=arrow_s]:not(.ck-tooltip):after {
-	border-top-color: var(--color-canvas-overlay) !important;
+	border-top-color: var(--overlay-borderColor) !important;
 }
 
 /* After updating ckeditor to 35.2.1 the update to the balloon panel arrow color was needed. See #377. */
 .ck.ck-balloon-panel[class*=arrow_n]:before {
-	border-bottom-color: var(--color-border-default);
+	border-bottom-color: var(--borderColor-default);
 }
 
 .ck.ck-balloon-panel[class*=arrow_s]:before {
-	border-top-color: var(--color-border-default);
+	border-top-color: var(--borderColor-default);
 }
 /* ********** */
 
 .ck-list {
-	color: var(--color-fg-default) !important;
-	background: var(--color-canvas-overlay) !important;
+	color: var(--fgColor-default) !important;
+	background: var(--overlay-bgColor) !important;
 }
 
 .ck-button {
-	color: var(--color-fg-default) !important;
+	color: var(--fgColor-default) !important;
 }
 
 /* Mermaid balloon toolbar styles */
@@ -51,7 +52,7 @@
 	margin-right: 0;
 	width: 1px;
 	min-width: 1px;
-	background: var(--color-border-default);
+	background: var(--borderColor-default);
 }
 
 /* When GitHub uses the light mode, we need to overwrite parts of the color scheme
@@ -70,8 +71,4 @@ html[data-color-mode="auto"] .ck.ck-balloon-panel {
 			border-bottom-color: var(--ck-color-panel-background) !important;
 		}
 	}
-}
-
-html[data-color-mode="dark"] .ck.ck-balloon-panel.ck-tooltip {
-	background-color: var(--ck-color-tooltip-background) !important;
 }
