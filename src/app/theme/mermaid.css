@@ -11,6 +11,6 @@
 	}
 
 	& textarea {
-		color: var(--color-fg-default);
+		color: var(--fgColor-default);
 	}
 }

@@ -20,7 +20,7 @@
 
 		/* Styles used in the code editor */
 		padding: 0;
-		background: var(--color-canvas-default);
+		background: var(--bgColor-default);
 
 		& > img {
 			margin: 0;
@@ -83,7 +83,7 @@
 			height: .25em;
 			padding: 0;
 			margin: 24px 0;
-			background-color: var(--color-border-default);
+			background-color: var(--borderColor-default);
 			border: 0;
 		}
 	}
@@ -95,7 +95,7 @@
 
 	/* Code block */
 	& pre {
-		color: var(--color-fg-default);
+		color: var(--fgColor-default);
 		background-color: var(--ck-color-pre-background);
 		border: 0;
 		padding: 16px;
@@ -122,7 +122,7 @@
 			}
 
 			& tr:nth-child(2n) {
-				background: var(--color-canvas-subtle);
+				background: var(--bgColor-muted);
 			}
 
 			& th {
@@ -132,7 +132,7 @@
 			& th,
 			& td {
 				padding: 6px 13px;
-				border: 1px solid var(--color-border-default) !important;
+				border: 1px solid var(--borderColor-default) !important;
 				width: auto;
 			}
 		}

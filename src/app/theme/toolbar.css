@@ -34,7 +34,7 @@
 }
 
 .ck.ck-toolbar {
-	background: transparent !important;
+	background: inherit !important;
 	padding: 0;
 
 	& > .ck-toolbar__items {
@@ -51,7 +51,7 @@
 			border: 0;
 
 			/* Color */
-			color: var(--color-fg-muted) !important;
+			color: var(--fgColor-muted) !important;
 
 			/* Height */
 			display: block;
@@ -59,11 +59,6 @@
 
 			/* Cursor */
 			cursor: pointer;
-
-			&.ck-on,
-			&:not(.ck-disabled):hover {
-				color: var(--color-accent-fg) !important;
-			}
 
 			&.ck-splitbutton__action {
 				margin-right: 0 !important;
@@ -104,7 +99,7 @@
 			margin-right: 4px;
 			width: 1px;
 			min-width: 1px;
-			background: var(--color-border-default);
+			background: var(--borderColor-default);
 		}
 
 		/* Fixes the toggle button in dropdown lists (#41) */

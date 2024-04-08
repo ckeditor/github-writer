@@ -8,7 +8,7 @@
 	min-width: 250px;
 	max-width: 250px;
 
-	color: var(--color-fg-muted);
+	color: var(--fgColor-muted);
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
 
 	& * {
@@ -17,38 +17,38 @@
 	}
 
 	& .select-menu-header {
-		background: var(--color-canvas-overlay);
+		background: var(--overlay-bgColor);
 		padding: 8px 10px;
-		border-bottom: 1px solid var(--color-border-muted);
+		border-bottom: 1px solid var(--borderColor-muted);
 		line-height: 16px;
 
 		& .select-menu-title {
 			font-weight: 600;
-			color: var(--color-fg-default);
+			color: var(--fgColor-default);
 			line-height: inherit;
 		}
 	}
 
 	& .select-menu-filters {
-		background-color: var(--color-canvas-overlay);
+		background-color: var(--overlay-bgColor);
 
 		& input {
 			padding: 5px 12px;
 			font-size: 14px;
 			line-height: 20px;
-			color: var(--color-fg-default);
-			background-color: var(--color-canvas-default);
-			border: 1px solid var(--color-border-default);
+			color: var(--fgColor-default);
+			background-color: var(--bgColor-default);
+			border: 1px solid var(--borderColor-default);
 			border-radius: 6px;
 			outline: none;
-			box-shadow: var(--color-primer-shadow-inset);
+			box-shadow: var(--shadow-inset);
 			min-width: auto;
 		}
 	}
 
 	& .select-menu-header code,
 	& .select-menu-item code {
-		color: var(--color-fg-default);
+		color: var(--fgColor-default);
 		font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 		font-size: 12px;
 		line-height: 16px;
@@ -65,8 +65,8 @@
 	& .ck.ck-button:not(.ck-disabled).select-menu-item {
 		cursor: pointer;
 		border: 0;
-		color: var(--color-fg-default) !important;
-		border-bottom: 1px solid var(--color-border-muted);
+		color: var(--fgColor-default) !important;
+		border-bottom: 1px solid var(--borderColor-muted);
 		padding: calc(0.2 * var(--ck-line-height-base) * var(--ck-font-size-base)) calc(0.4 * var(--ck-line-height-base) * var(--ck-font-size-base));
 		line-height: 18px;
 
@@ -77,12 +77,12 @@
 		&:hover,
 		&:active,
 		&:focus {
-			color: var(--color-fg-on-emphasis) !important;
-			background-color: var(--color-accent-emphasis);
+			color: var(--fgColor-on-emphasis) !important;
+			background-color: var(--fgColor-accent);
 			box-shadow: none;
 
 			& .description {
-				color: var(--color-fg-default) !important;
+				color: var(--fgColor-default) !important;
 			}
 		}
 
@@ -92,7 +92,7 @@
 			background-color: inherit;
 		}
 		& .description {
-			color: var(--color-fg-muted) !important;
+			color: var(--fgColor-muted) !important;
 		}
 	}
 
@@ -111,15 +111,15 @@
 	}
 
 	& .select-menu-footer {
-		color: var(--color-fg-default);
+		color: var(--fgColor-default);
 		border-bottom: 0;
 	}
 
 	& .form-control {
 		&:focus {
-			border-color: var(--color-accent-emphasis);
+			border-color: var(--fgColor-accent);
 			outline: none;
-			box-shadow: var(--color-primer-shadow-focus);
+			box-shadow: var(--button-primary-shadow-selected);
 		}
 	}
 
