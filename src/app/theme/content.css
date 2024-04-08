@@ -122,7 +122,7 @@
 			}
 
 			& tr:nth-child(2n) {
-				background: var(--color-closed-subtle);
+				background: var(--bgColor-muted);
 			}
 
 			& th {
